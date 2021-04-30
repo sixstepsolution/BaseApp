@@ -1,0 +1,188 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    @*<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=10">
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <meta http-equiv="Cache-control" content="no-cache">
+        <meta http-equiv="Expires" content="-1">*@
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="msapplication-config" content="none" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/wayleaveStyles/assets/Images/Way_Title.png" />
+    <title>Wayleave</title>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @*<script src="~/Scripts/angular.min.js"></script>*@
+    <!-- jquery 1.10.2 -->
+    @*<script src="~/Content/wayleaveStyles/assets/Scripts/jquery-1.10.2.js"></script>*@
+    <!-- Bootstrap 3.3.6 -->
+    @*<script src="~/Content/wayleaveStyles/assets/Content/bootstrap/js/bootstrap.min.js"></script>*@
+    <script src="~/Content/wayleaveStyles/assets/Content/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- iCheck 1.0.1 -->
+    <script src="~/Content/wayleaveStyles/assets/Content/plugins/iCheck/icheck.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/Content/wayleaveStyles/assets/Content/plugins/fastclick/fastclick.js"></script>
+    <!-- fullCalendar -->
+    <script src="~/Content/wayleaveStyles/assets/bower_components/moment/moment.js"></script>
+    <script src="~/Content/wayleaveStyles/assets/bower_components/fullcalendar/fullcalendar.js"></script>
+    <script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>
+    <script src="~/Content/wayleaveStyles/assets/Content/dist/js/app.min.js"></script>
+    <link rel="shortcut icon" href="~/Content/wayleaveStyles/assets/Images/Way_Title.png" type="image/x-icon">
+    @*<link href="~/Content/wayleaveStyles/assets/Content/bootstrap.min.css" rel="stylesheet" />*@
+
+    <link href="~/Content/wayleaveStyles/assets/Content/bootstrap-select.css" rel="stylesheet" />
+    <link href="~/Content/wayleaveStyles/assets/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- daterange picker -->
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link href="~/Content/wayleaveStyles/assets/Content/plugins/iCheck/all.css" rel="stylesheet" />
+    <!-- Bootstrap Color Picker -->
+    <link href="~/Content/wayleaveStyles/assets/Content/plugins/colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet" />
+    <!-- Bootstrap time Picker -->
+    <link href="~/Content/wayleaveStyles/assets/Content/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <!-- Select2 -->
+    <link href="~/Content/wayleaveStyles/assets/Content/plugins/select2/select2.min.css" rel="stylesheet" />
+    <!-- fullCalendar -->
+    <link href="~/Content/wayleaveStyles/assets/bower_components/fullcalendar/fullcalendar.css" rel="stylesheet" />
+    <link href="~/Content/wayleaveStyles/assets/bower_components/fullcalendar/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <!-- Theme style -->
+    <link href="~/Content/wayleaveStyles/assets/Content/dist/css/AdminLTE.css" rel="stylesheet" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link href="~/Content/wayleaveStyles/assets/Content/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/Content/wayleaveStyles/assets/Content/Timeline_New.css" rel="stylesheet" />
+    <link href="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/style.css" rel="stylesheet" />
+
+    <!-- JavaScript -->
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+    <!-- Semantic UI theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />
+    <!-- Load calender ui js and css -->
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" /> -->
+    <!-- Load toastr css -->
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" />*@
+
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function () {
+            if (localStorage.expandedMenu == 0) {
+                $("body").addClass('sidebar-collapse');
+            }
+
+            $('body').bind('expanded.pushMenu', function () {
+                localStorage.expandedMenu = 1;
+            });
+
+            $('body').bind('collapsed.pushMenu', function () {
+                localStorage.expandedMenu = 0;
+            });
+            var scroll_top_duration = 10;
+            $('body,html').animate({
+                scrollTop: 0,
+            }, scroll_top_duration
+            );
+        });
+    </script>
+    @*<script src="~/Scripts/angular-sanitize.js"></script>*@
+    @*<script data-semver="0.13.0" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>*@
+    @*<script src="~/Scripts/paginationUi.js"></script>*@
+    @*<script src="~/Content/autocomplete/angucomplete-alt.js"></script>*@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="~/Content/wayleaveStyles/Content/toastr.css" rel="stylesheet" />
+    @*<link href="~/Content/toastr.css" rel="stylesheet" />*@
+    @*<script src="~/Scripts/angular-route.min.js"></script>*@
+    @*<script src="~/AngularJs/wayleaveApp.js"></script>
+        <script src="~/AngularJs/controllers/mainCntrl.js"></script>
+        <script src="~/AngularJs/services/AuthenticationService.js"></script>
+        <script src="~/AngularJs/services/mainService.js"></script>*@
+
+    <style>
+        body {
+            background: url('../../Content/wayleaveStyles/assets/Images/Home_BG.png') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            /*background-color: #d5d5d5 !important;*/
+        }
+
+        bradius {
+            border-top-right-radius: 15px !important;
+            border-bottom-right-radius: 15px !important;
+        }
+
+        .panel-default {
+            opacity: 0.9;
+            margin-top: 30px;
+            border-radius: 15px !important;
+            border: 0px !important;
+            background-color: #fff !important
+        }
+
+        .form-group.last {
+            margin-bottom: 0px;
+        }
+
+        .form-control {
+            border-top-right-radius: 10px !important;
+            border-bottom-right-radius: 10px !important;
+            /*box-shadow: none;*/
+            border: 1px solid #ccc !important;
+            height: 30px !important;
+            background-color: #fff !important;
+        }
+
+        .input-group .input-group-addon {
+            /* border-radius: 0; */
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            border-color: none !important;
+            height: 30px;
+            border: 0px !important
+            /*background-color: #b59b5a;*/
+        }
+
+        .btn-custom {
+            height: 30px !important;
+            width: 150px !important;
+            padding-top: 5px;
+            border-radius: 10px !important
+        }
+
+        .bg-green-custom {
+            background-color: #006940 !important
+        }
+
+        .has-error {
+            border: 1px solid red !important;
+        }
+
+        .Anch_Back {
+            text-decoration: none;
+            color: #004785 !important;
+        }
+
+            .Anch_Back:hover {
+                text-decoration: none;
+                color: #004785 !important;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        @RenderBody()
+    </div>
+</body>
+</html>
