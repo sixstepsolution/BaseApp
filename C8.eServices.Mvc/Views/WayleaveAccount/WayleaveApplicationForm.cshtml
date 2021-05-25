@@ -1,9 +1,9 @@
-﻿
+﻿@model C8.eServices.Mvc.Models.WL_APPLICATIONFORM
+
 @{
     ViewBag.Title = "WayleaveApplicationForm";
     Layout = "~/Views/Shared/_LayoutWayleaveAccount.cshtml";
 }
-
 
 <style>
     .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
@@ -136,13 +136,26 @@
         color: red !important;
     }
 </style>
+<script src="~/Scripts/wayleaveScripts/ApplicationForm.js"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLOlMJLaIKTK3R1mRfv0gEI8bAmfqDxlk&sensor=false&libraries=places"></script>
-@*<script src="~/AngularJs/controllers/wayleaveAccountApplicationCntrl.js?dt=@DateTime.Now.Millisecond"></script>
-<script src="~/AngularJs/services/AuthenticationService.js"></script>
-<script src="~/AngularJs/services/wayleaveAccountApplicationService.js"></script>*@
-<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" ng-controller="wayleaveAccountApplicationCntrl" ng-cloak ng-init="Init()">
-    <form name="ApplicationForm" novalidate>
+
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        //if (!elem.getClientRects()) {
+        //    return { top: 0, left: 0 };
+        //}
+        var sessionInfo = '@Session["wayleaveaccountId"]';
+        if (sessionInfo != undefined && sessionInfo != "") {
+        }
+        else {
+            window.location.href = "../Home/WayleaveLogin";
+        }
+        Init();
+    });
+</script>
+<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
+    <form name="ApplicationForm">
         <div class="panel-group" style="margin-left: -25px;
         margin-bottom: 3px !important;">
             <div class="panel panel-default" style="border:none!important">
@@ -155,22 +168,22 @@
                     <div class="panel-body" style="padding: 5px!important;margin-bottom:0px !important">
                         <div style="margin-bottom:10px !important;">
                             <input id="Qs_PersonMandatory"
-                                   class="radio-custom" checked="checked" ng-click="showOwnerConsultantDetails('Property Owner')" name="Qs_PersonMandatory" type="radio"
+                                   class="radio-custom" checked="checked" onclick="$.fn.showOwnerConsultantDetails('Property Owner')" name="Qs_PersonMandatory" type="radio"
                                    style="margin-top: 10px !important;margin-left: 28px !important;background-color:#00A65A!important">
                             <label for="Qs_PersonMandatory" class="radio-custom-label"
                                    style="margin-top: 10px;padding: 1px;">Contractor</label>&nbsp;&nbsp;
-                            <input id="Qs_PersonMandatory1" class="radio-custom" ng-click="showOwnerConsultantDetails('Consultant')"
+                            <input id="Qs_PersonMandatory1" class="radio-custom" onclick="$.fn.showOwnerConsultantDetails('Consultant')"
                                    name="Qs_PersonMandatory" type="radio"
                                    style="margin-top: 10px !important">
 
                             <label for="Qs_PersonMandatory1" class="radio-custom-label"
                                    style="margin-top:10px;padding: 1px;">Consultant</label>
-                           
+
                         </div>
                     </div>
                     <div class="panel-body" style="padding: 5px!important;">
 
-                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;" id="accordionSerach" ng-hide="ShowPropertyOwnerConsultantSection">
+                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;" id="contractorInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
@@ -188,35 +201,35 @@
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Account Number</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.PROPERTYOWNER_ACCOUNT_NO" ng-class="{errorNew: showMsgs && ApplicationForm.PROPERTYOWNER_ACCOUNT_NO.$error.required}"
-                                                               class="form-control" name="PROPERTYOWNER_ACCOUNT_NO" />
+                                                        <input type="text" style="border-radius: 4px"
+                                                               class="form-control" name="PROPERTYOWNER_ACCOUNT_NO" id="PROPERTYOWNER_ACCOUNT_NO" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Contractor Name</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.PROPERTYOWNER_NAME"
+                                                        <input type="text" style="border-radius: 4px" id="PROPERTYOWNER_NAME"
                                                                class="form-control" name="PROPERTYOWNER_NAME" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Contractor Surname</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.PROPERTYOWNER_SURNAME"
+                                                        <input type="text" style="border-radius: 4px" id="PROPERTYOWNER_SURNAME"
                                                                class="form-control" name="PROPERTYOWNER_SURNAME" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Contact Number</label>
-                                                        <input type="text" maxlength="10" numbers-only style="border-radius: 4px" ng-model="appFormData.PROPERTYOWNER_CONTACTNO"
+                                                        <input type="text" maxlength="10" numbers-only style="border-radius: 4px" id="PROPERTYOWNER_CONTACTNO"
                                                                class="form-control" name="PROPERTYOWNER_CONTACTNO" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%" colspan="2">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Email</label>
-                                                        <input type="text" ng-pattern="emailFormat" style="border-radius: 4px" ng-model="appFormData.PROPERTYOWNER_EMAIL"
+                                                        <input type="text" ng-pattern="emailFormat" style="border-radius: 4px" id="PROPERTYOWNER_EMAIL"
                                                                class="form-control" name="PROPERTYOWNER_EMAIL" />
                                                     </div>
                                                 </td>
@@ -226,7 +239,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="consultantInfo" ng-show="ShowPropertyOwnerConsultantSection">
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;display:none" id="consultantInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
@@ -244,35 +257,35 @@
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Consultant Number</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.CONSULTANT_NO"
+                                                        <input type="text" style="border-radius: 4px" id="CONSULTANT_NO"
                                                                class="form-control" name="CONSULTANT_NO" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Consultant Company Name</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.CONSULTANT_COMPANYNAME"
+                                                        <input type="text" style="border-radius: 4px" id="CONSULTANT_COMPANYNAME"
                                                                class="form-control" name="CONSULTANT_COMPANYNAME" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Consultant First Name</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.CONSULTANT_NAME"
+                                                        <input type="text" style="border-radius: 4px" id="CONSULTANT_NAME"
                                                                class="form-control" name="CONSULTANT_NAME" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Consultant Surname</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.CONSULTANT_SURNAME"
+                                                        <input type="text" style="border-radius: 4px" id="CONSULTANT_SURNAME"
                                                                class="form-control" name="CONSULTANT_SURNAME" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Contact Number</label>
-                                                        <input type="text" maxlength="10" style="border-radius: 4px" ng-model="appFormData.CONSULTANT_CONTACTNO"
+                                                        <input type="text" maxlength="10" style="border-radius: 4px" id="CONSULTANT_CONTACTNO"
                                                                class="form-control" name="CONSULTANT_CONTACTNO" />
                                                     </div>
                                                 </td>
@@ -281,7 +294,7 @@
                                                 <td style="width: 15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Email</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.CONSULTANT_EMAIL"
+                                                        <input type="text" style="border-radius: 4px" id="CONSULTANT_EMAIL"
                                                                class="form-control" name="CONSULTANT_EMAIL" />
                                                     </div>
                                                 </td>
@@ -315,7 +328,7 @@
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Wayleave Immediate Attention</label>
                                                         <select style="border-radius: 4px"
-                                                                class="form-control" name="WAYLEAVE_ATTENTION" ng-model="appFormData.WAYLEAVE_ATTENTION" required>
+                                                                class="form-control" name="WAYLEAVE_ATTENTION" id="WAYLEAVE_ATTENTION" required>
                                                             <option value="" selected>Make a selection</option>
                                                             <option value="Yes">Yes</option>
                                                             <option value="No">No</option>
@@ -327,37 +340,29 @@
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Service Type</label>
-                                                        @*<select style="border-radius: 4px" ng-model="appFormData.SERVICE_TYPE"
-                                                                    class="form-control" name="SERVICE_TYPE">
-                                                                <option value="" selected>Make a selection</option>
-                                                                <option value="1">Construction Inside road Reserve</option>
-                                                                <option value="2">Filling station</option>
-                                                                <option value="3">Information Boards</option>
-                                                                <option value="4">Rand Water board / Water</option>
-                                                            </select>*@
-                                                        <select class="form-control" name="SERVICE_TYPE" ng-change="LoadServiceSubtypes(appFormData.SERVICE_TYPE)" ng-model="appFormData.SERVICE_TYPE" required>
+                                                        <select class="form-control" name="SERVICE_TYPE" onchange="$.fn.ChangeServiceType()" id="SERVICE_TYPE" required>
                                                             <option selected="selected" value="">Make a selection</option>
-                                                            <option ng-repeat="type in SeriveTypesList" ng-value="type.id">{{type.description}}</option>
+                                                            @*<option ng-repeat="type in SeriveTypesList" ng-value="type.id">{{type.description}}</option>*@
                                                         </select>
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Service Sub Type</label>
-                                                        <select class="form-control" name="SERVICE_SUB_TYPE" ng-model="appFormData.SERVICE_SUB_TYPE">
+                                                        <select class="form-control" name="SERVICE_SUB_TYPE" id="SERVICE_SUB_TYPE">
                                                             <option selected="selected" value="">Make a selection</option>
-                                                            <option ng-repeat="type in ServiceSubTypeList" ng-value="{{type.id}}">{{type.description}}</option>
+                                                            @*<option ng-repeat="type in ServiceSubTypeList" ng-value="{{type.id}}">{{type.description}}</option>*@
                                                         </select>
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Stage Type</label>
-                                                        <select style="border-radius: 4px" ng-model="appFormData.STAGE_TYPE"
+                                                        <select style="border-radius: 4px" id="STAGE_TYPE"
                                                                 class="form-control" name="STAGE_TYPE">
                                                             <option value="" selected>Make a selection</option>
-                                                            <option ng-value="1">Stage 1</option>
-                                                            <option ng-value="2">Stage 2</option>
+                                                            <option value="1">Stage 1</option>
+                                                            <option value="2">Stage 2</option>
                                                         </select>
                                                     </div>
                                                 </td>
@@ -368,14 +373,11 @@
                             </div>
                         </div>
 
-
-
-
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ProjectInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" ng-click="showGPS()" data-parent="#ProjectInfo" href="#collapse_ProjectInfo">
+                                        <a data-toggle="collapse" onclick="$.fn.showGPS()" data-parent="#ProjectInfo" href="#collapse_ProjectInfo">
                                             <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
                                             <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
                                             Work Location
@@ -384,7 +386,7 @@
                                 </div>
                                 <div id="collapse_ProjectInfo" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
                                     <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
-                                        <table class="table table-bordered table-hover" style="font-size:9pt!important">
+                                        <table class="table table-bordered table-hover" style="font-size:9pt!important" id="WorkLocationTable">
                                             <thead>
                                                 <tr style="background:#00A65A!important;color:#fff!important">
                                                     <td>Work Location Type</td>
@@ -393,11 +395,27 @@
                                                     <td class="text-center">Action</td>
                                                 </tr>
                                             </thead>
-                                            <tbody ng-repeat="m in Map_LocationsFromServer">
+                                            <tbody id="Map_LocationsFromServer" @*ng-repeat="m in Map_LocationsFromServer"*@>
+                                                @*<tr>
+                                                        <td>
+                                                            <select style="border-radius: 4px" disabled
+                                                                    class="form-control">
+                                                                <option value="{{m.WORK_LOCATION_TYPE}}">{{m.WORK_LOCATION_TYPE}}</option>
+                                                            </select>
+                                                        </td>
+                                                        <td><input class="form-control" readonly type="text" value={{m.GPS_START_ADDRESS}}></td>
+                                                        <td><input class="form-control" readonly type="text" value={{m.GPS_END_ADDRESS}}></td>
+                                                        <td class="text-center">
+                                                            <i title="View work location on map" class="fa fa-2x fa-map-marker text-blue" style="cursor:pointer" onclick="$.fn.ShowWorkLoactionOnMap(m)"></i>
+                                                            <i title="Delete work location" style="padding-left:10px;cursor:pointer" class="fa fa-2x fa-trash text-red" onclick="$.fn.RemoveWorkLoactionOnMap('server',m.WL_ID)"></i>
+                                                        </td>
+                                                    </tr>*@
+                                            </tbody>
+                                            <tbody id="Map_Locations" @*ng-repeat="m in Map_Locations"*@>
 
-                                                <tr>
-                                                    @*<td><input type="radio" name="radioLocations" id={{$index+''+'chkLocation'}} value="0" /></td>*@
-                                                    <td>
+                                                <!--<tr>-->
+                                                @*<td><input type="radio" name="radioLocations" id={{$index+''+'chkLocation'}} value="0" /></td>*@
+                                                <!--<td>
                                                         <select style="border-radius: 4px" disabled
                                                                 class="form-control">
                                                             <option value="{{m.WORK_LOCATION_TYPE}}">{{m.WORK_LOCATION_TYPE}}</option>
@@ -406,54 +424,29 @@
                                                     <td><input class="form-control" readonly type="text" value={{m.GPS_START_ADDRESS}}></td>
                                                     <td><input class="form-control" readonly type="text" value={{m.GPS_END_ADDRESS}}></td>
                                                     <td class="text-center">
-                                                        <i title="View work location on map" class="fa fa-2x fa-map-marker text-blue" style="cursor:pointer" ng-click="ShowWorkLoactionOnMap(m)"></i>
-                                                        <i title="Delete work location" style="padding-left:10px;cursor:pointer" class="fa fa-2x fa-trash text-red" ng-click="RemoveWorkLoactionOnMap('server',m.WL_ID)"></i>
-
+                                                        <i title="View work location on map" class="fa fa-2x fa-map-marker text-blue" style="cursor:pointer" onclick="$.fn.ShowWorkLoactionOnMap(m)"></i>
+                                                        <i title="Delete work location" style="padding-left:10px;cursor:pointer" class="fa fa-2x fa-trash text-red" onclick="$.fn.RemoveWorkLoactionOnMap('local',$index)"></i>
                                                     </td>
-                                                </tr>
-
+                                                </tr>-->
                                             </tbody>
-                                            <tbody ng-repeat="m in Map_Locations">
-
-                                                <tr>
-                                                    @*<td><input type="radio" name="radioLocations" id={{$index+''+'chkLocation'}} value="0" /></td>*@
-                                                    <td>
-                                                        <select style="border-radius: 4px" disabled
-                                                                class="form-control">
-                                                            <option value="{{m.WORK_LOCATION_TYPE}}">{{m.WORK_LOCATION_TYPE}}</option>
-                                                        </select>
-                                                    </td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.GPS_START_ADDRESS}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.GPS_END_ADDRESS}}></td>
-                                                    <td class="text-center">
-                                                        <i title="View work location on map" class="fa fa-2x fa-map-marker text-blue" style="cursor:pointer" ng-click="ShowWorkLoactionOnMap(m)"></i>
-                                                        <i title="Delete work location" style="padding-left:10px;cursor:pointer" class="fa fa-2x fa-trash text-red" ng-click="RemoveWorkLoactionOnMap('local',$index)"></i>
-
-                                                    </td>
-                                                </tr>
-
-                                            </tbody>
-                                            <tfoot ng-show="ShowMap_Locations">
+                                            <tfoot id="ShowMap_Locations">
                                                 <tr>
                                                     <td>
-                                                        <select style="border-radius: 4px" ng-model="WorkLocationModel.WORK_LOCATION_TYPE"
+                                                        <select style="border-radius: 4px" id="WORK_LOCATION_TYPE"
                                                                 class="form-control" name="WORK_LOCATION_TYPE">
                                                             <option value="" selected>Make a selection</option>
                                                             <option value="Cross">Cross</option>
                                                             <option value="Parallel">Parallel</option>
                                                         </select>
                                                     </td>
-                                                    <td><input type="text" class="form-control" ng-model="WorkLocationModel.GPS_START_ADDRESS" id="GPS_START_ADDRESS" /></td>
-                                                    <td><input type="text" class="form-control" ng-model="WorkLocationModel.GPS_END_ADDRESS" id="GPS_END_ADDRESS" /></td>
+                                                    <td><input type="text" class="form-control" id="GPS_START_ADDRESS" /></td>
+                                                    <td><input type="text" class="form-control" id="GPS_END_ADDRESS" /></td>
                                                     <td class="text-center">
-                                                        <i class="fa fa-2x fa-plus-circle text-success" style="cursor:pointer" ng-click="AddLocations()"></i>
-                                                        @*<input type="button" class="btn btn-success" value="Add" ng-click="AddLocations()" />*@
+                                                        <i class="fa fa-2x fa-plus-circle text-success" style="cursor:pointer" onclick="$.fn.AddLocations()"></i>
                                                     </td>
                                                 </tr>
                                             </tfoot>
                                         </table>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -477,21 +470,21 @@
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Project Number</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.PROJECT_NUMBER"
+                                                        <input type="text" style="border-radius: 4px" id="PROJECT_NUMBER"
                                                                class="form-control" name="PROJECT_NUMBER" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Project Name</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.PROJECT_NAME"
+                                                        <input type="text" style="border-radius: 4px" id="PROJECT_NAME"
                                                                class="form-control" name="PROJECT_NAME" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Service Owner</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="appFormData.APPLYING_ON_BEHALF"
+                                                        <input type="text" style="border-radius: 4px" id="APPLYING_ON_BEHALF"
                                                                class="form-control" name="APPLYING_ON_BEHALF" />
                                                     </div>
                                                 </td>
@@ -500,7 +493,7 @@
                                                 <td style="width: 15.5%" colspan="3">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Project Description</label>
-                                                        <textarea rows="4" style="border-radius: 4px" ng-model="appFormData.PROJECT_DESCRIPTION"
+                                                        <textarea rows="4" style="border-radius: 4px" id="PROJECT_DESCRIPTION"
                                                                   class="form-control" name="PROJECT_DESCRIPTION"></textarea>
                                                     </div>
                                                 </td>
@@ -513,33 +506,27 @@
                                                 <td>Region Name</td>
                                                 <td>Road Number</td>
                                                 <td>
-                                                    <button title="Add Region" type="button" class="btn btn-warning" style="text-decoration:none!important;" ng-click="AddRegion()"><i class="glyphicon glyphicon-plus"></i></button>&nbsp;&nbsp;
-                                                    <button type="button" title="Delete Region" ng-click="removeAll()" class="btn btn-primary" style="text-decoration:none!important;"><i class="fa fa-trash"></i></button>
+                                                    <button title="Add Region" type="button" class="btn btn-warning" style="text-decoration:none!important;" onclick="$.fn.AddRegion()"><i class="glyphicon glyphicon-plus"></i></button>&nbsp;&nbsp;
+                                                    <button type="button" title="Delete Region" onclick="$.fn.removeAll()" class="btn btn-primary" style="text-decoration:none!important;"><i class="fa fa-trash"></i></button>
                                                 </td>
                                             </tr>
-                                            <tbody ng-repeat="m in Customer_RegionListFromServer">
-                                                <tr>
-                                                    <td><input type="radio" name="radioRegion" id={{m.REGION_ID+''+'ChkId'}} value="0" /></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.REGION_CODE}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.REGION_NAME}}></td>
-                                                    <td colspan="2"><input class="form-control" readonly type="text" value={{m.ROAD_NUMBER}}></td>
+                                            <tbody id="Customer_RegionListFromServer">
+                                                @*<tr>
+                                                        <td><input type="radio" name="radioRegion" id={{m.REGION_ID+''+'ChkId'}} value="0" /></td>
+                                                        <td><input class="form-control" readonly type="text" value={{m.REGION_CODE}}></td>
+                                                        <td><input class="form-control" readonly type="text" value={{m.REGION_NAME}}></td>
+                                                        <td colspan="2"><input class="form-control" readonly type="text" value={{m.ROAD_NUMBER}}></td>
 
-                                                </tr>
+                                                    </tr>*@
                                             </tbody>
-                                            <tbody ng-repeat="m in Customer_Region">
-                                                <tr>
-                                                    <td><input type="radio" name="radioRegion" id={{m.REGION_ID+''+'ChkId'}} value="0" /></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.REGION_CODE}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.REGION_NAME}}></td>
-                                                    <td colspan="2"><input class="form-control" readonly type="text" value={{m.ROAD_NUMBER}}></td>
-                                                </tr>
+                                            <tbody id="Customer_Region">
                                             </tbody>
-                                            <tfoot ng-show="ShowRegionFooter">
+                                            <tfoot id="ShowRegionFooter">
                                                 <tr>
                                                     <td><input type="radio" name="radioRegion" /></td>
-                                                    <td><input type="text" class="form-control" ng-model="RegionCode" /></td>
-                                                    <td><input type="text" class="form-control" ng-model="RegionName" /></td>
-                                                    <td colspan="2"><input type="text" class="form-control" ng-model="RoadNumber" /></td>
+                                                    <td><input type="text" class="form-control" id="RegionCode" /></td>
+                                                    <td><input type="text" class="form-control" id="RegionName" /></td>
+                                                    <td colspan="2"><input type="text" class="form-control" id="RoadNumber" /></td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -571,7 +558,7 @@
                                                                   style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
                                                                 <i class="fa fa-calendar"></i>
                                                             </span>
-                                                            <input type="text" datepicker1 autocomplete="off" style="border-top-right-radius: 4px !important; border-bottom-right-radius: 4px !important" ng-model="appFormData.APPLICATION_DATE"
+                                                            <input type="text" datepicker1 autocomplete="off" style="border-top-right-radius: 4px !important; border-bottom-right-radius: 4px !important" id="APPLICATION_DATE"
                                                                    class="form-control" name="APPLICATION_DATE" />
 
                                                         </div>
@@ -585,7 +572,7 @@
                                                                   style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
                                                                 <i class="fa fa-calendar"></i>
                                                             </span>
-                                                            <input type="text" datepicker6 autocomplete="off" id="startDate" style="border-top-right-radius: 4px !important; border-bottom-right-radius: 4px !important" ng-model="appFormData.STARTING_DATE"
+                                                            <input type="text" datepicker6 autocomplete="off" style="border-top-right-radius: 4px !important; border-bottom-right-radius: 4px !important" id="STARTING_DATE"
                                                                    class="form-control" name="STARTING_DATE" />
 
                                                         </div>
@@ -599,9 +586,9 @@
                                                                   style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
                                                                 <i class="fa fa-calendar"></i>
                                                             </span>
-                                                            <input type="text" datepicker6 autocomplete="off" id="endDate"
+                                                            <input type="text" datepicker6 autocomplete="off"
                                                                    style="border-top-right-radius: 4px !important; border-bottom-right-radius: 4px !important"
-                                                                   ng-model="appFormData.COMPLETION_DATE"
+                                                                   id="COMPLETION_DATE"
                                                                    class="form-control" name="COMPLETION_DATE" />
 
                                                         </div>
@@ -611,8 +598,8 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Drawing Number</label>
-                                                        <input allow-decimal-numbers style="border-radius: 4px" nu ng-model="appFormData.DRAWING_NUMBER"
-                                                               class="form-control" name="DRAWING_NUMBER" />
+                                                        <input style="border-radius: 4px" id="DRAWING_NUMBER"
+                                                               class="form-control allowDecimalNumbers" name="DRAWING_NUMBER" />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -640,22 +627,22 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Length of excavation(m<sup>2</sup>)</label>
-                                                        <input type="text" allow-decimal-numbers style="border-radius: 4px" ng-model="appFormData.EXCAVATION_LENGTH"
-                                                               class="form-control" name="EXCAVATION_LENGTH" />
+                                                        <input type="text" style="border-radius: 4px" id="EXCAVATION_LENGTH"
+                                                               class="form-control allowDecimalNumbers" name="EXCAVATION_LENGTH" />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Rding surface(m<sup>2</sup>)</label>
-                                                        <input type="text" allow-decimal-numbers style="border-radius: 4px" ng-model="appFormData.RIDING_SURFACE"
-                                                               class="form-control" name="RIDING_SURFACE" />
+                                                        <input type="text" style="border-radius: 4px" id="RIDING_SURFACE"
+                                                               class="form-control allowDecimalNumbers" name="RIDING_SURFACE" />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>KERBS(m)</label>
-                                                        <input type="text" allow-decimal-numbers style="border-radius: 4px" ng-model="appFormData.KERBS"
-                                                               class="form-control" name="KERBS" />
+                                                        <input type="text" style="border-radius: 4px" id="KERBS"
+                                                               class="form-control allowDecimalNumbers" name="KERBS" />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -663,22 +650,22 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>ASPH.FOOTWAY(m<sup>2</sup>)</label>
-                                                        <input allow-decimal-numbers style="border-radius: 4px" ng-model="appFormData.ASPH_FOOTWAY"
-                                                               class="form-control" name="ASPH_FOOTWAY" />
+                                                        <input style="border-radius: 4px" id="ASPH_FOOTWAY"
+                                                               class="form-control allowDecimalNumbers" name="ASPH_FOOTWAY" />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>INTERL.BLOCK(m<sup>2</sup>)</label>
-                                                        <input allow-decimal-numbers style="border-radius: 4px" ng-model="appFormData.INTERL_BLOCK"
-                                                               class="form-control" name="INTERL_BLOCK" />
+                                                        <input style="border-radius: 4px" id="INTERL_BLOCK"
+                                                               class="form-control allowDecimalNumbers" name="INTERL_BLOCK" />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>UNPAVED FOOTWAYS(m<sup>2</sup>)</label>
-                                                        <input allow-decimal-numbers style="border-radius: 4px" ng-model="appFormData.UNPAVED_FOOTWAYS"
-                                                               class="form-control" name="UNPAVED_FOOTWAYS" />
+                                                        <input style="border-radius: 4px" id="UNPAVED_FOOTWAYS"
+                                                               class="form-control allowDecimalNumbers" name="UNPAVED_FOOTWAYS" />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -708,36 +695,28 @@
                                                 <td>Registration Number</td>
                                                 <td>Contact Number</td>
                                                 <td>
-                                                    <button title="Add Contact" type="button" class="btn btn-warning" style="text-decoration:none!important;" ng-click="AddContactPerson()"><i class="glyphicon glyphicon-plus"></i></button>&nbsp;&nbsp;
-                                                    <button type="button" title="Delete Contact" ng-click="removeContactPerson()" class="btn btn-primary" style="text-decoration:none!important;"><i class="fa fa-trash"></i></button>
+                                                    <button title="Add Contact" type="button" class="btn btn-warning" style="text-decoration:none!important;" onclick="$.fn.AddContactPerson()"><i class="glyphicon glyphicon-plus"></i></button>&nbsp;&nbsp;
+                                                    <button type="button" title="Delete Contact" onclick="$.fn.removeContactPerson()" class="btn btn-primary" style="text-decoration:none!important;"><i class="fa fa-trash"></i></button>
                                                 </td>
                                             </tr>
-                                            <tbody ng-repeat="m in Customer_ContactPersonListFromServer">
-                                                <tr>
-                                                    <td><input type="radio" name="radioContactPerson" id={{m.CONTACT_NUMBER+''+'ChkPerson'}} value="0" /></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.FIRST_NAME}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.LAST_NAME}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.REGISTRATION_NUMBER}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.CONTACT_NUMBER}}></td>
-                                                </tr>
+                                            <tbody id="Customer_ContactPersonListFromServer">
+                                                @*<tr>
+                                                        <td><input type="radio" name="radioContactPerson" id={{m.CONTACT_NUMBER+''+'ChkPerson'}} value="0" /></td>
+                                                        <td><input class="form-control" readonly type="text" value={{m.FIRST_NAME}}></td>
+                                                        <td><input class="form-control" readonly type="text" value={{m.LAST_NAME}}></td>
+                                                        <td><input class="form-control" readonly type="text" value={{m.REGISTRATION_NUMBER}}></td>
+                                                        <td><input class="form-control" readonly type="text" value={{m.CONTACT_NUMBER}}></td>
+                                                    </tr>*@
                                             </tbody>
-                                            <tbody ng-repeat="m in Customer_ContactPerson">
-                                                <tr>
-                                                    <td><input type="radio" name="radioContactPerson" id={{m.CONTACT_NUMBER+''+'ChkPerson'}} value="0" /></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.FIRST_NAME}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.LAST_NAME}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.REGISTRATION_NUMBER}}></td>
-                                                    <td><input class="form-control" readonly type="text" value={{m.CONTACT_NUMBER}}></td>
-                                                </tr>
+                                            <tbody id="Customer_ContactPerson">
                                             </tbody>
-                                            <tfoot ng-show="ShowContactPersonFooter">
+                                            <tfoot id="ShowContactPersonFooter">
                                                 <tr>
                                                     <td><input type="radio" name="radioContactPerson" /></td>
-                                                    <td><input type="text" class="form-control" string-only ng-model="ContactFirstName" /></td>
-                                                    <td><input type="text" class="form-control" string-only ng-model="ContactLastName" /></td>
-                                                    <td><input type="text" class="form-control" ng-model="ContactRegNumber" /></td>
-                                                    <td><input type="text" class="form-control" numbers-only maxlength="10" ng-model="ContactNumber" /></td>
-                                                    @*<td><input type="button" class="btn btn-success" value="Add" ng-click="AddContactPerson()" /></td>*@
+                                                    <td><input type="text" class="form-control stringOnly" id="ContactFirstName" /></td>
+                                                    <td><input type="text" class="form-control stringOnly" id="ContactLastName" /></td>
+                                                    <td><input type="text" class="form-control" id="ContactRegNumber" /></td>
+                                                    <td><input type="text" class="form-control numbersOnly" maxlength="10" id="ContactNumber" /></td>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -763,7 +742,7 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Upload Cover Letter</label>
-                                                        <input type="file" id="COVER_LETTER" style="border-radius: 4px" ng-model="appFormData.COVER_LETTER"
+                                                        <input type="file" id="COVER_LETTER" style="border-radius: 4px" id="appFormData.COVER_LETTER"
                                                                class="form-control" name="COVER_LETTER" />
                                                     </div>
                                                 </td>
@@ -778,30 +757,35 @@
                                                 <td>Document Type</td>
                                                 <td>Document Upload</td>
                                             </tr>
-                                            <tr ng-repeat="d in ServiceDocumentListFromServer">
-                                                <td>{{$index+1}}</td>
-                                                <td>{{d.DOCUMENT_TYPE}}</td>
-                                                <td>
-                                                    <div id="{{d.WSD_ID+''+'SupportDocument1'}}">
-                                                        <a href="#" ng-click="ViewDocument(d.DOCUMENT_NAME)" style="color:darkblue">View</a>
-                                                        <i title="Delete document" style="padding-left:10px;cursor:pointer" class="fa fa-trash text-red" ng-click="RemoveUploadedFile(d.WSD_ID)"></i>
-                                                    </div>
-                                                    <div style="display:none" id="{{d.WSD_ID+''+'SupportDocument2'}}"><input type="file" name="Add" id="{{d.WSD_ID+''+'SupportDocument'}}" /></div>
+                                            <tbody id="ServiceDocumentListFromServer">
+                                                @*<tr ng-repeat="d in ServiceDocumentListFromServer">
+                                                        <td>{{$index+1}}</td>
 
-                                                </td>
-                                            </tr>
-                                            <tr ng-repeat="d in ServiceDocumentList" ng-if="ServiceDocumentList.length>0">
-                                                <td>{{$index+1}}</td>
-                                                <td>{{d.description}}</td>
-                                                <td><input type="file" name="Add" id="{{d.id+''+'SupportDocument'}}" /></td>
-                                            </tr>
+                                                        <td>{{d.DOCUMENT_TYPE}}</td>
+                                                        <td>
+                                                            <div id="{{d.WSD_ID+''+'SupportDocument1'}}">
+                                                                <a href="#" onclick="$.fn.ViewDocument(d.DOCUMENT_NAME)" style="color:darkblue">View</a>
+                                                                <i title="Delete document" style="padding-left:10px;cursor:pointer" class="fa fa-trash text-red" onclick="$.fn.RemoveUploadedFile(d.WSD_ID)"></i>
+                                                            </div>
+                                                            <div style="display:none" id="{{d.WSD_ID+''+'SupportDocument2'}}"><input type="file" name="Add" id="{{d.WSD_ID+''+'SupportDocument'}}" /></div>
+
+                                                        </td>
+                                                    </tr>*@
+                                            </tbody>
+                                            <tbody id="ServiceDocumentList" @*ng-if="ServiceDocumentList.length>0"*@>
+                                                @*<tr ng-repeat="d in ServiceDocumentList" ng-if="ServiceDocumentList.length>0">
+                                                    <td>{{$index+1}}</td>
+                                                    <td>{{d.description}}</td>
+                                                    <td><input type="file" name="Add" id="{{d.id+''+'SupportDocument'}}" /></td>
+                                                </tr>*@
+                                            </tbody>                                            
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div ng-if="ServiceDepartmentList.length>0" class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="DepartmentInfo">
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="DepartmentInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
@@ -819,12 +803,12 @@
                                                 columns: 4;
                                             }
                                         </style>
-                                        <div class="columns">
-                                            <div ng-repeat="department in ServiceDepartmentList">
+                                        <div class="columns" id="ServiceDepartmentList">
+                                            @*<div ng-repeat="department in ServiceDepartmentList">
                                                 <input type="checkbox" class="checkbox-custom" checked="checked" disabled="disabled" id="CheckBox_{{department.id}}" ng-value="department.description">
                                                 <label class="checkbox-custom-label"
                                                        for="CheckBox_{{department.id}}">{{department.description}}</label>
-                                            </div>
+                                            </div>*@
                                         </div>
 
                                     </div>
@@ -833,17 +817,17 @@
                         </div>
                         <table width="100%">
                             <tr>
-                                <td colspan="4" class="text-center" ng-if="IsAppEdit&&(appFormData.APPLICATION_STEP_DESCRIPTION==='Rejected'||appFormData.APPLICATION_STEP_DESCRIPTION==='Request for documents')">
+                                <td colspan="4" class="text-center" id="IsAppEdit" @*ng-if="IsAppEdit&&(appFormData.APPLICATION_STEP_DESCRIPTION==='Rejected'||appFormData.APPLICATION_STEP_DESCRIPTION==='Request for documents')"*@>
                                     <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
-                                            ng-click="UpdateApplicationFormStaus(appFormData)">
+                                            onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
                                         <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
                                         Re-Submit
                                     </button>
                                     <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
                                 </td>
-                                <td colspan="4" class="text-center" ng-if="!IsAppEdit">
-                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" ng-click="SaveApplicationForm(appFormData,'')">
-                                        <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                                <td colspan="4" class="text-center">
+                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SaveApplicationForm()">
+                                        <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
                                         Submit
                                     </button>
                                     <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
@@ -865,7 +849,7 @@
                         <h4 class="modal-title text-center" style="color:green">Regions</h4>
                     </div>
                     <div class="modal-body">
-                        <div style="font-size:9pt !important;height:250px !important;overflow:auto;overflow-x:hidden">
+                        <div style="font-size:9pt !important;height:350px !important;overflow:auto;overflow-x:hidden">
                             <table border="0" width="100%">
                                 <thead>
                                     <tr style="background:#00A65A!important;color:#fff!important">
@@ -875,13 +859,7 @@
                                         <td>Road Number</td>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr ng-repeat="r in MasterRegions">
-                                        <td><input type="radio" id={{r.id+''+'chkRegionsPopup'}} name="chkRegionsPopup" ng-click="bindRegionDataFromList(r)" /></td>
-                                        <td>{{r.code}}</td>
-                                        <td>{{r.name}}</td>
-                                        <td>{{r.road}}</td>
-                                    </tr>
+                                <tbody id="MasterRegions">
                                 </tbody>
                             </table>
                             @*<div class="text-center" ng-show="gisLoader"><img src="~/Images/loadingimagenew.gif" style="width:120px !important;height:80px !important;border-radius:10px" /></div>*@

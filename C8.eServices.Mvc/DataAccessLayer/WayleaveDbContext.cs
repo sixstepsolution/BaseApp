@@ -37,12 +37,24 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public virtual DbSet<MASTER_INSPECTIONS> MASTER_INSPECTIONS { get; set; }
         public virtual DbSet<WL_INSPECTION_LIST> WL_INSPECTION_LIST { get; set; }
         public virtual DbSet<MASTER_CUSTOMERCARE_CENTERS_REGIONS> MASTER_CUSTOMERCARE_CENTERS_REGIONS { get; set; }
-
+        //public DbSet<SystemUser> SystemUsers { get; set; }
+        //public DbSet<SystemUserException> SystemUserException { get; set; }
+        //public DbSet<SystemUserLogTime> SystemUserLogTimes { get; set; }
+        //public DbSet<SystemUserType> SystemUserTypes { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-
+        {            
             Database.SetInitializer<WayleaveDbContext>(null);
             base.OnModelCreating(modelBuilder);
+
+            //modelBuilder.Entity<SystemUser>()
+            //    .HasOptional(f => f.CreatedBySystemUser)
+            //    .WithMany()
+            //    .HasForeignKey(f => f.CreatedBySystemUserId);
+
+            //modelBuilder.Entity<SystemUser>()
+            //    .HasOptional(f => f.ModifiedBySystemUser)
+            //    .WithMany()
+            //    .HasForeignKey(f => f.ModifiedBySystemUserId);
             //modelBuilder.Entity<MASTER_ROLES>()
             //    .Property(e => e.DESCRIPTION)
             //    .IsUnicode(false);

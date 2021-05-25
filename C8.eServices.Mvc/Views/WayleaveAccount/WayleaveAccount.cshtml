@@ -131,14 +131,35 @@
         color: red !important;
     }
 </style>
-@*<script src="~/AngularJs/controllers/WayleaveAccountCntrl.js"></script>
-<script src="~/AngularJs/services/wayleaveAccountService.js"></script>*@
-<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" ng-controller="WayleaveAccountCntrl" ng-cloak>
 
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        var sessionInfo = '@Session["wayleaveAccountNumber"]';
+        //alert(sessionInfo);
+        if (sessionInfo != undefined && sessionInfo != "") {
+            $.fn.LoadWayleaveAccountDetails(sessionInfo);
+        }
+        else {
+            //window.location.href = "../Home/WayleaveLogin";
+        }
+    });
 
-    @using (Html.BeginForm("WlAccountForm", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-    {
-        @Html.AntiForgeryToken()
+    //$('.panel-collapse').on('show.bs.collapse', function () {
+    //    $(this).parent('.panel').find('.fa-minus').show();
+    //    $(this).parent('.panel').find('.fa-plus').hide();
+    //})
+    //$('.panel-collapse').on('hide.bs.collapse', function () {
+    //    $(this).parent('.panel').find('.fa-minus').hide();
+    //    $(this).parent('.panel').find('.fa-plus').show();
+    //});
+</script>
+<script src="~/Scripts/wayleaveScripts/WayleaveAccount.js"></script>
+<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important">
+
+    @*@using (Html.BeginForm("WlAccountForm", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()*@
+    <form name="WlAccountForm" novalidate>
         <div class="panel-group" style="margin-left: -25px;margin-right: -14px;
         margin-bottom: 3px !important;">
             <div class="panel panel-default" style="border:none!important">
@@ -152,11 +173,11 @@
                     <div class="panel-body" style="padding: 5px!important;">
                         <div style="margin-bottom:10px !important;">
                             <input id="Qs_PersonMandatory"
-                                   class="radio-custom" ng-disabled="disableRadioBtn" checked ng-click="showAccountScreen('New')" name="Qs_PersonMandatory" type="radio"
+                                   class="radio-custom" checked onclick="$.fn.showAccountScreen('New')" name="Qs_PersonMandatory" type="radio"
                                    style="margin-top: 10px !important;margin-left: 28px !important;background-color:#d2930b!important">
                             <label for="Qs_PersonMandatory" class="radio-custom-label"
                                    style="margin-top: 10px;padding: 6px;">New Account</label>&nbsp;&nbsp;
-                            <input id="Qs_PersonMandatory1" ng-disabled="disableRadioBtn" class="radio-custom" ng-click="showAccountScreen('Renewal')"
+                            <input id="Qs_PersonMandatory1" class="radio-custom" onclick="$.fn.showAccountScreen('Renewal')"
                                    name="Qs_PersonMandatory" type="radio"
                                    style="margin-top: 10px !important">
                             <label for="Qs_PersonMandatory1" class="radio-custom-label"
@@ -168,13 +189,12 @@
                                 <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important">
                                     <div class="panel panel-default" style="border:none!important">
                                         <div id="collapse_search_1" class="panel-collapse collapse in" style="border:none">
-                                            <div class="panel-body" style="padding: 0;" ng-show="IsNewAccount">
+                                            <div class="panel-body" style="padding: 0;" id="IsNewAccount">
                                                 <div class="col-lg-6">
                                                     <div class="input-group input-label">
                                                         <label class="control-label"> Type of User</label>
-                                                        <select style="border-radius: 4px" ng-class="{'has-error': (WlAccountForm.UserType.$dirty
-                                          || submitted) && WlAccountForm.UserType.$error.required}" required
-                                                                class="form-control" name="UserType" ng-model="WlAccountModel.userType">
+                                                        <select style="border-radius: 4px" required
+                                                                class="form-control" name="UserType" id="userType">
                                                             <option value="" selected>Make a selection</option>
                                                             <option value="Consultant">Consultant</option>
                                                             <option value="Contractor">Contractor</option>
@@ -183,17 +203,17 @@
                                                 </div>
                                             </div>
 
-                                            <div class="panel-body" style="padding: 0;" ng-hide="IsNewAccount">
+                                            <div class="panel-body" style="padding: 0;display:none" id="IsRenewalAccount">
                                                 <div class="col-lg-4">
                                                     <div class="input-group input-label">
                                                         <label class="control-label">Search Account Number</label>
-                                                        <input type="text" placeholder="Type to search account number" style="border-radius: 4px" class="form-control" ng-model="AccountNumber"
+                                                        <input type="text" placeholder="Type to search account number" style="border-radius: 4px" class="form-control" id="AccountNumber"
                                                                name="AccountNumber" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <button class="btn btn-sm btn-success" ng-click="BindAccountInformation(AccountNumber)" style="background-color: #036638 !important; margin-top: 13px !important; height: 24px; padding: 5px; font-size: 10px ">
-                                                        <i class="fa fa-spinner fa-spin" ng-if="isLoading"></i>
+                                                    <button class="btn btn-sm btn-success" onclick="BindAccountInformation(AccountNumber)" style="background-color: #036638 !important; margin-top: 13px !important; height: 24px; padding: 5px; font-size: 10px ">
+                                                        @*<i class="fa fa-spinner fa-spin" ng-if="isLoading"></i>*@
                                                         Bind Account Information
                                                     </button>
                                                 </div>
@@ -221,25 +241,21 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Company Name</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.companyName"
-                                                               class="form-control" name="CompanyName"
-                                                               ng-class="{'has-error': (WlAccountForm.CompanyName.$dirty
-                                          || submitted) && WlAccountForm.CompanyName.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" id="companyName"
+                                                               class="form-control" name="CompanyName" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Company Full Name</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.companyFullName"
-                                                               class="form-control" name="CompanyFullName1"
-                                                               ng-class="{'has-error': (WlAccountForm.CompanyFullName.$dirty
-                                          || submitted) && WlAccountForm.CompanyFullName.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" id="companyFullName"
+                                                               class="form-control" name="CompanyFullName1" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Company Registration Number</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.companyRegistrationNumber"
+                                                        <input type="text" style="border-radius: 4px" id="companyRegistrationNumber"
                                                                class="form-control" name="CompanyRegistrationNumber" />
                                                     </div>
                                                 </td>
@@ -248,22 +264,22 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Expiration Date of Trade License</label>
-                                                        <input type="text" style="border-radius: 4px" datepicker ng-model="WlAccountModel.tradeLicenseExpirationDate"
+                                                        <input type="text" style="border-radius: 4px" datepicker id="tradeLicenseExpirationDate"
                                                                class="form-control" name="TradeLicenseExpirationDate" />
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="input-group input-label" style="width: 100%" ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'">
+                                                    <div class="input-group input-label" id="tradeLicenseSection" style="width: 100%" @*ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'"*@>
                                                         <label>Upload Trade License</label>
                                                         <input type="file" id="tradeLicensefile" style="border-radius: 4px;padding: 3px !important"
                                                                class="form-control" name="TradeLicenseFile" />
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="input-group" style="width: 100%;margin-top:10px;margin-left:20px;" ng-if="IsWayleaveAccountAuthenticated">
+                                                    <div class="input-group" id="tradeLicenseView" style="width: 100%;margin-top:10px;margin-left:20px;display:none" @*ng-if="IsWayleaveAccountAuthenticated"*@>
                                                         <label>
                                                             Current Trade License File
-                                                            <br /> <a ng-click="OpenFileNewTab(WlAccountModel.tradeLicenseFile)" href="#" style="color: #00337f; font-weight: 700">View</a>
+                                                            <br /> <a onclick="$.fn.OpenFileNewTab('trade')" style="color: #00337f; font-weight: 700">View</a>
                                                         </label>
                                                     </div>
                                                 </td>
@@ -291,25 +307,22 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Contact Person First Name</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.contactPersonFirstName"
-                                                               class="form-control" name="ContactPersonFirstName" ng-class="{'has-error': (WlAccountForm.ContactPersonFirstName.$dirty
-                                          || submitted) && WlAccountForm.ContactPersonFirstName.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" id="contactPersonFirstName"
+                                                               class="form-control" name="ContactPersonFirstName" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Contact Person Last Name</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.contactPersonLastName"
-                                                               class="form-control" name="ContactPersonLastName" ng-class="{'has-error': (WlAccountForm.ContactPersonLastName.$dirty
-                                          || submitted) && WlAccountForm.ContactPersonLastName.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" id="contactPersonLastName"
+                                                               class="form-control" name="ContactPersonLastName" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Designation</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.designation"
-                                                               class="form-control" name="Designation" ng-class="{'has-error': (WlAccountForm.Designation.$dirty
-                                          || submitted) && WlAccountForm.Designation.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" id="designation"
+                                                               class="form-control" name="Designation" required />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -318,24 +331,22 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Telephone Number</label>
-                                                        <input type="text" style="border-radius: 4px" ng-minlength="10" maxlength="10" min="10" max="10" numbers-only ng-model="WlAccountModel.telephoneNumber"
-                                                               class="form-control" name="TelephoneNumber" ng-class="{'has-error': (WlAccountForm.TelephoneNumber.$dirty) && WlAccountForm.TelephoneNumber.$error.required||WlAccountForm.TelephoneNumber.$error.minlength || WlAccountForm.MobileNumber.$error.maxlength}" />
+                                                        <input type="text" style="border-radius: 4px" maxlength="10" min="10" max="10" numbers-only id="telephoneNumber"
+                                                               class="form-control" name="TelephoneNumber" />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Mobile Number</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.mobileNumber"
-                                                               class="form-control" name="MobileNumber" numbers-only ng-minlength="10" maxlength="10" min="10" max="10" ng-class="{'has-error': (WlAccountForm.MobileNumber.$dirty
-                                          || submitted) && WlAccountForm.MobileNumber.$error.required||WlAccountForm.MobileNumber.$error.minlength || WlAccountForm.MobileNumber.$error.maxlength}" required />
+                                                        <input type="text" style="border-radius: 4px" id="mobileNumber"
+                                                               class="form-control" name="MobileNumber" numbers-only maxlength="10" min="10" max="10" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Email</label>
-                                                        <input type="text" style="border-radius: 4px" ng-pattern="emailFormat" ng-model="WlAccountModel.email"
-                                                               class="form-control" name="Email" ng-class="{'has-error': (WlAccountForm.Email.$dirty
-                                          || submitted) && WlAccountForm.Email.$error.required||WlAccountForm.Email.$error.pattern}" required />
+                                                        <input type="text" style="border-radius: 4px" @*ng-pattern="emailFormat"*@ id="email"
+                                                               class="form-control" name="Email" required />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -343,7 +354,7 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Fax No</label>
-                                                        <input type="text" style="border-radius: 4px" numbers-only ng-model="WlAccountModel.fax"
+                                                        <input type="text" style="border-radius: 4px" numbers-only id="fax"
                                                                class="form-control" name="Fax" />
                                                     </div>
                                                 </td>
@@ -371,25 +382,22 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Street Name</label>
-                                                        <input rows="3" style="border-radius: 4px" ng-model="WlAccountModel.streetName"
-                                                               class="form-control" name="StreetName" ng-class="{'has-error': (WlAccountForm.StreetName.$dirty
-                                          || submitted) && WlAccountForm.StreetName.$error.required}" required />
+                                                        <input rows="3" style="border-radius: 4px" id="streetName"
+                                                               class="form-control" name="StreetName" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">City</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.city"
-                                                               class="form-control" name="City" ng-class="{'has-error': (WlAccountForm.City.$dirty
-                                          || submitted) && WlAccountForm.City.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" id="city"
+                                                               class="form-control" name="City" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Province</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.province"
-                                                               class="form-control" name="Province" ng-class="{'has-error': (WlAccountForm.Province.$dirty
-                                          || submitted) && WlAccountForm.Province.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" id="province"
+                                                               class="form-control" name="Province" required />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -397,23 +405,18 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Country</label>
-                                                        <input type="text" style="border-radius: 4px" ng-model="WlAccountModel.country"
-                                                               class="form-control" name="Country" ng-class="{'has-error': (WlAccountForm.Country.$dirty
-                                          || submitted) && WlAccountForm.Country.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" id="country"
+                                                               class="form-control" name="Country" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Post Code</label>
-                                                        <input type="text" style="border-radius: 4px" numbers-only ng-model="WlAccountModel.postCode"
-                                                               class="form-control" name="PostCode" ng-class="{'has-error': (WlAccountForm.PostCode.$dirty
-                                          || submitted) && WlAccountForm.PostCode.$error.required}" required />
+                                                        <input type="text" style="border-radius: 4px" numbers-only id="postCode"
+                                                               class="form-control" name="PostCode" required />
                                                     </div>
                                                 </td>
                                             </tr>
-
-
-
                                         </table>
                                     </div>
                                 </div>
@@ -435,63 +438,45 @@
                                     <div class="panel-body" style="padding: 0px;">
 
                                         @*<ng-form name="innerForm" >*@
-                                        <table class="table table-bordered table-hover" style="">
-
-                                            <tr style="background:#d2930b!important;color:#fff !important">
-                                                <td>Select</td>
-                                                <td><label>Contact Name</label></td>
-                                                <td><label>Contact Surname</label></td>
-                                                <td><label>Contact Number</label></td>
-                                                <td><label>Email</label></td>
-                                                <td><label>Designation</label></td>
-                                                <td colspan="2">
-                                                    <div class="pull-right">
-                                                        <button title="Add Contact" type="button" class="btn btn-sm btn-warning" style="text-decoration:none!important;" ng-click="AddContactPerson()"><i class="glyphicon glyphicon-plus"></i></button>
-                                                        <button type="button" title="Delete Contact" ng-click="removeContactPerson()" class="btn btn-sm btn-primary" style="text-decoration:none!important;"><i class="fa fa-trash"></i></button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tbody ng-repeat="m in Customer_ContactPerson" style="padding:10px !important">
-                                                <tr>
-                                                    <td><input type="radio" name="radioContactPerson" id={{m.contactNumber+''+'ChkPerson'}} value="0" /></td>
-                                                    <td><input class="form-control" type="text" value={{m.firstName}}></td>
-                                                    <td><input class="form-control" type="text" value={{m.lastName}}></td>
-                                                    <td><input class="form-control" type="text" value={{m.contactNumber}}></td>
-                                                    <td><input class="form-control" type="text" value={{m.email}}></td>
-                                                    <td><input class="form-control" type="text" value={{m.designation}}></td>
-                                                    <td colspan="2"></td>
+                                        <table class="table table-bordered table-hover" id="ContactTable" style="">
+                                            <thead>
+                                                <tr style="background:#d2930b!important;color:#fff !important">
+                                                    <td>Select</td>
+                                                    <td><label>Contact Name</label></td>
+                                                    <td><label>Contact Surname</label></td>
+                                                    <td><label>Contact Number</label></td>
+                                                    <td><label>Email</label></td>
+                                                    <td><label>Designation</label></td>
+                                                    <td colspan="2">
+                                                        <div class="pull-right">
+                                                            <button title="Add Contact" type="button" class="btn btn-sm btn-warning" style="text-decoration:none!important;" onclick="$.fn.AddContactPerson()"><i class="glyphicon glyphicon-plus"></i></button>
+                                                            <button type="button" title="Delete Contact" onclick="$.fn.removeContactPerson()" class="btn btn-sm btn-primary" style="text-decoration:none!important;"><i class="fa fa-trash"></i></button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
+                                            </thead>
+                                            <tbody style="padding:10px !important" id="ContactTableBody">
                                             </tbody>
-                                            <tfoot ng-show="ShowContactPersonFooter">
+                                            <tfoot id="ShowContactPersonFooter">
                                                 <tr>
                                                     <td><input type="radio" name="radioContactPerson" /></td>
                                                     <td>
-                                                        <input type="text" class="form-control" ng-model="conatctModel.ContactFirstName" name="ContactFirstName"
-                                                               ng-class="{'has-error': (innerForm.ContactFirstName.$dirty
-                                          || Innersubmitted) && innerForm.ContactFirstName.$error.required}" />
+                                                        <input type="text" class="form-control" id="ContactFirstName" name="ContactFirstName" />
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" ng-model="conatctModel.ContactLastName" name="ContactLastName"
-                                                               ng-class="{'has-error': (innerForm.ContactLastName.$dirty
-                                          || Innersubmitted) && innerForm.ContactLastName.$error.required}" />
+                                                        <input type="text" class="form-control" id="ContactLastName" name="ContactLastName" />
                                                     </td>
 
                                                     <td>
-                                                        <input type="text" class="form-control" numbers-only ng-minlength="10" maxlength="10" min="10" max="10" name="ContactNumber"
-                                                               ng-model="conatctModel.ContactNumber"
-                                                               ng-class="{'has-error': (innerForm.ContactNumber.$dirty
-                                          || Innersubmitted) && innerForm.ContactNumber.$error.required||innerForm.ContactNumber.$error.minlength || innerForm.ContactNumber.$error.maxlength}" />
+                                                        <input type="text" class="form-control" numbers-only maxlength="10" min="10" max="10" name="ContactNumber"
+                                                               id="ContactNumber" />
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" name="ContactEmail"
-                                                               ng-pattern="emailFormat"
-                                                               ng-model="conatctModel.ContactEmail" ng-class="{'has-error': (innerForm.ContactEmail.$dirty
-                                          || Innersubmitted) && innerForm.ContactEmail.$error.required||innerForm.ContactEmail.$error.pattern}" />
+                                                        <input type="text" class="form-control" onkeyup="$.fn.validateEmail()" name="ContactEmail"
+                                                               id="ContactEmail" />
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" ng-model="conatctModel.ContactDesignation" name="ContactDESIGNATION"
-                                                               ng-class="{'has-error': (innerForm.ContactDesignation.$dirty
-                                          || Innersubmitted) && innerForm.ContactDesignation.$error.required}" />
+                                                        <input type="text" class="form-control" id="ContactDesignation" name="ContactDESIGNATION" />
                                                     </td>
                                                     @*<td><input type="button" class="btn btn-success" value="Add" ng-click="AddContactPerson(conatctModel)" /></td>*@
                                                 </tr>
@@ -520,29 +505,29 @@
 
                                             <tr>
                                                 <td>
-                                                    <div class="input-group input-label" style="width: 100%" ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'">
+                                                    <div class="input-group input-label" id="regCertificateSection" style="width: 100%" @*ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'"*@>
                                                         <label>Registartion Certificate</label>
                                                         <input type="file" id="regCertificatefile" style="border-radius: 4px;padding: 3px !important"
                                                                class="form-control" name="RegistartionCertificate" />
                                                     </div>
-                                                    <div class="input-group" style="width: 100%;margin-top:10px;" ng-if="IsWayleaveAccountAuthenticated">
+                                                    <div class="input-group" id="regCertificateView" style="width: 100%;margin-top:10px;display:none" @*ng-if="IsWayleaveAccountAuthenticated"*@>
                                                         <label>
                                                             Current  Registartion Certificate File
-                                                            <br /> <a ng-click="OpenFileNewTab(WlAccountModel.registartionCertificate)" href="#" style="color: #00337f; font-weight: 700">View</a>
+                                                            <br /> <a onclick="$.fn.OpenFileNewTab('registartion')" style="color: #00337f; font-weight: 700">View</a>
                                                         </label>
 
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="input-group input-label" style="width: 100%" ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'">
+                                                    <div class="input-group input-label" id="taxCertificateSection" style="width: 100%" @*ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'"*@>
                                                         <label>Tax Certificate</label>
                                                         <input type="file" id="taxCertificatefile" style="border-radius: 4px;padding: 3px !important"
                                                                class="form-control" name="TaxCertificate" />
                                                     </div>
-                                                    <div class="input-group" style="width: 100%;margin-top:10px;" ng-if="IsWayleaveAccountAuthenticated">
+                                                    <div class="input-group" id="taxCertificateView" style="width: 100%;margin-top:10px;display:none" @*ng-if="IsWayleaveAccountAuthenticated"*@>
                                                         <label>
                                                             Current Tax Certificate File
-                                                            <br /> <a ng-click="OpenFileNewTab(WlAccountModel.taxCertificate)" href="#" style="color: #00337f; font-weight: 700">View</a>
+                                                            <br /> <a onclick="$.fn.OpenFileNewTab('tax')" style="color: #00337f; font-weight: 700;cursor:pointer">View</a>
                                                         </label>
 
                                                     </div>
@@ -552,7 +537,7 @@
                                                 <td colspan="2">
                                                     <div style="font-size:11px;color:#d2930b">
                                                         <h5 style="color:#cc0c00"><strong><u>File Name Convention</u></strong></h5>
-                                                        Use Captal or lower letters to delimit words,not spaces. e.g: RegisrationCertificate<br />
+                                                        Use Capital or lower letters to delimit words,not spaces. e.g: RegisrationCertificate<br />
                                                         Keep file names short,but meaningful. e.g: 2020TaxCertificate<br />
                                                         <strong style="color:#cc0c00">DON'T</strong> save files containing any special characters. e.g *:/\<>|"?[];=&%$#()
                                                     </div>
@@ -565,7 +550,7 @@
                             </div>
                         </div>
 
-                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important" id="accordionApprove" ng-if="IsWayleaveAccountAuthenticated">
+                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important;display:none!important" id="accordionApprove">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#d2930b">
                                     <h4 class="panel-title">
@@ -581,54 +566,29 @@
                                     <div class="panel-body" style="padding: 10px;">
                                         <div class="col-lg-4">
                                             <div class="input-group input-label">
-                                                <label><strong>Current status</strong> : <b style="color:#cc0c00">{{WlAccountModel.status}}</b></label><br />
-                                                <label ng-if="WlAccountModel.status=='Rejected'"><strong>Comments</strong> : <b style="color:#cc0c00">{{WlAccountModel.comments}}</b></label>
+                                                <label><strong>Current status</strong> : <b style="color:#cc0c00" id="WlAccountStatus"></b></label><br />
+                                                <label id="WlAccountComments"><strong>Comments</strong> : <b style="color:#cc0c00" id="WlAccountStatusComments"></b></label>
 
                                             </div>
                                         </div>
                                     </div>
-                                    @*@if (HttpContext.Current.Session["wayleaveaccountId"] == null)
-                                        {
-                                            <div class="panel-body" style="padding: 10px;" ng-if="accountStatusId==7">
-                                                <div class="col-lg-4">
-                                                    <div class="input-group input-label">
-                                                        <label class="control-label">Status</label>
-                                                        <select style="border-radius: 4px" ng-change="changeStatusType(WlAccount_statusId)" ng-class="{'has-error': (WlAccountForm.statusId.$dirty
-                                              || submitted) && WlAccountForm.statusId.$error.required}" required
-                                                                class="form-control" name="statusId" ng-model="WlAccount_statusId">
-                                                            <option selected value="">Make a selection</option>
-                                                            <option ng-value="6">Approved</option>
-                                                            <option ng-value="7">Rejected</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="panel-body" style="padding: 10px;" ng-if="accountStatusId==7">
-                                                <div class="col-lg-12">
-                                                    <div class="input-group input-label">
-                                                        <label class="control-label">Comments</label>
-                                                        <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="comments" ng-model="WlAccountModel.comments" ng-class="{'has-error': (WlAccountForm.comments.$dirty
-                                              || submitted) && WlAccountForm.comments.$error.required}" required></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }*@
                                 </div>
                             </div>
                         </div>
                         <table width="100%">
                             <tr>
-                                <td colspan="4" class="text-center" ng-if="!IsWayleaveAccountAuthenticated">
-                                    <button class="btn btn-success" ng-disabled="IsSubmit" ng-click="SaveWlAccountForm(WlAccountModel)" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
-                                        <i class="fa fa-spinner fa-spin" ng-if="IsSubmit"></i>
+                                <td colspan="4" class="text-center" id="IsWayleaveAccountSubmit">
+                                    <button class="btn btn-success" type="button" @*ng-disabled="IsSubmit"*@ onclick="$.fn.SaveWlAccountForm()" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
+                                        <i class="fa fa-spinner fa-spin custom-hide" id="loadSpinner"></i>
                                         Submit
                                     </button>
                                     <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
                                 </td>
-                                <td colspan="4" class="text-center" ng-if="IsWayleaveAccountAuthenticated&&accountStatusId==7">
-                                    <button class="btn btn-success" ng-click="UpdateWlAccountForm(WlAccountModel)" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
-                                        <i class="fa fa-spinner fa-spin" ng-if="IsSubmit"></i>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="text-center custom-hide" id="IsWayleaveAccountResubmit">
+                                    <button class="btn btn-success" onclick="UpdateWlAccountForm(WlAccountModel)" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
+                                        <i class="fa fa-spinner fa-spin"></i>
                                         Re-submit
                                     </button>
                                     <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
@@ -640,7 +600,8 @@
                 </div>
             </div>
         </div>
-    }
+    </form>
+    @*}*@
 </section>
 
 

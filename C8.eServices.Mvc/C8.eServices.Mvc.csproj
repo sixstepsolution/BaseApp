@@ -48,6 +48,9 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.10.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="BouncyCastle.Crypto, Version=1.8.2.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.2\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -182,9 +185,11 @@
       <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -207,9 +212,8 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.3\lib\net45\System.Web.Http.Cors.dll</HintPath>
@@ -250,6 +254,15 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Unity.Abstractions, Version=5.11.7.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.10\lib\net46\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.11.11.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.5.11.10\lib\net46\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.WebApi, Version=5.4.0.0, Culture=neutral, PublicKeyToken=43da31bc42a85347, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.WebAPI.5.4.0\lib\net45\Unity.WebApi.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease">
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
@@ -2847,6 +2860,7 @@
     <Content Include="Scripts\wayleaveScripts\angular-touch.min.js" />
     <Content Include="Scripts\wayleaveScripts\angular.js" />
     <Content Include="Scripts\wayleaveScripts\angular.min.js" />
+    <Content Include="Scripts\wayleaveScripts\ApplicationForm.js" />
     <Content Include="Scripts\wayleaveScripts\bootstrap.js" />
     <Content Include="Scripts\wayleaveScripts\bootstrap.min.js" />
     <Content Include="Scripts\wayleaveScripts\i18n\angular-locale_af-na.js" />
@@ -3593,6 +3607,7 @@
     <Content Include="Scripts\wayleaveScripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\wayleaveScripts\jquery-3.4.1.slim.min.js" />
     <None Include="Scripts\wayleaveScripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\wayleaveScripts\Jquery-ui-migrate.js" />
     <Content Include="Scripts\wayleaveScripts\jquery.validate.js" />
     <Content Include="Scripts\wayleaveScripts\jquery.validate.min.js" />
     <Content Include="Scripts\wayleaveScripts\jquery.validate.unobtrusive.js" />
@@ -3608,6 +3623,7 @@
     <Content Include="Scripts\wayleaveScripts\test-bundles\angular-route.js" />
     <Content Include="Scripts\wayleaveScripts\test-bundles\angular-sanitize.js" />
     <Content Include="Scripts\wayleaveScripts\test-bundles\angular-touch.js" />
+    <Content Include="Scripts\wayleaveScripts\WayleaveAccount.js" />
     <Content Include="Service References\CorrespondenceSoapService\C8.eServices.Mvc.CorrespondenceSoapService.CaseStartOffline_Response.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -3646,6 +3662,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup_Auth.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccountTypeController.cs" />
@@ -3701,6 +3718,10 @@
     <Compile Include="Controllers\SystemUserTypeController.cs" />
     <Compile Include="Controllers\TitleTypeController.cs" />
     <Compile Include="Controllers\WayleaveAccountController.cs" />
+    <Compile Include="Controllers\WayLeaveController.cs" />
+    <Compile Include="Controllers\WLController.cs" />
+    <Compile Include="Controllers\WL_ACCOUNTController.cs" />
+    <Compile Include="Controllers\WL_APPLICATIONFORMController.cs" />
     <Compile Include="DataAccessLayer\BillingDbContext.cs" />
     <Compile Include="DataAccessLayer\CesarBulkDBContext.cs" />
     <Compile Include="DataAccessLayer\CesarDbContext.cs" />
@@ -3914,6 +3935,9 @@
     <Compile Include="Models\Audits\SystemUserTypeAudit.cs" />
     <Compile Include="Models\Audits\TitleTypeAudit.cs" />
     <Compile Include="Models\Audits\UnitOfmeasureTypeAudit.cs" />
+    <Compile Include="Models\Authentication\OAuthCustomRefreshTokenProvider.cs" />
+    <Compile Include="Models\Authentication\WayleaveAuthProvider.cs" />
+    <Compile Include="Models\Authentication\WayleaveAuthRepository.cs" />
     <Compile Include="Models\Bank.cs" />
     <Compile Include="Models\BankAccount.cs" />
     <Compile Include="Models\BankAccountType.cs" />
@@ -3928,17 +3952,43 @@
     <Compile Include="Models\CategoryType.cs" />
     <Compile Include="Models\CesarSMS.cs" />
     <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Comm\CommonModel.cs" />
+    <Compile Include="Models\Comm\Pagenation.cs" />
+    <Compile Include="Models\Comm\SessionControllerHandler.cs" />
     <Compile Include="Models\DebitOrderStatus.cs" />
+    <Compile Include="Models\ElasticEmailService\ElasticEmail.cs" />
     <Compile Include="Models\EmailAccountsBulk.cs" />
     <Compile Include="Models\EmailAccounts.cs" />
     <Compile Include="Models\EmailAttachmentQueueBulk.cs" />
+    <Compile Include="Models\EmailBodys\EmailNotificationBody.cs" />
+    <Compile Include="Models\EmailBodys\EmailNotifications.cs" />
     <Compile Include="Models\EmailQueueItemBulk.cs" />
     <Compile Include="Models\EmailQueueProcessedBulk.cs" />
     <Compile Include="Models\EmailQueueProcessed.cs" />
     <Compile Include="Models\Employees.cs" />
+    <Compile Include="Models\EncriptDecript\EncriptDecript.cs" />
+    <Compile Include="Models\InspectionPdfData.cs" />
     <Compile Include="Models\InstantEFT.cs" />
     <Compile Include="Models\InstantEFTTransaction.cs" />
     <Compile Include="Models\LinkedMobile.cs" />
+    <Compile Include="Models\Mapings\AccountContactModel.cs" />
+    <Compile Include="Models\Mapings\AccountsView.cs" />
+    <Compile Include="Models\Mapings\ApplicationFormView.cs" />
+    <Compile Include="Models\Mapings\ApplicationInputClaimModel.cs" />
+    <Compile Include="Models\Mapings\ApplicationInputModel.cs" />
+    <Compile Include="Models\Mapings\ApplicationModel.cs" />
+    <Compile Include="Models\Mapings\MasterCustomercareCentersModel.cs" />
+    <Compile Include="Models\Mapings\MasterInputCalimsModel.cs" />
+    <Compile Include="Models\Mapings\PreInspectionDataModel.cs" />
+    <Compile Include="Models\Mapings\StudentView.cs" />
+    <Compile Include="Models\Mapings\WayleaveAccountDashboardModel.cs" />
+    <Compile Include="Models\Mapings\WayleaveAccountInputModel.cs" />
+    <Compile Include="Models\Mapings\WayleaveInputClaimModel.cs" />
+    <Compile Include="Models\Mapings\WLAccountsModel.cs" />
+    <Compile Include="Models\Mapings\WLApplicationContactPersonModel.cs" />
+    <Compile Include="Models\Mapings\WLApplicationDocumentsModel.cs" />
+    <Compile Include="Models\Mapings\WLregionsModel.cs" />
+    <Compile Include="Models\Mapings\WLworklocationModel.cs" />
     <Compile Include="Models\MasterpassRequest.cs" />
     <Compile Include="Models\MasterpassTransaction.cs" />
     <Compile Include="Models\MASTER_CUSTOMERCARE_CENTERS_REGIONS.cs" />
@@ -3996,6 +4046,7 @@
     <Compile Include="Models\Payment.cs" />
     <Compile Include="Models\PaymentHistory.cs" />
     <Compile Include="Models\PostalCode.cs" />
+    <Compile Include="Models\PreinspectionPaginationData.cs" />
     <Compile Include="Models\Property.cs" />
     <Compile Include="Models\PropertyAccount.cs" />
     <Compile Include="Models\PropertyInvestment.cs" />
@@ -4007,10 +4058,52 @@
     <Compile Include="Models\RatesRebateProperty.cs" />
     <Compile Include="Models\RecipientType.cs" />
     <Compile Include="Models\ReferenceType.cs" />
+    <Compile Include="Models\Repository\ApplicationFormRepo.cs" />
+    <Compile Include="Models\Repository\ApplicationRegionRepo.cs" />
+    <Compile Include="Models\Repository\ApplicationStatusRepo.cs" />
+    <Compile Include="Models\Repository\ContactPersonRepo.cs" />
+    <Compile Include="Models\Repository\DepartmentsRepo.cs" />
+    <Compile Include="Models\Repository\MasterCustomerCareCentersRepo.cs" />
+    <Compile Include="Models\Repository\MasterDepartmentsRepo.cs" />
+    <Compile Include="Models\Repository\MasterInspectionRepo.cs" />
+    <Compile Include="Models\Repository\MasterRegionsRepo.cs" />
+    <Compile Include="Models\Repository\MasterStatusTypesRepo.cs" />
+    <Compile Include="Models\Repository\RegionRepo.cs" />
+    <Compile Include="Models\Repository\SeriviceSubTypesRepo.cs" />
+    <Compile Include="Models\Repository\SeriviceTypesRepo.cs" />
+    <Compile Include="Models\Repository\ServiceDocumentRepo.cs" />
+    <Compile Include="Models\Repository\SudentRepo.cs" />
+    <Compile Include="Models\Repository\SupportingDocumentRepo.cs" />
+    <Compile Include="Models\Repository\WayleaveRepo.cs" />
+    <Compile Include="Models\Repository\WlAccountRepo.cs" />
+    <Compile Include="Models\Repository\WlAccount_ContactRepo.cs" />
+    <Compile Include="Models\Repository\WLInspectionListRepo.cs" />
+    <Compile Include="Models\Repository\WorkLocationRepo.cs" />
     <Compile Include="Models\Request.cs" />
     <Compile Include="Models\RmsPropertyAccount.cs" />
     <Compile Include="Models\RmsTemporaryRatesRebate.cs" />
     <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\Services\IApplicationForm.cs" />
+    <Compile Include="Models\Services\IApplicationRegions.cs" />
+    <Compile Include="Models\Services\IApplicationStatus.cs" />
+    <Compile Include="Models\Services\IContactPersons.cs" />
+    <Compile Include="Models\Services\IDepartments.cs" />
+    <Compile Include="Models\Services\IMasterCustomerCareCenters.cs" />
+    <Compile Include="Models\Services\IMasterDepartments.cs" />
+    <Compile Include="Models\Services\IMasterInspections.cs" />
+    <Compile Include="Models\Services\IMasterRegions.cs" />
+    <Compile Include="Models\Services\IMasterStatusTypes.cs" />
+    <Compile Include="Models\Services\IRegion.cs" />
+    <Compile Include="Models\Services\ISeriviceSubTypes.cs" />
+    <Compile Include="Models\Services\ISeriviceTypes.cs" />
+    <Compile Include="Models\Services\IServiceDocument.cs" />
+    <Compile Include="Models\Services\ISudent.cs" />
+    <Compile Include="Models\Services\ISupportingDocument.cs" />
+    <Compile Include="Models\Services\IWayleave.cs" />
+    <Compile Include="Models\Services\IWlAccount.cs" />
+    <Compile Include="Models\Services\IWlAccountContact.cs" />
+    <Compile Include="Models\Services\IWLInspectionList.cs" />
+    <Compile Include="Models\Services\IWorkLocations.cs" />
     <Compile Include="Models\SessionModel.cs" />
     <Compile Include="Models\SidEftTransaction.cs" />
     <Compile Include="Models\SmsAccountsBulk.cs" />
@@ -4070,6 +4163,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />
     <Compile Include="ViewModels\ActivateViewModel.cs" />
+    <Compile Include="ViewModels\ApplicationFormViewModel.cs" />
     <Compile Include="ViewModels\BillListViewModel.cs" />
     <Compile Include="ViewModels\BillViewModel.cs" />
     <Compile Include="ViewModels\ConsumptionViewModel.cs" />
@@ -4426,6 +4520,15 @@
     <Content Include="Views\Shared\_LayoutWayleaveAccount.cshtml" />
     <Content Include="Views\WayleaveAccount\WayleaveAccount.cshtml" />
     <Content Include="Views\WayleaveAccount\WayleaveApplicationForm.cshtml" />
+    <Content Include="Views\Shared\_LayoutEkurhuleni.cshtml" />
+    <Content Include="Views\WL\InspectionLetterPdfNew.cshtml" />
+    <Content Include="Views\WL\Index.cshtml" />
+    <Content Include="Views\WL\ApplicationForm.cshtml" />
+    <Content Include="Views\WL\WayleaveAccount.cshtml" />
+    <Content Include="Views\WL\WayleaveAccountDashboard.cshtml" />
+    <Content Include="Views\WL\ApplicationStatusList.cshtml" />
+    <Content Include="Views\WL\InspectionList.cshtml" />
+    <Content Include="Views\WL\PreInspectionList.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -22,7 +22,8 @@ namespace C8.eServices.Mvc
 
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
+            BundleConfig.RegisterBundles(BundleTable.Bundles);            
+            UnityConfig.RegisterComponents();
 
             //GlobalFilters.Filters.Add(new SqlExceptionFilter());
 

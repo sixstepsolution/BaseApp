@@ -11,6 +11,9 @@ using C8.eServices.Mvc.Keys;
 using C8.eServices.Mvc.Models;
 using C8.eServices.Mvc.ViewModels;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity;
+using C8.eServices.Mvc.Models.Comm;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -79,6 +82,7 @@ namespace C8.eServices.Mvc.Controllers
                 }
 
                 ViewBag.ReturnUrl = returnUrl;
+                ViewBag.Error = "";
                 return View();
             }
             catch (Exception ex)
@@ -231,8 +235,6 @@ namespace C8.eServices.Mvc.Controllers
         }
         #endregion
 
-
-
         #region Account Login POST
         //
         // POST: /Account/Login
@@ -241,36 +243,49 @@ namespace C8.eServices.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(LoginViewModel model, string returnUrl)
         {
-            return RedirectToAction("Index", "WayleaveAccount");
-            //using (var context = new eServicesDbContext())
-            //{
-            //    _base.Initialise(context);
+            ///return RedirectToAction("Index", "WayleaveAccount");
+            using (var context = new WayleaveDbContext())
+            {
+                //_base.Initialise(context);
 
-            //    //incremental delay to prevent brute force attacks
-            //    int incrementalDelay;
-            //    var error = "";
+                //incremental delay to prevent brute force attacks
+                int incrementalDelay;
+                var error = "";
 
-            //    if (HttpContext.Application[Request.UserHostAddress] != null)
-            //    {
-            //        // wait for delay if there is one
-            //        incrementalDelay = (int)HttpContext.Application[Request.UserHostAddress];
-            //        await Task.Delay(incrementalDelay * 1000);
-            //    }
+                if (HttpContext.Application[Request.UserHostAddress] != null)
+                {
+                    // wait for delay if there is one
+                    incrementalDelay = (int)HttpContext.Application[Request.UserHostAddress];
+                    await Task.Delay(incrementalDelay * 1000);
+                }
 
-            //    if (ModelState.IsValid)
-            //    {
-            //        var store = new UserStore<SystemIdentityUser>(context);
-            //        var UserManager = new UserManager<SystemIdentityUser>(store);
-            //        UserManager.UserValidator = new UserValidator<SystemIdentityUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
-            //        var user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
+                if (ModelState.IsValid)
+                {
+                    var result = context.Users.Where(s => s.username == model.UserName && s.password == model.Password).FirstOrDefault();
+                    if (result != null)
+                    {
+                        //CommonModel ekurhuleniData = new CommonModel();
+                        //ekurhuleniData.userId = result.userid;
+                        //ekurhuleniData.userName = result.username;
+                        //ekurhuleniData.deptartmentname = result.deptartmentname;
+                        Session["ekurhuleniData"] = result;
+                        Session["ekurhuleniUserName"] = result.username;
+                        Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
+                        return RedirectToAction("Index", "WL");
+                    }
+                    else
+                    {
+                        TempData["LoginError"] = "Invalid username or password!";
+                        error = "Invalid username or password!";
+                        return RedirectToAction("WayleaveLogin", "Home");
+                    }
+                }
 
-            //    }
-
-            //    // If we got this far, something failed, redisplay form
-            //    ViewBag.Error = error;
-            //    return View(model);
-            //}
-            return View();
+                // If we got this far, something failed, redisplay form
+                ViewBag.Error = error;
+                return View(model);
+            }
+            //return View();
         }
         #endregion
 
