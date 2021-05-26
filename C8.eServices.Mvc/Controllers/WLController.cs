@@ -11,6 +11,10 @@ using C8.eServices.Mvc.Models;
 using C8.eServices.Mvc.Models.Mapings;
 using C8.eServices.Mvc.Models.Services;
 using C8.eServices.Mvc.DataAccessLayer;
+using System.Net.Http;
+using System.Configuration;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -25,6 +29,44 @@ namespace C8.eServices.Mvc.Controllers
                 // if IsAuthenticated is false return to login code here....
                 return Redirect("../home/index");
 
+            }
+
+            IEnumerable<ApplicationInputModel> members = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
+                inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                var responseTask = client.PostAsync("api/get-applications-with-counts", byteContent);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ApplicationInputModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    ViewBag.ApplicationData = members;
+                }
+                else
+                {
+                    //Error response received   
+                    members = Enumerable.Empty<ApplicationInputModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
             }
             return View();
         }
@@ -60,6 +102,43 @@ namespace C8.eServices.Mvc.Controllers
                 // if IsAuthenticated is false return to login code here....
                 return Redirect("../home/index");
             }
+
+            IEnumerable<WayleaveAccountDashboardModel> members = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                //inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                //var myContent = JsonConvert.SerializeObject(inpuclaims);
+                //var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                //var byteContent = new ByteArrayContent(buffer);
+                //byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                var responseTask = client.GetAsync("api/get-wl-accounts-with-counts");
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<WayleaveAccountDashboardModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    ViewBag.WayleaveAccountData = members;
+                }
+                else
+                {
+                    //Error response received   
+                    members = Enumerable.Empty<WayleaveAccountDashboardModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
             return View();
         }
 
@@ -69,6 +148,51 @@ namespace C8.eServices.Mvc.Controllers
             {
                 // if IsAuthenticated is false return to login code here....
                 return Redirect("../home/index");
+            }
+            IEnumerable<ApplicationInputModel> members = null;
+            ViewBag.ApplicationStatusList = null;
+            ViewBag.ApplicationStatusListCount = 0;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
+                inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                var responseTask = client.PostAsync("api/get-applications-status-list", byteContent);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ApplicationInputModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    var tt = (List<ApplicationInputModel>)members;
+
+                    tt = tt.Where(s=>s.name== "Completed").ToList();
+                    var statusResult = tt.FirstOrDefault().applicationList;
+                    ViewBag.ApplicationStatusList = statusResult;
+                    ViewBag.ApplicationStatusListCount = statusResult.Count();
+                }
+                else
+                {
+                    //Error response received  
+                    ViewBag.ApplicationStatusList = null;
+                    ViewBag.ApplicationStatusListCount = 0;
+                    members = Enumerable.Empty<ApplicationInputModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
             }
             return View();
         }
@@ -80,6 +204,46 @@ namespace C8.eServices.Mvc.Controllers
                 // if IsAuthenticated is false return to login code here....
                 return Redirect("../home/index");
             }
+            IEnumerable<ApplicationInputModel> members = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
+                inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                var responseTask = client.PostAsync("api/get-applications-status-list", byteContent);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ApplicationInputModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    var tt = (List<ApplicationInputModel>)members;
+
+                    tt = tt.Where(s => s.name == "Completed").ToList();
+                    ViewBag.ApplicationStatusList = tt.FirstOrDefault().applicationList;
+                }
+                else
+                {
+                    //Error response received   
+                    members = Enumerable.Empty<ApplicationInputModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
             return View();
         }
 
@@ -89,6 +253,46 @@ namespace C8.eServices.Mvc.Controllers
             {
                 // if IsAuthenticated is false return to login code here....
                 return Redirect("../home/index");
+            }
+            IEnumerable<ApplicationInputModel> members = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
+                inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                var responseTask = client.PostAsync("api/get-applications-status-list", byteContent);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ApplicationInputModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    var tt = (List<ApplicationInputModel>)members;
+
+                    tt = tt.Where(s => s.name == "Completed").ToList();
+                    ViewBag.ApplicationStatusList = tt.FirstOrDefault().applicationList;
+                }
+                else
+                {
+                    //Error response received   
+                    members = Enumerable.Empty<ApplicationInputModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
             }
             return View();
         }

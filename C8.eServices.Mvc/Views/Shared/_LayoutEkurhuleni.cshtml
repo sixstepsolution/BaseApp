@@ -65,7 +65,8 @@
     <!-- Semantic UI theme -->
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />
     <!-- Load calender ui js and css -->
-    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    @*<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>*@
+    <script src="~/Scripts/wayleaveScripts/Jquery-ui-migrate.js"></script>
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" /> -->
     <!-- Load toastr css -->
@@ -180,9 +181,9 @@
             });
         });
     </script>
-  
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <link href="~/Content/wayleaveStyles/Content/toastr.css" rel="stylesheet" />   
+    <link href="~/Content/wayleaveStyles/Content/toastr.css" rel="stylesheet" />
     <style>
         .bg-green-custom {
             background-color: #006940 !important
@@ -262,7 +263,7 @@
                                     <div class="pull-left">
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" ng-click="logOut()" class="btn btn-warning" style="color:#fff">
+                                        <a href="../Home/EkurhuleniLogout" class="btn btn-warning" style="color:#fff">
                                             Sign out
                                         </a>
                                     </div>

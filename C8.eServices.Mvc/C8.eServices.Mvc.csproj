@@ -2861,6 +2861,7 @@
     <Content Include="Scripts\wayleaveScripts\angular.js" />
     <Content Include="Scripts\wayleaveScripts\angular.min.js" />
     <Content Include="Scripts\wayleaveScripts\ApplicationForm.js" />
+    <Content Include="Scripts\wayleaveScripts\ApplicationStatusList.js" />
     <Content Include="Scripts\wayleaveScripts\bootstrap.js" />
     <Content Include="Scripts\wayleaveScripts\bootstrap.min.js" />
     <Content Include="Scripts\wayleaveScripts\i18n\angular-locale_af-na.js" />
@@ -3602,6 +3603,7 @@
     <Content Include="Scripts\wayleaveScripts\i18n\angular-locale_zu-za.js" />
     <Content Include="Scripts\wayleaveScripts\i18n\angular-locale_zu.js" />
     <None Include="Scripts\wayleaveScripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\wayleaveScripts\InspectionList.js" />
     <Content Include="Scripts\wayleaveScripts\jquery-3.4.1.js" />
     <Content Include="Scripts\wayleaveScripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\wayleaveScripts\jquery-3.4.1.slim.js" />
@@ -3614,6 +3616,7 @@
     <Content Include="Scripts\wayleaveScripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\wayleaveScripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\wayleaveScripts\paginationUi.js" />
+    <Content Include="Scripts\wayleaveScripts\PreInspectionList.js" />
     <Content Include="Scripts\wayleaveScripts\sitemap.xml" />
     <Content Include="Scripts\wayleaveScripts\test-bundles\angular-aria.js" />
     <Content Include="Scripts\wayleaveScripts\test-bundles\angular-cookies.js" />
@@ -4529,6 +4532,7 @@
     <Content Include="Views\WL\ApplicationStatusList.cshtml" />
     <Content Include="Views\WL\InspectionList.cshtml" />
     <Content Include="Views\WL\PreInspectionList.cshtml" />
+    <Content Include="Views\WL\InspectionLetterPdf.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

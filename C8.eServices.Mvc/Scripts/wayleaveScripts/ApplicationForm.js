@@ -21,6 +21,7 @@ var accountID = localStorage.getItem('wayleaveAccountNumber');
  //alert(localStorage.getItem('wayleaveAccountNumber'));
 
 /*......................Vew Google Map Route...................................*/
+//Intialize google map
 function initMap(sLat, sLng, eLat, eLng) {
     const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 8,
@@ -59,6 +60,7 @@ function initMap(sLat, sLng, eLat, eLng) {
     );
 }
 
+//Display Start address and end address routes
 function displayRoute(origin, destination, service, display) {
     service.route(
         {
@@ -79,6 +81,7 @@ function displayRoute(origin, destination, service, display) {
     );
 }
 
+//Calculate total distance for start and end address
 function computeTotalDistance(result) {
     let total = 0;
     const myroute = result.routes[0];
@@ -98,6 +101,7 @@ function computeTotalDistance(result) {
     //document.getElementById("total").innerHTML = total + " km";
 }
 
+//Intialize starting address
 function Startinitialize(sAddr) {
     GPS_START_Lat = "";
     GPS_START_Lng = "";
@@ -114,6 +118,7 @@ function Startinitialize(sAddr) {
     });
 }
 
+//Intialize ending address
 function Endinitialize(eAddr) {
     GPS_END_Lat = "";
     GPS_END_Lng = "";
@@ -132,6 +137,7 @@ $.fn.showGPS = function () {
     Endinitialize("");
 }
 
+//Get map routes
 $.fn.getMapRoute = function () {
     initMap(37.7780509, -122.4478889, "37.7791968", "-122.4476479");
     initMap("14.4426", "79.9865", "13.0827", "80.2707");
@@ -432,6 +438,7 @@ $.fn.BindLocations = function () {
     };
 }
 
+//Add region validation
 $.fn.Add = function () {
     var rc = $('#RegionCode').val();
     var ren = $('#RegionName').val();
@@ -444,6 +451,7 @@ $.fn.Add = function () {
     }
 };
 
+//Bind region data
 function bindRegionDataFromList(regionId) {
     //alert(MasterRegions.length);
     //ShowRegionFooter = true;     
@@ -497,6 +505,7 @@ function bindRegionDataFromList(regionId) {
     $('#RoadNumber').val('');
 }
 
+//Remove regions from the array list
 $.fn.removeAll = function () {
     console.log(Customer_Region);
     var isChecked = false;
@@ -562,6 +571,7 @@ $.fn.removeAll = function () {
 
 }
 
+// Show Region list from database
 $.fn.AddRegion = function () {
     $.each(MasterRegions, function (index, value) {
         var decsionID = value.id + "chkRegionsPopup";
@@ -572,6 +582,7 @@ $.fn.AddRegion = function () {
     $("#RegionPopup").modal('show');
 }
 
+//Add Contact persons
 $.fn.AddContactPerson = function () {
     var rc = $("#ContactFirstName").val();
     var ren = $("#ContactLastName").val();
@@ -616,6 +627,7 @@ $.fn.AddContactPerson = function () {
     }
 };
 
+//Remove contact persons from array
 $.fn.removeContactPerson = function () {
     console.log(Customer_ContactPerson);
     var isChecked = false;
@@ -831,6 +843,7 @@ $.fn.RemoveUploadedFile = function (id) {
     }
 }
 
+// Set form data values
 $.fn.GetFormdataValues = function () {
     appFormData.PROPERTYOWNER_ACCOUNT_NO = $('#PROPERTYOWNER_ACCOUNT_NO').val();
     appFormData.PROPERTYOWNER_NAME = $('#PROPERTYOWNER_NAME').val();

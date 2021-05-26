@@ -16,14 +16,8 @@ namespace C8.eServices.Mvc.Controllers
     {
         // GET: WayleaveAccount
         public ActionResult Index()
-        {
-            //ViewBag.ApplicationData = null;
-            //using (var context = new WayleaveDbContext())
-            //{
-            //    ViewBag.ApplicationData = context.WL_APPLICATIONFORM.ToList();
-            //}
+        {            
             IEnumerable<ApplicationInputModel> members = null;
-
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());

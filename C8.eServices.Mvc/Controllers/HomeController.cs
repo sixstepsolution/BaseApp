@@ -294,5 +294,12 @@ namespace C8.eServices.Mvc.Controllers
             Session.RemoveAll();
             return RedirectToAction("Index", "Home");
         }
+        public ActionResult EkurhuleniLogout()
+        {
+            System.Web.HttpContext.Current.Session.Clear();
+            System.Web.HttpContext.Current.Session.Abandon();
+            System.Web.HttpContext.Current.Session.RemoveAll();
+            return Redirect("../home/index");
+        }
     }
 }

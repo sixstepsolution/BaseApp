@@ -221,35 +221,8 @@
         border-radius: 4px !important
     }
 </style>
-
-<script type="text/javascript">
-    $('.panel-collapse').on('show.bs.collapse', function () {
-        alert();
-        $(this).parent('.panel').find('.fa-minus').show();
-        $(this).parent('.panel').find('.fa-plus').hide();
-    })
-    $('.panel-collapse').on('hide.bs.collapse', function () {
-        alert();
-        $(this).parent('.panel').find('.fa-minus').hide();
-        $(this).parent('.panel').find('.fa-plus').show();
-    });
-    function addIconCollapse(val, id) {
-        //alert(id);
-        //$scope.requestconsole.forEach(function (res, i) {
-        //    $("#panelSection" + res.Id).css({ "background-color": "#f3f0e1" });
-        //});        
-
-        $("#panelSection_" + id).css({ "background-color": "#c1b56b" });
-        $(".collapse").on('show.bs.collapse', function () {
-            $(this).parent().find(".glyphicon").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-top");
-            $("#collapse_" + id).show();
-            }).on('hide.bs.collapse', function () {
-            $(this).parent().find(".glyphicon").removeClass("glyphicon-triangle-top").addClass("glyphicon-triangle-bottom");
-            $("#panelSection_" + id).css({ "background-color": "#c1b56b" });
-            $("#collapse_" + id).hide();
-            });
-        }
-</script>
+@*<link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">*@
+@*<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
 <div>
     <div>
         <section class="content" style="padding-right: 0;padding-top:0;">
