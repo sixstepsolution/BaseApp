@@ -220,171 +220,233 @@
     }
 </style>
 
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        var userRole = '@Session["ekurhuleniUserRole"]';
+        //alert(userRole);
+        if (userRole ==="Admin") {
+            $.fn.LoadApplicationsAlertsWithCounts("Y");
+        }
+        else {
+            $.fn.LoadApplicationsAlertsWithCounts("N")
+        }
+        //Init();
+    });
+</script>
+<script src="~/Scripts/wayleaveScripts/PreInspectionList.js"></script>
 <div>
-    <div>
-        <section class="content" style="padding-right: 0;padding-top:0;" @*ng-init="LoadApplicationsWithCounts()"*@>
-            <div style="background-color:#e0e0e0!important;margin-top:4px">
-                <h4 class="text-center">Application Status List</h4>
-                <table class="table table-striped table-hover tabel-condensed" style="font-size: 11px;">
-                    <thead style="background-color:#00A65A !important; font-size:11px !important;color:#fff !important;margin-bottom: 0;">
-                        <tr>
-                            <td style="width:5% !important" ng-click="sort('NAME')"
-                                ng-class="sortClass('NAME')">
-                                <a class="anchor_sorting" href="">
-                                    ID
-                                </a>&nbsp;
-                            </td>
-                            <td style="width:13% !important" ng-click="sort('NAME')"
-                                ng-class="sortClass('NAME')">
-                                <a class="anchor_sorting" href="">
-                                    Application Number
-                                </a>&nbsp;
-                            </td>
-                            <td style="width:13% !important" ng-click="sort('STATUS')"
-                                ng-class="sortClass('STATUS')">
-                                <a class="anchor_sorting" href="">
-                                    Step Status
-                                </a>&nbsp;
-                            </td>
-                            <td style="width:13% !important" ng-click="sort('NAME')"
-                                ng-class="sortClass('NAME')">
-                                <a class="anchor_sorting" href="">
-                                    Name
-                                </a>&nbsp;
-                            </td>
-                            @*<td style="width:13% !important" ng-click="sort('NAME')"
-                                    ng-class="sortClass('NAME')">
-                                    <a class="anchor_sorting" href="">
-                                        Service
-                                        Type
-                                    </a>&nbsp;
-                                </td>
-                                <td style="width:13% !important" ng-click="sort('CREATED_DATE')"
-                                    ng-class="sortClass('CREATED_DATE')">
-                                    <a class="anchor_sorting" href="">
-                                        Service Sub
-                                        Type
-                                    </a>&nbsp;
-                                </td>*@
-                            <td style="width:12% !important" ng-click="sort('CREATED_DATE')"
-                                ng-class="sortClass('CREATED_DATE')">
-                                <a class="anchor_sorting" href="">
-                                    Immediate Attention
-                                </a>&nbsp;
-                            </td>
+    <section class="content" style="padding-right: 0;padding-top:0;" @*ng-init="LoadApplicationsWithCounts()"*@>
+        <div style="background-color:#e0e0e0!important;margin-top:4px">
+            <h4 class="text-center">Application Status List</h4>
+            <table class="table table-striped table-hover tabel-condensed" style="font-size: 11px;">
+                <thead style="background-color:#00A65A !important; font-size:11px !important;color:#fff !important;margin-bottom: 0;">
+                    <tr>
+                        <td style="width:5% !important" ng-click="sort('NAME')"
+                            ng-class="sortClass('NAME')">
+                            <a class="anchor_sorting" href="">
+                                ID
+                            </a>&nbsp;
+                        </td>
+                        <td style="width:13% !important" ng-click="sort('NAME')"
+                            ng-class="sortClass('NAME')">
+                            <a class="anchor_sorting" href="">
+                                Application Number
+                            </a>&nbsp;
+                        </td>
+                        <td style="width:13% !important" ng-click="sort('STATUS')"
+                            ng-class="sortClass('STATUS')">
+                            <a class="anchor_sorting" href="">
+                                Step Status
+                            </a>&nbsp;
+                        </td>
+                        <td style="width:13% !important" ng-click="sort('NAME')"
+                            ng-class="sortClass('NAME')">
+                            <a class="anchor_sorting" href="">
+                                Name
+                            </a>&nbsp;
+                        </td>
+                        @*<td style="width:13% !important" ng-click="sort('NAME')"
+                            ng-class="sortClass('NAME')">
+                            <a class="anchor_sorting" href="">
+                                Service
+                                Type
+                            </a>&nbsp;
+                        </td>
+                        <td style="width:13% !important" ng-click="sort('CREATED_DATE')"
+                            ng-class="sortClass('CREATED_DATE')">
+                            <a class="anchor_sorting" href="">
+                                Service Sub
+                                Type
+                            </a>&nbsp;
+                        </td>*@
+                        @*<td style="width:12% !important" ng-click="sort('CREATED_DATE')"
+                            ng-class="sortClass('CREATED_DATE')">
+                            <a class="anchor_sorting" href="">
+                                Immediate Attention
+                            </a>&nbsp;
+                        </td>*@
 
 
-                            <td style="width:10% !important" ng-click="sort('CREATED_DATE')"
-                                ng-class="sortClass('CREATED_DATE')">
-                                <a class="anchor_sorting" href="">
-                                    Created On
-                                </a>&nbsp;
-                            </td>
-                            <td style="width:10% !important">
-                                <a class="anchor_sorting" href="">
+                        <td style="width:10% !important" ng-click="sort('CREATED_DATE')"
+                            ng-class="sortClass('CREATED_DATE')">
+                            <a class="anchor_sorting" href="">
+                                Created On
+                            </a>&nbsp;
+                        </td>
+                        <td style="width:10% !important">
+                            <a class="anchor_sorting" href="">
 
-                                </a>&nbsp;
+                            </a>&nbsp;
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var app in (List<C8.eServices.Mvc.Models.Mapings.ApplicationFormDashboardView>)ViewBag.ApplicationStatusList)
+                    {
+                        <tr style="border-collapse:collapse;">
+                            <td style="width:5% !important">
+                                <a ng-click="OpenWayleaveApplicationForm(@app.id)"
+                                   style="cursor: pointer;"
+                                   class="ggb-a"><u>  @app.id</u></a>
+                            </td>
+                            <td style="width:15% !important">
+                                @app.applicationNumber
+                            </td>
+                            <td style="width:13% !important">
+                                @if (app.applicationStepStatus == "Rejected")
+                                {
+                                    <div style="color:red">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
+                                    </div>
+                                }
+                                @if (app.applicationStepStatus == "Pending")
+                                {
+                                    <div style="color:greenyellow">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:greenyellow"><u>  @app.applicationStepStatus</u></a>
+                                    </div>
+                                }
+                                @if (app.applicationStepStatus == "Request for approvals")
+                                {
+                                    <div style="color:blueviolet">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:blueviolet"><u>  @app.applicationStepStatus</u></a>
+                                    </div>
+                                }
+                                @if (app.applicationStepStatus == "Approved")
+                                {
+                                    <div style="color:green">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
+                                    </div>
+                                }
+                                @if (app.applicationStepStatus == "Completed")
+                                {
+                                    <div style="color:green">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
+                                    </div>
+                                }
+                                @if (app.applicationStepStatus == "Request for documents")
+                                {
+                                    <div style="color:peru">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:peru"><u>  @app.applicationStepStatus</u></a>
+                                    </div>
+                                }
+                            </td>
+                            <td style="width:13% !important">
+                                @app.full_name
+                            </td>
+                            @*<td style="width:12% !important">
+                                @if (app.wayleaveAttention == "Yes")
+                                {
+                                    <div style="color:red">
+                                        <span class="fa fa-flag" style="color:red;font-size: 14px !important;"></span>
+                                        @app.wayleaveAttention
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div style="color:blueviolet">
+                                        <span class="fa fa-flag" style="color:blueviolet;font-size: 14px !important;"></span>
+                                        @app.wayleaveAttention
+                                    </div>
+                                }
+                            </td>*@
+                            <td style="width:8% !important">
+                                @app.createdDate
+                            </td>
+                            <td style="width:13% !important">
+                                <button type="button" onclick=UpdatePreInspectiondata('@app.applicationNumber',@app.id) class="btn btn-sm btn-ggb-orange" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-secret"></i>&nbsp;Pre Inspection</button>
                             </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var app in (List<C8.eServices.Mvc.Models.Mapings.ApplicationFormDashboardView>)ViewBag.ApplicationStatusList)
-                        {
-                            <tr
-                                style="border-collapse:collapse;">
-                                <td style="width:5% !important">
-                                    <a ng-click="OpenWayleaveApplicationForm(@app.id)"
-                                       style="cursor: pointer;"
-                                       class="ggb-a"><u>  @app.id</u></a>
-                                </td>
-                                <td style="width:15% !important">
-                                    @app.applicationNumber
-                                </td>
-                                <td style="width:13% !important">
-                                    @if (app.applicationStepStatus == "Rejected")
-                                    {
-                                        <div style="color:red">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Pending")
-                                    {
-                                        <div style="color:greenyellow">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:greenyellow"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Request for approvals")
-                                    {
-                                        <div style="color:blueviolet">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:blueviolet"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Approved")
-                                    {
-                                        <div style="color:green">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Request for documents")
-                                    {
-                                        <div style="color:peru">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:peru"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                </td>
-                                <td style="width:13% !important">
-                                    @app.full_name
-                                </td>
-                                <td style="width:12% !important">
-                                    @if (app.wayleaveAttention == "Yes")
-                                    {
-                                        <div style="color:red">
-                                            <span class="fa fa-flag" style="color:red;font-size: 14px !important;"></span>
-                                            @app.wayleaveAttention
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div style="color:blueviolet">
-                                            <span class="fa fa-flag" style="color:blueviolet;font-size: 14px !important;"></span>
-                                            @app.wayleaveAttention
-                                        </div>
-                                    }
-                                </td>
-                                <td style="width:8% !important">
-                                    @app.createdDate
-                                </td>
-                                <td style="width:13% !important">
-                                    <button type="button" onclick="UpdateInspectiondata(@app)" class="btn btn-sm btn-ggb-orange" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-secret"></i>&nbsp;Pre Inspection</button>
-                                </td>
-                            </tr>
-                        }
+                    }
 
-                    </tbody>
-                    @*<tbody ng-hide="ShowAppStatusList">
+                </tbody>
+                @*<tbody ng-hide="ShowAppStatusList">
+                    <tr>
+                        <td colspan="7" class="text-center">
+                            <i class="fa fa-spinner fa-spin text-green" style="font-size:10pt;color:#006940!important"></i>
+                        </td>
+                    </tr>
+                </tbody>*@               
+                
+                
+            </table>
+        </div>
+        <div class="modal fade" id="PreInspectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title text-center" style="font-size:14pt!important">Pre-Inspection details</h3>
+                    </div>
+                    <div class="modal-body">
+                        <div style="text-align:center!important"><b style="color:#e83232" id="ErrorMsg"></b></div>
+                        <div style="height:180px!important;margin:20px 0px 10px 50px!important;overflow-x:hidden;overflow-y:auto">
+                            <table width="100%">
+                                <tbody>
+                                    <tr>
+                                        <td colspan="2" style="text-align:left!important">Application No: <b class="text-red" style="font-size:10pt!important" id="modalApplicationNo"></b></td>
+                                    </tr>
+                                </tbody>
+                                <tbody id="PreInspectionListData">
+                                </tbody>
+                                <tbody id="showPreInspectionList">
+                                    <tr>
+                                        <td colspan="2" style="text-align:center!important">
+                                            <i class="fa fa-spinner fa-spin text-green" style="font-size:12pt!important;color:#006940!important"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <table width="50%">
                             <tr>
-                                <td colspan="7" class="text-center">
-                                    <i class="fa fa-spinner fa-spin text-green" style="font-size:10pt;color:#006940!important"></i>
+                                <td colspan="2"></td>
+                                <td>
+                                    <label>Status</label>
+                                    <select class="form-control" name="PreInspectionStatus" id="PreInspectionStatus">
+                                        <option value="" selected>Select</option>
+                                        <option value="Accept">Accept</option>
+                                        <option value="Reject">Reject</option>
+                                    </select>
                                 </td>
+                                <td colspan="2"></td>
                             </tr>
-                        </tbody>*@
-                    <tbody ng-hide="ShowAppStatusList">
-                        <tr>
-                            <td colspan="7" class="text-center">
-                                <i class="fa fa-spinner fa-spin text-green" style="font-size:10pt;color:#006940!important"></i>
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
-
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-ggb-orange" onclick="$.fn.SavePreInspectionDetails('pre')"><i class="fa fa-spin fa-spinner" id="isLoading" style="display:none"></i>Submit</button>
+                        <button type="button" class="btn btn-ggb-orange" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 </div>
 

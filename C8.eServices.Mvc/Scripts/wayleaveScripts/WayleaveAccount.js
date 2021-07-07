@@ -3,18 +3,32 @@ var wayleaveAccount = new Object();
 var Customer_ContactPerson = [];
 var apiBaseUrl = localStorage.getItem('apiBaseUrl');
 var re = /^\w+([-+.'][^\s]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/; //Email validation regex
-$('#loadSpinner').hide();
+$('#isAppLoading').hide();
+$('#isAppUpdateLoading').hide();
 $('#accordionApprove').hide();
 $('#WlAccountComments').hide();
+$("#ShowUpdateButton").hide();
+
+//Show and hide collapse panel
+$.fn.showcollapse = function () {
+    $('.panel-collapse').on('show.bs.collapse', function () {
+        $(this).parent('.panel').find('.fa-minus').show();
+        $(this).parent('.panel').find('.fa-plus').hide();
+    })
+    $('.panel-collapse').on('hide.bs.collapse', function () {
+        $(this).parent('.panel').find('.fa-minus').hide();
+        $(this).parent('.panel').find('.fa-plus').show();
+    });
+};
 
 //Email validation
-$.fn.validateEmail = function () {
-    var emailFormat1 = re.test($("#ContactEmail").val()); // This return result in Boolean type
+$.fn.validateEmail = function (id) {
+    var emailFormat1 = re.test($("#"+id).val()); // This return result in Boolean type
     if (!emailFormat1) {
-        $("#ContactEmail").css('color', 'red');
+        $("#"+id).css('color', 'red');
     }
     else {
-        $("#ContactEmail").css('color', 'black');
+        $("#"+id).css('color', 'black');
     }
 };
 //alert(localStorage.getItem('apiBaseUrl'));
@@ -153,7 +167,7 @@ $.fn.removeContactPerson = function () {
 
 //View Uploaded files
 $.fn.OpenFileNewTab = function (flag) {
-    alert();
+    
     var file = "";
 
     switch (flag) {
@@ -173,8 +187,8 @@ $.fn.OpenFileNewTab = function (flag) {
 }
 
 //Save Wayleave Account Details
-$.fn.SaveWlAccountForm = function () {
-    //$('#loadSpinner').show();
+$.fn.SaveWlAccountForm = function () {     
+    $('#isAppLoading').show();
     var Customer_ContactPersonSingle = [];
     var formData = new FormData();
     var files = $('#tradeLicensefile').get(0).files;
@@ -194,68 +208,107 @@ $.fn.SaveWlAccountForm = function () {
         formData.append("taxCertificatefile", files2[i]);
     }
 
-    if (Customer_ContactPerson.length === 0) {
-        var fn = $("#ContactFirstName").val();
-        var ln = $("#ContactLastName").val();
-        var ce = $("#ContactEmail").val();
-        var cn = $("#ContactNumber").val();
-        var cd = $("#ContactDesignation").val();
-        if (fn && ln && ce && cn && cd) {
-            //if ($scope.isInnerFormValid) {
-            var person = {};
-            person.firstName = fn;
-            person.lastName = ln;
-            person.email = ce;
-            person.contactNumber = cn;
-            person.designation = cd;
-            Customer_ContactPersonSingle.push(person);
-            formData.append("ContactData", JSON.stringify(Customer_ContactPersonSingle));
+    var formValid = $.fn.CheckFormValidations();
+    if (formValid) {
+        $('#isAppLoading').show();
+        var emailFormat = re.test($("#email").val()); // This return result in Boolean type
+        if (!emailFormat) {
+            //$("#ContactEmail").css('color', 'red');
+            toastr.warning('Invalid email address!', "Warning", {
+                "timeOut": "0",
+                "extendedTImeout": "0",
+                "closeButton": true
+            });
+            return;
         }
-    }
-    else {
-        formData.append("ContactData", JSON.stringify(Customer_ContactPerson));
-    }
+        if (Customer_ContactPerson.length === 0) {
+            var fn = $("#ContactFirstName").val();
+            var ln = $("#ContactLastName").val();
+            var ce = $("#ContactEmail").val();
+            var cn = $("#ContactNumber").val();
+            var cd = $("#ContactDesignation").val();
+            if (fn && ln && ce && cn && cd) {
+                //if ($scope.isInnerFormValid) {
+                var person = {};
+                person.firstName = fn;
+                person.lastName = ln;
+                person.email = ce;
+                person.contactNumber = cn;
+                person.designation = cd;
+                Customer_ContactPersonSingle.push(person);
+                formData.append("ContactData", JSON.stringify(Customer_ContactPersonSingle));
+            }
+        }
+        else {
+            formData.append("ContactData", JSON.stringify(Customer_ContactPerson));
+        }
 
-    $.ajax({
-        url: apiBaseUrl + 'add-wl-accounts',
-        type: 'POST',
-        processData: false,
-        contentType: false,
-        cache: false,
-        enctype: 'multipart/form-data',
-        dataType: 'json',
-        data: formData,
-        success: function (data, textStatus, xhr) {
-            console.log("======Result=========");
-            console.log(data);
-            //console.log(data.accountUserName);
-            $('#loadSpinner').hide();
-            toastr.success(`Wayleave account created successfully!
+        if (Customer_ContactPerson.length == 0) {
+
+        }
+
+        $.ajax({
+            url: apiBaseUrl + 'add-wl-accounts',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            cache: false,
+            enctype: 'multipart/form-data',
+            dataType: 'json',
+            data: formData,
+            success: function (data, textStatus, xhr) {
+                console.log("======Result=========");
+                console.log(data);
+                //console.log(data.accountUserName);
+                $('#isAppLoading').hide();
+                if (data.emailExists) {
+                    toastr.error('Contact person email already exist!');
+                }
+                else if (data) {
+                    toastr.success(`Wayleave account created successfully!
 <br /><div>Please write down below account number for future reference<br />Account Number : <b style='color:#00337f'>`+ data.accountNumber + `</b><br />
 User Name : <b style='color:#00337f'>`+ data.accountUserName + `</b><br />
 Password : <b style='color:#00337f'>`+ data.accountPassword + `</b>
 </div>
 `, "Success", {
-                "timeOut": "0",
-                "extendedTImeout": "0",
-                "closeButton": true,
-            });
-
-            setTimeout(function () {
-                window.location.href = "../Home/WayleaveLogin";
-            }, 10000);
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            //console.log('Error in Operation');
-            toastr.error('Error in Operation');
-        }
-    });
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                    setTimeout(function () {
+                        window.location.href = "../Home/WayleaveLogin";
+                    }, 25000);
+                }
+                else {
+                    toastr.error('Error in Operation');
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                //console.log('Error in Operation');
+                toastr.error('Error in Operation');
+            }
+        });
+    }
+    else {
+        $('#isAppLoading').hide();
+        toastr.warning('* Fields are required!');
+    }
 };
 
+$.fn.ShowUpdateButtons = function () {
+    //alert();
+    $("#ShowUpdateButton").show();
+    $("#IsWayleaveAccountResubmit").show();
+}
+
+
 //Load Wayleave Account Details
-$.fn.LoadWayleaveAccountDetails = function (accountNumber) {
+$.fn.LoadWayleaveAccountDetails = function (accountNumber,status) {
     //alert(accountNumber);
     Customer_ContactPerson = [];
+    if (status != null && status != "") {
+        $("#ShowUpdateButton").show();
+    }
     $.ajax({
         url: apiBaseUrl + 'get-WLAccount-by-account-number/' + accountNumber,
         type: 'GET',
@@ -269,7 +322,8 @@ $.fn.LoadWayleaveAccountDetails = function (accountNumber) {
             console.log("======Account Data Result=========");
             console.log(data);
             var alternateContactdata = data.accountContactModelDto;
-
+            wayleaveAccount.statusId = data.statusId;
+            wayleaveAccount.account_id = data.account_id;
             $('#IsWayleaveAccountSubmit').hide();
             $('#accordionApprove').show();
             $('#userType').val(data.userType);
@@ -371,5 +425,143 @@ $.fn.GetFormdataValues = function () {
     wayleaveAccount.country = $('#country').val();
     wayleaveAccount.postCode = $('#postCode').val();
 };
+
+$.fn.CheckFormValidations = function () {
+    var isFormValid = false;
+    var ut=$('#userType').val();
+    var cn=$('#companyName').val();
+    var cf=$('#companyFullName').val();
+    //$('#companyRegistrationNumber').val();
+    //$('#tradeLicenseExpirationDate').val();
+    var cpf=$('#contactPersonFirstName').val();
+    var cpl=$('#contactPersonLastName').val();
+    var des=$('#designation').val();
+    //$('#telephoneNumber').val();
+    var mb=$('#mobileNumber').val();
+    var em=$('#email').val();
+    //$('#fax').val();
+    var sn=$('#streetName').val();
+    var ct=$('#city').val();
+    var pv=$('#province').val();
+    var cn=$('#country').val();
+    var pc = $('#postCode').val();
+    if (ut != undefined && ut != "" && cn != undefined && cn != "" && cf != undefined && cf != "" && cpf != undefined && cpf != ""
+        && cpl != undefined && cpl != "" && des != undefined && des != "" && mb != undefined && mb != "" && em != undefined && em != ""
+        && sn != undefined && sn != "" && ct != undefined && ct != "" && pv != undefined && pv != "" && cn != undefined && cn != "" && pc != undefined && pc != "") {
+        isFormValid = true;
+        return isFormValid;
+    }
+    else {        
+        isFormValid = false;
+        return isFormValid;
+    }
+}
+
+/*..............Update Application form details..................*/
+
+$.fn.UpdateWlAccountForm = function () {
+    $('#isAppUpdateLoading').show();
+    var Customer_ContactPersonSingle = [];
+    var formData = new FormData();
+    var files = $('#tradeLicensefile').get(0).files;
+    var files1 = $('#regCertificatefile').get(0).files;
+    var files2 = $('#taxCertificatefile').get(0).files;
+    $.fn.GetFormdataValues();
+
+    formData.append("AccountData", JSON.stringify(wayleaveAccount));
+
+    for (var i = 0; i < files.length; i++) {
+        formData.append("tradeLicensefile", files[i]);
+    }
+    for (var i = 0; i < files1.length; i++) {
+        formData.append("regCertificatefile", files1[i]);
+    }
+    for (var i = 0; i < files2.length; i++) {
+        formData.append("taxCertificatefile", files2[i]);
+    }
+
+    var formValid = $.fn.CheckFormValidations();
+    if (formValid) {
+        $('#isAppLoading').show();
+        var emailFormat = re.test($("#email").val()); // This return result in Boolean type
+        if (!emailFormat) {
+            //$("#ContactEmail").css('color', 'red');
+            toastr.warning('Invalid email address!', "Warning", {
+                "timeOut": "0",
+                "extendedTImeout": "0",
+                "closeButton": true
+            });
+            return;
+        }
+        if (Customer_ContactPerson.length === 0) {
+            var fn = $("#ContactFirstName").val();
+            var ln = $("#ContactLastName").val();
+            var ce = $("#ContactEmail").val();
+            var cn = $("#ContactNumber").val();
+            var cd = $("#ContactDesignation").val();
+            if (fn && ln && ce && cn && cd) {
+                //if ($scope.isInnerFormValid) {
+                var person = {};
+                person.firstName = fn;
+                person.lastName = ln;
+                person.email = ce;
+                person.contactNumber = cn;
+                person.designation = cd;
+                Customer_ContactPersonSingle.push(person);
+                formData.append("ContactData", JSON.stringify(Customer_ContactPersonSingle));
+            }
+        }
+        else {
+            formData.append("ContactData", JSON.stringify(Customer_ContactPerson));
+        }         
+
+        $.ajax({
+            url: apiBaseUrl + 'update-wl-accounts-form',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            cache: false,
+            enctype: 'multipart/form-data',
+            dataType: 'json',
+            data: formData,
+            success: function (data, textStatus, xhr) {
+                console.log("======Result=========");
+                console.log(data);
+                //console.log(data.accountUserName);
+                $('#isAppUpdateLoading').hide();
+                if (data.success) {
+                    // Display a success toast, with a title
+                    toastr.success(`Wayleave account updated successfully!`, "Success", {
+                        "timeOut": "0",
+                        "extendedTImeout": "0",
+                        "closeButton": true,
+                    });                    
+                } else if (data.exception) {
+                    // Display an error toast, with a title
+                    toastr.error(data.exception);
+                } else if (data.emailExists) {
+
+                    // Display an error toast, with a title
+                    toastr.warning('Contact person email alredy has been taken, please choose another one.', "Error", {
+                        "timeOut": "0",
+                        "extendedTImeout": "0",
+                        "closeButton": true
+                    });
+                }
+                else {
+                    toastr.error('Error in Operation');
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                //console.log('Error in Operation');
+                toastr.error('Error in Operation');
+            }
+        });
+    }
+    else {
+        $('#isAppUpdateLoading').hide();
+        toastr.warning('* Fields are required!');
+    }
+}
 
 

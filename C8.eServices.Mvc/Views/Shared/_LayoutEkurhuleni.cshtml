@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Configuration
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -15,7 +16,6 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
-    <script src="~/Scripts/angular.min.js"></script>
     <!-- jquery 1.10.2 -->
     @*<script src="~/Content/wayleaveStyles/assets/Scripts/jquery-1.10.2.js"></script>*@
     <!-- Bootstrap 3.3.6 -->
@@ -56,24 +56,30 @@
     <link href="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/style.css" rel="stylesheet" />
 
     <!-- JavaScript -->
-    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    @*<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>*@
 
     <!-- CSS -->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+    @*<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />*@
     <!-- Default theme -->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />
+    @*<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />*@
     <!-- Semantic UI theme -->
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />
+    @*<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />*@
     <!-- Load calender ui js and css -->
     @*<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>*@
+    <script src="~/Scripts/wayleaveScripts/jquery-ui.js"></script>
     <script src="~/Scripts/wayleaveScripts/Jquery-ui-migrate.js"></script>
-    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    @*<script src="https://momentjs.com/downloads/moment.min.js"></script>*@
+    <script src="~/Scripts/wayleaveScripts/moment.min.js"></script>
     <!-- <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" /> -->
+    <link href="~/Content/wayleaveStyles/assets/Content/jquery-ui.css" rel="stylesheet" />
     <!-- Load toastr css -->
     @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" />*@
 
     <script type="text/javascript" language="javascript">
         $(document).ready(function () {
+            localStorage.clear();
+            localStorage.setItem("apiBaseUrl", "@ConfigurationManager.AppSettings["Api_Url"].ToString()");
+            localStorage.setItem("BaseUrl", "@ConfigurationManager.AppSettings["Base_Url"].ToString()");
             if (localStorage.expandedMenu == 0) {
                 $("body").addClass('sidebar-collapse');
             }
@@ -90,6 +96,50 @@
                 scrollTop: 0,
             }, scroll_top_duration
             );
+
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+            $('.numbersOnly').bind('keyup blur', function () {
+                var node = $(this);
+                node.val(node.val().replace(/[^0-9]/g, ''));
+            });
+            $('.stringOnly').bind('keyup blur', function () {
+                var node = $(this);
+                node.val(node.val().replace(/[^a-zA-Z]/g, ''));
+            });
+            $('.allowDecimalNumbers').bind('keyup blur', function () {
+                var $input = $(this);
+                var value = $input.val();
+                value = value.replace(/[^0-9\.]/g, '')
+                var findsDot = new RegExp(/\./g)
+                var containsDot = value.match(findsDot)
+                if (containsDot != null && ([46, 110, 190].indexOf(event.which) > -1)) {
+                    event.preventDefault();
+                    return false;
+                }
+                $input.val(value);
+                if (event.shiftKey && ([48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64].indexOf(event.which) > -1)) {
+                    event.preventDefault();
+                }
+                if (event.which == 64 || event.which == 16) {
+                    // numbers
+                    return false;
+                } if ([8, 13, 27, 37, 38, 39, 40, 110].indexOf(event.which) > -1) {
+                    // backspace, enter, escape, arrows
+                    return true;
+                } else if (event.which >= 48 && event.which <= 57) {
+                    // numbers
+                    return true;
+                } else if (event.which >= 96 && event.which <= 105) {
+                    // numpad number
+                    return true;
+                } else if ([46, 110, 190].indexOf(event.which) > -1) {
+                    // dot and numpad dot
+                    return true;
+                } else {
+                    event.preventDefault();
+                    return false;
+                }
+            });
         });
     </script>
 
@@ -182,7 +232,8 @@
         });
     </script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>*@
+    <script src="~/Scripts/wayleaveScripts/toastr.min.js"></script>
     <link href="~/Content/wayleaveStyles/Content/toastr.css" rel="stylesheet" />
     <style>
         .bg-green-custom {
@@ -204,10 +255,29 @@
         .btn-green-custom {
             background-color: #1E8449 !important
         }
+
+        .input-group-addon {
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1;
+            color: #fff !important;
+            text-align: center;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        bradius {
+            border-top-right-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+        }
     </style>
+    @*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">*@
 </head>
 
 <body id="pagewrap" class="hold-transition skin-green" style="background-color:#ccc!important">
+    <script src="~/Scripts/wayleaveScripts/Ekurhuleni.js"></script>
     <div class="wrapper">
         <!--header content-->
         <header class="main-header">
@@ -226,15 +296,6 @@
                     </a>*@
                 <div class="navbar-custom-menu">
                     <ul class="nav navbar-nav">
-                        <!-- <li class="right-pane" *ngIf="isLoggedIn">
-                            <a style="padding: 0;">
-                                <input type="button" value="Manager Dashboard" class="btn btn-ggb-orange btn-header"></a>
-                        </li>
-                         <li class="right-pane" *ngIf="isLoggedIn">
-                            <a style="padding: 0;">
-                                <input type="button" value="Employee Self Service" class="btn btn-ggb-orange btn-header"></a>
-                        </li> -->
-
                         <li class="dropdown user user-menu right-pane">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border:0px solid red;height:50px">
                                 @*<img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" class="user-image" alt="User Image" />*@
@@ -252,7 +313,7 @@
                                         <div style="color:#000;font-weight:100">
                                             @if (Session["ekurhuleniData"] != null)
                                             {
-                                                <b>@Session["ekurhuleniUserName"]</b>
+                                                <p>@Session["ekurhuleniUserName"]</p>
                                             }
                                         </div>
 
@@ -263,15 +324,15 @@
                                     <div class="pull-left">
                                     </div>
                                     <div class="pull-right">
-                                        <a href="../Home/EkurhuleniLogout" class="btn btn-warning" style="color:#fff">
+                                        <a href="../Home/EkurhuleniLogout" onclick="$.fn.Logout()" class="btn btn-warning" style="color:#fff">
                                             Sign out
                                         </a>
                                     </div>
                                 </li>
                             </ul>
-                        </li>                        
+                        </li>
                     </ul>
-                </div>                
+                </div>
             </nav>
         </header>
 
@@ -290,10 +351,10 @@
                 </a>
                 <div class="user-panel text-center">
                     <div style="font-size:11pt!important;margin-bottom:5px!important">Hello</div>
-                    <div style="font-size:14pt!important;border:0px solid red;margin-top:-10px!important">
+                    <div style="font-size:12pt!important;border:0px solid red;margin-top:-10px!important">
                         @if (Session["ekurhuleniData"] != null)
                         {
-                          <b>@Session["ekurhuleniUserName"]</b>
+                            <p>@Session["ekurhuleniUserName"]</p>
                         }
 
                         <hr style="width:95%!important;border:0.5px solid #8b8b8b!important;margin-top:5px!important" />
@@ -303,114 +364,15 @@
                     <div class="small-box">
                         <div class="col-md-12" style="padding: 0;margin-bottom:10px!important;">
                             <p style="text-align: center;margin: 0;font-size: 25px;color:#5f5f5f!important">Alerts</p>
-                            <div ng-show="ShowAlerts">
-                                <div ng-repeat="alert in LeftAccountsMenuAlerts" class="col-md-6" style="padding: 8px;padding-left: 3px;padding-right: 0px;padding-bottom: 4px;padding-top: 0px;">
-                                    <a href="../wl/WayleaveAccountDashboard">
-                                        <div class="small-box  {{alert.name==='Rejected'?'bg-red':(alert.name==='Approved'?'bg-green':'bg-yellow')}} " style="margin: 0;padding: 8px;">
-                                            <div class="inner" style="text-align: center;">
-                                                <p style="font-size: 20px;margin: 0;">{{alert.count}}</p>
-
-                                                <p style="margin: 0;font-size: 11px;">{{alert.name}}</p>
-                                            </div>
-                                            <div class="icon">
-
-                                            </div>
-
-                                        </div>
-                                    </a>
+                            <div id="ShowAlerts">
+                                <div id="LeftAccountsMenuAlerts">
                                 </div>
-
-                                <div ng-repeat="alert in LeftMenuAlerts" class="col-md-6" style="padding: 8px;padding-left: 3px;padding-right: 0px;padding-bottom: 4px;padding-top: 0px;">
-                                    <a href="#">
-                                        <div class="small-box  {{alert.name==='Cancelled'?'bg-red':(alert.name==='Completed'?'bg-green':'bg-yellow')}} " style="margin: 0;padding: 8px;">
-                                            <div class="inner" style="text-align: center;">
-                                                <p style="font-size: 20px;margin: 0;">{{alert.count}}</p>
-
-                                                <p style="margin: 0;font-size: 11px;">{{alert.name}}</p>
-                                            </div>
-                                            <div class="icon">
-
-                                            </div>
-
-                                        </div>
-                                    </a>
+                                <div id="LeftMenuAlerts">
                                 </div>
                             </div>
                             <div class="text-center" ng-hide="ShowAlerts">
                                 <i class="fa fa-spinner fa-spin text-green" style="font-size:10pt;color:#006940!important"></i>
                             </div>
-                            @*<div class="col-md-6" style="padding: 8px;padding-right: 4px;padding-bottom: 4px;padding-top: 0px;">
-                                    <a href="#" routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                                        <div class="small-box bg-yellow" style="margin: 0;padding: 8px;">
-                                            <div class="inner" style="text-align: center;">
-                                                <p style="font-size: 20px;margin: 0;">
-                                                    <i class="fa fa-spinner fa-spin" style="font-size:10pt" ng-if="LeftMenuAlerts.length==0"></i>
-                                                    {{LeftMenuAlerts[0].count}}
-                                                </p>
-
-                                                <p style="margin: 0;font-size: 10px;">Pending</p>
-                                            </div>
-                                            <div class="icon">
-
-                                            </div>
-
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-6" style="padding: 8px;padding-left: 4px;padding-bottom: 4px;padding-top: 0;">
-                                    <a href="~/Content/wayleaveStyles/assets/Dashboard/IndexNew">
-                                        <div class="small-box bg-yellow" style="margin: 0;padding: 8px;">
-                                            <div class="inner" style="text-align: center;">
-                                                <p style="font-size: 20px;margin: 0;">
-                                                    <i class="fa fa-spinner fa-spin" style="font-size:10pt" ng-if="LeftMenuAlerts.length==0"></i>
-                                                    {{LeftMenuAlerts[1].count}}
-                                                </p>
-
-                                                <p style="margin: 0;font-size: 10px;">InProgress</p>
-                                            </div>
-                                            <div class="icon">
-
-                                            </div>
-
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-6" style="padding: 8px;padding-right: 4px;padding-top: 4px;">
-                                    <a href="~/Content/wayleaveStyles/assets/Dashboard/IndexNew">
-                                        <div class="small-box bg-yellow" style="margin: 0;padding: 8px;">
-                                            <div class="inner" style="text-align: center;">
-                                                <p style="font-size: 20px;margin: 0;">
-                                                    <i class="fa fa-spinner fa-spin" style="font-size:10pt" ng-if="LeftMenuAlerts.length==0"></i>
-                                                    {{LeftMenuAlerts[2].count}}
-                                                </p>
-
-                                                <p style="margin: 0;font-size: 10px;">Completed</p>
-                                            </div>
-                                            <div class="icon">
-
-                                            </div>
-
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-md-6" style="padding: 8px;padding-left: 4px;padding-top: 4px;">
-                                    <a href="~/Content/wayleaveStyles/assets/Dashboard/IndexNew">
-                                        <div class="small-box" style="margin: 0;padding: 8px;background-color:#cc0c00">
-                                            <div class="inner" style="text-align: center;">
-                                                <p style="font-size: 20px;margin: 0;">
-                                                    <i class="fa fa-spinner fa-spin" style="font-size:10pt" ng-if="LeftMenuAlerts.length==0"></i>
-                                                    {{LeftMenuAlerts[3].count}}
-                                                </p>
-
-                                                <p style="margin: 0;font-size: 10px;">Cancelled</p>
-                                            </div>
-                                            <div class="icon">
-
-                                            </div>
-
-                                        </div>
-                                    </a>
-                                </div>*@
                         </div>
                     </div>
                     <div class="text-center" style="border:0px solid red;margin-top:20px!important">
@@ -444,10 +406,10 @@
                                     </li>
                                     <li class="right-pane-inv">
                                         <a class="right-pane-inv" href="../WL/ApplicationStatusList">
-                                            <i class="menu-icon fa fa-file bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
+                                            <i class="menu-icon fa fa-print bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
 
                                             <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
-                                                <h3 class="control-sidebar-subheading">Application Status</h3>
+                                                <h3 class="control-sidebar-subheading">Print Certificate</h3>
                                             </div>
                                         </a>
                                     </li>
@@ -504,9 +466,6 @@
                             </li>
                         }
                     }
-
-
-
                 </ul>
             </section>
             <!-- /.sidebar -->

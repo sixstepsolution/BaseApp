@@ -16,9 +16,9 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string wayleaveAttention { get; set; }
         public string createdDate { get; set; }
         public int statusId { get; set; }       
-        public string full_name { get; set; }       
-        public string serviceTypeName { get; set; }       
-        public string serviceSubTypeName { get; set; }       
+        public string full_name { get; set; }
+        public string serviceTypeName { get; set; }
+        public string serviceSubTypeName { get; set; }
         public string applicationStatus { get; set; }       
         public string applicationStepStatus { get; set; }
         public string inspectionStatus { get; set; }

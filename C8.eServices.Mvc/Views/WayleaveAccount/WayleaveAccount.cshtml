@@ -130,28 +130,31 @@
         border-color: red !important;
         color: red !important;
     }
+    .panel-default > .panel-heading {
+        position: relative;
+    }
+
+    /*.panel-heading .fa {
+        position: absolute;
+        right: 10px;
+        top: 13px;
+    }*/
 </style>
 
 <script type="text/javascript" language="javascript">
     $(document).ready(function () {
         var sessionInfo = '@Session["wayleaveAccountNumber"]';
+        var updateAccount = '@ViewBag.UpdateProfile';
         //alert(sessionInfo);
         if (sessionInfo != undefined && sessionInfo != "") {
-            $.fn.LoadWayleaveAccountDetails(sessionInfo);
-        }
-        else {
-            //window.location.href = "../Home/WayleaveLogin";
-        }
+            $.fn.LoadWayleaveAccountDetails(sessionInfo, updateAccount);
+            $.fn.LoadApplicationsAlertsWithCounts('o');
+        }  
+        if (updateAccount != undefined && updateAccount != "") {
+            //alert(updateAccount);
+            $.fn.ShowUpdateButtons();
+        } 
     });
-
-    //$('.panel-collapse').on('show.bs.collapse', function () {
-    //    $(this).parent('.panel').find('.fa-minus').show();
-    //    $(this).parent('.panel').find('.fa-plus').hide();
-    //})
-    //$('.panel-collapse').on('hide.bs.collapse', function () {
-    //    $(this).parent('.panel').find('.fa-minus').hide();
-    //    $(this).parent('.panel').find('.fa-plus').show();
-    //});
 </script>
 <script src="~/Scripts/wayleaveScripts/WayleaveAccount.js"></script>
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important">
@@ -177,11 +180,11 @@
                                    style="margin-top: 10px !important;margin-left: 28px !important;background-color:#d2930b!important">
                             <label for="Qs_PersonMandatory" class="radio-custom-label"
                                    style="margin-top: 10px;padding: 6px;">New Account</label>&nbsp;&nbsp;
-                            <input id="Qs_PersonMandatory1" class="radio-custom" onclick="$.fn.showAccountScreen('Renewal')"
+                            @*<input id="Qs_PersonMandatory1" class="radio-custom" onclick="$.fn.showAccountScreen('Renewal')"
                                    name="Qs_PersonMandatory" type="radio"
                                    style="margin-top: 10px !important">
                             <label for="Qs_PersonMandatory1" class="radio-custom-label"
-                                   style="margin-top:10px;padding: 6px;">Renewal of Account</label>
+                                   style="margin-top:10px;padding: 6px;">Renewal of Account</label>*@
                         </div>
 
                         <div>
@@ -227,14 +230,14 @@
                             <div class="panel panel-default" style="border:none!important;overflow:hidden">
                                 <div class="panel-heading" style="background:#d2930b">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordionSerach" href="#collapse_search_1">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#accordionSerach" href="#collapse_search_2">
                                             <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
                                             <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
                                             Company Information
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapse_search_1" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+                                <div id="collapse_search_2" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
                                     <div class="panel-body" style="padding: 10px;">
                                         <table width="100%">
                                             <tr>
@@ -293,9 +296,9 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#d2930b">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#consultantInfo" href="#collapse_consultantInfo">
-                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#consultantInfo" href="#collapse_consultantInfo">
+                                            <i class="fa fa-plus" style="display: none;font-size: 12px; top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px; top: 0;"></i>
                                             Contact Person Information
                                         </a>
                                     </h4>
@@ -332,20 +335,20 @@
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Telephone Number</label>
                                                         <input type="text" style="border-radius: 4px" maxlength="10" min="10" max="10" numbers-only id="telephoneNumber"
-                                                               class="form-control" name="TelephoneNumber" />
+                                                               class="form-control numbersOnly" name="TelephoneNumber" />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Mobile Number</label>
                                                         <input type="text" style="border-radius: 4px" id="mobileNumber"
-                                                               class="form-control" name="MobileNumber" numbers-only maxlength="10" min="10" max="10" required />
+                                                               class="form-control numbersOnly" name="MobileNumber" maxlength="10" min="10" max="10" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Email</label>
-                                                        <input type="text" style="border-radius: 4px" @*ng-pattern="emailFormat"*@ id="email"
+                                                        <input type="text" style="border-radius: 4px" onkeyup="$.fn.validateEmail('email')" @*ng-pattern="emailFormat"*@ id="email"
                                                                class="form-control" name="Email" required />
                                                     </div>
                                                 </td>
@@ -354,8 +357,8 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Fax No</label>
-                                                        <input type="text" style="border-radius: 4px" numbers-only id="fax"
-                                                               class="form-control" name="Fax" />
+                                                        <input type="text" style="border-radius: 4px" id="fax"
+                                                               class="form-control numbersOnly" name="Fax" />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -368,14 +371,14 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#d2930b">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#WayleaveTypeInfo" href="#collapse_WayleaveTypeInfo">
-                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#WayleaveTypeInfo" href="#collapse_WayleaveTypeInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="display: none; font-size: 12px; top: 0;"></i>
                                             Address Information
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapse_WayleaveTypeInfo" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+                                <div id="collapse_WayleaveTypeInfo" class="panel-collapse collapse" style="border: 1px solid #b59b5a;">
                                     <div class="panel-body" style="padding: 10px;">
                                         <table width="100%">
                                             <tr>
@@ -412,8 +415,8 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Post Code</label>
-                                                        <input type="text" style="border-radius: 4px" numbers-only id="postCode"
-                                                               class="form-control" name="PostCode" required />
+                                                        <input type="text" style="border-radius: 4px" id="postCode" maxlength="4"
+                                                               class="form-control numbersOnly" name="PostCode" required />
                                                     </div>
                                                 </td>
                                             </tr>
@@ -427,14 +430,14 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#d2930b">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#ContactPersonInfo" href="#collapse_ContactPersonInfo">
-                                            <i class="fa fa-plus" style="display: none; font-size: 12px; top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ContactPersonInfo" href="#collapse_ContactPersonInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px; top: 0;"></i>
+                                            <i class="fa fa-minus" style="display: none; font-size: 12px; top: 0;"></i>
                                             Alternative Contact Information
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapse_ContactPersonInfo" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;font-size: 10px !important">
+                                <div id="collapse_ContactPersonInfo" class="panel-collapse collapse" style="border: 1px solid #b59b5a;font-size: 10px !important">
                                     <div class="panel-body" style="padding: 0px;">
 
                                         @*<ng-form name="innerForm" >*@
@@ -468,16 +471,17 @@
                                                     </td>
 
                                                     <td>
-                                                        <input type="text" class="form-control" numbers-only maxlength="10" min="10" max="10" name="ContactNumber"
+                                                        <input type="text" class="form-control numbersOnly" maxlength="10" min="10" max="10" name="ContactNumber"
                                                                id="ContactNumber" />
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" onkeyup="$.fn.validateEmail()" name="ContactEmail"
+                                                        <input type="text" class="form-control" onkeyup="$.fn.validateEmail('ContactEmail')" name="ContactEmail"
                                                                id="ContactEmail" />
                                                     </td>
                                                     <td>
                                                         <input type="text" class="form-control" id="ContactDesignation" name="ContactDESIGNATION" />
                                                     </td>
+                                                    <td colspan="2"></td>
                                                     @*<td><input type="button" class="btn btn-success" value="Add" ng-click="AddContactPerson(conatctModel)" /></td>*@
                                                 </tr>
                                             </tfoot>
@@ -488,18 +492,18 @@
                             </div>
                         </div>
 
-                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important" id="accordionSupportDocs">
+                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;" id="accordionSupportDocs">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#d2930b">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordionSupportDocs" href="#collapse_supporting_docs">
-                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#accordionSupportDocs" href="#collapse_supporting_docs">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="display: none; font-size: 12px; top: 0;"></i>
                                             Supporting Documents
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapse_supporting_docs" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+                                <div id="collapse_supporting_docs" class="panel-collapse collapse" style="border: 1px solid #b59b5a;">
                                     <div class="panel-body" style="padding: 10px;">
                                         <table width="100%">
 
@@ -554,7 +558,7 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#d2930b">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordionSupportDocs" href="#collapse_accordionApprove">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#accordionSupportDocs" href="#collapse_accordionApprove">
                                             <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
                                             <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
                                             Approve/Reject
@@ -579,24 +583,24 @@
                             <tr>
                                 <td colspan="4" class="text-center" id="IsWayleaveAccountSubmit">
                                     <button class="btn btn-success" type="button" @*ng-disabled="IsSubmit"*@ onclick="$.fn.SaveWlAccountForm()" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
-                                        <i class="fa fa-spinner fa-spin custom-hide" id="loadSpinner"></i>
+                                        @*<i class="fa fa-spinner fa-spin" id="loadSpinner" style="display:none!important"></i>*@
+                                        <i id="isAppLoading" class="fa fa-spinner fa-spin" style="display:none!important"></i>
                                         Submit
                                     </button>
                                     <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="4" class="text-center custom-hide" id="IsWayleaveAccountResubmit">
-                                    <button class="btn btn-success" onclick="UpdateWlAccountForm(WlAccountModel)" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
-                                        <i class="fa fa-spinner fa-spin"></i>
-                                        Re-submit
+                            <tr id="ShowUpdateButton" style="display:none!important">
+                                <td colspan="4" class="text-center" id="IsWayleaveAccountResubmit">
+                                    <button type="button" class="btn btn-success" onclick="$.fn.UpdateWlAccountForm()" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
+                                        <i id="isAppUpdateLoading" style="display:none!important" class="fa fa-spinner fa-spin"></i>
+                                        Update
                                     </button>
                                     <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
                                 </td>
                             </tr>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>

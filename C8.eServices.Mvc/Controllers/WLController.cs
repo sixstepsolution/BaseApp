@@ -15,12 +15,13 @@ using System.Net.Http;
 using System.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using C8.eServices.Mvc.Helpers;
 
 namespace C8.eServices.Mvc.Controllers
 {
     public class WLController : Controller
     {
-        private WayleaveDbContext db = new WayleaveDbContext();        
+        private WayleaveDbContext db = new WayleaveDbContext();
         // GET: WL
         public ActionResult Index()
         {
@@ -32,7 +33,8 @@ namespace C8.eServices.Mvc.Controllers
             }
 
             IEnumerable<ApplicationInputModel> members = null;
-
+            ViewBag.ApplicationData = members;
+            ViewBag.ApplicationDataCount = 0;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
@@ -46,7 +48,7 @@ namespace C8.eServices.Mvc.Controllers
                 //GetAsync to send a GET request   
                 // PutAsync to send a PUT request  
                 ///var result = client.PostAsync("", byteContent).Result
-                var responseTask = client.PostAsync("api/get-applications-with-counts", byteContent);
+                var responseTask = client.PostAsync("get-applications-with-counts", byteContent);
                 responseTask.Wait();
 
                 //To store result of web api response.   
@@ -60,10 +62,12 @@ namespace C8.eServices.Mvc.Controllers
 
                     members = readTask.Result;
                     ViewBag.ApplicationData = members;
+                    ViewBag.ApplicationDataCount = members.Count();
                 }
                 else
                 {
-                    //Error response received   
+                    //Error response received 
+                    ViewBag.ApplicationDataCount = 0;
                     members = Enumerable.Empty<ApplicationInputModel>();
                     ModelState.AddModelError(string.Empty, "Server error try after some time.");
                 }
@@ -84,7 +88,7 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
 
-        public ActionResult WayleaveAccount()
+        public ActionResult ApplicationFormNew(string id=null)
         {
             if (Session["ekurhuleniData"] == null)
             {
@@ -92,9 +96,40 @@ namespace C8.eServices.Mvc.Controllers
                 return Redirect("../home/index");
 
             }
+            
+            if (id != null)
+            {
+                id = id.Replace(" ", "+");
+                ViewBag.ApplicationId = new AesCrypto().Decrypt(id);
+            }
+            else
+            {
+                ViewBag.ApplicationId = null;
+            }
+
             return View();
         }
 
+        public ActionResult WayleaveAccount(string id=null)
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            if (id != null)
+            {
+                id = id.Replace(" ", "+");
+                ViewBag.AccountId = new AesCrypto().Decrypt(id);
+            }
+            else
+            {
+                ViewBag.AccountId = null;
+            }
+            return View();
+        }
+
+        [HttpGet]
         public ActionResult WayleaveAccountDashboard()
         {
             if (Session["ekurhuleniData"] == null)
@@ -102,9 +137,19 @@ namespace C8.eServices.Mvc.Controllers
                 // if IsAuthenticated is false return to login code here....
                 return Redirect("../home/index");
             }
+            List<SelectListItem> userTypeList = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "Contractor", Value = "Contractor"
+                },
+                new SelectListItem {
+                    Text = "Consultant", Value = "Consultant"
+                },
+            };
+            ViewBag.userTypeList = userTypeList;
 
             IEnumerable<WayleaveAccountDashboardModel> members = null;
-
+            ViewBag.WayleaveAccountData = members;
+            ViewBag.WayleaveAccountDataCount = 0;
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
@@ -117,7 +162,94 @@ namespace C8.eServices.Mvc.Controllers
                 //GetAsync to send a GET request   
                 // PutAsync to send a PUT request  
                 ///var result = client.PostAsync("", byteContent).Result
-                var responseTask = client.GetAsync("api/get-wl-accounts-with-counts");
+                var responseTask = client.GetAsync("get-wl-accounts-with-counts");
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<WayleaveAccountDashboardModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    ViewBag.WayleaveAccountData = members;
+                    ViewBag.WayleaveAccountDataCount = members.Count();
+                }
+                else
+                {
+                    //Error response received  
+                    ViewBag.WayleaveAccountDataCount = 0;
+                    members = Enumerable.Empty<WayleaveAccountDashboardModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
+
+            IEnumerable<MasterInputCalimsModel> statusTypes = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());                
+                var responseTask = client.GetAsync("get-application-staus-types");
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<MasterInputCalimsModel>>();
+                    readTask.Wait();
+
+                    statusTypes = readTask.Result;
+                    ViewBag.statusTypes = statusTypes;
+                }
+                else
+                {
+                    //Error response received   
+                    statusTypes = Enumerable.Empty<MasterInputCalimsModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult WayleaveAccountDashboard(WayleaveInputClaimModel inpuclaims)
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            List<SelectListItem> userTypeList = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "Contractor", Value = "Contractor"
+                },
+                new SelectListItem {
+                    Text = "Consultant", Value = "Consultant"
+                },
+            };
+            ViewBag.userTypeList = userTypeList;
+
+            IEnumerable<WayleaveAccountDashboardModel> members = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                //inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                var responseTask = client.PostAsync("get-wayleave-with-counts-serach", byteContent);
                 responseTask.Wait();
 
                 //To store result of web api response.   
@@ -142,6 +274,7 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult ApplicationStatusList()
         {
             if (Session["ekurhuleniData"] == null)
@@ -165,7 +298,7 @@ namespace C8.eServices.Mvc.Controllers
                 //GetAsync to send a GET request   
                 // PutAsync to send a PUT request  
                 ///var result = client.PostAsync("", byteContent).Result
-                var responseTask = client.PostAsync("api/get-applications-status-list", byteContent);
+                var responseTask = client.PostAsync("get-applications-status-list", byteContent);
                 responseTask.Wait();
 
                 //To store result of web api response.   
@@ -180,10 +313,67 @@ namespace C8.eServices.Mvc.Controllers
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
 
-                    tt = tt.Where(s=>s.name== "Completed").ToList();
+                    tt = tt.Where(s => s.name == "Completed").ToList();
                     var statusResult = tt.FirstOrDefault().applicationList;
                     ViewBag.ApplicationStatusList = statusResult;
                     ViewBag.ApplicationStatusListCount = statusResult.Count();
+                }
+                else
+                {
+                    //Error response received  
+                    ViewBag.ApplicationStatusList = null;
+                    ViewBag.ApplicationStatusListCount = 0;
+                    members = Enumerable.Empty<ApplicationInputModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ApplicationStatusList(string searchKeyword)
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            IEnumerable<ApplicationInputModel> members = null;
+            ViewBag.ApplicationStatusList = null;
+            ViewBag.ApplicationStatusListCount = 0;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
+                inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                var responseTask = client.PostAsync("get-applications-status-list", byteContent);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ApplicationInputModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    var tt = (List<ApplicationInputModel>)members;
+
+                    tt = tt.Where(s => s.name == "Completed").ToList();
+                    var statusResult = tt.FirstOrDefault().applicationList;
+                    var finalResult = statusResult.Where(s => s.applicationNumber == searchKeyword).ToList();
+                    ViewBag.ApplicationStatusList = finalResult;
+                    ViewBag.ApplicationStatusListCount = finalResult.Count();
                 }
                 else
                 {
@@ -219,7 +409,7 @@ namespace C8.eServices.Mvc.Controllers
                 //GetAsync to send a GET request   
                 // PutAsync to send a PUT request  
                 ///var result = client.PostAsync("", byteContent).Result
-                var responseTask = client.PostAsync("api/get-applications-status-list", byteContent);
+                var responseTask = client.PostAsync("get-applications-status-list", byteContent);
                 responseTask.Wait();
 
                 //To store result of web api response.   
@@ -269,7 +459,7 @@ namespace C8.eServices.Mvc.Controllers
                 //GetAsync to send a GET request   
                 // PutAsync to send a PUT request  
                 ///var result = client.PostAsync("", byteContent).Result
-                var responseTask = client.PostAsync("api/get-applications-status-list", byteContent);
+                var responseTask = client.PostAsync("get-applications-status-list", byteContent);
                 responseTask.Wait();
 
                 //To store result of web api response.   
@@ -350,7 +540,7 @@ namespace C8.eServices.Mvc.Controllers
         [HttpGet]
         public ActionResult GetInspectionPdfNew(int appId)
         {
-            var root = Server.MapPath("~/UploadFiles/");
+            var root = Server.MapPath("~/uploads/");
             string pdfname = "Inspection.pdf";
             var path = Path.Combine(root, pdfname);
             path = Path.GetFullPath(path);

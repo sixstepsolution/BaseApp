@@ -92,7 +92,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     TAX_CERTIFICATE_NAME = account.TAX_CERTIFICATE_NAME,
                     CREATED_BY = 1,
                     CREATED_DATE = dt,
-                    STATUS_ID = 5,
+                    STATUS_ID = 6,
                     IS_ACTIVE = "Y",
                     PASSWORD = CommonModel.CreateRandomPassword(8)
 
@@ -130,7 +130,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 else
                 {
                     dct.Add("success", false);
-                    msg= "Wayleave account created Failed!";
+                    msg= "Wayleave account creation failed!";
                 }
             }
             catch (Exception ex)
@@ -201,13 +201,15 @@ namespace C8.eServices.Mvc.Models.Repository
                      //acc.TAX_CERTIFICATE_NAME = account.TAX_CERTIFICATE_NAME;
                      acc.MODIFIED_BY = 1;
                      acc.MODIFIED_DATE = dt;
-                     acc.STATUS_ID = 5;
+                     acc.STATUS_ID = account.STATUS_ID;
                 //acc.IS_ACTIVE = "Y",
                 //PASSWORD = CommonModel.CreateRandomPassword(8)
 
-
-
-                _context.WL_ACCO_CONTACTS.RemoveRange(acc.WL_ACCO_CONTACT);
+                if (contactList.Count > 0)
+                {
+                    _context.WL_ACCO_CONTACTS.RemoveRange(acc.WL_ACCO_CONTACT);
+                }
+                
                 foreach (WL_ACCO_CONTACT r in contactList)
                 {
                     //var dd = _wlcontact.GetWlAccountContact(r.CONTACT_ID);

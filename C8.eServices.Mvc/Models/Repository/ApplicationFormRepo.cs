@@ -114,7 +114,144 @@ namespace C8.eServices.Mvc.Models.Repository
         }
 
 
-        public string AddApplicationForm(WL_APPLICATIONFORM applicationForm, List<WL_REGIONS> RegionResponse, List<WL_CONTACT_PERSONS> ContactResponse, List<WL_WORK_LOCATIONS> locationResponse, List<WL_DEPARTMENTS> departmentsDataResponse, HttpFileCollection files, string browser, int appCount)
+        //public string AddApplicationForm(WL_APPLICATIONFORM applicationForm, List<WL_REGIONS> RegionResponse, List<WL_CONTACT_PERSONS> ContactResponse, List<WL_WORK_LOCATIONS> locationResponse, List<WL_DEPARTMENTS> departmentsDataResponse, HttpFileCollection files, string browser, int appCount,string paymentStatus)
+        //{
+        //    Dictionary<string, object> dct = new Dictionary<string, object>();
+        //    string file_Name = string.Empty;
+        //    string fileName = string.Empty;
+        //    int counter = appCount;
+        //    counter = counter + 1;
+        //    string year = DateTime.Now.ToString("yy");
+        //    string month = DateTime.Now.ToString("MM");
+        //    string outputValue = String.Format("{0:D4}", counter);
+        //    string applicationNumber = "APP" + year + month + outputValue;
+
+        //    try
+        //    {
+        //        int st =Convert.ToInt32((int?)applicationForm.SERVICE_TYPE);
+        //        var serviceResult = _serviceDocument.GetServiceDocumentsById(st);
+        //        var tt = serviceResult.ToList();
+        //        int loggedinID = 1;
+        //        if (HttpContext.Current.Session["wayleaveaccountId"] != null)
+        //        {
+        //            loggedinID = Convert.ToInt32(HttpContext.Current.Session["wayleaveaccountId"]);
+        //        }
+
+        //        if(paymentStatus=="EFT")
+        //        {
+        //            applicationForm.STATUS_ID = 8;
+        //            applicationForm.APPLICATION_STEP_DESCRIPTION = "Payment Pending";
+        //        }
+        //        else if (paymentStatus == "MasterPass")
+        //        {
+        //            applicationForm.STATUS_ID = 3;
+        //            applicationForm.APPLICATION_STEP_DESCRIPTION = "Completed";
+        //        }
+
+        //        applicationForm.APPLICATION_NUMBER = applicationNumber;
+        //        applicationForm.COMPANY_ID = 1;
+
+        //        applicationForm.CREATED_BY = loggedinID;
+
+        //        applicationForm.CREATED_DATE = DateTime.Now;
+
+        //        applicationForm.MODIFIED_BY = loggedinID;
+        //        applicationForm.MODIFIED_DATE = DateTime.Now;
+        //        applicationForm.APPLICATION_GENERATION_DATE = DateTime.Now;
+        //        _context.WL_APPLICATIONFORM.Add(applicationForm);
+
+
+        //        if (files.Count > 0)
+        //        {  //  Get all files from Request object 
+        //            //return null;
+        //            for (int i = 0; i < files.AllKeys.Count(); i++)
+        //            {
+        //                WL_SUPPORTING_DOCUMENTS ws = new WL_SUPPORTING_DOCUMENTS();
+
+        //                string serviceDocId = files.AllKeys[i];
+        //                string documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId.Substring(0, 1) : "0";
+
+        //                string documentType = tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault() != null ? tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault().DESCRIPTION : "";
+
+        //                HttpPostedFile file = files[i];
+        //                //string fd = serviceDocId.Substring(1, 1);
+        //                if (browser == "IE" || browser == "INTERNETEXPLORER")
+        //                {
+        //                    string[] testfiles = file.FileName.Split(new char[] { '\\' });
+        //                    fileName = testfiles[testfiles.Length - 1];
+        //                }
+        //                else
+        //                {
+        //                    fileName = file.FileName;
+        //                }
+        //                //string fdd = serviceDocId.Substring(0, 1);
+        //                fileName = file.FileName;
+        //                file_Name = string.Format("{0}-{1}", DateTime.Now.ToString("ddMMMyyyyHHmmss"), fileName.Replace("-", ""));
+        //                fileName = Path.Combine(HttpContext.Current.Server.MapPath("~/uploads/"), file_Name);
+        //                file.SaveAs(fileName);
+
+        //                ws.SD_ID = Convert.ToInt32(documentId ?? "0");
+        //                ws.DOCUMENT_TYPE = documentType;
+        //                ws.DOCUMENT_NAME = file_Name;
+        //                ws.CREATED_BY = 1;
+        //                ws.CREATED_DATE = DateTime.Now;
+        //                _context.WL_SUPPORTING_DOCUMENTS.Add(ws);
+        //                //applicationForm.COVER_LETTER = file_Name;
+        //            }
+        //        }
+
+
+        //        foreach (WL_REGIONS r in RegionResponse)
+        //        {
+        //            r.CREATED_BY = 1;
+        //            r.CREATED_DATE = DateTime.Now;
+        //            _context.WL_REGIONS.Add(r);
+        //        }
+
+        //        foreach (WL_CONTACT_PERSONS c in ContactResponse)
+        //        {
+        //            c.CREATED_BY = 1;
+        //            c.CREATED_DATE = DateTime.Now;
+        //            _context.WL_CONTACT_PERSONS.Add(c);
+        //        }
+
+        //        foreach (WL_WORK_LOCATIONS wl in locationResponse)
+        //        {
+        //            wl.CREATED_BY = 1;
+        //            wl.CREATED_DATE = DateTime.Now;
+        //            _context.WL_WORK_LOCATIONS.Add(wl);
+        //        }
+        //       foreach (WL_DEPARTMENTS department in departmentsDataResponse)
+        //        {
+        //            department.SERVICE_ID = applicationForm.SERVICE_TYPE;
+        //            department.APP_ID = applicationForm.APP_ID;
+        //            department.CREATED_ON = DateTime.Now;
+        //            _context.WL_DEPARTMENTS.Add(department);
+        //        }
+        //        bool n = SaveChanges();
+
+        //        if (n)
+        //        {
+        //            dct.Add("success", true);
+        //            return applicationForm.APPLICATION_NUMBER;
+        //        }
+        //        else
+        //        {
+        //            dct.Add("error", false);
+        //            return "Application Form Saving Failed!";
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        dct.Add("isError", true);
+        //        dct.Add("exception", ex.Message);
+        //    }
+
+        //    //return Json(dct, JsonRequestBehavior.AllowGet);
+        //    return "";
+        //}
+
+        public string AddApplicationForm(WL_APPLICATIONFORM applicationForm, List<WL_DEPARTMENTS> departmentsDataResponse, List<WL_DECLARATIONS> declarations, HttpFileCollection files, string browser, int appCount, string paymentStatus)
         {
             Dictionary<string, object> dct = new Dictionary<string, object>();
             string file_Name = string.Empty;
@@ -128,18 +265,41 @@ namespace C8.eServices.Mvc.Models.Repository
 
             try
             {
-                var serviceResult = _serviceDocument.GetServiceDocumentsById(applicationForm.SERVICE_TYPE);
+                int st = Convert.ToInt32((int?)applicationForm.SERVICE_TYPE);
+                var serviceResult = _serviceDocument.GetServiceDocumentsById(st);
                 var tt = serviceResult.ToList();
                 int loggedinID = 1;
                 if (HttpContext.Current.Session["wayleaveaccountId"] != null)
                 {
                     loggedinID = Convert.ToInt32(HttpContext.Current.Session["wayleaveaccountId"]);
                 }
+
+                if (paymentStatus == "EFT")
+                {
+                    applicationForm.STATUS_ID = 8;
+                    applicationForm.APPLICATION_STEP_DESCRIPTION = "Payment Pending";
+                }
+                else if (paymentStatus == "MasterPass")
+                {
+                    applicationForm.STATUS_ID = 3;
+                    applicationForm.APPLICATION_STEP_DESCRIPTION = "Completed";
+                }
+                else if (paymentStatus == "PayLater")
+                {
+                    applicationForm.STATUS_ID = 8;
+                    applicationForm.APPLICATION_STEP_DESCRIPTION = "Payment Pending";
+                }
+                else
+                {
+                    applicationForm.STATUS_ID = 1;
+                    applicationForm.APPLICATION_STEP_DESCRIPTION = "Pending";
+                }
+
                 applicationForm.APPLICATION_NUMBER = applicationNumber;
                 applicationForm.COMPANY_ID = 1;
-                applicationForm.STATUS_ID = 1;
+
                 applicationForm.CREATED_BY = loggedinID;
-                applicationForm.APPLICATION_STEP_DESCRIPTION = "Pending";
+
                 applicationForm.CREATED_DATE = DateTime.Now;
 
                 applicationForm.MODIFIED_BY = loggedinID;
@@ -187,34 +347,24 @@ namespace C8.eServices.Mvc.Models.Repository
                     }
                 }
 
-
-                foreach (WL_REGIONS r in RegionResponse)
-                {
-                    r.CREATED_BY = 1;
-                    r.CREATED_DATE = DateTime.Now;
-                    _context.WL_REGIONS.Add(r);
-                }
-
-                foreach (WL_CONTACT_PERSONS c in ContactResponse)
-                {
-                    c.CREATED_BY = 1;
-                    c.CREATED_DATE = DateTime.Now;
-                    _context.WL_CONTACT_PERSONS.Add(c);
-                }
-
-                foreach (WL_WORK_LOCATIONS wl in locationResponse)
-                {
-                    wl.CREATED_BY = 1;
-                    wl.CREATED_DATE = DateTime.Now;
-                    _context.WL_WORK_LOCATIONS.Add(wl);
-                }
-               foreach (WL_DEPARTMENTS department in departmentsDataResponse)
+                foreach (WL_DEPARTMENTS department in departmentsDataResponse)
                 {
                     department.SERVICE_ID = applicationForm.SERVICE_TYPE;
                     department.APP_ID = applicationForm.APP_ID;
                     department.CREATED_ON = DateTime.Now;
                     _context.WL_DEPARTMENTS.Add(department);
                 }
+
+                foreach (WL_DECLARATIONS dec in declarations)
+                {
+                    dec.APP_ID = applicationForm.APP_ID;
+                    dec.CREATED_DATE = DateTime.Now;
+                    dec.MODIFIED_DATE = DateTime.Now;
+                    dec.CREATED_BY = loggedinID;
+                    dec.MODIFIED_BY = loggedinID;
+                    _context.WL_DECLARATIONS.Add(dec);
+                }
+
                 bool n = SaveChanges();
 
                 if (n)
@@ -238,8 +388,6 @@ namespace C8.eServices.Mvc.Models.Repository
             return "";
         }
 
-       
-
         public string UpdateApplicationForm(WL_APPLICATIONFORM applicationForm,HttpFileCollection files, string browser)
         {
             string file_Name = string.Empty;
@@ -252,11 +400,22 @@ namespace C8.eServices.Mvc.Models.Repository
                 loggedinID = Convert.ToInt32(HttpContext.Current.Session["wayleaveaccountId"]);
             }
             WL_APPLICATIONFORM res = GetApplicationFormData(applicationForm.APP_ID);
-            res.APPLICATION_STEP_DESCRIPTION = "Pending";
+            if (applicationForm.APPLICATION_STEP_DESCRIPTION != "Payment Pending")
+            {
+                res.APPLICATION_STEP_DESCRIPTION = "Pending";
+            }
+           
             res.STATUS_ID = 1;
             if (files.Count > 0)
             {  //  Get all files from Request object 
                //return null;
+                var list=_context.WL_SUPPORTING_DOCUMENTS.Where(w => w.APP_ID == applicationForm.APP_ID).ToList();
+                if(list.Count()>0)
+                {
+                    _context.WL_SUPPORTING_DOCUMENTS.RemoveRange(list);
+                    SaveChanges();
+                }
+                
                 for (int i = 0; i < files.AllKeys.Count(); i++)
                 {
                     WL_SUPPORTING_DOCUMENTS ws = new WL_SUPPORTING_DOCUMENTS();
@@ -284,6 +443,13 @@ namespace C8.eServices.Mvc.Models.Repository
                     file.SaveAs(fileName);
 
                     ws.SD_ID = Convert.ToInt32(documentId ?? "0");
+                    if (applicationForm.APPLICATION_STEP_DESCRIPTION == "Payment Pending")
+                    {
+                        if (documentType.Contains("EFT"))
+                        {
+                            res.APPLICATION_STEP_DESCRIPTION = "Pending";
+                        }
+                    }                    
                     ws.DOCUMENT_TYPE = documentType;
                     ws.DOCUMENT_NAME = file_Name;
                     ws.CREATED_BY = 1;
@@ -312,19 +478,19 @@ namespace C8.eServices.Mvc.Models.Repository
             res.APPLICATION_STEP_DESCRIPTION = appStatus;
             res.STATUS_ID = appStatus == "Approved" ? 3 : (appStatus == "Request for approvals" || appStatus == "Request for documents" ? 2 : 4);
             res.APPLICATION_COMMENTS = comments;
-            if(!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
-            {
-                WL_DEPARTMENTS wd = GetDepartmentDataById(appId, deptName);
-                wd.APPROVE_OR_REJECT_COMMENTS = !String.IsNullOrEmpty(deptComments)? deptComments:"";
-                wd.APPLICATION_STATUS = deptStatus;
-            }            
+            //if(!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
+            //{
+            //    WL_DEPARTMENTS wd = GetDepartmentDataById(appId, deptName);
+            //    wd.APPROVE_OR_REJECT_COMMENTS = !String.IsNullOrEmpty(deptComments)? deptComments:"";
+            //    wd.APPLICATION_STATUS = deptStatus;
+            //}            
             return SaveChanges();
         }
 
         public bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus)
         {           
             if (!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
-            {
+            {                
                 WL_DEPARTMENTS wd = GetDepartmentDataById(appId, deptName);
                 wd.APPROVE_OR_REJECT_COMMENTS = !String.IsNullOrEmpty(deptComments) ? deptComments : "";
                 wd.APPLICATION_STATUS = deptStatus;

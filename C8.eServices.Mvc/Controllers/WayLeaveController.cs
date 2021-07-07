@@ -29,6 +29,9 @@ namespace C8.eServices.Mvc.Controllers
         private readonly IMasterDepartments _serviceDepartments = null;
         private readonly IMasterInspections _masterinspections = null;
         private readonly IMasterCustomerCareCenters _mastercccenters = null;
+        private readonly IMasterDeclarations _masterdeclarations = null;
+        private readonly IWLDeclarations _wldeclarations = null;
+        private readonly IDepartments _departments = null;
         private IMapper _mapper = null;
 
         public WayLeaveController(IWayleave wayleave,
@@ -43,7 +46,11 @@ namespace C8.eServices.Mvc.Controllers
              IRegion region,
              IMasterInspections masterinspections,
             IWlAccount accou,
-            IMasterCustomerCareCenters mastercccenters)
+            IMasterCustomerCareCenters mastercccenters,
+            IMasterDeclarations masterdeclarations,
+            IWLDeclarations wldeclarations,
+            IDepartments departments
+            )
         {
             _wayleave = wayleave;
             _seriviceTypes = seriviceTypes;
@@ -59,6 +66,9 @@ namespace C8.eServices.Mvc.Controllers
             _mapper = mapper;
             _masterinspections = masterinspections;
             _mastercccenters = mastercccenters;
+            _masterdeclarations = masterdeclarations;
+            _wldeclarations = wldeclarations;
+            _departments = departments;
         }
 
 
@@ -239,16 +249,6 @@ namespace C8.eServices.Mvc.Controllers
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
             }
         }
-
-
-
-
-
-
-
-
-
-
 
 
         // GET: api/WL_APPLICATIONFORM
@@ -511,6 +511,7 @@ namespace C8.eServices.Mvc.Controllers
 
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
         }
+        
 
         [Route("api/get-service-documents/{id}")]
         //[Authorize]        
@@ -531,6 +532,67 @@ namespace C8.eServices.Mvc.Controllers
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
             }
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No documents"));
+        }
+
+        [Route("api/get-application-departments/{id}")]
+        //[Authorize]        
+        public async Task<IHttpActionResult> GetDepartmentsByApplicationId(int id)
+        {
+            try
+            {
+                var res = _departments.GetDepartmentsData(id);
+
+                if (res.Count() > 0)
+                {
+                    //var mpres = _mapper.Map<List<MasterInputCalimsModel>>(res);
+                    return Ok(res);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No documents"));
+        }
+
+        [Route("api/get-wayleave-declarations")]
+        //[Authorize]        
+        public async Task<IHttpActionResult> GetAllDeclarations()
+        {
+            try
+            {
+                var res = _masterdeclarations.GetAllDeclarations();
+                if (res.Count() > 0)
+                {
+                    var mpres = _mapper.Map<List<MasterInputCalimsModel>>(res);
+                    return Ok(mpres);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No documents"));
+        }
+
+        [Route("api/get-wayleave-declarations/{id}")]
+        //[Authorize]        
+        public async Task<IHttpActionResult> GetDeclarationsById(int id)
+        {
+            try
+            {
+                var res = _wldeclarations.GetDeclarationsData(id);
+                if (res.Count() > 0)
+                {
+                    //var mpres = _mapper.Map<List<MasterInputCalimsModel>>(res);
+                    return Ok(res);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No data found!"));
         }
 
         [Route("api/get-service-departments/{id}")]
@@ -650,8 +712,8 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 var res = _wayleave.GetWLAccountNumbers(name);
-
-                return Ok(res);
+                var finalResult = (from o in res select o.name).ToList();
+                return Ok(finalResult);
             }
             catch (Exception ex)
             {
@@ -667,8 +729,8 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 var res = _wayleave.GetWLAccountPersonFirstNames(name);
-
-                return Ok(res);
+                var finalResult = (from o in res select o.name).ToList();
+                return Ok(finalResult);
             }
             catch (Exception ex)
             {
@@ -684,8 +746,8 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 var res = _wayleave.GetWLAccountPersonLsatNames(name);
-
-                return Ok(res);
+                var finalResult = (from o in res select o.name).ToList();
+                return Ok(finalResult);
             }
             catch (Exception ex)
             {
@@ -701,8 +763,8 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 var res = _wayleave.GetWLAccountCompanyNames(name);
-
-                return Ok(res);
+                var finalResult = (from o in res select o.name).ToList();
+                return Ok(finalResult);
             }
             catch (Exception ex)
             {
@@ -718,8 +780,8 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 var res = _wayleave.GetWLAccountEmails(name);
-
-                return Ok(res);
+                var finalResult = (from o in res select o.name).ToList();
+                return Ok(finalResult);
             }
             catch (Exception ex)
             {
@@ -735,8 +797,8 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 var res = _wayleave.GetWLAccountMobiles(name);
-
-                return Ok(res);
+                var finalResult = (from o in res select o.name).ToList();
+                return Ok(finalResult);
             }
             catch (Exception ex)
             {

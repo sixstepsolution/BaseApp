@@ -1,0 +1,894 @@
+﻿@model C8.eServices.Mvc.Models.WL_APPLICATIONFORM
+
+@{
+    ViewBag.Title = "WayleaveApplicationForm";
+    Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
+}
+
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+
+    select {
+        vertical-align: top;
+        height: 30px;
+    }
+
+    input, select {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+
+    .badge {
+        display: inline-block;
+        width: 80px;
+        padding: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #777;
+        border-radius: 10px;
+    }
+
+    .headindg-size {
+        margin-left: -26px;
+        font-size: 14px;
+        padding: 2px;
+    }
+
+    span {
+        height: 24px !important;
+        font-size: 10px !important;
+    }
+
+    .panel-default-custom {
+        border: 0.5px solid transparent;
+    }
+
+        .panel-default-custom > .panel-heading {
+            color: #fff;
+            background-color: #f3f0e1;
+            /* border-color: #ddd; */
+            border: none;
+            border-radius: 0;
+            height: 22px;
+        }
+
+    .panel-group {
+        margin-bottom: 0px;
+    }
+
+    role {
+        margin-right: 80px;
+        margin-left: 20px;
+        font-weight: normal;
+        float: left;
+        margin: 0px;
+        margin-top: 8px;
+        margin-left: 10px;
+        font-size: 11px !important;
+    }
+
+    label {
+        font-size: 10.5px !important;
+        padding: 0;
+        font-weight: 500;
+        padding-left: 3px;
+        margin-bottom: -10px;
+    }
+
+    .checkbox-custom-label {
+        font-size: 10.5px !important;
+        font-weight: 500;
+    }
+
+    .pac-container {
+        z-index: 10000 !important;
+        /*width:70% !important;*/
+    }
+</style>
+<style type="text/css">
+    #right-panel {
+        font-family: "Roboto", "sans-serif";
+        line-height: 30px;
+        padding-left: 10px;
+    }
+
+        #right-panel select,
+        #right-panel input {
+            font-size: 15px;
+        }
+
+        #right-panel select {
+            width: 100%;
+        }
+
+        #right-panel i {
+            font-size: 12px;
+        }
+
+
+    #map {
+        width: 100%;
+        height: 500px;
+        margin: 0px !important;
+        padding: 0px !important
+    }
+
+    #right-panel {
+        float: right;
+        width: 34%;
+        height: 100%;
+    }
+
+    .panel {
+        height: 100%;
+        overflow: auto;
+    }
+
+    .errorNew {
+        border: 2px solid red !important;
+        border-color: red !important;
+        color: red !important;
+    }
+
+    .payment-custom img {
+        border: 1px solid #ccc !important;
+    }
+
+        .payment-custom img:hover {
+            border: 2px solid green !important;
+        }
+</style>
+<style>
+    .ui-autocomplete {
+        max-height: 200px;
+        max-width: 170px !important;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: auto;
+        /* add padding to account for vertical scrollbar */
+        padding: 5px !important;
+        font-size: 12pt !important;
+        border: 1px solid #00a65a !important;
+        color: #000 !important;
+    }
+</style>
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">*@
+<script src="~/Scripts/wayleaveScripts/WLApplicationForm.js?dt=@DateTime.Now.Millisecond""></script>
+@*<script src="~/Scripts/wayleaveScripts/ApplicationFormNew.js?dt=@DateTime.Now.Millisecond"></script>*@
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLOlMJLaIKTK3R1mRfv0gEI8bAmfqDxlk&sensor=false&libraries=places"></script>
+<script type="text/javascript" language="javascript">
+    @*$(document).ready(function () {
+        var sessionInfo = '@Session["wayleaveaccountId"]';
+        var applicationId = '@ViewBag.ApplicationId';
+
+        
+        if (sessionInfo != undefined && sessionInfo != "") {
+            $.fn.LoadApplicationsAlertsWithCounts('o');
+        }
+        Init();
+    });*@
+    $(document).ready(function () {
+        var departmentName = '@Session["ekurhuleniUserDeptName"]';
+        var applicationId = '@ViewBag.ApplicationId';
+        //var wayleaveAppId = localStorage.getItem('WLAppId');
+        //if (wayleaveAppId != undefined && wayleaveAppId != "") {
+        //    $.fn.bindApplicationDataFrom(wayleaveAppId);
+        //    $("#CurrentUserDepartmentName").val(departmentName);
+        //}
+        if (applicationId != undefined && applicationId != "") {
+            $.fn.LoadApplicationsDetailsByAppId(applicationId);
+            $("#CurrentUserDepartmentName").val(departmentName);
+        }
+        else {
+            $.fn.LoadSupportingDocumentsOnPageLoad();
+            $.fn.LoadDeclarationsOnPageLoad();
+        }
+        var userRole = '@Session["ekurhuleniUserRole"]';
+        //alert(userRole);
+        if (userRole ==="Admin") {
+            $.fn.LoadApplicationsAlertsWithCounts("Y");
+        }
+        else {
+            $.fn.LoadApplicationsAlertsWithCounts("N")
+        }
+
+        Init();
+    });
+</script>
+<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
+    <form name="ApplicationForm">
+        <div class="panel-group" style="margin-left: -25px;
+        margin-bottom: 3px !important;">
+            <div class="panel panel-default" style="border:none!important">
+                <div class="panel-heading" style="background:#00A65A;padding-top:5px!important">
+                    <h4 class="panel-title text-center" style="font-size:16pt!important">
+                        Wayleave Application <b class="pull-right" style="font-size:10pt!important;background-color:#fff!important;padding:5px!important;margin-top:-2px!important;border-radius:3px!important;display:none" id="APPLICATION_STEP_DESCRIPTION_STATUS"></b>
+                    </h4>
+                </div>
+                <div style="border:1px solid #00A65A;">
+                    <div class="panel-body" style="padding: 5px!important;">
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="WayleaveHeaderInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div id="WayleaveHeaderInfo" class="panel-collapse collapse in" style="border: 0px solid #00A65A;">
+                                    <div class="panel-body" style="padding:5px 10px 0px 0 !important;text-align:justify!important;">
+                                        <label style="font-size:10.5px!important;font-weight:600!important;color:#1e5986">
+                                            APPLICATION IS HEREBY MADE BY THE UNDERSIGNED TO DO WORK IN THE ROAD RESERVE AS DETAILED BELOW<br />
+                                            The application undertakes to do the work according to the latest edition of the CODE OF PRACTICE FOR WORK IN THE PUBLIC ROAD RESERVE. NO WORK SHALL COMMENCE BEFORE A WAYLEAVE IS ISSUED.<br />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;" id="contractorInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#accordionSerach" href="#collapse_search_1">
+                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Applicant Details
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_search_1" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                        <table>
+                                            <tr>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Account Number</label>
+                                                        <input type="text" readonly style="border-radius: 4px"
+                                                               class="form-control" name="PROPERTYOWNER_ACCOUNT_NO" id="PROPERTYOWNER_ACCOUNT_NO" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Applicant Name</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="PROPERTYOWNER_NAME"
+                                                               class="form-control" name="PROPERTYOWNER_NAME" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Applicant Surname</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="PROPERTYOWNER_SURNAME"
+                                                               class="form-control" name="PROPERTYOWNER_SURNAME" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Tel Number</label>
+                                                        <input type="text" readonly maxlength="10" numbers-only style="border-radius: 4px" id="PROPERTYOWNER_CONTACTNO"
+                                                               class="form-control numbersOnly" name="PROPERTYOWNER_CONTACTNO" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Mobile Number</label>
+                                                        <input type="text" readonly maxlength="10" style="border-radius: 4px" id="PROPERTYOWNER_MOBILENO"
+                                                               class="form-control numbersOnly" name="PROPERTYOWNER_MOBILENO" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%" colspan="2">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Email</label>
+                                                        <input type="text" readonly @*onkeyup="$.fn.validateEmail('PROPERTYOWNER_EMAIL')"*@ style="border-radius: 4px" id="PROPERTYOWNER_EMAIL"
+                                                               class="form-control" name="PROPERTYOWNER_EMAIL" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important" id="consultantInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#consultantInfo" href="#collapse_consultantInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;display: none;"></i>
+                                            Consulting Engineer Details
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_consultantInfo" class="panel-collapse collapse" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                        <table>
+                                            <tr>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Name</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="CONSULTANT_NAME"
+                                                               class="form-control" name="CONSULTANT_NAME" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Surname</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="CONSULTANT_SURNAME"
+                                                               class="form-control" name="CONSULTANT_SURNAME" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Tel Number</label>
+                                                        <input type="text" readonly maxlength="10" style="border-radius: 4px" id="CONSULTANT_CONTACTNO"
+                                                               class="form-control numbersOnly" name="CONSULTANT_CONTACTNO" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Mobile Number</label>
+                                                        <input type="text" readonly maxlength="10" style="border-radius: 4px" id="CONSULTANT_MOBILENO"
+                                                               class="form-control numbersOnly" name="CONSULTANT_MOBILENO" />
+                                                    </div>
+                                                </td>
+                                                <td style="width: 15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Email</label>
+                                                        <input type="text" readonly @*onkeyup="$.fn.validateEmail('PROPERTYOWNER_EMAIL')"*@ style="border-radius: 4px" id="CONSULTANT_EMAIL"
+                                                               class="form-control" name="CONSULTANT_EMAIL" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Address</label>
+                                                        <textarea class="form-control" readonly name="CONSULTANT_ADDRESS" id="CONSULTANT_ADDRESS" rows="3" style="border-radius: 4px"></textarea>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important" id="ContractorInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ContractorInfo" href="#collapse_ContractorInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;display: none;"></i>
+                                            Contractor Details
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_ContractorInfo" class="panel-collapse collapse" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                        <table>
+                                            <tr>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Name</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="CONTRACTOR_NAME"
+                                                               class="form-control" name="CONTRACTOR_NAME" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Surname</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="CONTRACTOR_SURNAME"
+                                                               class="form-control" name="CONTRACTOR_SURNAME" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Tel Number</label>
+                                                        <input type="text" readonly maxlength="10" style="border-radius: 4px" id="CONTRACTOR_CONTACTNO"
+                                                               class="form-control numbersOnly" name="CONTRACTOR_CONTACTNO" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Mobile Number</label>
+                                                        <input type="text" readonly maxlength="10" style="border-radius: 4px" id="CONTRACTOR_MOBILENO"
+                                                               class="form-control numbersOnly" name="CONTRACTOR_MOBILENO" />
+                                                    </div>
+                                                </td>
+                                                <td style="width: 15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Email</label>
+                                                        <input type="text" readonly @*onkeyup="$.fn.validateEmail('PROPERTYOWNER_EMAIL')"*@ style="border-radius: 4px" id="CONTRACTOR_EMAIL"
+                                                               class="form-control" name="CONTRACTOR_EMAIL" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Address</label>
+                                                        <textarea class="form-control" readonly name="CONTRACTOR_ADDRESS" id="CONTRACTOR_ADDRESS" rows="3" style="border-radius: 4px"></textarea>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ProvisionalDates">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ProvisionalDates" href="#collapse_ProvisionalDates">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;display: none"></i>
+                                            Provisional Dates
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_ProvisionalDates" class="panel-collapse collapse" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+
+                                        <table>
+                                            <tr>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-label-date">
+                                                        <label>Starting Date</label>
+                                                        <div class="input-group" style="width: 100%">
+                                                            @*<span class="input-group-addon"
+                                                                  style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </span>*@
+                                                            <input type="date" readonly autocomplete="off" style="border-radius: 4px !important;" id="STARTING_DATE"
+                                                                   class="form-control border-radius" name="STARTING_DATE" />
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-label-date">
+                                                        <label>Estimated Completion Date</label>
+                                                        <div class="input-group" style="width: 100%">
+                                                            <input type="date" readonly autocomplete="off"
+                                                                   style="border-radius:4px!important;"
+                                                                   id="COMPLETION_DATE"
+                                                                   class="form-control" name="COMPLETION_DATE" />
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ExcavationDetails">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ExcavationDetails" href="#collapse_ExcavationDetails">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;display: none"></i>
+                                            Excavation Details
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_ExcavationDetails" class="panel-collapse collapse" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                        <table>
+                                            <tr>
+                                                <td><label>Type of road crossing</label></td>
+                                                <td>
+                                                    <div><input type="checkbox" disabled class="checkbox-custom" id="ChkHD" value="Horizontal drilling"><label class="checkbox-custom-label" for="ChkHD">Horizontal drilling</label></div>
+                                                </td>
+                                                <td>
+                                                    <div><input type="checkbox" disabled class="checkbox-custom" id="ChkOT" value="Open trench"><label class="checkbox-custom-label" for="ChkOT">Open trench</label></div>
+                                                </td>
+                                                <td>
+                                                    <div><input type="checkbox" disabled class="checkbox-custom" id="ChkNone" value="None"><label class="checkbox-custom-label" for="ChkNone">None</label></div>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label">
+                                                        <label>Excavation Length</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="EXCAVATION_LENGTH"
+                                                               class="form-control allowDecimalNumbers" name="EXCAVATION_LENGTH" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label">
+                                                        <label>Width</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="RIDING_SURFACE"
+                                                               class="form-control allowDecimalNumbers" name="RIDING_SURFACE" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label">
+                                                        <label>Depth</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="KERBS"
+                                                               class="form-control allowDecimalNumbers" name="KERBS" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label">
+                                                        <label>Starting Address</label>
+                                                        <input type="text" readonly autocomplete="off" style="border-radius: 4px" id="GPS_START_ADDRESS"
+                                                               class="form-control" name="GPS_START_ADDRESS" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label">
+                                                        <label>Ending Address</label>
+                                                        <input type="text" readonly style="border-radius: 4px" id="GPS_END_ADDRESS"
+                                                               class="form-control" name="GPS_END_ADDRESS" />
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <div class="input-group input-label" style="width: 100%;padding-top:5px!important">
+                                                        <label>Description of work:<br /><b style="color:#d14343">NOTE: PLEASE PROVIDE A DETAIL DESCRIPTION OF THE WORK TO BE PERFORMED, HOW EXCAVATION WILL BE DONE AND HOW TRAFFIC WILL BE CONTROLLED (TO BE COMPLETED IN FULL).</b></label>
+                                                        <textarea class="form-control" readonly name="APPLICATION_COMMENTS" id="APPLICATION_COMMENTS" rows="5" style="border-radius: 4px"></textarea>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="WayleaveInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div id="WayleaveInfo" class="panel-collapse collapse in" style="border: 0px solid #00A65A;">
+                                    <div class="panel-body" style="padding:5px 10px 0px 0 !important;text-align:justify!important;margin-left:-10px!important;color:#1e5986!important">
+                                        <ol style="list-style-type:disc">
+                                            <li style="font-size:10.5px!important;font-weight:600!important">
+                                                NO OPEN TRENCHES ACROSS THE ROAD, NO CUTTING IN ANY WAY OF NEWLY RESURFACED ROADS WILL BE PERMITTED, IF THIS IS DONE THE A REGISTERED ENGINEERING PROFESSIONAL SHALL CERTIFY THAT THE REINSTATEMENT
+                                                OF THE CROSSING COMPLIES WITH THE SPECIFICATIONS; APPROVAL TO TRENCH THROUGH ROADS SHOULD BE OBTAINED PRIOR TO COMMENCEMENT OF THE WORK UNLESS IN CASES OF EMERGENCY.
+
+                                            </li>
+                                            <li style="font-size:10.5px!important;font-weight:600!important">
+                                                THIS WAYLEAVE AND PLANS NEED TO BE ON SITE FULL TIME; THIS WAYLEAVE IS NOT PERMISSION TO CLOSE ANY PUBLIC PLACE, i.e. A ROAD, STREET, PARK etc. NEITHER IS IT PERMISSION TO REMOVE TREES, AS TEMPORARY ROAD CLOSURES AND REQUEST TO REMOVE TREES ARE DEALT WITH SEPERATELY.
+                                            </li>
+                                            <li style="font-size:10.5px!important;font-weight:600!important">
+                                                ON COMPLETION OF THE WORK, THE RELEVANT DEPOT MANAGER MUST BE REQUESTED TO SIGN THE SERVICES CONTROL LIST OFF.
+                                            </li>
+                                            <li style="font-size:10.5px!important;font-weight:600!important">
+                                                NB: THE SITE SHOULD BE SAFE GUARDED AT ALL TIMES IN TERMS OF VOLUME 2, CHAPTER 13 OF SARTSM AND THE OCCUPATIONAL HEALTH AND SAFETY ACT, ACT 85 OF 1993. WAYLEAVE HOLDER TO COMPLY WITH THE CITY OF EKURHULENI WAYLEAVE POLICY.
+                                            </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="UploadDocumentInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#UploadDocumentInfo" href="#collapse_UploadDocumentInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;display: none"></i>
+                                            Supporting Documents
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_UploadDocumentInfo" class="panel-collapse collapse" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding:5px 0 5px 0 !important;">
+                                        <table class="table table-bordered table-hover" style="font-size:9pt!important">
+                                            <tr style="background:#00A65A!important;color:#fff!important">
+                                                <td>S.No</td>
+                                                <td>Document Type</td>
+                                                <td>Document Upload</td>
+                                            </tr>
+                                            <tbody id="ServiceDocumentListFromServer">
+                                            </tbody>
+                                            <tbody id="ServiceDocumentList">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table border="0" style="font-size:9pt!important">
+                            <tr>
+                                <td><b>Please tick the relevant checkboxes to declare that the drawings provided meet the following requirements:</b></td>
+                            </tr>
+                            <tbody id="ServiceDeclarationListFromServer">
+                            </tbody>
+                            <tbody id="ServiceDeclarationList">
+                            </tbody>
+                        </table>
+                        @*<table width="100%" id="IsViewApplication">
+                            <tr>
+                                <td colspan="4" class="text-center" id="IsAppEdit">
+                                    <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
+                                            onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
+                                        <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                                        Re-Submit
+                                    </button>
+                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                                </td>
+                                <td colspan="4" class="text-center">
+                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()">
+                                        <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                                        Submit
+                                    </button>
+                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
+                                </td>
+                            </tr>
+                        </table>*@
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;display:none;margin-top:10px!important" id="DepartmentInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#DepartmentInfo" href="#collapse_DepartmentInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Circulated Departments
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_DepartmentInfo" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                        @if (Session["ekurhuleniData"] != null)
+                                        {
+                                            if (Session["ekurhuleniUserRole"].ToString() == "Admin")
+                                            {
+                                                <div>
+                                                    <table class="table table-bordered table-hover" style="font-size:9pt!important">
+                                                        <tr style="background:#00A65A!important;color:#fff!important">
+                                                            <td>S.No</td>
+                                                            <td>Deaprtment Name</td>
+                                                            <td>Status</td>
+                                                            <td>Comments</td>
+                                                            <td>Date</td>
+                                                        </tr>
+                                                        <tbody id="circulatedDepartmentList">
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            }
+                                            if (Session["ekurhuleniUserRole"].ToString() == "application")
+                                            {
+                                                <div class="col-lg-12">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Status</label>
+                                                        <select style="border-radius: 4px" required onchange="$.fn.changeDepartmentStatus()" class="form-control" name="DEPARTMENT_STATUS" id="DEPARTMENT_STATUS">
+                                                            <option selected value="">Make a selection</option>
+                                                            <option value="Not Affected">Not Affected</option>
+                                                            <option value="Affected">Affected</option>
+                                                        </select>
+                                                    </div>
+                                                </div><br />
+                                                if (Session["ekurhuleniUserDeptName"] != null)
+                                                {
+                                                    <div style="margin-top:20px!important;display:none!important" id="departmentRejectComment" @*ng-if="EkurhuleniRoles.indexOf('application') > -1 && CurrentUserDepartmentName!=null && appDepartmentData.DEPARTMENT_STATUS=='Rejected'"*@>
+                                                        <div class="col-lg-12">
+                                                            <div class="input-group input-label">
+                                                                <label class="control-label">Department Comments</label>
+                                                                <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="DEPARTMENT_COMMENTS" id="DEPARTMENT_COMMENTS"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;display:none;margin-top:10px!important" id="ApplicationStatus">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ApplicationStatus" href="#collapse_ApplicationStatus">
+                                            <i class="fa fa-plus" style="display: none; font-size: 12px; top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Application Status
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_ApplicationStatus" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                        <div class="col-lg-4">
+                                            <div class="input-group input-label">
+                                                <label><strong>Current status</strong> : <b id="APPLICATION_STEP_DESCRIPTION1"></b></label>
+                                                <br />
+                                                <label id="APPLICATION_STEP_DESCRIPTIONComments" style="display:none"><strong>Comments</strong> : <b style="color:#cc0c00" id="APPLICATION_DESCRIPTIONComments"></b></label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (Session["ekurhuleniUserRole"].ToString() == "Admin")
+                                    {
+                                        <div id="ApplicationPendingStatus" style="display:none" @*ng-if="EkurhuleniRoles.indexOf('Admin') > -1 && appFormData.APPLICATION_STEP_DESCRIPTION=='Pending'"*@>
+                                            <div class="panel-body" style="padding: 10px;">
+                                                <div class="col-lg-4">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Status</label>
+                                                        <select style="border-radius: 4px" onchange="$.fn.ChangeAppSatus('PendingStatus')" required
+                                                                class="form-control" name="APPLICATION_STEP_DESCRIPTION" id="AppPendingStatus">
+                                                            <option selected value="">Make a selection</option>
+                                                            <option value="Request for documents" @*ng-show="ServiceDocumentListFromServer.length>0"*@>Request for documents</option>
+                                                            <option value="Request for approvals">Request for approvals</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" style="padding: 10px;display:none" id="IsRequestDocuments">
+                                                <div class="col-lg-12">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Comments</label>
+                                                        <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="APPLICATION_COMMENTS" id="APPLICATION_COMMENTS" @*ng-required="IsRequestDocuments"*@></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    @if (Session["ekurhuleniUserRole"].ToString() == "Admin")
+                                    {
+                                        <div id="APPLICATION_STEP_DESCRIPTION_RequestStatus" style="display:none" @*ng-if="EkurhuleniRoles.indexOf('Admin') > -1 && appFormData.APPLICATION_STEP_DESCRIPTION==='Request for approvals'"*@>
+                                            <div class="panel-body" style="padding: 10px;">
+                                                <div class="col-lg-4">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Status</label>
+                                                        <select style="border-radius: 4px" onchange="$.fn.ChangeAppSatus('ApproveStatus')" required
+                                                                class="form-control" name="APPLICATION_STEP_DESCRIPTION" id="AppStatus">
+                                                            <option selected value="">Make a selection</option>
+                                                            <option value="Approved">Grant Wayleave Application</option>
+                                                            <option value="Rejected">Reject Application</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="panel-body" style="padding: 10px;display:none" id="IsStatusReject">
+                                                <div class="col-lg-12">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Comments</label>
+                                                        <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="APPLICATION_COMMENTS" id="APPLICATION_COMMENTS"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        @if (Session["ekurhuleniUserRole"].ToString() == "Admin")
+                        {
+                            <div id="ApplicationAdminSection" style="display:none!important">
+                                <table width="100%">
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px" onclick="$.fn.UpdateApplicationFormStaus()">
+                                                <i id="isAppLoading" class="fa fa-spinner fa-spin" style="font-size:10pt;margin-right:5px!important;display:none!important"></i>
+                                                Submit
+                                            </button>
+                                            <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        }
+
+                        @if (Session["ekurhuleniUserRole"].ToString() == "application")
+                        {
+                            <div id="showUpdateDepartmentStaus" style="display:none" @*ng-if="circulatedDepartmentList.length>0"*@>
+                                <table width="100%">
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px" onclick="$.fn.UpdateDepartmentStaus()">
+                                                <i id="isAppLoading" class="fa fa-spinner fa-spin" style="font-size:10pt;margin-right:5px!important"></i>
+                                                Submit
+                                            </button>
+                                            <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="locationPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="border-radius:5px!important;width:80% !important;">
+                <div class="modal-content">
+                    <div class="modal-header modal-danger">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            x
+                        </button>
+                        <h1 class="modal-title text-center" style="color:green;font-size:20px !important">Work Location</h1>
+                    </div>
+                    <div class="modal-body">
+                        <div id="map"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="PageLoaderModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="border-radius:5px!important;width:5%;height:50px!important;top:30%;border-radius:20px!important">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h3 class="text-center"><i class="fa fa-spinner fa-spin text-success"></i></h3>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <input type="hidden" id="CurrentUserDepartmentName" />
+        <div class="modal fade" id="PaymentModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="top:10%!important;border-radius:5px!important">
+                <div class="modal-content">
+                    <div class="modal-header modal-danger">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            x
+                        </button>
+                        <h4 class="modal-title text-center" style="color:green">Payment Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div style="font-size:9pt !important;height:200px !important;overflow:auto;overflow-x:hidden">
+                            <table border="0" width="100%">
+                                <tr style="height:50px!important">
+                                    <td style="width:10%!important"></td>
+                                    <td colspan="2"><b>Select Payment Method:</b></td>
+                                    <td style="width:10%!important"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%!important"></td>
+                                    <td class="text-center">
+                                        <i class="fa fa-spinner fa-spin text-success" id="EftLoader" style="display:none;"></i>
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('EFT','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/EFT_Logo.jpg" width="200" height="100" /></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-spinner fa-spin text-success" id="MasterpassLoader" style="display:none;"></i>
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('MasterPass','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/Masterpass-logo.png" width="200" height="100" /></a>
+                                    </td>
+                                    <td style="width:10%!important"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-success" value="Close" data-dismiss="modal" />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </form>
+</section>
+
+
+
+
+
+
+
+
+

@@ -10,15 +10,45 @@ var Customer_ContactPerson = [];
 var DepartmentList = [];
 var MasterRegions = [];
 var ServiceDocumentList = [];
+var ServiceDocumentListTemp = [];
 var ServiceDepartmentList = [];
 var Map_LocationsFromServer = [];
 var Customer_RegionListFromServer = [];
 var Customer_ContactPersonListFromServer = [];
 var ServiceDocumentListFromServer = [];
 var apiBaseUrl = localStorage.getItem('apiBaseUrl');
+var BaseUrl = localStorage.getItem('BaseUrl');
 //alert(apiBaseUrl);
 var accountID = localStorage.getItem('wayleaveAccountNumber');
+//var appId = localStorage.getItem('appId');
+$("#IsViewApplication").show();
  //alert(localStorage.getItem('wayleaveAccountNumber'));
+//alert(appId);
+
+//$.fn.urlParam = function (name) {
+//    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+//    if (results == null) {
+//        return null;
+//    }
+//    return results[1];
+//}
+//var appId = $.fn.urlParam("id");
+
+//Show and hide collapse panel
+$.fn.showcollapse = function () {
+    $('.panel-collapse').on('show.bs.collapse', function () {
+        $(this).parent('.panel').find('.fa-minus').show();
+        $(this).parent('.panel').find('.fa-plus').hide();
+    })
+    $('.panel-collapse').on('hide.bs.collapse', function () {
+        $(this).parent('.panel').find('.fa-minus').hide();
+        $(this).parent('.panel').find('.fa-plus').show();
+    });
+};
+
+
+
+
 
 /*......................Vew Google Map Route...................................*/
 //Intialize google map
@@ -273,6 +303,7 @@ $.fn.LoadSupportingDocumentsOnPageLoad = function () {
             console.log(data);
             //MasterRegions = data;
             ServiceDocumentList = data;
+            ServiceDocumentListTemp = data;
             if (ServiceDocumentList.length > 0) {
                 $('#ServiceDocumentList').empty();
                 $("#ServiceDocumentListFromServer").hide();
@@ -374,10 +405,138 @@ function Init() {
     //GetApplicationStausTypes();
     $.fn.GetContractorOrConsultant();    
     $.fn.GetCustomercareCenters();
-    $.fn.LoadSupportingDocumentsOnPageLoad();
+    //if (!appId) {
+        //$.fn.LoadSupportingDocumentsOnPageLoad();
+    //}
+    
     Startinitialize('');
     Endinitialize('');
 }
+
+$.fn.LoadApplicationsDetailsByAppId = function (appId) {
+    if (appId) {
+        $("#PageLoaderModel").modal('show');
+        $("#IsViewApplication").show();
+        $.getJSON(apiBaseUrl + 'get-wlApplication-by-id/' + appId, function (data, status, xhr) {
+            console.log("========Wayleave Application form data by app id==========");
+            console.log(data);
+            if (data) {
+                //$.fn.GetContractorOrConsultant(consultanT_NO);
+                appFormData.APP_ID = data.apP_ID;
+                $('#PROPERTYOWNER_ACCOUNT_NO').val(data.propertyowneR_ACCOUNT_NO);
+                $('#PROPERTYOWNER_NAME').val(data.propertyowneR_NAME);
+                $('#PROPERTYOWNER_SURNAME').val(data.propertyowneR_SURNAME);
+                $('#PROPERTYOWNER_CONTACTNO').val(data.propertyowneR_CONTACTNO);
+                $('#PROPERTYOWNER_EMAIL').val(data.propertyowneR_EMAIL);
+
+                $('#CONSULTANT_NO').val(data.consultanT_NO);
+                $('#CONSULTANT_COMPANYNAME').val(data.consultanT_COMPANYNAME);
+                $('#CONSULTANT_NAME').val(data.consultanT_NAME);
+                $('#CONSULTANT_SURNAME').val(data.consultanT_SURNAME);
+                $('#CONSULTANT_CONTACTNO').val(data.consultanT_CONTACTNO);
+                $('#CONSULTANT_EMAIL').val(data.consultanT_EMAIL);
+
+                $('#WAYLEAVE_ATTENTION').val(data.wayleavE_ATTENTION);
+                $('#STAGE_TYPE').val(data.stagE_TYPE);
+                $('#PROJECT_NUMBER').val(data.projecT_NUMBER);
+                $('#PROJECT_NAME').val(data.projecT_NAME);
+                $('#APPLYING_ON_BEHALF').val(data.applyinG_ON_BEHALF);
+                $('#PROJECT_DESCRIPTION').val(data.projecT_DESCRIPTION);
+
+                $('#APPLICATION_DATE').val(data.applicatioN_DATE);
+                $('#STARTING_DATE').val(data.startinG_DATE);
+                $('#COMPLETION_DATE').val(data.completioN_DATE);
+                $('#DRAWING_NUMBER').val(data.drawinG_NUMBER);
+
+                $('#EXCAVATION_LENGTH').val(data.excavatioN_LENGTH);
+                $('#RIDING_SURFACE').val(data.ridinG_SURFACE);
+                $('#KERBS').val(data.kerbs);
+                $('#ASPH_FOOTWAY').val(data.aspH_FOOTWAY);
+                $('#INTERL_BLOCK').val(data.interL_BLOCK);
+                $('#UNPAVED_FOOTWAYS').val(data.unpaveD_FOOTWAYS);
+
+                $('#ApplicationStatus').show();
+                appFormData.APPLICATION_STEP_DESCRIPTION = data.applicatioN_STEP_DESCRIPTION;
+
+                $('#APPLICATION_STEP_DESCRIPTION_STATUS').text(data.applicatioN_STEP_DESCRIPTION);
+                if (data.applicatioN_STEP_DESCRIPTION == "Request for documents") {
+                    $('#APPLICATION_STEP_DESCRIPTIONComments').show();
+                    $('#APPLICATION_DESCRIPTIONComments').text(data.applicatioN_COMMENTS);
+                }
+
+                if (data.applicatioN_STEP_DESCRIPTION == "Request for approvals") {
+                    $('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
+                    $('#APPLICATION_COMMENTS').val(data.applicatioN_COMMENTS);
+                }
+
+                //if (data.applicatioN_STEP_DESCRIPTION == "Pending") {
+                //    $('#ApplicationPendingStatus').show();
+                //}
+
+                //if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for documents') {
+                //    $('#ApplicationAdminSection').show();
+                //}
+
+
+                setTimeout(function () {
+                    $.fn.GetServiceTypes();
+                    $('#SERVICE_TYPE').val(data.servicE_TYPE);
+                    $.fn.ChangeServiceType();
+                    $('#SERVICE_SUB_TYPE').val(data.servicE_SUB_TYPE);
+                    $.fn.GetFormdataValues();
+                    Map_LocationsFromServer = data.wL_WORK_LOCATIONS;
+                    circulatedDepartmentList = data.departments;
+                    Customer_RegionListFromServer = data.wL_REGIONS;
+                    Customer_ContactPersonListFromServer = data.wL_CONTACT_PERSONS;
+                    ServiceDocumentListFromServer = data.wL_SUPPORTING_DOCUMENTS;
+                    $.fn.BindLocationsByAppid();
+                    $.fn.LoadContactPersonByAppid();
+                    bindRegionDataByAppid()
+                    $.fn.LoadSupportingDocumentsByAppid(data.applicatioN_STEP_DESCRIPTION);
+
+                    //if (circulatedDepartmentList.length > 0) {
+                    //    console.log("ServiceDepartmentList");
+                    //    console.log(ServiceDepartmentList);
+                    //    $('#showUpdateDepartmentStaus').show();                    
+                    //    for (let i = 0; i < ServiceDepartmentList.length; i++) {
+                    //        var id = ServiceDocumentList[i].id + "SupportDocument";
+                    //        var index = i + 1;
+                    //        $('#ServiceDocumentList').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' /></td></tr>');
+                    //    };
+                    //}
+
+                }, 10000);
+                setTimeout(function () {
+                    $("#PageLoaderModel").modal('hide');
+                }, 15000);                
+            }
+            else {
+
+            }
+        });
+    }
+    else {
+        $("#IsViewApplication").show();
+    }
+}
+
+//if ($.fn.urlParam("id")) {
+//    //alert(appId);
+    
+//    //$scope.isLoading = true;
+//    //$.getJSON(BaseUrl +"Home/GetDecryptValue?id="+ appId, function (dataAppId, status, xhr) {
+//    //    console.log("=============Decrypted value==========");        
+//    //    console.log(dataAppId);
+//    //    if (dataAppId) {
+//    //        //alert(dataAppId);
+            
+//    //    }
+//    //});
+    
+//}
+//else {
+    
+//}
 
 //Add work locations
 $.fn.AddLocations = function () {
@@ -627,6 +786,48 @@ $.fn.AddContactPerson = function () {
     }
 };
 
+//Add Supported documents
+$.fn.AddSupportingDocuments = function () {
+    var dt = $("#DocumentType").val();
+    var fileslist = $('#DocumentUpload').get(0).files;
+    
+    if (dt !== "" && dt !== undefined && fileslist.length>0) {
+        var documents = {};
+        documents.id = ServiceDocumentList.length+1;
+        documents.description = dt;
+        documents.comment = "";
+        var index = ServiceDocumentList.findIndex(x => x.description === dt)
+        var indexServer = ServiceDocumentListFromServer.findIndex(x => x.description === dt)
+        if (index === -1 && indexServer === -1) {
+            $("#ShowServiceDocumentListFooter").show();
+            ServiceDocumentList.push(documents);
+
+            $('#ServiceDocumentList').empty();
+            $("#ShowServiceDocumentListFooter").show();
+            $("#ServiceDocumentListFromServer").hide();
+            console.log("Service Document List details");
+            console.log(ServiceDocumentList);
+
+            for (let i = 0; i < ServiceDocumentList.length; i++) {
+                var fileId = ServiceDocumentList[i].id + "SupportDocument";
+                var id = ServiceDocumentList[i].id + "SupportDocumentId";
+                $('#ServiceDocumentList').append('<tr><td><input type="radio" name="radioServiceDocument" id="' + id + '" value="0" /> </td><td><input class="form-control" readonly type="text" value="' + ServiceDocumentList[i].description + '"></td><td> </td><td colspan="2"> </td></tr>');
+            };
+
+            $("#DocumentType").val('');
+            $("#DocumentUpload").val('');
+        }
+        else {
+            alert("Document type already exist!");
+        }
+        console.log(ServiceDocumentList);
+    }
+    else {
+        //alert("Please add contact details!");
+        $("#ShowContactPersonFooter").show();
+    }
+};
+
 //Remove contact persons from array
 $.fn.removeContactPerson = function () {
     console.log(Customer_ContactPerson);
@@ -704,6 +905,12 @@ function ShowWorkLoactionOnMap(i) {
     initMap(parseFloat(location.GPS_START_LATITUDE), parseFloat(location.GPS_START_LONGITUDE), parseFloat(location.GPS_END_LATITUDE), parseFloat(location.GPS_END_LONGITUDE));
 };
 
+function ShowWorkLoactionOnMapByAppid(i) {
+    let location = Map_LocationsFromServer[i];
+    $("#locationPopup").modal('show');
+    initMap(parseFloat(location.gpS_START_LATITUDE), parseFloat(location.gpS_START_LONGITUDE), parseFloat(location.gpS_END_LATITUDE), parseFloat(location.gpS_END_LONGITUDE));
+};
+
 //Remove work location from pushed array
 function RemoveWorkLoactionOnMap(where, id) {
     if (where === 'server') {
@@ -732,21 +939,48 @@ function RemoveWorkLoactionOnMap(where, id) {
 
 };
 
+//Open Payment gateway modal
+$.fn.SubmitApplication = function () {
+    if (appFormData.APPLICATION_STEP_DESCRIPTION == "Payment Pending") {
+        $.fn.SaveApplicationForm("","");
+    }
+    else {
+        $("#PaymentModel").modal();
+    }
+}
+
 //Save Wayleave application form details
-$.fn.SaveApplicationForm = function (appdata, alertStatus) { 
+$.fn.SaveApplicationForm = function (paymentStatus, alertStatus) { 
     //console.log(appdata);
     //console.log(Customer_Region);
     //console.log(Customer_ContactPerson);
     var wa = $("#WAYLEAVE_ATTENTION").val();
     var st = $("#SERVICE_TYPE").val();
     var sbt = $("#SERVICE_SUB_TYPE").val();
-    
-    if (wa != undefined && wa != "" && st != undefined && st != "") {
+    $("#EftLoader").hide();
+    $("#MasterpassLoader").hide();    
+    if (wa != undefined && wa != "" && st != undefined && st != "") {         
         var formData = new FormData();
+
+        if (Map_Locations.length == 0 && appFormData.APPLICATION_STEP_DESCRIPTION != "Payment Pending") {
+            toastr.warning('Please add work location');
+            return;
+        }
+
+        if (Customer_Region.length == 0 && appFormData.APPLICATION_STEP_DESCRIPTION != "Payment Pending") {
+            toastr.warning('Please select minimum one region!');
+            return;
+        }
+
+        if (Customer_ContactPerson.length == 0 && appFormData.APPLICATION_STEP_DESCRIPTION != "Payment Pending") {
+            toastr.warning('Please add contact person details!');
+            return;
+        }
+
         if (sbt == undefined || sbt == "") {
             $("#SERVICE_SUB_TYPE").val('1');
         }
-        $("#isAppLoading").show();
+
         console.log('ServiceDepartmentList');
         console.log(ServiceDepartmentList);
         $.fn.GetFormdataValues();
@@ -768,20 +1002,34 @@ $.fn.SaveApplicationForm = function (appdata, alertStatus) {
         formData.append("SupportDocumentList", JSON.stringify(ServiceDocumentList));
         formData.append("WorkLocations", JSON.stringify(Map_Locations));
         formData.append("Departments", JSON.stringify(DepartmentList));
-
+        formData.append("PaymentStatus", JSON.stringify(paymentStatus));
+        
         if (ServiceDocumentList.length > 0) {
+            var isFileUploaded = false;
             console.log(ServiceDocumentList);
             $.each(ServiceDocumentList, function (data, value) {
                 var decsionID = value.id + "SupportDocument";
-                //alert(decsionID);
-                //var files = $('#1SupportDocument').get(0).files;
-                //alert(files.length);
                 var fileslist = $('#' + decsionID).get(0).files;
                 for (var i = 0; i < fileslist.length; i++) {
+                    isFileUploaded = true;
                     formData.append(decsionID, fileslist[i]);
                 }
             });
+            if (!isFileUploaded) {
+                toastr.warning('Please upload supporting documents!');
+                return;
+            }
         }
+
+        $("#isAppLoading").show();
+        if (paymentStatus == "EFT") {
+            $("#EftLoader").show();
+        }
+        else if (paymentStatus == "MasterPass") {
+            $("#MasterpassLoader").show();
+        }
+
+        
 
         $.ajax({
             url: apiBaseUrl + 'add-application-form',
@@ -799,14 +1047,9 @@ $.fn.SaveApplicationForm = function (appdata, alertStatus) {
                 $('#isAppLoading').hide();
                 if (alertStatus == "resubmission") {
                     toastr.success('Application form re-submitted successfully');
-                    //alert("Application form saved successfully.");
-                    //setTimeout(function () {
-                    //    window.location.href = "../WayleaveAccount/Index";
-                    //}, 2000)
-
                 }
                 else {
-                    toastr.success('Application form saved successfully');
+                    toastr.success('Application form submitted successfully');
                     //alert("Application form saved successfully.");
                     setTimeout(function () {
                         window.location.href = "../WayleaveAccount/Index";
@@ -821,6 +1064,7 @@ $.fn.SaveApplicationForm = function (appdata, alertStatus) {
         });
     }
     else {
+        //$("#PaymentModel").modal('hide');
         toastr.warning('* Fields are required!');
     }
 }
@@ -878,4 +1122,180 @@ $.fn.GetFormdataValues = function () {
     //appFormData.postCode = $('#postCode').val();
     //appFormData.postCode = $('#postCode').val();
 };
+
+//Bind Worklocations from array
+$.fn.BindLocationsByAppid = function () {
+    $('#Map_LocationsFromServer').empty();
+    //alert('success');
+    //Customer_ContactPerson.push(person);
+    $("#ShowMap_Locations").hide();
+    $("#Map_Locations").hide();
+    $("#Map_LocationsFromServer").show();
+    console.log("Customer_Work location details");
+    console.log(Map_LocationsFromServer);
+    var tLocation;
+    for (let i = 0; i < Map_LocationsFromServer.length; i++) {
+        var id = "Map_LocationsFromServer" + i;
+        $('#Map_LocationsFromServer').append('<tr><td><select style="border-radius: 4px" disabled class="form-control"> <option value=' + Map_LocationsFromServer[i].worK_LOCATION_TYPE + '>' + Map_LocationsFromServer[i].worK_LOCATION_TYPE + '</option></select></td><td><input class="form-control" readonly type="text" value="' + Map_LocationsFromServer[i].gpS_START_ADDRESS + '"></td><td><input class="form-control" type="text" readonly value="' + Map_LocationsFromServer[i].gpS_END_ADDRESS + '"></td><td class="text-center"> <a title="View work location on map" id="' + id + '" onclick=ShowWorkLoactionOnMapByAppid("' + i + '") class="fa fa-2x fa-map-marker text-blue" style="cursor:pointer"></a></td></tr>');
+    };
+}
+
+//Load Contact persons
+$.fn.LoadContactPersonByAppid = function () {
+    $("#ShowContactPersonFooter").hide();
+    $('#Customer_ContactPersonListFromServer').hide();
+    $("#ShowContactPersonFooter").hide();
+    $("#Customer_ContactPersonListFromServer").show();
+    console.log("ContactPersonListFromServer details");
+    console.log(Customer_ContactPersonListFromServer);
+
+    for (let i = 0; i < Customer_ContactPersonListFromServer.length; i++) {
+        var id = Customer_ContactPersonListFromServer[i].contacT_NUMBER + "ChkPerson";
+        $('#Customer_ContactPersonListFromServer').append('<tr><td><input class="form-control" readonly type="text" value="' + Customer_ContactPersonListFromServer[i].firsT_NAME + '"></td><td><input class="form-control" readonly type="text" value="' + Customer_ContactPersonListFromServer[i].lasT_NAME + '"> </td><td><input class="form-control" readonly type="text" value="' + Customer_ContactPersonListFromServer[i].registratioN_NUMBER + '"></td><td colspan="2"><input class="form-control" readonly type="text" value="' + Customer_ContactPersonListFromServer[i].contacT_NUMBER + '"></td></tr>');
+    };     
+};
+
+//Bind region data
+function bindRegionDataByAppid() {
+    $("#ShowRegionFooter").hide();
+    $('#Customer_Region').hide();
+    $("#ShowRegionFooter").hide();
+    $("#Customer_RegionListFromServer").show();
+    console.log("Customer_RegionListFromServer details");
+    console.log(Customer_RegionListFromServer);
+    var tLocation;
+    for (let i = 0; i < Customer_RegionListFromServer.length; i++) {
+        var id = Customer_RegionListFromServer[i].regioN_ID + "ChkId";
+        $('#Customer_RegionListFromServer').append('<tr><td><input type="radio" name="radioRegion" id="' + id + '" value="0" /> </td><td><input class="form-control" readonly type="text" value="' + Customer_RegionListFromServer[i].regioN_CODE + '"></td><td><input class="form-control" readonly type="text" value="' + Customer_RegionListFromServer[i].regioN_NAME + '"> </td><td colspan="2"><input class="form-control" readonly type="text" value="' + Customer_RegionListFromServer[i].roaD_NUMBER + '"></td></tr>');
+    };    
+}
+
+// loading supporting documents and departments by application id
+$.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
+
+    ServiceDocumentList = [];
+    ServiceDepartmentList = [];
+    $.ajax({
+        url: apiBaseUrl + 'get-service-documents/' + 2,
+        type: 'GET',
+        processData: false,
+        contentType: false,
+        cache: false,
+        enctype: 'multipart/form-data',
+        dataType: 'json',
+        //data: formData,
+        success: function (data, textStatus, xhr) {
+            console.log("======Service DocumentList Result=========");
+            console.log(data);
+            console.log(ServiceDocumentListFromServer);
+            //MasterRegions = data;
+            ServiceDocumentList = data;
+            //if (ServiceDocumentList.length > 0) {
+            //    $('#ServiceDocumentList').empty();
+            //    $("#ServiceDocumentListFromServer").hide();
+            //    console.log("Service Document details");
+            //    console.log(ServiceDocumentList);
+
+            //    for (let i = 0; i < ServiceDocumentList.length; i++) {
+            //        var id = ServiceDocumentList[i].id + "SupportDocument";
+            //        var index = i + 1;
+            //        $('#ServiceDocumentList').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' /></td></tr>');
+            //    };
+            //}
+            if (ServiceDocumentListFromServer.length > 0) {
+                //alert(stepDescription);
+                $('#ServiceDocumentList').hide();
+                $('#ServiceDocumentListFromServer').empty();
+                $("#ServiceDocumentListFromServer").show();
+                console.log("ServiceDocumentListFromServer details");
+                console.log(ServiceDocumentListFromServer);
+                for (let i = 0; i < ServiceDocumentList.length; i++) {
+                    var sid = ServiceDocumentList[i].id + "SupportDocument";
+                    //var index = i + 1;
+                    //$('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentListFromServer[i].documenT_TYPE + '</td><td><a href="#" id=' + id + ' onclick=ViewDocument("' + ServiceDocumentListFromServer[i].documenT_NAME + '") style="color:darkblue">View</a></td></tr>');
+                    for (let j = 0; j < ServiceDocumentListFromServer.length; j++) {
+                        var id = ServiceDocumentListFromServer[j].sD_ID + "SupportDocument";
+                        var index = i + 1;
+                        if (sid == id) {
+                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + sid + ' /><a id=' + id + ' onclick="ViewDocument("' + ServiceDocumentListFromServer[j].documenT_NAME + '")" style="color:darkblue">View</a></td></tr>');
+                        }
+                        else {
+                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + sid + ' /></td></tr>');
+                        }
+                    };
+                };
+            }
+            else {
+                ServiceDocumentListFromServer = data;
+                for (let j = 0; j < ServiceDocumentListFromServer.length; j++) {
+                    var id = ServiceDocumentListFromServer[j].id + "SupportDocument";
+                    var index = j + 1;
+                    $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentListFromServer[j].description + '</td><td><input type="file" name="Add" id=' + id + ' /></td></tr>');
+                };
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            toastr.error('Error in Operation');
+        }
+    });
+
+    $.ajax({
+        url: apiBaseUrl + 'get-service-departments/' + 1,
+        type: 'GET',
+        processData: false,
+        contentType: false,
+        cache: false,
+        enctype: 'multipart/form-data',
+        dataType: 'json',
+        //data: formData,
+        success: function (data, textStatus, xhr) {
+            console.log("====== Service DepartmentList Result=========");
+            console.log(data);
+            ServiceDepartmentList = data;
+            if (ServiceDepartmentList.length > 0) {
+                $('#ServiceDepartmentList').empty();
+                console.log("Service Departments details");
+                console.log(ServiceDepartmentList);
+
+                for (let i = 0; i < ServiceDepartmentList.length; i++) {
+                    var id = "CheckBox_" + ServiceDepartmentList[i].id;
+                    var index = i + 1;
+                    $('#ServiceDepartmentList').append('<div><input type="checkbox" class="checkbox-custom" checked="checked" disabled="disabled" id=' + id + ' value="' + ServiceDepartmentList[i].description + '"><label class="checkbox-custom-label" for=' + id + '>' + ServiceDepartmentList[i].description + '</label></div>');
+                };
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            //toastr.error('Error in Operation');
+        }
+    });     
+
+    if (circulatedDepartmentList.length > 0) {
+        $('#DepartmentInfo').show();
+        $('#circulatedDepartmentList').empty();
+        console.log("circulated Department List");
+        console.log(circulatedDepartmentList);
+
+        for (let i = 0; i < circulatedDepartmentList.length; i++) {
+            var dptInfo = circulatedDepartmentList[i];
+            var status = "";
+            var dptComment = "";
+
+            if (dptInfo.applicationStatus != null && dptInfo.applicationStatus != '') {
+                status = dptInfo.applicationStatus;
+            }
+
+            if (dptInfo.comment != null && dptInfo.comment != '') {
+                dptComment = dptInfo.comment;
+            }
+
+            $('#circulatedDepartmentList').append('<tr><td>' + circulatedDepartmentList[i].id + '</td> <td>' + circulatedDepartmentList[i].description + '</td> <td>' + status + '</td> <td>' + dptComment + '</td> <td>' + circulatedDepartmentList[i].createdDate + '</td> </tr>');
+        };
+    }
+}
+
+function ViewDocument(filename) {
+    window.location.href = "~/uploads/"+filename;
+}
+
+
 

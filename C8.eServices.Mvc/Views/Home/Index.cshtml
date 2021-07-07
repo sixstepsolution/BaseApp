@@ -127,8 +127,6 @@
     </div>
 </div>
 
-@*<script src="https://www.google.com/recaptcha/api.js?hl=en" async defer></script>*@
-
 <script type="text/javascript">
     $(document).ready(function () {
         $("#loginButtons").show();
@@ -139,8 +137,8 @@
             $.fn.loadLoginPages(val);
         }
 
-        $.fn.loadLoginPages = function(val) {
-            $("#loginPage").show();
+        $.fn.loadLoginPages = function (val) {
+            $("#loginPage").fadeToggle();
             $("#loginButtons").hide();
             if (val) {
                 $("#loginButtons").show();

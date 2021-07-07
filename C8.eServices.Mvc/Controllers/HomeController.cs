@@ -270,6 +270,7 @@ namespace C8.eServices.Mvc.Controllers
                         //ekurhuleniData.deptartmentname = result.deptartmentname;
                         Session["ekurhuleniData"] = result;
                         Session["ekurhuleniUserName"] = result.username;
+                        Session["ekurhuleniUserDeptName"] = result.deptartmentname;
                         Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
                         return RedirectToAction("Index", "WL");
                     }
@@ -300,6 +301,12 @@ namespace C8.eServices.Mvc.Controllers
             System.Web.HttpContext.Current.Session.Abandon();
             System.Web.HttpContext.Current.Session.RemoveAll();
             return Redirect("../home/index");
+        }
+
+        public ActionResult GetDecryptValue(string id)
+        {
+            var result = new AesCrypto().Decrypt(id);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }

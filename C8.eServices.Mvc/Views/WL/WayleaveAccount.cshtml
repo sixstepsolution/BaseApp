@@ -4,5 +4,658 @@
     Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
 }
 
-<h2>WayleaveAccount</h2>
+
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+
+    select {
+        vertical-align: top;
+        height: 30px;
+    }
+
+    input, select {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+
+    .badge {
+        display: inline-block;
+        width: 80px;
+        padding: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #777;
+        border-radius: 10px;
+    }
+
+    .headindg-size {
+        margin-left: -26px;
+        font-size: 14px;
+        padding: 2px;
+    }
+
+    span {
+        height: 24px !important;
+        font-size: 10px !important;
+    }
+
+    .panel-default-custom {
+        border: 0.5px solid transparent;
+    }
+
+        .panel-default-custom > .panel-heading {
+            color: #000;
+            background-color: #f3f0e1;
+            /* border-color: #ddd; */
+            border: none;
+            border-radius: 0;
+            height: 22px;
+        }
+
+    .panel-group {
+        margin-bottom: 0px;
+    }
+
+    role {
+        margin-right: 80px;
+        margin-left: 20px;
+        font-weight: normal;
+        float: left;
+        margin: 0px;
+        margin-top: 8px;
+        margin-left: 10px;
+        font-size: 11px !important;
+    }
+
+    label {
+        font-size: 11px;
+        padding: 0;
+        font-weight: 500;
+        padding-left: 3px;
+        margin-bottom: -10px;
+    }
+</style>
+
+<style type="text/css">
+    #right-panel {
+        font-family: "Roboto", "sans-serif";
+        line-height: 30px;
+        padding-left: 10px;
+    }
+
+        #right-panel select,
+        #right-panel input {
+            font-size: 15px;
+        }
+
+        #right-panel select {
+            width: 100%;
+        }
+
+        #right-panel i {
+            font-size: 12px;
+        }
+
+
+    #map {
+        width: 100%;
+        height: 250px;
+        margin: 0px !important;
+        padding: 0px !important
+    }
+
+    #right-panel {
+        float: right;
+        width: 34%;
+        height: 100%;
+    }
+
+    .panel {
+        height: 100%;
+        overflow: auto;
+    }
+
+    .errorNew {
+        border: 2px solid red !important;
+        border-color: red !important;
+        color: red !important;
+    }
+</style>
+
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        var wayleaveAccountNumber = '@ViewBag.AccountId';
+        if (wayleaveAccountNumber != undefined && wayleaveAccountNumber != "") {
+            $.fn.LoadWayleaveAccountDetails(wayleaveAccountNumber);
+        }
+        else {
+            //window.location.href = "../Home/WayleaveLogin";
+        }
+    });
+</script>
+<script src="~/Scripts/wayleaveScripts/VerifyingWayleaveAccount.js"></script>
+<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important">
+    <form name="WlAccountForm" novalidate>
+        <div class="panel-group" style="margin-left: -25px;margin-right: -14px;
+        margin-bottom: 3px !important;">
+            <div class="panel panel-default" style="border:none!important">
+                <div class="panel-heading" style="background:#d2930b;padding-top:5px!important">
+                    <a class="fa fa-chevron-left pull-left" style="font-size:16pt!important;text-decoration:none!important;color:#fff!important" title="Back to home" href="../WL/WayleaveAccountDashboard"></a>
+                    <h4 class="panel-title text-center" style="font-size:16pt!important">
+                        Verifying Wayleave Account
+                    </h4>
+                </div>
+                <div style="border:1px solid #b59b5a;">
+                    <div class="panel-body" style="padding: 5px!important;">
+                        <div style="margin-bottom:10px !important;">
+                            <input id="Qs_PersonMandatory"
+                                   class="radio-custom" checked onclick="$.fn.showAccountScreen('New')" name="Qs_PersonMandatory" type="radio"
+                                   style="margin-top: 10px !important;margin-left: 28px !important;background-color:#d2930b!important">
+                            <label for="Qs_PersonMandatory" class="radio-custom-label"
+                                   style="margin-top: 10px;padding: 6px;">New Account</label>&nbsp;&nbsp;
+                            @*<input id="Qs_PersonMandatory1" class="radio-custom" onclick="$.fn.showAccountScreen('Renewal')"
+                                   name="Qs_PersonMandatory" type="radio"
+                                   style="margin-top: 10px !important">
+                            <label for="Qs_PersonMandatory1" class="radio-custom-label"
+                                   style="margin-top:10px;padding: 6px;">Renewal of Account</label>*@
+                        </div>
+
+                        <div>
+                            <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;">
+                                <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important">
+                                    <div class="panel panel-default" style="border:none!important">
+                                        <div id="collapse_search_1" class="panel-collapse collapse in" style="border:none">
+                                            <div class="panel-body" style="padding: 0;" id="IsNewAccount">
+                                                <div class="col-lg-6">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label"> Type of User</label>
+                                                        <select style="border-radius: 4px" required
+                                                                class="form-control" name="UserType" id="userType">
+                                                            <option value="" selected>Make a selection</option>
+                                                            <option value="Consultant">Consultant</option>
+                                                            <option value="Contractor">Contractor</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="panel-body" style="padding: 0;display:none" id="IsRenewalAccount">
+                                                <div class="col-lg-4">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Search Account Number</label>
+                                                        <input type="text" placeholder="Type to search account number" style="border-radius: 4px" class="form-control" id="AccountNumber"
+                                                               name="AccountNumber" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <button class="btn btn-sm btn-success" onclick="BindAccountInformation(AccountNumber)" style="background-color: #036638 !important; margin-top: 13px !important; height: 24px; padding: 5px; font-size: 10px ">
+                                                        @*<i class="fa fa-spinner fa-spin" ng-if="isLoading"></i>*@
+                                                        Bind Account Information
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important" id="accordionSerach">
+                            <div class="panel panel-default" style="border:none!important;overflow:hidden">
+                                <div class="panel-heading" style="background:#d2930b">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordionSerach" href="#collapse_search_1">
+                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Company Information
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_search_1" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+                                    <div class="panel-body" style="padding: 10px;">
+                                        <table width="100%">
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Company Name</label>
+                                                        <input type="text" style="border-radius: 4px" id="companyName"
+                                                               class="form-control" name="CompanyName" required />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Company Full Name</label>
+                                                        <input type="text" style="border-radius: 4px" id="companyFullName"
+                                                               class="form-control" name="CompanyFullName1" required />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Company Registration Number</label>
+                                                        <input type="text" style="border-radius: 4px" id="companyRegistrationNumber"
+                                                               class="form-control" name="CompanyRegistrationNumber" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Expiration Date of Trade License</label>
+                                                        <input type="text" style="border-radius: 4px" datepicker id="tradeLicenseExpirationDate"
+                                                               class="form-control" name="TradeLicenseExpirationDate" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" id="tradeLicenseSection" style="width: 100%" @*ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'"*@>
+                                                        <label>Upload Trade License</label>
+                                                        <input type="file" id="tradeLicensefile" style="border-radius: 4px;padding: 3px !important"
+                                                               class="form-control" name="TradeLicenseFile" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group" id="tradeLicenseView" style="width: 100%;margin-top:10px;margin-left:20px;display:none" @*ng-if="IsWayleaveAccountAuthenticated"*@>
+                                                        <label>
+                                                            Current Trade License File
+                                                            <br /> <a onclick="$.fn.OpenFileNewTab('trade')" style="color: #00337f; font-weight: 700">View</a>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="consultantInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#d2930b">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#consultantInfo" href="#collapse_consultantInfo">
+                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Contact Person Information
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_consultantInfo" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+                                    <div class="panel-body" style="padding: 10px;">
+                                        <table width="100%">
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Contact Person First Name</label>
+                                                        <input type="text" style="border-radius: 4px" id="contactPersonFirstName"
+                                                               class="form-control" name="ContactPersonFirstName" required />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Contact Person Last Name</label>
+                                                        <input type="text" style="border-radius: 4px" id="contactPersonLastName"
+                                                               class="form-control" name="ContactPersonLastName" required />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Designation</label>
+                                                        <input type="text" style="border-radius: 4px" id="designation"
+                                                               class="form-control" name="Designation" required />
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Telephone Number</label>
+                                                        <input type="text" style="border-radius: 4px" maxlength="10" min="10" max="10" numbers-only id="telephoneNumber"
+                                                               class="form-control" name="TelephoneNumber" />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Mobile Number</label>
+                                                        <input type="text" style="border-radius: 4px" id="mobileNumber"
+                                                               class="form-control" name="MobileNumber" numbers-only maxlength="10" min="10" max="10" required />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Email</label>
+                                                        <input type="text" style="border-radius: 4px" @*ng-pattern="emailFormat"*@ id="email"
+                                                               class="form-control" name="Email" required />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label>Fax No</label>
+                                                        <input type="text" style="border-radius: 4px" numbers-only id="fax"
+                                                               class="form-control" name="Fax" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="WayleaveTypeInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#d2930b">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#WayleaveTypeInfo" href="#collapse_WayleaveTypeInfo">
+                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Address Information
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_WayleaveTypeInfo" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+                                    <div class="panel-body" style="padding: 10px;">
+                                        <table width="100%">
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Street Name</label>
+                                                        <input rows="3" style="border-radius: 4px" id="streetName"
+                                                               class="form-control" name="StreetName" required />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">City</label>
+                                                        <input type="text" style="border-radius: 4px" id="city"
+                                                               class="form-control" name="City" required />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Province</label>
+                                                        <input type="text" style="border-radius: 4px" id="province"
+                                                               class="form-control" name="Province" required />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Country</label>
+                                                        <input type="text" style="border-radius: 4px" id="country"
+                                                               class="form-control" name="Country" required />
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Post Code</label>
+                                                        <input type="text" style="border-radius: 4px" numbers-only id="postCode"
+                                                               class="form-control" name="PostCode" required />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ContactPersonInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#d2930b">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#ContactPersonInfo" href="#collapse_ContactPersonInfo">
+                                            <i class="fa fa-plus" style="display: none; font-size: 12px; top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Alternative Contact Information
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_ContactPersonInfo" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;font-size: 10px !important">
+                                    <div class="panel-body" style="padding: 0px;">
+
+                                        @*<ng-form name="innerForm" >*@
+                                        <table class="table table-bordered table-hover" id="ContactTable" style="">
+                                            <thead>
+                                                <tr style="background:#d2930b!important;color:#fff !important">
+                                                    <td>Select</td>
+                                                    <td><label>Contact Name</label></td>
+                                                    <td><label>Contact Surname</label></td>
+                                                    <td><label>Contact Number</label></td>
+                                                    <td><label>Email</label></td>
+                                                    <td><label>Designation</label></td>
+                                                    <td colspan="2">
+                                                        <div class="pull-right">
+                                                            <button title="Add Contact" type="button" class="btn btn-sm btn-warning" style="text-decoration:none!important;" onclick="$.fn.AddContactPerson()"><i class="glyphicon glyphicon-plus"></i></button>
+                                                            <button type="button" title="Delete Contact" onclick="$.fn.removeContactPerson()" class="btn btn-sm btn-primary" style="text-decoration:none!important;"><i class="fa fa-trash"></i></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                            <tbody style="padding:10px !important" id="ContactTableBody">
+                                            </tbody>
+                                            <tfoot id="ShowContactPersonFooter">
+                                                <tr>
+                                                    <td><input type="radio" name="radioContactPerson" /></td>
+                                                    <td>
+                                                        <input type="text" class="form-control" id="ContactFirstName" name="ContactFirstName" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" id="ContactLastName" name="ContactLastName" />
+                                                    </td>
+
+                                                    <td>
+                                                        <input type="text" class="form-control" numbers-only maxlength="10" min="10" max="10" name="ContactNumber"
+                                                               id="ContactNumber" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" onkeyup="$.fn.validateEmail()" name="ContactEmail"
+                                                               id="ContactEmail" />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" id="ContactDesignation" name="ContactDESIGNATION" />
+                                                    </td>
+                                                    @*<td><input type="button" class="btn btn-success" value="Add" ng-click="AddContactPerson(conatctModel)" /></td>*@
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        @*</ng-form>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important" id="accordionSupportDocs">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#d2930b">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordionSupportDocs" href="#collapse_supporting_docs">
+                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Supporting Documents
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_supporting_docs" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+                                    <div class="panel-body" style="padding: 10px;">
+                                        <table width="100%">
+
+                                            <tr>
+                                                <td>
+                                                    <div class="input-group input-label" id="regCertificateSection" style="width: 100%" @*ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'"*@>
+                                                        <label>Registartion Certificate</label>
+                                                        <input type="file" id="regCertificatefile" style="border-radius: 4px;padding: 3px !important"
+                                                               class="form-control" name="RegistartionCertificate" />
+                                                    </div>
+                                                    <div class="input-group" id="regCertificateView" style="width: 100%;margin-top:10px;display:none" @*ng-if="IsWayleaveAccountAuthenticated"*@>
+                                                        <label>
+                                                            Current  Registartion Certificate File
+                                                            <br /> <a onclick="$.fn.OpenFileNewTab('registartion')" style="color: #00337f; font-weight: 700">View</a>
+                                                        </label>
+
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group input-label" id="taxCertificateSection" style="width: 100%" @*ng-if="!IsWayleaveAccountAuthenticated||WlAccountModel.status=='Rejected'"*@>
+                                                        <label>Tax Certificate</label>
+                                                        <input type="file" id="taxCertificatefile" style="border-radius: 4px;padding: 3px !important"
+                                                               class="form-control" name="TaxCertificate" />
+                                                    </div>
+                                                    <div class="input-group" id="taxCertificateView" style="width: 100%;margin-top:10px;display:none" @*ng-if="IsWayleaveAccountAuthenticated"*@>
+                                                        <label>
+                                                            Current Tax Certificate File
+                                                            <br /> <a onclick="$.fn.OpenFileNewTab('tax')" style="color: #00337f; font-weight: 700;cursor:pointer">View</a>
+                                                        </label>
+
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <div style="font-size:11px;color:#d2930b">
+                                                        <h5 style="color:#cc0c00"><strong><u>File Name Convention</u></strong></h5>
+                                                        Use Capital or lower letters to delimit words,not spaces. e.g: RegisrationCertificate<br />
+                                                        Keep file names short,but meaningful. e.g: 2020TaxCertificate<br />
+                                                        <strong style="color:#cc0c00">DON'T</strong> save files containing any special characters. e.g *:/\<>|"?[];=&%$#()
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important" id="accordionApprove">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#d2930b">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#accordionSupportDocs" href="#collapse_accordionApprove">
+                                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Approve/Reject
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_accordionApprove" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+
+                                    <div class="panel-body" style="padding: 10px;">
+                                        <div class="col-lg-4">
+                                            <div class="input-group input-label">
+                                                <label><strong>Previous status</strong> : <b style="color:#cc0c00" id="WlAccountStatus"></b></label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel-body" style="padding: 10px;display:none" id="isWayleaveAccountNotApproved">
+                                        <div class="col-lg-4">
+                                            <div class="input-group input-label">
+                                                <label class="control-label">Status</label>
+                                                <select style="border-radius: 4px" onchange="$.fn.changeStatusType()" required
+                                                        class="form-control" name="statusId" id="statusId">
+                                                    <option selected="selected" value="">Make a selection</option>
+                                                    <option value="6">Wayleave Account Approved</option>
+                                                    <option value="7">Wayleave Account Rejected</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel-body" style="padding: 10px;display:none" id="showRejectedComment">
+                                        <div class="col-lg-12">
+                                            <div class="input-group input-label">
+                                                <label class="control-label">Comments</label>
+                                                <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="comments" id="comments" required></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table width="100%">
+                            <tr class="isWayleaveAccountNotApproved" style="display:none">
+                                @*<td colspan="4" class="text-center" id="IsFromNotPending">
+                                        <button class="btn btn-success" ng-disabled="IsSubmit" ng-click="SaveWlAccountForm(WlAccountModel)" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
+                                            <i class="fa fa-spinner fa-spin" ng-if="IsSubmit"></i>
+                                            Submit
+                                        </button>
+                                        <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                                    </td>*@
+                                <td colspan="4" class="text-center" id="IsFromPending">
+                                    <button type="button" class="btn btn-success" onclick="$.fn.UpdateWlAccountFormStatus()" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
+                                        <i class="fa fa-spinner fa-spin" id="loadSpinner" style="display:none!important"></i>
+                                        Submit
+                                    </button>
+                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                                </td>
+                            </tr>
+                        </table>
+                        @*<div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important;display:none!important" id="accordionApprove">
+                                <div class="panel panel-default" style="border:none!important">
+                                    <div class="panel-heading" style="background:#d2930b">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordionSupportDocs" href="#collapse_accordionApprove">
+                                                <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
+                                                <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                                Approve/Reject
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse_accordionApprove" class="panel-collapse collapse in" style="border: 1px solid #b59b5a;">
+
+                                        <div class="panel-body" style="padding: 10px;">
+                                            <div class="col-lg-4">
+                                                <div class="input-group input-label">
+                                                    <label><strong>Current status</strong> : <b style="color:#cc0c00" id="WlAccountStatus"></b></label><br />
+                                                    <label id="WlAccountComments"><strong>Comments</strong> : <b style="color:#cc0c00" id="WlAccountStatusComments"></b></label>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        @*<table width="100%">
+                                <tr>
+                                    <td colspan="4" class="text-center" id="IsWayleaveAccountSubmit">
+                                        <button class="btn btn-success" type="button" onclick="$.fn.SaveWlAccountForm()" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
+                                            <i class="fa fa-spinner fa-spin custom-hide" id="loadSpinner"></i>
+                                            Submit
+                                        </button>
+                                        <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-center custom-hide" id="IsWayleaveAccountResubmit">
+                                        <button class="btn btn-success" onclick="UpdateWlAccountForm(WlAccountModel)" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">
+                                            <i class="fa fa-spinner fa-spin"></i>
+                                            Re-submit
+                                        </button>
+                                        <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                                    </td>
+                                </tr>
+                            </table>*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+
+
+
 

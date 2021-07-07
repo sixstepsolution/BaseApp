@@ -87,6 +87,10 @@ namespace C8.eServices.Mvc.Keys
         // Payment History
         public const string PaymenthistoryPollingDirectory = "as_paymenthistory_polling_directory";
 
+        // Payment gateway
+        public const string PGDomain = "pg_domain";
+        public const string RCSPaymentGateway = "pg_domain";
+
         //Recurring Debit Orders
         public const string RecurringDebitOrdersStrikeDayEdit = "as_recurring_debit_orders_strikeday_edit";
         public const string RecurringDebitOrdersStrikeDayRemove = "as_recurring_debit_orders_strikeday_remove";

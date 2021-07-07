@@ -135,25 +135,52 @@
         border-color: red !important;
         color: red !important;
     }
+
+    .payment-custom img {
+        border: 1px solid #ccc !important;
+    }
+
+        .payment-custom img:hover {
+            border: 2px solid green !important;
+        }
 </style>
-<script src="~/Scripts/wayleaveScripts/ApplicationForm.js"></script>
+<style>
+    .ui-autocomplete {
+        max-height: 200px;
+        max-width: 170px !important;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: auto;
+        /* add padding to account for vertical scrollbar */
+        padding: 5px !important;
+        font-size: 12pt !important;
+        border: 1px solid #00a65a !important;
+        color: #000 !important;
+    }
+</style>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="~/Scripts/wayleaveScripts/ApplicationForm.js?dt=@DateTime.Now.Millisecond"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLOlMJLaIKTK3R1mRfv0gEI8bAmfqDxlk&sensor=false&libraries=places"></script>
-
 <script type="text/javascript" language="javascript">
     $(document).ready(function () {
-        //if (!elem.getClientRects()) {
-        //    return { top: 0, left: 0 };
-        //}
         var sessionInfo = '@Session["wayleaveaccountId"]';
-        if (sessionInfo != undefined && sessionInfo != "") {
+        var applicationId = '@ViewBag.ApplicationId';
+
+        if (applicationId != undefined && applicationId != "") {
+            $.fn.LoadApplicationsDetailsByAppId(applicationId);
         }
         else {
-            window.location.href = "../Home/WayleaveLogin";
+            $.fn.LoadSupportingDocumentsOnPageLoad();
+        }
+        if (sessionInfo != undefined && sessionInfo != "") {
+            $.fn.LoadApplicationsAlertsWithCounts('o');
         }
         Init();
     });
 </script>
+
+@*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
     <form name="ApplicationForm">
         <div class="panel-group" style="margin-left: -25px;
@@ -178,6 +205,12 @@
 
                             <label for="Qs_PersonMandatory1" class="radio-custom-label"
                                    style="margin-top:10px;padding: 1px;">Consultant</label>
+                            <div class="pull-right" style="margin-top:0px; margin-right:100px">
+                                <h4 class="title" style="color:red"><b id="APPLICATION_STEP_DESCRIPTION_STATUS"></b></h4>
+                                @*<h4 class="title" ng-if="appFormData.APPLICATION_STEP_DESCRIPTION==='Pending'" style="color:red"><b>{{appFormData.APPLICATION_STEP_DESCRIPTION}}</b></h4>
+                                    <h4 class="title" ng-if="appFormData.APPLICATION_STEP_DESCRIPTION==='Request for documents'||appFormData.APPLICATION_STEP_DESCRIPTION==='Request for approvals'" style="color:#cc0c00"><b>{{appFormData.APPLICATION_STEP_DESCRIPTION}}</b></h4><br>
+                                    <h4 class="title" title="{{appFormData.APPLICATION_COMMENTS}}" ng-if="appFormData.APPLICATION_STEP_DESCRIPTION==='Rejected'"><b style="color:#cc0c00">{{appFormData.APPLICATION_STEP_DESCRIPTION}}</b></h4>*@
+                            </div>
 
                         </div>
                     </div>
@@ -187,7 +220,7 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#accordionSerach" href="#collapse_search_1">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#accordionSerach" href="#collapse_search_1">
                                             <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
                                             <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
                                             Contractor Details
@@ -243,7 +276,7 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#consultantInfo" href="#collapse_consultantInfo">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#consultantInfo" href="#collapse_consultantInfo">
                                             <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
                                             <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
                                             Consultant Details
@@ -308,12 +341,11 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="WayleaveTypeInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#WayleaveTypeInfo" href="#collapse_WayleaveTypeInfo">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#WayleaveTypeInfo" href="#collapse_WayleaveTypeInfo">
                                             <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
                                             <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
                                             Wayleave Type Details
@@ -372,14 +404,13 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ProjectInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" onclick="$.fn.showGPS()" data-parent="#ProjectInfo" href="#collapse_ProjectInfo">
-                                            <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" @*onclick="$.fn.showGPS()"*@ data-parent="#ProjectInfo" href="#collapse_ProjectInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;display: none"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0"></i>
                                             Work Location
                                         </a>
                                     </h4>
@@ -451,13 +482,12 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ProjectDetailsInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#ProjectDetailsInfo" href="#collapse_ProjectDetailsInfo">
-                                            <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ProjectDetailsInfo" href="#collapse_ProjectDetailsInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;display: none"></i>
                                             <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
                                             Project Details
                                         </a>
@@ -538,9 +568,9 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#ProvisionalDates" href="#collapse_ProvisionalDates">
-                                            <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ProvisionalDates" href="#collapse_ProvisionalDates">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;display: none"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0"></i>
                                             Provisional Dates
                                         </a>
                                     </h4>
@@ -558,8 +588,8 @@
                                                                   style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
                                                                 <i class="fa fa-calendar"></i>
                                                             </span>
-                                                            <input type="text" datepicker1 autocomplete="off" style="border-top-right-radius: 4px !important; border-bottom-right-radius: 4px !important" id="APPLICATION_DATE"
-                                                                   class="form-control" name="APPLICATION_DATE" />
+                                                            <input type="text" autocomplete="off" style="border-top-right-radius: 4px !important; border-bottom-right-radius: 4px !important" id="APPLICATION_DATE"
+                                                                   class="form-control datepicker" name="APPLICATION_DATE" />
 
                                                         </div>
                                                     </div>
@@ -613,9 +643,9 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#ExcavationDetails" href="#collapse_ExcavationDetails">
-                                            <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ExcavationDetails" href="#collapse_ExcavationDetails">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;display: none"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0"></i>
                                             Excavation Details
                                         </a>
                                     </h4>
@@ -678,9 +708,9 @@
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#ContactPersonInfo" href="#collapse_ContactPersonInfo">
-                                            <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ContactPersonInfo" href="#collapse_ContactPersonInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;display: none"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0"></i>
                                             Contact Person Details
                                         </a>
                                     </h4>
@@ -700,13 +730,6 @@
                                                 </td>
                                             </tr>
                                             <tbody id="Customer_ContactPersonListFromServer">
-                                                @*<tr>
-                                                        <td><input type="radio" name="radioContactPerson" id={{m.CONTACT_NUMBER+''+'ChkPerson'}} value="0" /></td>
-                                                        <td><input class="form-control" readonly type="text" value={{m.FIRST_NAME}}></td>
-                                                        <td><input class="form-control" readonly type="text" value={{m.LAST_NAME}}></td>
-                                                        <td><input class="form-control" readonly type="text" value={{m.REGISTRATION_NUMBER}}></td>
-                                                        <td><input class="form-control" readonly type="text" value={{m.CONTACT_NUMBER}}></td>
-                                                    </tr>*@
                                             </tbody>
                                             <tbody id="Customer_ContactPerson">
                                             </tbody>
@@ -724,74 +747,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="UploadDocumentInfo">
-                            <div class="panel panel-default" style="border:none!important">
-                                <div class="panel-heading" style="background:#00A65A">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#UploadDocumentInfo" href="#collapse_UploadDocumentInfo">
-                                            <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
-                                            Supporting Documents
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapse_UploadDocumentInfo" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
-                                    <div class="panel-body" style="padding:5px 0 5px 0 !important;">
-                                        @*
-                                            <tr>
-                                                <td>
-                                                    <div class="input-group input-label" style="width: 100%">
-                                                        <label>Upload Cover Letter</label>
-                                                        <input type="file" id="COVER_LETTER" style="border-radius: 4px" id="appFormData.COVER_LETTER"
-                                                               class="form-control" name="COVER_LETTER" />
-                                                    </div>
-                                                </td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>*@
-
-                                        <table class="table table-bordered table-hover" style="font-size:9pt!important">
-                                            <tr style="background:#00A65A!important;color:#fff!important">
-                                                <td>S.No</td>
-                                                <td>Document Type</td>
-                                                <td>Document Upload</td>
-                                            </tr>
-                                            <tbody id="ServiceDocumentListFromServer">
-                                                @*<tr ng-repeat="d in ServiceDocumentListFromServer">
-                                                        <td>{{$index+1}}</td>
-
-                                                        <td>{{d.DOCUMENT_TYPE}}</td>
-                                                        <td>
-                                                            <div id="{{d.WSD_ID+''+'SupportDocument1'}}">
-                                                                <a href="#" onclick="$.fn.ViewDocument(d.DOCUMENT_NAME)" style="color:darkblue">View</a>
-                                                                <i title="Delete document" style="padding-left:10px;cursor:pointer" class="fa fa-trash text-red" onclick="$.fn.RemoveUploadedFile(d.WSD_ID)"></i>
-                                                            </div>
-                                                            <div style="display:none" id="{{d.WSD_ID+''+'SupportDocument2'}}"><input type="file" name="Add" id="{{d.WSD_ID+''+'SupportDocument'}}" /></div>
-
-                                                        </td>
-                                                    </tr>*@
-                                            </tbody>
-                                            <tbody id="ServiceDocumentList" @*ng-if="ServiceDocumentList.length>0"*@>
-                                                @*<tr ng-repeat="d in ServiceDocumentList" ng-if="ServiceDocumentList.length>0">
-                                                    <td>{{$index+1}}</td>
-                                                    <td>{{d.description}}</td>
-                                                    <td><input type="file" name="Add" id="{{d.id+''+'SupportDocument'}}" /></td>
-                                                </tr>*@
-                                            </tbody>                                            
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="DepartmentInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
-                                        <a data-toggle="collapse" data-parent="#DepartmentInfo" href="#collapse_DepartmentInfo">
-                                            <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#DepartmentInfo" href="#collapse_DepartmentInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;display: none"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0"></i>
                                             Departments
                                         </a>
                                     </h4>
@@ -804,20 +766,82 @@
                                             }
                                         </style>
                                         <div class="columns" id="ServiceDepartmentList">
-                                            @*<div ng-repeat="department in ServiceDepartmentList">
-                                                <input type="checkbox" class="checkbox-custom" checked="checked" disabled="disabled" id="CheckBox_{{department.id}}" ng-value="department.description">
-                                                <label class="checkbox-custom-label"
-                                                       for="CheckBox_{{department.id}}">{{department.description}}</label>
-                                            </div>*@
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <table width="100%">
+                        @*<div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ContactPersonInfo">
+                                <div class="panel panel-default" style="border:none!important">
+                                    <div class="panel-heading" style="background:#00A65A">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#ContactPersonInfo" href="#collapse_ContactPersonInfo">
+                                                <i class="fa fa-plus" style="font-size: 12px;display: none;top: 0;"></i>
+                                                <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                                Contact Person Details
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse_ContactPersonInfo" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
+                                        <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                            <table class="table table-bordered table-hover" style="font-size:9pt!important">
+                                                <tr style="background:#00A65A!important;color:#fff!important">
+                                                    <td>Select</td>
+                                                    <td>Document Type</td>
+                                                    <td>Document Upload</td>
+                                                    <td>
+                                                        <button title="Add Document" type="button" class="btn btn-warning" style="text-decoration:none!important;" onclick="$.fn.AddSupportingDocuments()"><i class="glyphicon glyphicon-plus"></i></button>&nbsp;&nbsp;
+                                                        <button type="button" title="Delete Document" onclick="$.fn.removeDocument()" class="btn btn-primary" style="text-decoration:none!important;"><i class="fa fa-trash"></i></button>
+                                                    </td>
+                                                </tr>
+                                                <tbody id="ServiceDocumentListFromServer">
+                                                </tbody>
+                                                <tbody id="ServiceDocumentList">
+                                                </tbody>
+                                                <tfoot id="ShowServiceDocumentListFooter">
+                                                    <tr>
+                                                        <td><input type="radio" name="radioServiceDocument" /></td>
+                                                        <td><input type="text" class="form-control stringOnly" id="DocumentType" /></td>
+                                                        <td><input type="file" class="form-control stringOnly" id="DocumentUpload" /></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="UploadDocumentInfo">
+                            <div class="panel panel-default" style="border:none!important">
+                                <div class="panel-heading" style="background:#00A65A">
+                                    <h4 class="panel-title">
+                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#UploadDocumentInfo" href="#collapse_UploadDocumentInfo">
+                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;display: none"></i>
+                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                            Supporting Documents
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapse_UploadDocumentInfo" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
+                                    <div class="panel-body" style="padding:5px 0 5px 0 !important;">
+                                        <table class="table table-bordered table-hover" style="font-size:9pt!important">
+                                            <tr style="background:#00A65A!important;color:#fff!important">
+                                                <td>S.No</td>
+                                                <td>Document Type</td>
+                                                <td>Document Upload</td>
+                                            </tr>
+                                            <tbody id="ServiceDocumentListFromServer">
+                                            </tbody>
+                                            <tbody id="ServiceDocumentList">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <table width="100%" id="IsViewApplication">
                             <tr>
-                                <td colspan="4" class="text-center" id="IsAppEdit" @*ng-if="IsAppEdit&&(appFormData.APPLICATION_STEP_DESCRIPTION==='Rejected'||appFormData.APPLICATION_STEP_DESCRIPTION==='Request for documents')"*@>
+                                <td colspan="4" class="text-center" id="IsAppEdit">
                                     <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
                                             onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
                                         <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
@@ -826,7 +850,7 @@
                                     <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
                                 </td>
                                 <td colspan="4" class="text-center">
-                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SaveApplicationForm()">
+                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()" @*onclick="$.fn.SaveApplicationForm()"*@>
                                         <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
                                         Submit
                                     </button>
@@ -888,6 +912,57 @@
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="PageLoaderModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="border-radius:5px!important;width:5%;height:50px!important;top:30%;border-radius:20px!important">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h3 class="text-center"><i class="fa fa-spinner fa-spin text-danger"></i></h3>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="PaymentModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="top:10%!important;border-radius:5px!important">
+                <div class="modal-content">
+                    <div class="modal-header modal-danger">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            x
+                        </button>
+                        <h4 class="modal-title text-center" style="color:green">Payment Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div style="font-size:9pt !important;height:200px !important;overflow:auto;overflow-x:hidden">
+                            <table border="0" width="100%">
+                                <tr style="height:50px!important">
+                                    <td style="width:10%!important"></td>
+                                    <td colspan="2"><b>Select Payment Method:</b></td>
+                                    <td style="width:10%!important"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%!important"></td>
+                                    <td class="text-center">
+                                        <i class="fa fa-spinner fa-spin text-success" id="EftLoader" style="display:none;"></i>
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('EFT','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/EFT_Logo.jpg" width="200" height="100" /></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-spinner fa-spin text-success" id="MasterpassLoader" style="display:none;"></i>
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('MasterPass','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/Masterpass-logo.png" width="200" height="100" /></a>
+                                    </td>
+                                    <td style="width:10%!important"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-success" value="Close" data-dismiss="modal" />
                     </div>
                 </div>
                 <!-- /.modal-content -->

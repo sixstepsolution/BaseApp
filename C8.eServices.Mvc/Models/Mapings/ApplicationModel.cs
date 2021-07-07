@@ -15,13 +15,26 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string PROPERTYOWNER_NAME { get; set; }
         public string PROPERTYOWNER_SURNAME { get; set; }
         public string PROPERTYOWNER_CONTACTNO { get; set; }
+        public string PROPERTYOWNER_MOBILENO { get; set; }
         public string PROPERTYOWNER_EMAIL { get; set; }
         public string CONSULTANT_NO { get; set; }
         public string CONSULTANT_COMPANYNAME { get; set; }
         public string CONSULTANT_NAME { get; set; }
         public string CONSULTANT_SURNAME { get; set; }
         public string CONSULTANT_CONTACTNO { get; set; }
+        public string CONSULTANT_MOBILENO { get; set; }
         public string CONSULTANT_EMAIL { get; set; }
+        public string CONSULTANT_ADDRESS { get; set; }
+
+        public string CONTRACTOR_NAME { get; set; }
+        public string CONTRACTOR_SURNAME { get; set; }
+        public string CONTRACTOR_CONTACTNO { get; set; }
+        public string CONTRACTOR_MOBILENO { get; set; }
+        public string CONTRACTOR_EMAIL { get; set; }
+        public string CONTRACTOR_ADDRESS { get; set; }
+
+
+
         public string WAYLEAVE_ATTENTION { get; set; }
         public int SERVICE_TYPE { get; set; }
         public int SERVICE_SUB_TYPE { get; set; }
@@ -55,6 +68,10 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string STARTING_DATE { get; set; }
         public string COMPLETION_DATE { get; set; }
         public int? DRAWING_NUMBER { get; set; }
+
+        public string TYPE_OF_ROADCROSSING { get; set; }
+        public string TYPE_OF_ROADCROSSING1 { get; set; }
+        public string TYPE_OF_ROADCROSSING2 { get; set; }
         public decimal? EXCAVATION_LENGTH { get; set; }
         public decimal? RIDING_SURFACE { get; set; }
         public decimal? KERBS { get; set; }

@@ -4,10 +4,8 @@ $.fn.OpenWayleaveApplicationForm = function (id) {
     sessionStorage.setItem("appId", id);
     window.location.href = '../wl/applicationForm';
 }
+
 $.fn.downloadCertificate = function (loadId, cloudId, appId) {
-    alert(loadId);
-    alert(cloudId);
-    alert(appId);
     $("#" + loadId).show();
     $("#" + cloudId).hide();   
 

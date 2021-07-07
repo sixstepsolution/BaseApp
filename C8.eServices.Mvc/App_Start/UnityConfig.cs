@@ -42,6 +42,8 @@ namespace C8.eServices.Mvc
             container.RegisterType<IMasterInspections, MasterInspectionRepo>();
             container.RegisterType<IWLInspectionList, WLInspectionListRepo>();
             container.RegisterType<IMasterCustomerCareCenters, MasterCustomerCareCentersRepo>();
+            container.RegisterType<IMasterDeclarations, MasterDeclarationsRepo>();
+            container.RegisterType<IWLDeclarations, WLDeclarationsRepo>();
 
             container.RegisterInstance<IMapper>(new MapperConfiguration(cfg =>
             {
@@ -57,13 +59,13 @@ namespace C8.eServices.Mvc
                 .ForMember(dest => dest.first_name, opt => opt.MapFrom(src => src.PROPERTYOWNER_NAME))
                 .ForMember(dest => dest.last_name, opt => opt.MapFrom(src => src.PROPERTYOWNER_SURNAME))
                 .ForMember(dest => dest.full_name, opt => opt.MapFrom(src => src.PROPERTYOWNER_NAME + " " + src.PROPERTYOWNER_SURNAME))
-                .ForMember(dest => dest.serviceType, opt => opt.MapFrom(src => src.SERVICE_TYPE))
-                .ForMember(dest => dest.serviceTypeName, opt => opt.MapFrom(src => src.MASTER_SERVICE_TYPES.DESCRIPTION))
-                .ForMember(dest => dest.serviceSubType, opt => opt.MapFrom(src => src.SERVICE_SUB_TYPE))
-                .ForMember(dest => dest.serviceSubTypeName, opt => opt.MapFrom(src => src.MASTER_SERVICE_SUB_TYPES.DESCRIPTION))
-                .ForMember(dest => dest.wayleaveAttention, opt => opt.MapFrom(src => src.WAYLEAVE_ATTENTION))
+                .ForMember(dest => dest.serviceType, opt => opt.MapFrom(src => src.SERVICE_TYPE==null?0:1))
+                //.ForMember(dest => dest.serviceTypeName, opt => opt.MapFrom(src => src.MASTER_SERVICE_TYPES.DESCRIPTION))
+                .ForMember(dest => dest.serviceSubType, opt => opt.MapFrom(src => src.SERVICE_SUB_TYPE == null ? 0 : 1))
+                //.ForMember(dest => dest.serviceSubTypeName, opt => opt.MapFrom(src => src.MASTER_SERVICE_SUB_TYPES.DESCRIPTION))
+                ///.ForMember(dest => dest.wayleaveAttention, opt => opt.MapFrom(src => src.WAYLEAVE_ATTENTION))
                 .ForMember(dest => dest.createdDate, opt => opt.MapFrom(src => src.CREATED_DATE != null ? Convert.ToDateTime(src.CREATED_DATE).ToString("yyyy-MM-dd") : ""))
-                .ForMember(dest => dest.applicationStatus, opt => opt.MapFrom(src => src.MASTER_STATUS_TYPES.DESCRIPTION))
+                .ForMember(dest => dest.applicationStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.applicationStepStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.statusId, opt => opt.MapFrom(src => src.STATUS_ID))
                 .ReverseMap();
@@ -81,6 +83,7 @@ namespace C8.eServices.Mvc
               .ForMember(dest => dest.name, opt => opt.MapFrom(src => src.DESCRIPTION))
               .ForMember(dest => dest.sequenceId, opt => opt.MapFrom(src => src.SEQUENCE_ID))
               .ReverseMap();
+
 
 
 
@@ -106,6 +109,10 @@ namespace C8.eServices.Mvc
                 cfg.CreateMap<MASTER_DEPARTMENTS, MasterInputCalimsModel>()
           .ForMember(dest => dest.id, opt => opt.MapFrom(src => src.DPT_ID))
           .ForMember(dest => dest.description, opt => opt.MapFrom(src => src.DEPARTMENT_NAME)).ReverseMap();
+
+                cfg.CreateMap<MASTER_DECLARATIONS, MasterInputCalimsModel>()
+          .ForMember(dest => dest.id, opt => opt.MapFrom(src => src.MD_ID))
+          .ForMember(dest => dest.description, opt => opt.MapFrom(src => src.DESCRIPTION)).ReverseMap();
 
                 cfg.CreateMap<MASTER_CUSTOMERCARE_CENTERS_REGIONS, MasterCustomercareCentersModel>()
               .ForMember(dest => dest.id, opt => opt.MapFrom(src => src.CCC_ID))
@@ -261,31 +268,43 @@ namespace C8.eServices.Mvc
                .ForMember(dest => dest.PROPERTYOWNER_NAME, opt => opt.MapFrom(src => src.PROPERTYOWNER_NAME))
                .ForMember(dest => dest.PROPERTYOWNER_SURNAME, opt => opt.MapFrom(src => src.PROPERTYOWNER_SURNAME))
                .ForMember(dest => dest.PROPERTYOWNER_CONTACTNO, opt => opt.MapFrom(src => src.PROPERTYOWNER_CONTACTNO))
+               .ForMember(dest => dest.PROPERTYOWNER_MOBILENO, opt => opt.MapFrom(src => src.PROPERTYOWNER_MOBILENO))
                .ForMember(dest => dest.PROPERTYOWNER_EMAIL, opt => opt.MapFrom(src => src.PROPERTYOWNER_EMAIL))
+
                .ForMember(dest => dest.CONSULTANT_NO, opt => opt.MapFrom(src => src.CONSULTANT_NO))
                .ForMember(dest => dest.CONSULTANT_COMPANYNAME, opt => opt.MapFrom(src => src.CONSULTANT_COMPANYNAME))
                .ForMember(dest => dest.CONSULTANT_NAME, opt => opt.MapFrom(src => src.CONSULTANT_NAME))
                .ForMember(dest => dest.CONSULTANT_SURNAME, opt => opt.MapFrom(src => src.CONSULTANT_SURNAME))
                .ForMember(dest => dest.CONSULTANT_CONTACTNO, opt => opt.MapFrom(src => src.CONSULTANT_CONTACTNO))
+               .ForMember(dest => dest.CONSULTANT_MOBILENO, opt => opt.MapFrom(src => src.CONSULTANT_MOBILENO))
                .ForMember(dest => dest.CONSULTANT_EMAIL, opt => opt.MapFrom(src => src.CONSULTANT_EMAIL))
-               .ForMember(dest => dest.WAYLEAVE_ATTENTION, opt => opt.MapFrom(src => src.WAYLEAVE_ATTENTION))
-               .ForMember(dest => dest.SERVICE_TYPE, opt => opt.MapFrom(src => src.SERVICE_TYPE))
-               .ForMember(dest => dest.SERVICE_SUB_TYPE, opt => opt.MapFrom(src => src.SERVICE_SUB_TYPE))
-               .ForMember(dest => dest.STAGE_TYPE, opt => opt.MapFrom(src => src.STAGE_TYPE))
-               .ForMember(dest => dest.MAP_SIZE, opt => opt.MapFrom(src => src.MAP_SIZE))
-               .ForMember(dest => dest.PROJECT_NUMBER, opt => opt.MapFrom(src => src.PROJECT_NUMBER))
-               .ForMember(dest => dest.PROJECT_NAME, opt => opt.MapFrom(src => src.PROJECT_NAME))
-               .ForMember(dest => dest.APPLYING_ON_BEHALF, opt => opt.MapFrom(src => src.APPLYING_ON_BEHALF))
-               .ForMember(dest => dest.PROJECT_DESCRIPTION, opt => opt.MapFrom(src => src.PROJECT_DESCRIPTION))
-               .ForMember(dest => dest.ROAD_NUMBER, opt => opt.MapFrom(src => src.ROAD_NUMBER))
-               .ForMember(dest => dest.REGION_OR_AREA, opt => opt.MapFrom(src => src.REGION_OR_AREA))
-               .ForMember(dest => dest.AREA_DESCRIPTION, opt => opt.MapFrom(src => src.AREA_DESCRIPTION))
-               .ForMember(dest => dest.CONTACT_PERSON_FIRSTNAME, opt => opt.MapFrom(src => src.CONTACT_PERSON_FIRSTNAME))
-               .ForMember(dest => dest.CONTACT_PERSON_LASTNAME, opt => opt.MapFrom(src => src.CONTACT_PERSON_LASTNAME))
-             .ForMember(dest => dest.CONTACT_PERSON_REGISTRATION_NO, opt => opt.MapFrom(src => src.CONTACT_PERSON_REGISTRATION_NO))
+               .ForMember(dest => dest.CONSULTANT_ADDRESS, opt => opt.MapFrom(src => src.CONSULTANT_ADDRESS))
 
-             .ForMember(dest => dest.CONTACT_PERSON_CONTACTNO, opt => opt.MapFrom(src => src.CONTACT_PERSON_CONTACTNO))
-             .ForMember(dest => dest.COVER_LETTER, opt => opt.MapFrom(src => src.COVER_LETTER))
+               .ForMember(dest => dest.CONTRACTOR_NAME, opt => opt.MapFrom(src => src.CONTRACTOR_NAME))
+               .ForMember(dest => dest.CONTRACTOR_SURNAME, opt => opt.MapFrom(src => src.CONTRACTOR_SURNAME))
+               .ForMember(dest => dest.CONTRACTOR_CONTACTNO, opt => opt.MapFrom(src => src.CONTRACTOR_CONTACTNO))
+               .ForMember(dest => dest.CONTRACTOR_MOBILENO, opt => opt.MapFrom(src => src.CONTRACTOR_MOBILENO))
+               .ForMember(dest => dest.CONTRACTOR_EMAIL, opt => opt.MapFrom(src => src.CONTRACTOR_EMAIL))
+               .ForMember(dest => dest.CONTRACTOR_ADDRESS, opt => opt.MapFrom(src => src.CONTRACTOR_ADDRESS))
+
+             //.ForMember(dest => dest.WAYLEAVE_ATTENTION, opt => opt.MapFrom(src => src.WAYLEAVE_ATTENTION))
+             ///.ForMember(dest => dest.SERVICE_TYPE, opt => opt.MapFrom(src => src.SERVICE_TYPE))
+             //.ForMember(dest => dest.SERVICE_SUB_TYPE, opt => opt.MapFrom(src => src.SERVICE_SUB_TYPE))
+             //.ForMember(dest => dest.STAGE_TYPE, opt => opt.MapFrom(src => src.STAGE_TYPE))
+             //.ForMember(dest => dest.MAP_SIZE, opt => opt.MapFrom(src => src.MAP_SIZE))
+             //.ForMember(dest => dest.PROJECT_NUMBER, opt => opt.MapFrom(src => src.PROJECT_NUMBER))
+             //.ForMember(dest => dest.PROJECT_NAME, opt => opt.MapFrom(src => src.PROJECT_NAME))
+             //.ForMember(dest => dest.APPLYING_ON_BEHALF, opt => opt.MapFrom(src => src.APPLYING_ON_BEHALF))
+             //.ForMember(dest => dest.PROJECT_DESCRIPTION, opt => opt.MapFrom(src => src.PROJECT_DESCRIPTION))
+             //.ForMember(dest => dest.ROAD_NUMBER, opt => opt.MapFrom(src => src.ROAD_NUMBER))
+             //.ForMember(dest => dest.REGION_OR_AREA, opt => opt.MapFrom(src => src.REGION_OR_AREA))
+             //.ForMember(dest => dest.AREA_DESCRIPTION, opt => opt.MapFrom(src => src.AREA_DESCRIPTION))
+             //  .ForMember(dest => dest.CONTACT_PERSON_FIRSTNAME, opt => opt.MapFrom(src => src.CONTACT_PERSON_FIRSTNAME))
+             //  .ForMember(dest => dest.CONTACT_PERSON_LASTNAME, opt => opt.MapFrom(src => src.CONTACT_PERSON_LASTNAME))
+             //.ForMember(dest => dest.CONTACT_PERSON_REGISTRATION_NO, opt => opt.MapFrom(src => src.CONTACT_PERSON_REGISTRATION_NO))
+
+             //.ForMember(dest => dest.CONTACT_PERSON_CONTACTNO, opt => opt.MapFrom(src => src.CONTACT_PERSON_CONTACTNO))
+             //.ForMember(dest => dest.COVER_LETTER, opt => opt.MapFrom(src => src.COVER_LETTER))
              .ForMember(dest => dest.STATUS_ID, opt => opt.MapFrom(src => src.STATUS_ID))
              .ForMember(dest => dest.APPLICATION_STEP_NO, opt => opt.MapFrom(src => src.APPLICATION_STEP_NO))
              .ForMember(dest => dest.APPLICATION_STEP_DESCRIPTION, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
@@ -298,20 +317,28 @@ namespace C8.eServices.Mvc
              .ForMember(dest => dest.MODIFIED_BY, opt => opt.MapFrom(src => src.MODIFIED_BY))
 
              .ForMember(dest => dest.MODIFIED_DATE, opt => opt.MapFrom(src => src.MODIFIED_DATE))
-             .ForMember(dest => dest.APPLICATION_DATE, opt => opt.MapFrom(src => src.APPLICATION_DATE != null ? Convert.ToDateTime(src.APPLICATION_DATE).ToString("yyyy-MM-dd") : ""))
+             //.ForMember(dest => dest.APPLICATION_DATE, opt => opt.MapFrom(src => src.APPLICATION_DATE != null ? Convert.ToDateTime(src.APPLICATION_DATE).ToString("yyyy-MM-dd") : ""))
              .ForMember(dest => dest.STARTING_DATE, opt => opt.MapFrom(src => src.STARTING_DATE != null ? Convert.ToDateTime(src.STARTING_DATE).ToString("yyyy-MM-dd") : ""))
              .ForMember(dest => dest.COMPLETION_DATE, opt => opt.MapFrom(src => src.COMPLETION_DATE != null ? Convert.ToDateTime(src.COMPLETION_DATE).ToString("yyyy-MM-dd") : ""))
-             .ForMember(dest => dest.DRAWING_NUMBER, opt => opt.MapFrom(src => src.DRAWING_NUMBER))
+             //.ForMember(dest => dest.DRAWING_NUMBER, opt => opt.MapFrom(src => src.DRAWING_NUMBER))
+
+             .ForMember(dest => dest.TYPE_OF_ROADCROSSING, opt => opt.MapFrom(src => src.TYPE_OF_ROADCROSSING))
+             .ForMember(dest => dest.TYPE_OF_ROADCROSSING1, opt => opt.MapFrom(src => src.TYPE_OF_ROADCROSSING1))
+             .ForMember(dest => dest.TYPE_OF_ROADCROSSING2, opt => opt.MapFrom(src => src.TYPE_OF_ROADCROSSING2))
              .ForMember(dest => dest.EXCAVATION_LENGTH, opt => opt.MapFrom(src => src.EXCAVATION_LENGTH))
              .ForMember(dest => dest.RIDING_SURFACE, opt => opt.MapFrom(src => src.RIDING_SURFACE))
              .ForMember(dest => dest.KERBS, opt => opt.MapFrom(src => src.KERBS))
-             .ForMember(dest => dest.ASPH_FOOTWAY, opt => opt.MapFrom(src => src.ASPH_FOOTWAY))
-             .ForMember(dest => dest.INTERL_BLOCK, opt => opt.MapFrom(src => src.INTERL_BLOCK))
-             .ForMember(dest => dest.UNPAVED_FOOTWAYS, opt => opt.MapFrom(src => src.UNPAVED_FOOTWAYS))
-             .ForMember(dest => dest.WL_CONTACT_PERSONS, opt => opt.MapFrom(src => src.WL_CONTACT_PERSONS))
-             .ForMember(dest => dest.WL_REGIONS, opt => opt.MapFrom(src => src.WL_REGIONS))
-             .ForMember(dest => dest.WL_WORK_LOCATIONS, opt => opt.MapFrom(src => src.WL_WORK_LOCATIONS))
+             .ForMember(dest => dest.GPS_START_ADDRESS, opt => opt.MapFrom(src => src.GPS_START_ADDRESS))
+             .ForMember(dest => dest.GPS_END_ADDRESS, opt => opt.MapFrom(src => src.GPS_END_ADDRESS))
+
+             //.ForMember(dest => dest.ASPH_FOOTWAY, opt => opt.MapFrom(src => src.ASPH_FOOTWAY))
+             //.ForMember(dest => dest.INTERL_BLOCK, opt => opt.MapFrom(src => src.INTERL_BLOCK))
+             //.ForMember(dest => dest.UNPAVED_FOOTWAYS, opt => opt.MapFrom(src => src.UNPAVED_FOOTWAYS))
+             //.ForMember(dest => dest.WL_CONTACT_PERSONS, opt => opt.MapFrom(src => src.WL_CONTACT_PERSONS))
+             //.ForMember(dest => dest.WL_REGIONS, opt => opt.MapFrom(src => src.WL_REGIONS))
+             //.ForMember(dest => dest.WL_WORK_LOCATIONS, opt => opt.MapFrom(src => src.WL_WORK_LOCATIONS))
              .ForMember(dest => dest.WL_SUPPORTING_DOCUMENTS, opt => opt.MapFrom(src => src.WL_SUPPORTING_DOCUMENTS))
+             //.ForMember(dest => dest.wl, opt => opt.MapFrom(src => src.WL_SUPPORTING_DOCUMENTS))
              .ForMember(dest => dest.departments, opt => opt.MapFrom(src => src.WL_DEPARTMENTS))
                .ReverseMap();
 
@@ -353,6 +380,13 @@ namespace C8.eServices.Mvc
             .ForMember(dest => dest.DOCUMENT_TYPE, opt => opt.MapFrom(src => src.DOCUMENT_TYPE))
             .ForMember(dest => dest.DOCUMENT_NAME, opt => opt.MapFrom(src => src.DOCUMENT_NAME))
             .ForMember(dest => dest.SD_ID, opt => opt.MapFrom(src => src.SD_ID))
+            .ForMember(dest => dest.APP_ID, opt => opt.MapFrom(src => src.APP_ID))
+            .ReverseMap();
+
+                cfg.CreateMap<WL_DECLARATIONS, WLApplicationDeclarationModel>()
+            .ForMember(dest => dest.DID, opt => opt.MapFrom(src => src.DID))
+            .ForMember(dest => dest.DECLARATION_NAME, opt => opt.MapFrom(src => src.DECLARATION_NAME))
+            .ForMember(dest => dest.MD_ID, opt => opt.MapFrom(src => src.MD_ID))
             .ForMember(dest => dest.APP_ID, opt => opt.MapFrom(src => src.APP_ID))
             .ReverseMap();
 

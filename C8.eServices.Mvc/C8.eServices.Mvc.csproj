@@ -1414,10 +1414,12 @@
     <Content Include="Content\wayleaveStyles\assets\Content\FileUpload\plugins\canvas-to-blob.min.js" />
     <Content Include="Content\wayleaveStyles\assets\Content\FileUpload\plugins\purify.min.js" />
     <Content Include="Content\wayleaveStyles\assets\Content\FileUpload\plugins\sortable.min.js" />
+    <Content Include="Content\wayleaveStyles\assets\Content\font-awesome.min.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\font-awesome\css\font-awesome.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\font-awesome\css\font-awesome.min.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\wayleaveStyles\assets\Content\isteven-multi-select.css" />
+    <Content Include="Content\wayleaveStyles\assets\Content\jquery-ui.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\loaderimage.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\NewContent\autocomplete\jquery-1.10.2.js" />
     <Content Include="Content\wayleaveStyles\assets\Content\NewContent\autocomplete\jquery-ui-1.10.4.custom.min.css" />
@@ -2294,6 +2296,7 @@
     <Content Include="Content\wayleaveStyles\assets\Images\COE.png" />
     <Content Include="Content\wayleaveStyles\assets\Images\COEE.png" />
     <Content Include="Content\wayleaveStyles\assets\Images\dark_blue.png" />
+    <Content Include="Content\wayleaveStyles\assets\Images\EFT_Logo.jpg" />
     <Content Include="Content\wayleaveStyles\assets\Images\ekurhuleni.png" />
     <Content Include="Content\wayleaveStyles\assets\Images\Ekurhuleni_Logo.jpg" />
     <Content Include="Content\wayleaveStyles\assets\Images\EK_Title.png" />
@@ -2308,6 +2311,7 @@
     <Content Include="Content\wayleaveStyles\assets\Images\login.png" />
     <Content Include="Content\wayleaveStyles\assets\Images\mail_close.png" />
     <Content Include="Content\wayleaveStyles\assets\Images\mail_open.png" />
+    <Content Include="Content\wayleaveStyles\assets\Images\Masterpass-logo.png" />
     <Content Include="Content\wayleaveStyles\assets\Images\orange_flag.png" />
     <Content Include="Content\wayleaveStyles\assets\Images\Picture1.png" />
     <Content Include="Content\wayleaveStyles\assets\Images\red_flag.png" />
@@ -2346,10 +2350,6 @@
     <Content Include="Content\wayleaveStyles\Content\toastr.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
@@ -2790,10 +2790,6 @@
       <DependentUpon>eBilling6Months.edmx</DependentUpon>
       <LastGenOutput>eBilling6Months.cs</LastGenOutput>
     </Content>
-    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
@@ -2861,9 +2857,11 @@
     <Content Include="Scripts\wayleaveScripts\angular.js" />
     <Content Include="Scripts\wayleaveScripts\angular.min.js" />
     <Content Include="Scripts\wayleaveScripts\ApplicationForm.js" />
+    <Content Include="Scripts\wayleaveScripts\ApplicationFormNew.js" />
     <Content Include="Scripts\wayleaveScripts\ApplicationStatusList.js" />
     <Content Include="Scripts\wayleaveScripts\bootstrap.js" />
     <Content Include="Scripts\wayleaveScripts\bootstrap.min.js" />
+    <Content Include="Scripts\wayleaveScripts\Ekurhuleni.js" />
     <Content Include="Scripts\wayleaveScripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\wayleaveScripts\i18n\angular-locale_af-za.js" />
     <Content Include="Scripts\wayleaveScripts\i18n\angular-locale_af.js" />
@@ -3610,11 +3608,13 @@
     <Content Include="Scripts\wayleaveScripts\jquery-3.4.1.slim.min.js" />
     <None Include="Scripts\wayleaveScripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\wayleaveScripts\Jquery-ui-migrate.js" />
+    <Content Include="Scripts\wayleaveScripts\jquery-ui.js" />
     <Content Include="Scripts\wayleaveScripts\jquery.validate.js" />
     <Content Include="Scripts\wayleaveScripts\jquery.validate.min.js" />
     <Content Include="Scripts\wayleaveScripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\wayleaveScripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\wayleaveScripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\wayleaveScripts\moment.min.js" />
     <Content Include="Scripts\wayleaveScripts\paginationUi.js" />
     <Content Include="Scripts\wayleaveScripts\PreInspectionList.js" />
     <Content Include="Scripts\wayleaveScripts\sitemap.xml" />
@@ -3626,7 +3626,14 @@
     <Content Include="Scripts\wayleaveScripts\test-bundles\angular-route.js" />
     <Content Include="Scripts\wayleaveScripts\test-bundles\angular-sanitize.js" />
     <Content Include="Scripts\wayleaveScripts\test-bundles\angular-touch.js" />
+    <Content Include="Scripts\wayleaveScripts\toastr.min.js" />
+    <Content Include="Scripts\wayleaveScripts\VerifyingWayleaveAccount.js" />
     <Content Include="Scripts\wayleaveScripts\WayleaveAccount.js" />
+    <Content Include="Scripts\wayleaveScripts\WayleaveAccountDashboard.js" />
+    <Content Include="Scripts\wayleaveScripts\WayleaveAccountHome.js" />
+    <Content Include="Scripts\wayleaveScripts\WayleaveAlerts.js" />
+    <Content Include="Scripts\wayleaveScripts\WLApplicationForm.js" />
+    <Content Include="Scripts\wayleaveScripts\WLApplicationFormDashboard.js" />
     <Content Include="Service References\CorrespondenceSoapService\C8.eServices.Mvc.CorrespondenceSoapService.CaseStartOffline_Response.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Content>
@@ -3853,6 +3860,22 @@
     <Compile Include="Migrations\202104270346186_Initial.Designer.cs">
       <DependentUpon>202104270346186_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202106200208246_addingdeclarationtable.cs" />
+    <Compile Include="Migrations\202106200208246_addingdeclarationtable.Designer.cs">
+      <DependentUpon>202106200208246_addingdeclarationtable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106201215569_addingdeclarationrelation.cs" />
+    <Compile Include="Migrations\202106201215569_addingdeclarationrelation.Designer.cs">
+      <DependentUpon>202106201215569_addingdeclarationrelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202106211716044_addingdepartmentrelation.cs" />
+    <Compile Include="Migrations\202106211716044_addingdepartmentrelation.Designer.cs">
+      <DependentUpon>202106211716044_addingdepartmentrelation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202107071609132_addingPaymentsInApplicationform.cs" />
+    <Compile Include="Migrations\202107071609132_addingPaymentsInApplicationform.Designer.cs">
+      <DependentUpon>202107071609132_addingPaymentsInApplicationform.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountInformation.cs" />
@@ -3957,6 +3980,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Comm\CommonModel.cs" />
     <Compile Include="Models\Comm\Pagenation.cs" />
+    <Compile Include="Models\Comm\PaymentHelper.cs" />
     <Compile Include="Models\Comm\SessionControllerHandler.cs" />
     <Compile Include="Models\DebitOrderStatus.cs" />
     <Compile Include="Models\ElasticEmailService\ElasticEmail.cs" />
@@ -3989,12 +4013,14 @@
     <Compile Include="Models\Mapings\WayleaveInputClaimModel.cs" />
     <Compile Include="Models\Mapings\WLAccountsModel.cs" />
     <Compile Include="Models\Mapings\WLApplicationContactPersonModel.cs" />
+    <Compile Include="Models\Mapings\WLApplicationDeclarationModel.cs" />
     <Compile Include="Models\Mapings\WLApplicationDocumentsModel.cs" />
     <Compile Include="Models\Mapings\WLregionsModel.cs" />
     <Compile Include="Models\Mapings\WLworklocationModel.cs" />
     <Compile Include="Models\MasterpassRequest.cs" />
     <Compile Include="Models\MasterpassTransaction.cs" />
     <Compile Include="Models\MASTER_CUSTOMERCARE_CENTERS_REGIONS.cs" />
+    <Compile Include="Models\MASTER_DECLARATIONS.cs" />
     <Compile Include="Models\MASTER_DEPARTMENTS.cs" />
     <Compile Include="Models\MASTER_INSPECTIONS.cs" />
     <Compile Include="Models\MASTER_REGIONS.cs" />
@@ -4067,6 +4093,7 @@
     <Compile Include="Models\Repository\ContactPersonRepo.cs" />
     <Compile Include="Models\Repository\DepartmentsRepo.cs" />
     <Compile Include="Models\Repository\MasterCustomerCareCentersRepo.cs" />
+    <Compile Include="Models\Repository\MasterDeclarationsRepo.cs" />
     <Compile Include="Models\Repository\MasterDepartmentsRepo.cs" />
     <Compile Include="Models\Repository\MasterInspectionRepo.cs" />
     <Compile Include="Models\Repository\MasterRegionsRepo.cs" />
@@ -4080,6 +4107,7 @@
     <Compile Include="Models\Repository\WayleaveRepo.cs" />
     <Compile Include="Models\Repository\WlAccountRepo.cs" />
     <Compile Include="Models\Repository\WlAccount_ContactRepo.cs" />
+    <Compile Include="Models\Repository\WLDeclarationsRepo.cs" />
     <Compile Include="Models\Repository\WLInspectionListRepo.cs" />
     <Compile Include="Models\Repository\WorkLocationRepo.cs" />
     <Compile Include="Models\Request.cs" />
@@ -4092,6 +4120,7 @@
     <Compile Include="Models\Services\IContactPersons.cs" />
     <Compile Include="Models\Services\IDepartments.cs" />
     <Compile Include="Models\Services\IMasterCustomerCareCenters.cs" />
+    <Compile Include="Models\Services\IMasterDeclarations.cs" />
     <Compile Include="Models\Services\IMasterDepartments.cs" />
     <Compile Include="Models\Services\IMasterInspections.cs" />
     <Compile Include="Models\Services\IMasterRegions.cs" />
@@ -4105,6 +4134,7 @@
     <Compile Include="Models\Services\IWayleave.cs" />
     <Compile Include="Models\Services\IWlAccount.cs" />
     <Compile Include="Models\Services\IWlAccountContact.cs" />
+    <Compile Include="Models\Services\IWLDeclarations.cs" />
     <Compile Include="Models\Services\IWLInspectionList.cs" />
     <Compile Include="Models\Services\IWorkLocations.cs" />
     <Compile Include="Models\SessionModel.cs" />
@@ -4147,6 +4177,7 @@
     <Compile Include="Models\WL_ACCO_CONTACT.cs" />
     <Compile Include="Models\WL_APPLICATIONFORM.cs" />
     <Compile Include="Models\WL_CONTACT_PERSONS.cs" />
+    <Compile Include="Models\WL_DECLARATIONS.cs" />
     <Compile Include="Models\WL_DEPARTMENTS.cs" />
     <Compile Include="Models\WL_INSPECTION_LIST.cs" />
     <Compile Include="Models\WL_REGIONS.cs" />
@@ -4533,6 +4564,10 @@
     <Content Include="Views\WL\InspectionList.cshtml" />
     <Content Include="Views\WL\PreInspectionList.cshtml" />
     <Content Include="Views\WL\InspectionLetterPdf.cshtml" />
+    <Content Include="Views\WayleaveAccount\WayleaveApplicationNew.cshtml" />
+    <Content Include="Views\WL\ApplicationFormNew.cshtml" />
+    <Content Include="Views\WayleaveAccount\Payment_Test.cshtml" />
+    <Content Include="Views\WayleaveAccount\ReturnBackUrl.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4567,6 +4602,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202104270346186_Initial.resx">
       <DependentUpon>202104270346186_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106200208246_addingdeclarationtable.resx">
+      <DependentUpon>202106200208246_addingdeclarationtable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106201215569_addingdeclarationrelation.resx">
+      <DependentUpon>202106201215569_addingdeclarationrelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202106211716044_addingdepartmentrelation.resx">
+      <DependentUpon>202106211716044_addingdepartmentrelation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202107071609132_addingPaymentsInApplicationform.resx">
+      <DependentUpon>202107071609132_addingPaymentsInApplicationform.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

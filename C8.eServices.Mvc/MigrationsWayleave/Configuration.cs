@@ -9,7 +9,7 @@ namespace C8.eServices.Mvc.MigrationsWayleave
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(C8.eServices.Mvc.DataAccessLayer.WayleaveDbContext context)

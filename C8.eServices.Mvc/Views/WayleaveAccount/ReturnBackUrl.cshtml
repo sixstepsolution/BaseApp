@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "WayleaveApplicationForm";
+    Layout = "~/Views/Shared/_LayoutWayleaveAccount.cshtml";
+}
+
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }    
+</style>
+<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important">
+    <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="UploadDocumentInfo">
+        <div class="panel panel-default" style="border:none!important">
+            <div class="panel-heading" style="background:#00A65A">
+                <h4 class="panel-title text-center">
+                    Payment Details
+                </h4>
+            </div>
+            <div id="collapse_UploadDocumentInfo" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
+                <div class="panel-body" style="padding:5px 0 5px 0 !important;">
+                    <table class="table table-bordered table-hover" style="font-size:10pt!important">
+                        <tr style="background:#00A65A!important;color:#fff!important">
+                            <td colspan="2"><b>@ViewBag.ResponseData[14]</b></td>
+                        </tr>
+                        <tr>
+                            <td>Application Number</td>
+                            <td><b>@ViewBag.ResponseData[16]</b></td>
+                        </tr>
+                        <tr>
+                            <td>Receipt Number</td>
+                            <td><b>@ViewBag.ResponseData[4]</b></td>
+                        </tr>
+                        <tr>
+                            <td>Total Amount</td>
+                            <td><b>@ViewBag.ResponseData[7]</b></td>
+                        </tr>
+                        <tr>
+                            <td>Payment Date</td>
+                            <td><b>@ViewBag.ResponseData[5] @ViewBag.ResponseData[6]</b></td>
+                        </tr>
+
+                        <tr>
+                            <td>Method of Payment</td>
+                            <td><b>@ViewBag.ResponseData[8]</b></td>
+                        </tr>
+                        <tr>
+                            <td>Processed By</td>
+                            <td><b>@ViewBag.ResponseData[10]</b></td>
+                        </tr>
+                        <tr>
+                            <td>Receipt</td>
+                            <td><a href="@ViewBag.ResponseData[12]" title="Receipt" target="_blank" style="color:#fff!important;text-decoration:none" class="btn btn-green-custom"> <i class="fa fa-cloud-download"></i>&nbsp;Download Receipt</a></td>
+                        </tr>
+                    </table>
+                    @*@if (ViewBag.ResponseData != null)
+        {
+
+        }
+        else
+        {
+        <h4 class="text-red text-center">Your transaction was failed!</h4>
+        }*@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    @*<html>
+        <body>
+            <h2>Payment Complete</h2>
+            <div class=WordSection1>
+
+
+                <p class=MsoNormal>Department: @e[1] </p>
+
+                <p class=MsoNormal>Vote Number:@e[2] </p>
+
+                <p class=MsoNormal>Application Reference Number: @e[3] </p>
+
+                <p class=MsoNormal>Receipt Number: @e[4] </p>
+
+                <p class=MsoNormal>Date: @e[5] </p>
+
+                <p class=MsoNormal>Time: @e[6]. </p>
+
+                <p class=MsoNormal>Total Amount paid: @e[7] </p>
+
+                <p class=MsoNormal>Method of Payment: @e[8] </p>
+
+                <p class=MsoNormal>Payment Description: @e[9] </p>
+                <p class=MsoNormal>Processed By: @e[10] </p>
+                <p class=MsoNormal>Name of Customer: @e[11] </p>
+                <p class=MsoNormal>
+                    Receipt:<a href="@e[12]" title="Receipt" target="_blank">Click to Download Receipt</a>
+                </p>
+                <p class=MsoNormal>Transaction Status: @e[13] </p>
+                <p class=MsoNormal>Transaction Status Message: @e[14] </p>
+                <p class=MsoNormal>ERF No (Adhoc Reference1): @e[15] </p>
+                <p class=MsoNormal>Adhoc Reference2: @e[16] </p>
+                <p class=MsoNormal>Adhoc Reference3: @e[17] </p>
+                <p class=MsoNormal>Adhoc Reference4: @e[18] </p>
+                <p class=MsoNormal>Adhoc Reference5: @e[19] </p>
+
+            </div>
+
+        </body>
+        </html>*@

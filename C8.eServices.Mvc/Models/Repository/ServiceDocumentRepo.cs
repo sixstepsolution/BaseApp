@@ -10,9 +10,11 @@ namespace C8.eServices.Mvc.Models.Repository
     public class ServiceDocumentRepo:IServiceDocument
     {
         private WayleaveDbContext _context;
-        public ServiceDocumentRepo(WayleaveDbContext context)
+        private readonly IWayleave _wayleave;
+        public ServiceDocumentRepo(WayleaveDbContext context, IWayleave wayleave)
         {
             _context = context;
+            _wayleave = wayleave;
         }
         public IQueryable<MASTER_SERVICE_DOCUMENTS> GetServiceDocuments()
         {

@@ -218,12 +218,46 @@
         border-radius: 4px !important
     }
 </style>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        var userRole = '@Session["ekurhuleniUserRole"]';
+        //alert(userRole);
+        if (userRole ==="Admin") {
+            $.fn.LoadApplicationsAlertsWithCounts("Y");
+        }
+        else {
+            $.fn.LoadApplicationsAlertsWithCounts("N")
+        }
+        //Init();
 
+        $.fn.showLoader = function () {
+            $("#isLoading").show();
+        }
+    });
+</script>
 <script src="~/Scripts/wayleaveScripts/ApplicationStatusList.js"></script>
 <div>
     <section class="content" style="padding-right: 0;padding-top:0;" @*ng-init="LoadApplicationsWithCounts()"*@>
         <div style="background-color:#e0e0e0!important;margin-top:4px">
             <h4 class="text-center">Application Status List</h4>
+            <div class="row">
+                @using (Html.BeginForm("ApplicationStatusList", "WL", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <table>
+                        <tr>
+                            <td style="padding-left:20px!important">
+                                @Html.TextBox("searchKeyword",null, new { @class = "form-control bradius", @required = true, autocomplete = "off", autofocus = "on", name = "searchKeyword", placeholder = "Enter application number" })
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-sm btn-green-custom" onclick="$.fn.showLoader()" style="color:#fff!important;">
+                                    <i id="isLoading" class="fa fa-spinner fa-spin" style="font-size:9pt;display:none"></i>&nbsp;<i class="fa fa-search"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </div>
             <table class="table table-striped table-hover tabel-condensed" style="font-size: 11px;">
                 <thead style="background-color:#00A65A !important; font-size:11px !important;color:#fff !important;margin-bottom: 0;">
                     <tr>
@@ -251,12 +285,12 @@
                                 Name
                             </a>&nbsp;
                         </td>
-                        <td style="width:12% !important" ng-click="sort('CREATED_DATE')"
+                        @*<td style="width:12% !important" ng-click="sort('CREATED_DATE')"
                             ng-class="sortClass('CREATED_DATE')">
                             <a class="anchor_sorting" href="">
                                 Immediate Attention
                             </a>&nbsp;
-                        </td>
+                        </td>*@
 
 
                         <td style="width:10% !important" ng-click="sort('CREATED_DATE')"
@@ -314,6 +348,13 @@
                                            style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
                                     </div>
                                 }
+                                @if (app.applicationStepStatus == "Completed")
+                                {
+                                    <div style="color:green">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
+                                    </div>
+                                }
                                 @if (app.applicationStepStatus == "Request for documents")
                                 {
                                     <div style="color:peru">
@@ -325,7 +366,7 @@
                             <td style="width:13% !important">
                                 @app.full_name
                             </td>
-                            <td style="width:12% !important">
+                            @*<td style="width:12% !important">
                                 @if (app.wayleaveAttention == "Yes")
                                 {
                                     <div style="color:red">
@@ -340,7 +381,7 @@
                                         @app.wayleaveAttention
                                     </div>
                                 }
-                            </td>
+                            </td>*@
                             <td style="width:8% !important">
                                 @app.createdDate
                             </td>

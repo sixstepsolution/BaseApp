@@ -44,10 +44,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 var AccountData = HttpContext.Current.Request.Form["AccountData"];
                 var ContactData = HttpContext.Current.Request.Form["ContactData"];
-
                 var file = HttpContext.Current.Request.Files;
-
-
                 var accountResponse = JsonConvert.DeserializeObject<WLAccountsModel>(AccountData);
                 var contactlist = ContactData != null ? JsonConvert.DeserializeObject<List<AccountContactModel>>(ContactData) : null;
 
@@ -115,7 +112,7 @@ namespace C8.eServices.Mvc.Controllers
                         }
 
                         dct.Add("success", true);
-                        EmailNotifications.SendWayleaveAccountStatus(dd.EMAIL, dd.CONTACT_PERSON_FIRST_NAME + " " + dd.CONTACT_PERSON_LAST_NAME, dd.EMAIL, dd.PASSWORD, dd.ACCOUNT_NUMBER, status);
+                        //EmailNotifications.SendWayleaveAccountStatus(dd.EMAIL, dd.CONTACT_PERSON_FIRST_NAME + " " + dd.CONTACT_PERSON_LAST_NAME, dd.EMAIL, dd.PASSWORD, dd.ACCOUNT_NUMBER, status);
                     }
                     else
                     {
@@ -139,14 +136,12 @@ namespace C8.eServices.Mvc.Controllers
         {
             try
             {
+                Dictionary<string, object> res = new Dictionary<string, object>();
                 var AccountData = HttpContext.Current.Request.Form["AccountData"];
                 var ContactData = HttpContext.Current.Request.Form["ContactData"];
-
                 var file = HttpContext.Current.Request.Files;
-
-
                 var accountResponse = JsonConvert.DeserializeObject<WLAccountsModel>(AccountData);
-                var contactlist = JsonConvert.DeserializeObject<List<AccountContactModel>>(ContactData);
+                
 
 
                 HttpPostedFile f1 = file["tradeLicensefile"];
@@ -159,8 +154,20 @@ namespace C8.eServices.Mvc.Controllers
                 {
                     ddss.TRADE_LICENSE_EXPIRE_DATE = Convert.ToDateTime(accountResponse.tradeLicenseExpirationDate);
                 }
-                var ddss1 = _mapper.Map<List<AccountContactModel>, List<WL_ACCO_CONTACT>>(contactlist);
-                Dictionary<string, object> res = _accou.UpdateWL_ACCOUNT(ddss, ddss1, f1, f2, f3, HttpContext.Current.Request.Browser.Browser.ToUpper(), Count);
+                if (ContactData != null)
+                {
+                    var contactlist = JsonConvert.DeserializeObject<List<AccountContactModel>>(ContactData);
+                    var ddss1 = _mapper.Map<List<AccountContactModel>, List<WL_ACCO_CONTACT>>(contactlist);
+                    res = _accou.UpdateWL_ACCOUNT(ddss, ddss1, f1, f2, f3, HttpContext.Current.Request.Browser.Browser.ToUpper(), Count);
+                }
+                else
+                {
+                    List<AccountContactModel> acm = new List<AccountContactModel>();
+                    var ddss1 = _mapper.Map<List<AccountContactModel>, List<WL_ACCO_CONTACT>>(acm);
+                    res = _accou.UpdateWL_ACCOUNT(ddss, ddss1, f1, f2, f3, HttpContext.Current.Request.Browser.Browser.ToUpper(), Count);
+                }
+
+                
 
                 if (res != null)
                 {
@@ -219,7 +226,8 @@ namespace C8.eServices.Mvc.Controllers
                         s.CONTACT_PERSON_LAST_NAME,
                         s.MOBILE,
                         s.EMAIL,
-                        s.COMPANY_FULL_NAME
+                        s.COMPANY_FULL_NAME,
+                        s.TELEPHONE_NUMBER
                     }).FirstOrDefault();
 
                 if (res != null)
@@ -252,6 +260,7 @@ namespace C8.eServices.Mvc.Controllers
                         s.MOBILE,
                         s.EMAIL,
                         s.COMPANY_FULL_NAME,
+                        s.TELEPHONE_NUMBER
                     }).FirstOrDefault();
 
                 if (res != null)

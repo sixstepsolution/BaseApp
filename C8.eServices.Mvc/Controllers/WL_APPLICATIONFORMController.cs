@@ -17,11 +17,16 @@ using C8.eServices.Mvc.Models;
 using C8.eServices.Mvc.Models.Mapings;
 using C8.eServices.Mvc.Models.Services;
 using C8.eServices.Mvc.DataAccessLayer;
+using System.Configuration;
+using C8.eServices.Mvc.Helpers;
+using C8.eServices.Mvc.Models.Comm;
 
 namespace C8.eServices.Mvc.Controllers
 {
     public class WL_APPLICATIONFORMController : ApiController
     {
+        public string encp = "spgencpassp";
+        private eServicesDbContext dbeService = new eServicesDbContext();
         private WayleaveDbContext db = new WayleaveDbContext();
         private readonly IApplicationForm _appFrom = null;
         private readonly IApplicationStatus _appStatusTypes = null;
@@ -214,7 +219,7 @@ namespace C8.eServices.Mvc.Controllers
                     var mpres = _mapper.Map<List<ApplicationFormDashboardView>>(appRes);
 
                     var appFinalResult = new List<ApplicationInputModel>();
-                    var serviceTypeDetails = _seriviceTypes.GetSeriveTypes().Where(f => f.DESCRIPTION == "Access").FirstOrDefault();
+                    //var serviceTypeDetails = _seriviceTypes.GetSeriveTypes().Where(f => f.DESCRIPTION == "Access").FirstOrDefault();
 
                     foreach (ApplicationInputModel a in mpresult)
                     {
@@ -238,8 +243,8 @@ namespace C8.eServices.Mvc.Controllers
                                 id = a.id,
                                 sequenceId = a.sequenceId,
                                 name = a.name,
-                                count = mpres.Where(d => d.statusId == a.id && d.serviceType == (serviceTypeDetails != null ? serviceTypeDetails.SERVICE_ID : 0)).Count(),
-                                applicationList = mpres.Where(d => d.statusId == a.id && d.serviceType == (serviceTypeDetails != null ? serviceTypeDetails.SERVICE_ID : 0)).ToList()
+                                count = mpres.Where(d => d.statusId == a.id).Count(),
+                                applicationList = mpres.Where(d => d.statusId == a.id).ToList()
                             };
                             appFinalResult.Add(app);
                         }
@@ -313,8 +318,8 @@ namespace C8.eServices.Mvc.Controllers
                                 id = a.id,
                                 sequenceId = a.sequenceId,
                                 name = a.name,
-                                count = mpres.Where(d => d.statusId == a.id && d.serviceType == (serviceTypeDetails != null ? serviceTypeDetails.SERVICE_ID : 0)).Count(),
-                                applicationList = mpres.Where(d => d.statusId == a.id && d.serviceType == (serviceTypeDetails != null ? serviceTypeDetails.SERVICE_ID : 0)).ToList()
+                                count = mpres.Where(d => d.statusId == a.id).Count(),
+                                applicationList = mpres.Where(d => d.statusId == a.id).ToList()
                             };
                             appFinalResult.Add(app);
                         }
@@ -353,7 +358,7 @@ namespace C8.eServices.Mvc.Controllers
                     var mpres = _mapper.Map<List<ApplicationFormDashboardView>>(appRes);
 
                     var appFinalResult = new List<ApplicationInputModel>();
-                    var serviceTypeDetails = _seriviceTypes.GetSeriveTypes().Where(f => f.DESCRIPTION == "Access").FirstOrDefault();
+                    //var serviceTypeDetails = _seriviceTypes.GetSeriveTypes().Where(f => f.DESCRIPTION == "Access").FirstOrDefault();
 
                     foreach (ApplicationInputModel a in mpresult)
                     {
@@ -376,7 +381,7 @@ namespace C8.eServices.Mvc.Controllers
                                 id = a.id,
                                 sequenceId = a.sequenceId,
                                 name = a.name,
-                                count = mpres.Where(d => d.statusId == a.id && d.serviceType == (serviceTypeDetails != null ? serviceTypeDetails.SERVICE_ID : 0)).Count(),
+                                count = mpres.Where(d => d.statusId == a.id).Count(),
                                 //applicationList = mpres.Where(d => d.statusId == a.id && d.serviceType == (serviceTypeDetails != null ? serviceTypeDetails.SERVICE_ID : 0)).ToList()
                             };
                             appFinalResult.Add(app);
@@ -403,17 +408,21 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 var FormData = HttpContext.Current.Request.Form["FormData"];
-                var RegionData = HttpContext.Current.Request.Form["RegionData"];
-                var ContactData = HttpContext.Current.Request.Form["ContactPersonData"];
-                var WorkLocationData = HttpContext.Current.Request.Form["WorkLocations"];
+                //var RegionData = HttpContext.Current.Request.Form["RegionData"];
+                //var ContactData = HttpContext.Current.Request.Form["ContactPersonData"];
+                //var WorkLocationData = HttpContext.Current.Request.Form["WorkLocations"];
                 var DepartmentsData = HttpContext.Current.Request.Form["Departments"];
+                var DeclarationsData = HttpContext.Current.Request.Form["Declarations"];
+                var PaymentsData = HttpContext.Current.Request.Form["paymentStatus"];
 
 
                 var applicationFormResponse = JsonConvert.DeserializeObject<WL_APPLICATIONFORM>(FormData);
-                var RegionResponse = JsonConvert.DeserializeObject<List<WL_REGIONS>>(RegionData);
-                var ContactResponse = JsonConvert.DeserializeObject<List<WL_CONTACT_PERSONS>>(ContactData);
-                var WorkLocationResponse = JsonConvert.DeserializeObject<List<WL_WORK_LOCATIONS>>(WorkLocationData);
+                //var RegionResponse = JsonConvert.DeserializeObject<List<WL_REGIONS>>(RegionData);
+                //var ContactResponse = JsonConvert.DeserializeObject<List<WL_CONTACT_PERSONS>>(ContactData);
+                //var WorkLocationResponse = JsonConvert.DeserializeObject<List<WL_WORK_LOCATIONS>>(WorkLocationData);
                 var DepartmentsDataResponse = JsonConvert.DeserializeObject<List<WL_DEPARTMENTS>>(DepartmentsData);
+                var DeclarationsDataResponse = JsonConvert.DeserializeObject<List<WL_DECLARATIONS>> (DeclarationsData);
+                var PaymentsDataResponse = JsonConvert.DeserializeObject<string>(PaymentsData);
 
                 //HttpFileCollection files = HttpContext.Current.Request.Files;
 
@@ -421,13 +430,18 @@ namespace C8.eServices.Mvc.Controllers
 
                 int appCount = _appFrom.GetAllApplicationForm().Count();
                 string res = string.Empty;
-                if (applicationFormResponse.APPLICATION_STEP_DESCRIPTION == "Request for documents")
+                if (applicationFormResponse.APPLICATION_STEP_DESCRIPTION == "Request for documents" || applicationFormResponse.APPLICATION_STEP_DESCRIPTION == "Payment Pending")
                 {
                     res = _appFrom.UpdateApplicationForm(applicationFormResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper());
                 }
                 else
                 {
-                    res = _appFrom.AddApplicationForm(applicationFormResponse, RegionResponse, ContactResponse, WorkLocationResponse, DepartmentsDataResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), appCount);
+                    res = _appFrom.AddApplicationForm(applicationFormResponse, DepartmentsDataResponse, DeclarationsDataResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), appCount, PaymentsDataResponse);
+                    if (PaymentsDataResponse == "PayNow")
+                    {
+                        var applicationNo = new AesCrypto(encp).Encrypt(res);
+                        res = applicationNo;
+                    }                                        
                 }
 
                 if (res != null)
@@ -450,10 +464,21 @@ namespace C8.eServices.Mvc.Controllers
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
             }
 
-
-
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
         }
+
+        public string EncryptPaymentRequest(PaymentHelper ph)
+        {            
+            string enc = string.Format("{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}",
+              ph.pgMerchantId, ph.voteNumber, ph.pgMerchantReference, ph.pgMerchantDescription, ph.Amount,
+              ph.pgEmail, ph.pgMobile, ph.customerFirstName, ph.customerLastName, ph.returnUrl, ph.adhocRef1, ph.adhocRef2, ph.adhocRef3, ph.adhocRef4, ph.adhocRef5);
+
+            //Encrypt the Single String to and Encrypted string e
+            var e = new AesCrypto(encp).Encrypt(enc);            
+            return e;
+        }
+
+
 
         [Route("api/get-preinspection-list")]
         //[Authorize]

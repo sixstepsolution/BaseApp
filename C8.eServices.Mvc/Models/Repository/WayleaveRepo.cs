@@ -160,7 +160,7 @@ namespace C8.eServices.Mvc.Models.Repository
         public IQueryable<MasterInputCalimsModel> GetWLAccountNumbers(string val)
         {
             return _context.WL_ACCOUNTS.Where(a => a.ACCOUNT_NUMBER.Contains(val))
-                .Select(s => new MasterInputCalimsModel { id = s.ACCOUNT_ID,  name = s.ACCOUNT_NUMBER });
+                .Select(s => new MasterInputCalimsModel { /*id = s.ACCOUNT_ID,  */name = s.ACCOUNT_NUMBER });
         }
 
 

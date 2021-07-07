@@ -17,6 +17,7 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public virtual DbSet<MASTER_SERVICE_SUB_TYPES> MASTER_SERVICE_SUB_TYPES { get; set; }
         public virtual DbSet<MASTER_SERVICE_TYPES> MASTER_SERVICE_TYPES { get; set; }
         public virtual DbSet<MASTER_STATUS_TYPES> MASTER_STATUS_TYPES { get; set; }
+        public virtual DbSet<MASTER_DECLARATIONS> MASTER_DECLARATIONS { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<tblEmployee> tblEmployees { get; set; }
@@ -36,6 +37,7 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public virtual DbSet<testMigration> testMigrations { get; set; }
         public virtual DbSet<MASTER_INSPECTIONS> MASTER_INSPECTIONS { get; set; }
         public virtual DbSet<WL_INSPECTION_LIST> WL_INSPECTION_LIST { get; set; }
+        public virtual DbSet<WL_DECLARATIONS> WL_DECLARATIONS { get; set; }
         public virtual DbSet<MASTER_CUSTOMERCARE_CENTERS_REGIONS> MASTER_CUSTOMERCARE_CENTERS_REGIONS { get; set; }
         //public DbSet<SystemUser> SystemUsers { get; set; }
         //public DbSet<SystemUserException> SystemUserException { get; set; }
