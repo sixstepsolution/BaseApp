@@ -506,7 +506,7 @@
                                                         {
                                                             foreach (var rc in (List<C8.eServices.Mvc.Models.Mapings.ApplicationInputModel>)ViewBag.ApplicationData)
                                                             {
-                                                                if (rc.name != "Payment Pending")
+                                                                if (rc.id != 8)
                                                                 {
                                                                     <div class="panel-heading" style="padding: 4px 14px;" id="panelSection_@rc.id">
                                                                         <h4 class="panel-title">
@@ -551,42 +551,42 @@
                                                                                                 @app.applicationNumber
                                                                                             </td>
                                                                                             <td style="width:13% !important">
-                                                                                                @if (app.applicationStepStatus == "Rejected")
+                                                                                                @if (rc.id == 4)
                                                                                                 {
                                                                                                     <div style="color:red">
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                            style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                     </div>
                                                                                                 }
-                                                                                                @if (app.applicationStepStatus == "Pending")
+                                                                                                @if (rc.id==1)
                                                                                                 {
                                                                                                     <div style="color:greenyellow">
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                            style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                     </div>
                                                                                                 }
-                                                                                                @if (app.applicationStepStatus == "Request for approvals")
+                                                                                                @*@if (app.applicationStepStatus == "Request for approvals")
                                                                                                 {
                                                                                                     <div style="color:blueviolet">
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                            style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                     </div>
-                                                                                                }
-                                                                                                @if (app.applicationStepStatus == "Approved")
+                                                                                                }*@
+                                                                                                @*@if (app.applicationStepStatus == "Approved")
+                                                                                                {
+                                                                                                    <div style="color:green">
+                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                           style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
+                                                                                                    </div>
+                                                                                                }*@
+                                                                                                @if (rc.id == 3)
                                                                                                 {
                                                                                                     <div style="color:green">
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                            style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
                                                                                                     </div>
                                                                                                 }
-                                                                                                @if (app.applicationStepStatus == "Completed")
-                                                                                                {
-                                                                                                    <div style="color:green">
-                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                           style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
-                                                                                                    </div>
-                                                                                                }
-                                                                                                @if (app.applicationStepStatus == "Request for documents")
+                                                                                                @if (rc.id==2)
                                                                                                 {
                                                                                                     <div style="color:peru">
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"

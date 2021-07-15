@@ -424,53 +424,53 @@
                                                                                             @app.applicationNumber
                                                                                         </td>
                                                                                         <td style="width:13% !important">
-                                                                                            @if (app.applicationStepStatus == "Rejected")
+                                                                                            @if (rc.id==4)
                                                                                             {
                                                                                                 <div style="color:red">
                                                                                                     <a onclick="OpenWayleaveApplicationForm(@app.id)"
                                                                                                        style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>
                                                                                             }
-                                                                                            @if (app.applicationStepStatus == "Pending")
+                                                                                            @if (rc.id == 1)
                                                                                             {
                                                                                                 <div style="color:greenyellow">
                                                                                                     <a onclick="OpenWayleaveApplicationForm(@app.id)"
                                                                                                        style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>
                                                                                             }
-                                                                                            @if (app.applicationStepStatus == "Request for approvals")
+                                                                                            @*@if (rc.id == 2)
                                                                                             {
                                                                                                 <div style="color:blueviolet">
                                                                                                     <a onclick="OpenWayleaveApplicationForm(@app.id)"
                                                                                                        style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>
-                                                                                            }
-                                                                                            @if (app.applicationStepStatus == "Approved")
+                                                                                            }*@
+                                                                                            @*@if (app.applicationStepStatus == "Approved")
                                                                                             {
                                                                                                 <div style="color:green">
                                                                                                     <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                                                                                       style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
+                                                                                                       style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>
-                                                                                            }
-                                                                                            @if (app.applicationStepStatus == "Completed")
+                                                                                            }*@
+                                                                                            @if (rc.id==3)
                                                                                             {
                                                                                                 <div style="color:green">
                                                                                                     <a onclick="OpenWayleaveApplicationForm(@app.id)"
                                                                                                        style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>
                                                                                             }
-                                                                                            @if (app.applicationStepStatus == "Request for documents")
+                                                                                            @if (rc.id==2)
                                                                                             {
                                                                                                 <div style="color:peru">
                                                                                                     <a onclick="OpenWayleaveApplicationForm(@app.id)"
                                                                                                        style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>
                                                                                             }
-                                                                                            @if (app.applicationStepStatus == "Payment Pending")
+                                                                                            @if (rc.id==8)
                                                                                             {
                                                                                                 <div style="color:peru">
                                                                                                     <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                                                                                       style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
+                                                                                                       style="cursor: pointer;color:red"><u>  Pending Payment</u></a>
                                                                                                 </div>
                                                                                             }
                                                                                         </td>

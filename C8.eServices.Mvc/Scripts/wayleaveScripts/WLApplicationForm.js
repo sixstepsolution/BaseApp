@@ -1602,7 +1602,8 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'red');
                 $('#APPLICATION_STEP_DESCRIPTION_STATUS').text(data.applicatioN_STEP_DESCRIPTION);
                 $('#APPLICATION_STEP_DESCRIPTION1').text(data.applicatioN_STEP_DESCRIPTION);
-                if (data.applicatioN_STEP_DESCRIPTION == "Completed") {
+
+                if (data.applicatioN_STEP_DESCRIPTION == "Application Granted") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
                     $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'green');
                 }
@@ -1613,7 +1614,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     $('#APPLICATION_DESCRIPTIONComments').text(data.applicatioN_COMMENTS);
                 }
 
-                if (data.applicatioN_STEP_DESCRIPTION == "Request for approvals") {
+                if (data.applicatioN_STEP_DESCRIPTION == "Request for approvals" || data.applicatioN_STEP_DESCRIPTION == "Distributed to Departments") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
@@ -1653,12 +1654,12 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     $.fn.LoadSupportingDocumentsByAppid(data.applicatioN_STEP_DESCRIPTION);
                                       
                 }, 10000);
-                //setTimeout(function () {
+                setTimeout(function () {
                     $("#PageLoaderModel").modal('hide');
-                //}, 20000);
+                }, 12000);
             }
             else {
-
+                $("#PageLoaderModel").modal('hide');
             }
         });
     }
@@ -1704,7 +1705,7 @@ $.fn.AddLocations = function () {
 
 //Open Payment gateway modal
 $.fn.SubmitApplication = function () {
-    if (appFormData.APPLICATION_STEP_DESCRIPTION == "Payment Pending") {
+    if (appFormData.APPLICATION_STEP_DESCRIPTION == "Pending Payment") {
         $.fn.SaveApplicationForm("", "");
     }
     else {
@@ -2024,8 +2025,14 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
             if (dptInfo.approvE_OR_REJECT_COMMENTS != null && dptInfo.approvE_OR_REJECT_COMMENTS != '') {
                 dptComment = dptInfo.approvE_OR_REJECT_COMMENTS;
             }
-
-            $('#circulatedDepartmentList').append('<tr><td>' + circulatedDepartmentList[i].dpT_ID + '</td> <td>' + circulatedDepartmentList[i].departmenT_NAME + '</td> <td>' + status + '</td> <td>' + dptComment + '</td> <td>' + dt + '</td> </tr>');
+            var tt = "";
+            if (status == "Not Affected") {
+                tt = "text-success";
+            }
+            else {
+                tt = "text-red";
+            }
+            $('#circulatedDepartmentList').append('<tr><td>' + circulatedDepartmentList[i].dpT_ID + '</td> <td>' + circulatedDepartmentList[i].departmenT_NAME + '</td> <td class="' + tt +'">' + status + '</td> <td>' + dptComment + '</td> <td>' + dt + '</td> </tr>');
         };
     }
     //$("#PageLoaderModel").modal('hide');
@@ -2158,7 +2165,6 @@ function ViewDocument(DOCUMENT_NAME) {
     window.open(filename);
 }
 
-
 //Change application status
 $.fn.ChangeAppSatus = function (flag) {
     var val = "";
@@ -2168,7 +2174,7 @@ $.fn.ChangeAppSatus = function (flag) {
     if (flag =="ApproveStatus") {
         val = $('#AppStatus').val();
         appFormData.AppStatus = val;
-        if (val == "Rejected") {
+        if (val == "Application Rejected") {
             $('#IsStatusReject').show();
         }
     }
@@ -2182,7 +2188,7 @@ $.fn.ChangeAppSatus = function (flag) {
     }
 
     IsRequestDocuments = val === 'Request for documents' ? true : false;
-    IsStatusReject = val === 'Rejected' ? true : false;
+    IsStatusReject = val === 'Application Rejected' ? true : false;
 }
 
  $.fn.changeDepartmentStatus = function () {

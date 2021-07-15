@@ -7,6 +7,7 @@ using System.Web;
 using C8.eServices.Mvc.DataAccessLayer;
 using C8.eServices.Mvc.Models.Mapings;
 using C8.eServices.Mvc.Models.Services;
+using C8.eServices.Mvc.Keys;
 
 namespace C8.eServices.Mvc.Models.Repository
 {
@@ -14,10 +15,12 @@ namespace C8.eServices.Mvc.Models.Repository
     {
         private WayleaveDbContext _context;
         private readonly IServiceDocument _serviceDocument = null;
-        public ApplicationFormRepo(WayleaveDbContext context, IServiceDocument serviceDocument)
+        private eServicesDbContext _dbeService;// = new eServicesDbContext();
+        public ApplicationFormRepo(WayleaveDbContext context, IServiceDocument serviceDocument, eServicesDbContext dbeService)
         {
             _serviceDocument = serviceDocument;
             _context = context;
+            _dbeService = dbeService;
         }
         public int AddApplicationForm(WL_APPLICATIONFORM applicationForm)
         {
@@ -269,31 +272,37 @@ namespace C8.eServices.Mvc.Models.Repository
                 var serviceResult = _serviceDocument.GetServiceDocumentsById(st);
                 var tt = serviceResult.ToList();
                 int loggedinID = 1;
+                
+                var payLater = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
+                var payNow = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayNow);
+                var PaynowPaymentCompletion = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
+
                 if (HttpContext.Current.Session["wayleaveaccountId"] != null)
                 {
                     loggedinID = Convert.ToInt32(HttpContext.Current.Session["wayleaveaccountId"]);
                 }
 
-                if (paymentStatus == "EFT")
-                {
+                //if (paymentStatus == "EFT")
+                //{
+                //    applicationForm.STATUS_ID = 8;
+                //    applicationForm.APPLICATION_STEP_DESCRIPTION = "Payment Pending";
+                //}
+                //else if (paymentStatus == "MasterPass")
+                //{
+                //    applicationForm.STATUS_ID = 3;
+                //    applicationForm.APPLICATION_STEP_DESCRIPTION = "Completed";
+                //}
+
+                //if (paymentStatus == (payLater!=null? payLater.Name:""))
+                //{
                     applicationForm.STATUS_ID = 8;
-                    applicationForm.APPLICATION_STEP_DESCRIPTION = "Payment Pending";
-                }
-                else if (paymentStatus == "MasterPass")
-                {
-                    applicationForm.STATUS_ID = 3;
-                    applicationForm.APPLICATION_STEP_DESCRIPTION = "Completed";
-                }
-                else if (paymentStatus == "PayLater")
-                {
-                    applicationForm.STATUS_ID = 8;
-                    applicationForm.APPLICATION_STEP_DESCRIPTION = "Payment Pending";
-                }
-                else
-                {
-                    applicationForm.STATUS_ID = 1;
-                    applicationForm.APPLICATION_STEP_DESCRIPTION = "Pending";
-                }
+                    applicationForm.APPLICATION_STEP_DESCRIPTION = (payLater != null ? payLater.Description : "");//"Payment Pending";
+                //}
+                //else
+                //{
+                //    applicationForm.STATUS_ID = 2;
+                //    applicationForm.APPLICATION_STEP_DESCRIPTION = PaynowPaymentCompletion != null ? PaynowPaymentCompletion.Description : "";
+                //}
 
                 applicationForm.APPLICATION_NUMBER = applicationNumber;
                 applicationForm.COMPANY_ID = 1;
@@ -393,14 +402,21 @@ namespace C8.eServices.Mvc.Models.Repository
             string file_Name = string.Empty;
             string fileName = string.Empty;
             var serviceResult = _serviceDocument.GetServiceDocumentsById(2);
+            var payLater = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
+            var PaynowPaymentCompletion = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
+            var departmentPaymentSuccess= _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.DepartmentPaymentSuccess);
+            var departmentsDataResponse = _context.WL_DEPARTMENTS.Where(s => s.APP_ID == applicationForm.APP_ID).ToList();
+            bool isEft = false;
+            bool n = false;
             var tt = serviceResult.ToList();
             int loggedinID = 1;
+
             if (HttpContext.Current.Session["wayleaveaccountId"] != null)
             {
                 loggedinID = Convert.ToInt32(HttpContext.Current.Session["wayleaveaccountId"]);
             }
             WL_APPLICATIONFORM res = GetApplicationFormData(applicationForm.APP_ID);
-            if (applicationForm.APPLICATION_STEP_DESCRIPTION != "Payment Pending")
+            if (applicationForm.APPLICATION_STEP_DESCRIPTION != (payLater != null ? payLater.Description : ""))
             {
                 res.APPLICATION_STEP_DESCRIPTION = "Pending";
             }
@@ -443,11 +459,13 @@ namespace C8.eServices.Mvc.Models.Repository
                     file.SaveAs(fileName);
 
                     ws.SD_ID = Convert.ToInt32(documentId ?? "0");
-                    if (applicationForm.APPLICATION_STEP_DESCRIPTION == "Payment Pending")
+                    if (applicationForm.APPLICATION_STEP_DESCRIPTION == (payLater != null ? payLater.Description : ""))
                     {
                         if (documentType.Contains("EFT"))
                         {
-                            res.APPLICATION_STEP_DESCRIPTION = "Pending";
+                            isEft = true;
+                            res.STATUS_ID = 2;
+                            res.APPLICATION_STEP_DESCRIPTION = PaynowPaymentCompletion != null ? PaynowPaymentCompletion.Description : "";
                         }
                     }                    
                     ws.DOCUMENT_TYPE = documentType;
@@ -459,8 +477,17 @@ namespace C8.eServices.Mvc.Models.Repository
                     //applicationForm.COVER_LETTER = file_Name;
                 }
             }
+            if (isEft)
+            {
+                foreach (WL_DEPARTMENTS department in departmentsDataResponse)
+                {
+                    department.APPLICATION_STATUS = (departmentPaymentSuccess != null ? departmentPaymentSuccess.Description : "");
+                    department.APP_ID = applicationForm.APP_ID;
+                    n=SaveChanges();
+                }
+            }
             //_context.Entry(res).State = System.Data.Entity.EntityState.Modified;
-            bool n = SaveChanges();
+             n = SaveChanges();
             if (n)
             {
                 return "Application Form resubmitted successfully.";
@@ -475,8 +502,12 @@ namespace C8.eServices.Mvc.Models.Repository
         public bool UpdateApplicationFormStaus(int appId, string appStatus,string comments, string deptComments, string deptName, string deptStatus)
         {           
             WL_APPLICATIONFORM res = GetApplicationFormData(appId);
+            var grantWayleave = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+            var rejectWayleave = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.RejectWayleaveApplication);
             res.APPLICATION_STEP_DESCRIPTION = appStatus;
-            res.STATUS_ID = appStatus == "Approved" ? 3 : (appStatus == "Request for approvals" || appStatus == "Request for documents" ? 2 : 4);
+            string grantStatus = grantWayleave != null ? grantWayleave.Description : "";
+            string rejectStatus = rejectWayleave != null ? rejectWayleave.Description : "";
+            res.STATUS_ID = appStatus == grantStatus ? 3 : (appStatus == "Request for approvals" || appStatus == "Request for documents" ? 2 : 4);
             res.APPLICATION_COMMENTS = comments;
             //if(!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
             //{

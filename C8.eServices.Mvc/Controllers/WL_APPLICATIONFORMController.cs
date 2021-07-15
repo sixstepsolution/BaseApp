@@ -20,7 +20,7 @@ using C8.eServices.Mvc.DataAccessLayer;
 using System.Configuration;
 using C8.eServices.Mvc.Helpers;
 using C8.eServices.Mvc.Models.Comm;
-
+using C8.eServices.Mvc.Keys;
 namespace C8.eServices.Mvc.Controllers
 {
     public class WL_APPLICATIONFORMController : ApiController
@@ -426,18 +426,19 @@ namespace C8.eServices.Mvc.Controllers
 
                 //HttpFileCollection files = HttpContext.Current.Request.Files;
 
-
-
                 int appCount = _appFrom.GetAllApplicationForm().Count();
                 string res = string.Empty;
-                if (applicationFormResponse.APPLICATION_STEP_DESCRIPTION == "Request for documents" || applicationFormResponse.APPLICATION_STEP_DESCRIPTION == "Payment Pending")
+                var payLater = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
+                var payNow = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayNow);
+
+                if (applicationFormResponse.APPLICATION_STEP_DESCRIPTION == (payLater != null? payLater.Description:""))
                 {
                     res = _appFrom.UpdateApplicationForm(applicationFormResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper());
                 }
                 else
                 {
                     res = _appFrom.AddApplicationForm(applicationFormResponse, DepartmentsDataResponse, DeclarationsDataResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), appCount, PaymentsDataResponse);
-                    if (PaymentsDataResponse == "PayNow")
+                    if (PaymentsDataResponse == (payNow != null ? payNow.Description : ""))
                     {
                         var applicationNo = new AesCrypto(encp).Encrypt(res);
                         res = applicationNo;

@@ -114,5 +114,19 @@ namespace C8.eServices.Mvc.Keys
         public const string SMSPending = "s_sms_pending";
         public const string SMSSuccess = "s_sms_success";
         public const string SMSFailed = "s_sms_failed";
+
+        //Payment
+        public const string PayLater = "s_paylater";
+        public const string PaynowPaymentCompletion = "s_payment_completion";
+        public const string PayNow = "s_paynow";
+
+        //Departments
+        public const string DepartmentPaymentSuccess = "s_department_payment_success";
+        public const string DepartmentReviewCompletion = "s_department_review_completion";
+
+        //Wayleave application
+        public const string WayleaveApplicationPaymentSuccess = "s_wayleave_application_payment_success";
+        public const string GrantWayleaveApplication = "s_wayleave_application_grant";
+        public const string RejectWayleaveApplication = "s_wayleave_application_reject";
     }
 }

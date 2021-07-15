@@ -3,7 +3,7 @@ var appFormData = new Object();
 var Map_Locations = [];
 var GPS_START_Lat = "";
 var GPS_START_Lng = "";
-var GPS_END_Lat = "";
+var GPS_END_Lat = ""; 
 var GPS_END_Lng = "";
 var Customer_Region = [];
 var Customer_ContactPerson = [];
@@ -328,6 +328,7 @@ $.fn.GetContractorOrConsultant = function () {
 
 }
 
+//Load declaration master data
 $.fn.LoadDeclarationsOnPageLoad = function () {
     ServiceDeclarationList = [];
     //alert();
@@ -384,6 +385,7 @@ function Init() {
     ContractorAddressinitialize('');
 }
 
+//Load application details based on application id
 $.fn.LoadApplicationsDetailsByAppId = function (appId) {
     if (appId) {
         $("#PageLoaderModel").modal('show');
@@ -451,9 +453,16 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 appFormData.APPLICATION_STEP_DESCRIPTION = data.applicatioN_STEP_DESCRIPTION;
                 $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
                 $('#APPLICATION_STEP_DESCRIPTION_STATUS').text(data.applicatioN_STEP_DESCRIPTION);
+
                 if (data.applicatioN_STEP_DESCRIPTION == "Completed") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
                 }
+
+                if (data.applicatioN_STEP_DESCRIPTION == "Distributed to Departments") {
+                    $('#IsViewApplication').hide();
+                }
+
+
                 if (data.applicatioN_STEP_DESCRIPTION == "Request for documents") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTIONComments').show();
@@ -492,6 +501,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     ServiceDocumentListFromServer = data.wL_SUPPORTING_DOCUMENTS;                    
                     $.fn.LoadSupportingDocumentsByAppid(data.applicatioN_STEP_DESCRIPTION);
                 }, 5000);
+
                 setTimeout(function () {
                     $("#PageLoaderModel").modal('hide');
                 }, 15000);
@@ -624,7 +634,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
         type: 'POST',
         processData: false,
         contentType: false,
-        crossDomain: true,
+        //crossDomain: true,
         cache: false,
         enctype: 'multipart/form-data',
         dataType: 'json',
@@ -640,20 +650,29 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
             }
             else {
                 var appNo = data;
-                if (paymentStatus == "PayNow") {                     
+                if (paymentStatus == "PayNow") {
                     window.location.href = "../WayleaveAccount/Payment_Test?q=" + appNo;
                 }
                 else if (paymentStatus == "PayLater") {
-                    toastr.success(`Your Wayleave Application Is In Status <b>Pending Payment</b>. <br />Your Reference Number is: <b>` + appNo + `</b>
-Please upload a receipt. <br />This can be done by navigating to the pending payment queue on your dashboard. <br />Click on your application with reference number <b>`+ appNo + `</b> and <br />upload your payment confirmation document, <br />under the supporting documents section.`, "Success", {
-                    "timeOut": "30000",
-                    "extendedTImeout": "50000",
-                    "closeButton": true,
+                    
+                    //alert(appNo);
+                    toastr.success(`<div>Your Wayleave Application Is In Status <b>Pending Payment</b>. <br />Your Reference Number is: <b>` + appNo + `</b>
+Please upload a receipt. <br />This can be done by navigating to the pending payment queue on your dashboard. <br />Click on your application with reference number <b>`+ appNo + `</b> and <br />upload your payment confirmation document, <br />under the supporting documents section.</div>`, "Success", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../Home/WayleaveLogin";
-                    }, 25000);
-                }                 
+                        $("#PaymentModel").modal('hide');
+                        window.location.href = "../WayleaveAccount/Index";
+                    }, 15000);
+                }
+                else {
+                    toastr.success('Application form updated successfully');
+                    setTimeout(function () {
+                        window.location.href = "../WayleaveAccount/Index";
+                    }, 1000);
+                }
             }
         },
         error: function (xhr, textStatus, errorThrown) {

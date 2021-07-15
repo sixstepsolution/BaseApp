@@ -314,48 +314,10 @@
                                     @app.applicationNumber
                                 </td>
                                 <td style="width:13% !important">
-                                    @if (app.applicationStepStatus == "Rejected")
-                                    {
-                                        <div style="color:red">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Pending")
-                                    {
-                                        <div style="color:greenyellow">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:greenyellow"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Request for approvals")
-                                    {
-                                        <div style="color:blueviolet">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:blueviolet"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Approved")
-                                    {
-                                        <div style="color:green">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Completed")
-                                    {
-                                        <div style="color:green">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
-                                    @if (app.applicationStepStatus == "Request for documents")
-                                    {
-                                        <div style="color:peru">
-                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                               style="cursor: pointer;color:peru"><u>  @app.applicationStepStatus</u></a>
-                                        </div>
-                                    }
+                                    <div style="color:green">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:green"><u>  Application Granted</u></a>
+                                    </div>
                                 </td>
                                 <td style="width:13% !important">
                                     @app.full_name
@@ -381,7 +343,7 @@
                                 </td>
                                 <td style="width:20% !important">
                                     <button type="button" onclick=UpdateInspectiondata('@app.applicationNumber',@app.id) class="btn btn-sm btn-ggb-orange" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-secret"></i>&nbsp;Inspection</button>
-                                    <button type="button" class="btn btn-sm btn-ggb-orange" onclick="$.fn.downloadCertificate(@app.id+'loaderId',@app.id+'cloudId',@app.id)"><i class="fa fa-spin fa-spinner" id="@(app.id+" loaderId")" style="display:none!important"></i> <i class="fa fa-cloud-download" id="@(app.id+" cloudId")"></i>&nbsp;Reinstatement Certificate</button>
+                                    <button type="button" class="btn btn-sm btn-ggb-orange" onclick="$.fn.downloadCertificate('loaderId'+@app.id,'cloudId'+@app.id,@app.id)"><i class="fa fa-spin fa-spinner" id="@("loaderId"+app.id)" style="display:none!important"></i> <i class="fa fa-cloud-download" id="@("cloudId"+app.id)" ></i>&nbsp;Reinstatement Certificate</button>
                                     @*<a href="#" title="Download Certificate"><i class="fa fa-file-pdf-o text-danger" title="Download Certificate"></i></a>*@
                                 </td>
                             </tr>

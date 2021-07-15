@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using C8.eServices.Mvc.Models;
 using C8.eServices.Mvc.Models.Comm;
+using C8.eServices.Mvc.Keys;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -25,12 +26,12 @@ namespace C8.eServices.Mvc.Controllers
         // GET: WayleaveAccount
         public ActionResult Index()
         {
-            if (Session["wayleaveaccountId"] == null)
-            {
-                // if IsAuthenticated is false return to login code here....
-                return Redirect("../Home/WayleaveLogin");
+            //if (Session["wayleaveaccountId"] == null)
+            //{
+            //    // if IsAuthenticated is false return to login code here....
+            //    return Redirect("../Home/WayleaveLogin");
 
-            }
+            //}
             IEnumerable<ApplicationInputModel> members = null;
             ViewBag.ApplicationData = members;
             ViewBag.ApplicationDataCount = 0;
@@ -192,6 +193,9 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.ResponseData = null;// new string[20];
             if (q!=null)
             {
+                var payLater = db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
+                var PaynowPaymentCompletion = db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
+                var departmentPaymentSuccess = db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.DepartmentPaymentSuccess);
                 AesCrypto aes = new AesCrypto(encp);// normal Decryption follows
                 var decrypted = aes.Decrypt(q);
                 var values = decrypted.Split('|');
@@ -206,6 +210,7 @@ namespace C8.eServices.Mvc.Controllers
                 var appData = dbWayleave.WL_APPLICATIONFORM.Where(s => s.APPLICATION_NUMBER == applicationNo).FirstOrDefault();
                 if(appData!=null)
                 {
+                    var departmentsDataResponse = dbWayleave.WL_DEPARTMENTS.Where(s => s.APP_ID == appData.APP_ID).ToList();
                     appData.PAYMENT_RECEIPT_NO = paymentReceiptNo;
                     appData.PAYMENT_MODE = paymentMode;
                     appData.PAYMENT_DATE = paymentDate;
@@ -213,14 +218,20 @@ namespace C8.eServices.Mvc.Controllers
                     appData.PAYMENT_STATUS = paymentStatus;
                     if (paymentStatus == "Success")
                     {
-                        appData.STATUS_ID = 3;
-                        appData.APPLICATION_STEP_DESCRIPTION = "Completed";
+                        appData.STATUS_ID = 2;
+                        appData.APPLICATION_STEP_DESCRIPTION = PaynowPaymentCompletion != null ? PaynowPaymentCompletion.Description : "";
+                        foreach (WL_DEPARTMENTS department in departmentsDataResponse)
+                        {
+                            department.APPLICATION_STATUS=(departmentPaymentSuccess!=null?departmentPaymentSuccess.Description:"");                            
+                            department.APP_ID = appData.APP_ID;
+                            dbWayleave.SaveChanges();
+                        }
                     }
                     else
                     {
-                        appData.STATUS_ID = 1;
-                        appData.APPLICATION_STEP_DESCRIPTION = "Pending";
-                    }
+                        appData.STATUS_ID = 8;
+                        appData.APPLICATION_STEP_DESCRIPTION = (payLater != null ? payLater.Description : "");
+                    }                    
                     dbWayleave.SaveChanges();                    
                 }
             }            

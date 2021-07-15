@@ -16,12 +16,14 @@ using System.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using C8.eServices.Mvc.Helpers;
+using C8.eServices.Mvc.Keys;
 
 namespace C8.eServices.Mvc.Controllers
 {
     public class WLController : Controller
     {
         private WayleaveDbContext db = new WayleaveDbContext();
+        private eServicesDbContext dbeService = new eServicesDbContext();
         // GET: WL
         public ActionResult Index()
         {
@@ -312,8 +314,8 @@ namespace C8.eServices.Mvc.Controllers
 
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
-
-                    tt = tt.Where(s => s.name == "Completed").ToList();
+                    var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.Description : "")).ToList();
                     var statusResult = tt.FirstOrDefault().applicationList;
                     ViewBag.ApplicationStatusList = statusResult;
                     ViewBag.ApplicationStatusListCount = statusResult.Count();
@@ -368,8 +370,8 @@ namespace C8.eServices.Mvc.Controllers
 
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
-
-                    tt = tt.Where(s => s.name == "Completed").ToList();
+                    var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+                    tt = tt.Where(s => s.name == (grantWayleave!=null? grantWayleave.Description:"")).ToList();
                     var statusResult = tt.FirstOrDefault().applicationList;
                     var finalResult = statusResult.Where(s => s.applicationNumber == searchKeyword).ToList();
                     ViewBag.ApplicationStatusList = finalResult;
@@ -424,7 +426,8 @@ namespace C8.eServices.Mvc.Controllers
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
 
-                    tt = tt.Where(s => s.name == "Completed").ToList();
+                    var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.Description : "")).ToList();
                     ViewBag.ApplicationStatusList = tt.FirstOrDefault().applicationList;
                 }
                 else
@@ -474,7 +477,8 @@ namespace C8.eServices.Mvc.Controllers
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
 
-                    tt = tt.Where(s => s.name == "Completed").ToList();
+                    var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.Description : "")).ToList();
                     ViewBag.ApplicationStatusList = tt.FirstOrDefault().applicationList;
                 }
                 else

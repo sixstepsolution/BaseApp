@@ -520,24 +520,6 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
     }
 }
 
-//if ($.fn.urlParam("id")) {
-//    //alert(appId);
-    
-//    //$scope.isLoading = true;
-//    //$.getJSON(BaseUrl +"Home/GetDecryptValue?id="+ appId, function (dataAppId, status, xhr) {
-//    //    console.log("=============Decrypted value==========");        
-//    //    console.log(dataAppId);
-//    //    if (dataAppId) {
-//    //        //alert(dataAppId);
-            
-//    //    }
-//    //});
-    
-//}
-//else {
-    
-//}
-
 //Add work locations
 $.fn.AddLocations = function () {
     let WorkLocationModel = {};
