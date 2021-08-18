@@ -7,6 +7,8 @@ using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
 using C8.eServices.Mvc.DataAccessLayer;
+using C8.eServices.Mvc.Helpers;
+using C8.eServices.Mvc.Keys;
 using C8.eServices.Mvc.Models.Comm;
 using C8.eServices.Mvc.Models.EmailBodys;
 using C8.eServices.Mvc.Models.Mapings;
@@ -20,12 +22,14 @@ namespace C8.eServices.Mvc.Models.Repository
         private bool disposedValue;
         private readonly IWayleave _wayleave = null;
         private WayleaveDbContext _context;
+        private eServicesDbContext _eserviceContext;
         private readonly IWlAccountContact _wlcontact = null;
-        public WlAccountRepo(WayleaveDbContext context, IWlAccountContact wlcontact, IWayleave wayleave)
+        public WlAccountRepo(WayleaveDbContext context, IWlAccountContact wlcontact, IWayleave wayleave, eServicesDbContext eserviceContext)
         {
             _context = context;
             _wlcontact = wlcontact;
             _wayleave = wayleave;
+            _eserviceContext = eserviceContext;
         }
         public int AddWL_ACCOUNT(WL_ACCOUNT formData)
         {
@@ -124,6 +128,14 @@ namespace C8.eServices.Mvc.Models.Repository
                     dct.Add("accountNumber", accountNumber);
                     dct.Add("accountUserName", acc.EMAIL);
                     dct.Add("accountPassword", acc.PASSWORD);
+                    EmailHelper email = new EmailHelper();
+                    email.Body= EmailNotificationBody.SentUserNamePassword(acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME, acc.EMAIL, acc.PASSWORD, accountNumber).ToString();
+                    email.Recipient = acc.EMAIL;//"prasadthummala558@gmail.com";
+                    email.Subject= "Wayleave Account Credentials";
+                    //email.SendEmail();
+                    Email em = new Email();
+                    em.GenerateEmail(email.Recipient, email.Subject, email.Body, accountNumber,false, AppSettingKeys.EmailNotificationTemplate, acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME,null,null, accountNumber,null,null,null,null);
+
                     //EmailNotifications.SentUserNamePassword(acc.EMAIL, acc.CONTACT_PERSON_FIRST_NAME+" "+ acc.CONTACT_PERSON_LAST_NAME, acc.EMAIL, acc.PASSWORD, accountNumber);
                     msg = "Wayleave account created sucessfully!";
                 }
@@ -135,7 +147,7 @@ namespace C8.eServices.Mvc.Models.Repository
             }
             catch (Exception ex)
             {
-                dct.Add("exception", true);
+                ////dct.Add("exception", true);
                 dct.Add("exception", ex.Message);
                 msg = ex.Message;
             }

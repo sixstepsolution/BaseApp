@@ -883,7 +883,7 @@ $.fn.removeContactPerson = function () {
 //Show work location on Map when click on Map icon
 function ShowWorkLoactionOnMap(i) {
     let location = Map_Locations[i];
-    $("#locationPopup").modal('show');
+    
     initMap(parseFloat(location.GPS_START_LATITUDE), parseFloat(location.GPS_START_LONGITUDE), parseFloat(location.GPS_END_LATITUDE), parseFloat(location.GPS_END_LONGITUDE));
 };
 

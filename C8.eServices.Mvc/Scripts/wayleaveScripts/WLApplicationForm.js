@@ -1629,7 +1629,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     $('#ApplicationAdminSection').show();
                 }
 
-
+                //alert($("#CurrentUserDepartmentName").val());
                 setTimeout(function () {
                     //$.fn.LoadDeclarationsByAppid();
                     $.getJSON(apiBaseUrl + 'get-wayleave-declarations/' + appId, function (dataDeclaration, status, xhr) {
@@ -1643,6 +1643,31 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                         circulatedDepartmentList = dataDept;
                         console.log("===================dataDepartments by appid==================");
                         console.log(dataDept);
+                        if (dataDept) {
+                            var departmentName = $("#CurrentUserDepartmentName").val();
+                            if (departmentName == "Energy") {
+                                departmentName = "Electricity";
+                            }  
+                            var newArray = dataDept.filter(function (el) {
+                                return el.departmenT_NAME == departmentName;
+                            });
+                            console.log("newArray");
+                            console.log(newArray);
+                            if (newArray.length > 0) {
+                                var CirculatedDeptStatus = newArray[0].applicatioN_STATUS;
+                                var CirculatedDeptCmnt = newArray[0].approvE_OR_REJECT_COMMENTS;
+                                if (CirculatedDeptStatus == "Affected") {
+                                    $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
+                                    $('#departmentRejectComment').show();
+                                    $("#DEPARTMENT_COMMENTS").val(CirculatedDeptCmnt);     
+                                }
+                                else if (CirculatedDeptStatus == "Not Affected") {
+                                    $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
+                                }
+                                
+                            }
+                            
+                        }
                         $.fn.LoadDepartmentsByAppid(dataDept);
                     });
 
@@ -1656,7 +1681,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 }, 10000);
                 setTimeout(function () {
                     $("#PageLoaderModel").modal('hide');
-                }, 12000);
+                }, 15000);
             }
             else {
                 $("#PageLoaderModel").modal('hide');

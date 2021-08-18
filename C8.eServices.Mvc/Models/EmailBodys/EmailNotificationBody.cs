@@ -102,5 +102,48 @@ namespace C8.eServices.Mvc.Models.EmailBodys
             strBulBodyContent.Append("</html>");
             return strBulBodyContent;
         }
+        public static StringBuilder SentApplicationFormGrantStatus(string firstName, string lastName, string accountNumber, string grantStatus,string applicationComment)
+        {
+            StringBuilder strBulBodyContent = new StringBuilder();
+            strBulBodyContent.Append("<html>");
+            strBulBodyContent.Append("<head>");
+            strBulBodyContent.Append("</head>");
+            strBulBodyContent.Append("<body>");
+            strBulBodyContent.Append("<div>");
+            strBulBodyContent.Append("<div>Dear " + firstName + " " + lastName + ",</div><br /><br/>");
+            strBulBodyContent.Append("<div>Your Wayleave application <b>" + accountNumber + "</b> has been <b>"+ grantStatus + "</b>.</div><br />");
+            if(!String.IsNullOrEmpty(applicationComment))
+            {
+                strBulBodyContent.Append("<div>Comments: <b>" + applicationComment + "</b></div><br />");
+            }
+            strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
+            strBulBodyContent.Append("Wayleave");
+            strBulBodyContent.Append("</div>");
+            strBulBodyContent.Append("</body>");
+            strBulBodyContent.Append("</html>");
+            return strBulBodyContent;
+        }
+        public static StringBuilder DepartmentResponseStatus(string firstName, string lastName, string accountNumber, string grantStatus, string applicationComment, string department)
+        {
+            StringBuilder strBulBodyContent = new StringBuilder();
+            strBulBodyContent.Append("<html>");
+            strBulBodyContent.Append("<head>");
+            strBulBodyContent.Append("</head>");
+            strBulBodyContent.Append("<body>");
+            strBulBodyContent.Append("<div>");
+            strBulBodyContent.Append("<div>Dear " + firstName + " " + lastName + ",</div><br /><br/>");
+            strBulBodyContent.Append("<div>Your Wayleave application <b>" + accountNumber + "</b> under the department <b>" + department + "</b>  has been <b>" + grantStatus + "</b>.</div><br />");
+            if (!String.IsNullOrEmpty(applicationComment))
+            {
+                strBulBodyContent.Append("<div>Comments: <b>" + applicationComment + "</b></div><br />");
+            }
+            strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
+            strBulBodyContent.Append("Wayleave");
+            strBulBodyContent.Append("</div>");
+            strBulBodyContent.Append("</body>");
+            strBulBodyContent.Append("</html>");
+            return strBulBodyContent;
+        }
+
     }
 }

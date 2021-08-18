@@ -21,6 +21,8 @@ using System.Configuration;
 using C8.eServices.Mvc.Helpers;
 using C8.eServices.Mvc.Models.Comm;
 using C8.eServices.Mvc.Keys;
+using C8.eServices.Mvc.Models.EmailBodys;
+
 namespace C8.eServices.Mvc.Controllers
 {
     public class WL_APPLICATIONFORMController : ApiController
@@ -531,7 +533,7 @@ namespace C8.eServices.Mvc.Controllers
                 bool res = _appFrom.UpdateApplicationFormStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus);
 
                 if (res)
-                {
+                {                    
                     return Ok(res);
                 }
             }
@@ -571,8 +573,6 @@ namespace C8.eServices.Mvc.Controllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
             }
-
-
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
         }
 

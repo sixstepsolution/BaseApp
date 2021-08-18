@@ -18,6 +18,7 @@ var Customer_RegionListFromServer = [];
 var Customer_ContactPersonListFromServer = [];
 var ServiceDocumentListFromServer = [];
 var ServiceDeclarationListFromServer = [];
+var GlobalSearchResult = "";
 var apiBaseUrl = localStorage.getItem('apiBaseUrl');
 var BaseUrl = localStorage.getItem('BaseUrl');
 //alert(apiBaseUrl);
@@ -37,138 +38,230 @@ $.fn.showcollapse = function () {
 };
 
 
+$.fn.ShowSearchMap = function (id) {
+    //ajaxOnComplete();
+    GlobalSearchResult = "";
+    GlobalSearchResult = id;
+    //$("#search").html('');
+    //$("#map").html('');
+    //ajaxOnComplete();
+    //("#ArcGisSearchMap").load(window.location.href + " #ArcGisSearchMap");
+    $("#locationPopup").modal('show');
+    
+};
 
+function ajaxOnComplete() {
+    require([
+        "esri/map",
+        "esri/dijit/Geocoder",
+        "esri/graphic",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/geometry/screenUtils",
+        "dojo/dom",
+        "dojo/dom-construct",
+        "dojo/query",
+        "dojo/_base/Color"
+    ], function (Map, Geocoder, Graphic, SimpleMarkerSymbol, screenUtils, dom, domConstruct, query, Color) {
+        // create a map and instance of the geocoder widget here
+        var map = new Map("map", {
+            basemap: "topo",
+            center: [26.2041, 28.0473],
+            zoom: 6,
+            scale: 19000
+        });
+        var geocoder = new Geocoder({
+            arcgisGeocoder: {
+                placeholder: "Find a place"
+            },
+            autoComplete: true,
+            map: map
+        }, dom.byId("search"));
 
+        map.on("load", enableSpotlight);
 
+        geocoder.on("select", showLocation);
+        geocoder.on("clear", removeSpotlight);
+
+        function showLocation(evt) {
+            //alert(evt.result.name);
+            //alert(GlobalSearchResult);
+            $("#" + GlobalSearchResult).val(evt.result.name);
+            console.log(evt.result);
+            map.graphics.clear();
+            var point = evt.result.feature.geometry;
+            var symbol = new SimpleMarkerSymbol().setStyle(
+                SimpleMarkerSymbol.STYLE_SQUARE).setColor(
+                    new Color([255, 0, 0, 0.5])
+                );
+            var graphic = new Graphic(point, symbol);
+            map.graphics.add(graphic);
+
+            map.infoWindow.setTitle("Search Result");
+            map.infoWindow.setContent(evt.result.name);
+            map.infoWindow.show(evt.result.feature.geometry);
+
+            var spotlight = map.on("extent-change", function (extentChange) {
+                var geom = screenUtils.toScreenGeometry(map.extent, map.width, map.height, extentChange.extent);
+                var width = geom.xmax - geom.xmin;
+                var height = geom.ymin - geom.ymax;
+
+                var max = height;
+                if (width > height) {
+                    max = width;
+                }
+
+                var margin = '-' + Math.floor(max / 2) + 'px 0 0 -' + Math.floor(max / 2) + 'px';
+
+                query(".spotlight").addClass("spotlight-active").style({
+                    width: max + "px",
+                    height: max + "px",
+                    margin: margin
+                });
+                spotlight.remove();
+            });
+        }
+
+        function enableSpotlight() {
+            var html = "<div id='spotlight' class='spotlight'></div>"
+            domConstruct.place(html, dom.byId("map_container"), "first");
+        }
+
+        function removeSpotlight() {
+            query(".spotlight").removeClass("spotlight-active");
+            map.infoWindow.hide();
+            map.graphics.clear();
+        }
+    });
+} 
 /*......................Vew Google Map Route...................................*/
 //Intialize google map
-function initMap(sLat, sLng, eLat, eLng) {
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 8,
-        center: { lat: sLat || 37.77, lng: sLng || -122.447 },
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
+//function initMap(sLat, sLng, eLat, eLng) {
+//    const map = new google.maps.Map(document.getElementById("map"), {
+//        zoom: 8,
+//        center: { lat: sLat || 37.77, lng: sLng || -122.447 },
+//        mapTypeId: google.maps.MapTypeId.ROADMAP
+//    });
 
-    var polylineOptions = {
-        map: map,
-        strokeColor: '#000000',
-        strokeOpacity: 1.0,
-        strokeWeight: 5
-    }
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer({
-        draggable: true,
-        map,
-        polylineOptions: polylineOptions,
-        suppressInfoWindows: true
-        // panel: document.getElementById("right-panel")
-    });
-    directionsService.suppressMarkers = true;
-    directionsService.preserveViewport = true;
-    directionsService.draggable = true;
-    directionsRenderer.addListener("directions_changed", () => {
-        // alert()
-        computeTotalDistance(directionsRenderer.getDirections());
-    });
-    var origin1 = { lat: sLat || 37.7780817, lng: sLng || -122.4476434 };
-    var destination1 = { lat: eLat || 37.7791968, lng: eLng || -122.4476478 };
-    displayRoute(
-        origin1,
-        destination1,
-        directionsService,
-        directionsRenderer
-    );
-}
+//    var polylineOptions = {
+//        map: map,
+//        strokeColor: '#000000',
+//        strokeOpacity: 1.0,
+//        strokeWeight: 5
+//    }
+//    const directionsService = new google.maps.DirectionsService();
+//    const directionsRenderer = new google.maps.DirectionsRenderer({
+//        draggable: true,
+//        map,
+//        polylineOptions: polylineOptions,
+//        suppressInfoWindows: true
+//        // panel: document.getElementById("right-panel")
+//    });
+//    directionsService.suppressMarkers = true;
+//    directionsService.preserveViewport = true;
+//    directionsService.draggable = true;
+//    directionsRenderer.addListener("directions_changed", () => {
+//        // alert()
+//        computeTotalDistance(directionsRenderer.getDirections());
+//    });
+//    var origin1 = { lat: sLat || 37.7780817, lng: sLng || -122.4476434 };
+//    var destination1 = { lat: eLat || 37.7791968, lng: eLng || -122.4476478 };
+//    displayRoute(
+//        origin1,
+//        destination1,
+//        directionsService,
+//        directionsRenderer
+//    );
+//}
 
-//Display Start address and end address routes
-function displayRoute(origin, destination, service, display) {
-    service.route(
-        {
-            origin: origin,
-            destination: destination,
-            //waypoints: arr,
-            travelMode: google.maps.TravelMode.WALKING,
-            avoidTolls: true
-        },
-        (result, status) => {
-            if (status === "OK") {
-                //showSteps(result, markerArray, stepDisplay, map);
-                display.setDirections(result);
-            } else {
-                alert("Could not display directions due to: " + status);
-            }
-        }
-    );
-}
+////Display Start address and end address routes
+//function displayRoute(origin, destination, service, display) {
+//    service.route(
+//        {
+//            origin: origin,
+//            destination: destination,
+//            //waypoints: arr,
+//            travelMode: google.maps.TravelMode.WALKING,
+//            avoidTolls: true
+//        },
+//        (result, status) => {
+//            if (status === "OK") {
+//                //showSteps(result, markerArray, stepDisplay, map);
+//                display.setDirections(result);
+//            } else {
+//                alert("Could not display directions due to: " + status);
+//            }
+//        }
+//    );
+//}
 
-//Calculate total distance for start and end address
-function computeTotalDistance(result) {
-    let total = 0;
-    const myroute = result.routes[0];
-    console.log(myroute.legs[0]);
-    $("#GPS_START_LATITUDE").val(myroute.legs[0].start_location.lat());
-    $("#GPS_START_LONGITUDE").val(myroute.legs[0].start_location.lng());
-    $("#GPS_END_LATITUDE").val(myroute.legs[0].end_location.lat());
-    $("#GPS_END_LONGITUDE").val(myroute.legs[0].end_location.lng());
-    console.log('slat : ' + myroute.legs[0].start_location.lat() + "," + 'slng : ' + myroute.legs[0].start_location.lng());
-    console.log('elat : ' + myroute.legs[0].end_location.lat() + "," + 'elng : ' + myroute.legs[0].end_location.lng());
+////Calculate total distance for start and end address
+//function computeTotalDistance(result) {
+//    let total = 0;
+//    const myroute = result.routes[0];
+//    console.log(myroute.legs[0]);
+//    $("#GPS_START_LATITUDE").val(myroute.legs[0].start_location.lat());
+//    $("#GPS_START_LONGITUDE").val(myroute.legs[0].start_location.lng());
+//    $("#GPS_END_LATITUDE").val(myroute.legs[0].end_location.lat());
+//    $("#GPS_END_LONGITUDE").val(myroute.legs[0].end_location.lng());
+//    console.log('slat : ' + myroute.legs[0].start_location.lat() + "," + 'slng : ' + myroute.legs[0].start_location.lng());
+//    console.log('elat : ' + myroute.legs[0].end_location.lat() + "," + 'elng : ' + myroute.legs[0].end_location.lng());
 
-    for (let i = 0; i < myroute.legs.length; i++) {
-        total += myroute.legs[i].distance.value;
-    }
+//    for (let i = 0; i < myroute.legs.length; i++) {
+//        total += myroute.legs[i].distance.value;
+//    }
 
-    total = total / 1000;
-    //document.getElementById("total").innerHTML = total + " km";
-}
+//    total = total / 1000;
+//    //document.getElementById("total").innerHTML = total + " km";
+//}
 
-//Intialize starting address
-function Startinitialize(sAddr) {
-    GPS_START_Lat = "";
-    GPS_START_Lng = "";
-    var input = sAddr != "" ? sAddr : document.getElementById('GPS_START_ADDRESS');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        console.log('place');
-        console.log(place.formatted_address);
-        GPS_START_Lat = place.geometry.location.lat();
-        GPS_START_Lng = place.geometry.location.lng();
+////Intialize starting address
+//function Startinitialize(sAddr) {
+//    GPS_START_Lat = "";
+//    GPS_START_Lng = "";
+//    var input = sAddr != "" ? sAddr : document.getElementById('GPS_START_ADDRESS');
+//    var autocomplete = new google.maps.places.Autocomplete(input);
+//    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+//        var place = autocomplete.getPlace();
+//        console.log('place');
+//        console.log(place.formatted_address);
+//        GPS_START_Lat = place.geometry.location.lat();
+//        GPS_START_Lng = place.geometry.location.lng();
 
-        $("#GPS_START_ADDRESS").val(place.formatted_address);
-    });
-}
+//        $("#GPS_START_ADDRESS").val(place.formatted_address);
+//    });
+//}
 
-//Intialize ending address
-function Endinitialize(eAddr) {
-    GPS_END_Lat = "";
-    GPS_END_Lng = "";
-    var input = eAddr != "" ? eAddr : document.getElementById('GPS_END_ADDRESS');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        GPS_END_Lat = place.geometry.location.lat();
-        GPS_END_Lng = place.geometry.location.lng();
-        $("#GPS_END_ADDRESS").val(place.formatted_address);
-    });
-}
+////Intialize ending address
+//function Endinitialize(eAddr) {
+//    GPS_END_Lat = "";
+//    GPS_END_Lng = "";
+//    var input = eAddr != "" ? eAddr : document.getElementById('GPS_END_ADDRESS');
+//    var autocomplete = new google.maps.places.Autocomplete(input);
+//    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+//        var place = autocomplete.getPlace();
+//        GPS_END_Lat = place.geometry.location.lat();
+//        GPS_END_Lng = place.geometry.location.lng();
+//        $("#GPS_END_ADDRESS").val(place.formatted_address);
+//    });
+//}
 
-function ConsultingAddressinitialize(eAddr) {
-    var input = eAddr != "" ? eAddr : document.getElementById('CONSULTANT_ADDRESS');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        $("#CONSULTANT_ADDRESS").val(place.formatted_address);
-    });
-}
+//function ConsultingAddressinitialize(eAddr) {
+//    var input = eAddr != "" ? eAddr : document.getElementById('CONSULTANT_ADDRESS');
+//    var autocomplete = new google.maps.places.Autocomplete(input);
+//    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+//        var place = autocomplete.getPlace();
+//        $("#CONSULTANT_ADDRESS").val(place.formatted_address);
+//    });
+//}
 
-function ContractorAddressinitialize(eAddr) {
-    var input = eAddr != "" ? eAddr : document.getElementById('CONTRACTOR_ADDRESS');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-        var place = autocomplete.getPlace();
-        $("#CONTRACTOR_ADDRESS").val(place.formatted_address);
-    });
-}
+//function ContractorAddressinitialize(eAddr) {
+//    var input = eAddr != "" ? eAddr : document.getElementById('CONTRACTOR_ADDRESS');
+//    var autocomplete = new google.maps.places.Autocomplete(input);
+//    google.maps.event.addListener(autocomplete, 'place_changed', function () {
+//        var place = autocomplete.getPlace();
+//        $("#CONTRACTOR_ADDRESS").val(place.formatted_address);
+//    });
+//}
 
 $.fn.showGPS = function () {
     Startinitialize("");
@@ -178,10 +271,10 @@ $.fn.showGPS = function () {
 //$.fn.showGPS();
 
 //Get map routes
-$.fn.getMapRoute = function () {
-    initMap(37.7780509, -122.4478889, "37.7791968", "-122.4476479");
-    initMap("14.4426", "79.9865", "13.0827", "80.2707");
-}
+//$.fn.getMapRoute = function () {
+//    initMap(37.7780509, -122.4478889, "37.7791968", "-122.4476479");
+//    initMap("14.4426", "79.9865", "13.0827", "80.2707");
+//}
 
 // loading account numbers by change account number
 $.fn.inputChanged = function (val) {
@@ -312,6 +405,7 @@ $.fn.GetContractorOrConsultant = function () {
             $("#PROPERTYOWNER_CONTACTNO").val(data.telephonE_NUMBER);
             $("#PROPERTYOWNER_MOBILENO").val(data.mobile);
             $("#PROPERTYOWNER_EMAIL").val(data.email);
+            //s.STREET_NAME,s.CITY ,s.PROVINCE, s.COUNTRY ,s.POST_CODE
 
             $("#CONSULTANT_NO").val(data.accounT_NUMBER);
             $("#CONSULTANT_NAME").val(data.contacT_PERSON_FIRST_NAME);
@@ -320,6 +414,11 @@ $.fn.GetContractorOrConsultant = function () {
             $("#CONSULTANT_CONTACTNO").val(data.telephonE_NUMBER);
             $("#CONSULTANT_MOBILENO").val(data.mobile);
             $("#CONSULTANT_EMAIL").val(data.email);
+            var consultantAddrs = data.streeT_NAME + " " + data.city + " " + data.province + " " + data.country + " " + data.posT_CODE;
+            $("#CONSULTANT_ADDRESS").val('');
+            setTimeout(function () {
+                $("#CONSULTANT_ADDRESS").val(consultantAddrs);
+            }, 5000);
         },
         error: function (xhr, textStatus, errorThrown) {
             toastr.error('Error in Operation');
@@ -371,7 +470,7 @@ function Init() {
     $("#IsAppEdit").hide();
     $.fn.GetContractorOrConsultant();
     //$.fn.GetServiceTypes();
-    $.fn.getMapRoute();
+    //$.fn.getMapRoute();
     //GetApplicationStausTypes();
     
     //$.fn.GetCustomercareCenters();
@@ -379,10 +478,10 @@ function Init() {
     //$.fn.LoadSupportingDocumentsOnPageLoad();
     //}
     //$.fn.LoadDeclarationsOnPageLoad();
-    Startinitialize('');
-    Endinitialize('');
-    ConsultingAddressinitialize('');
-    ContractorAddressinitialize('');
+    //Startinitialize('');
+    //Endinitialize('');
+    //ConsultingAddressinitialize('');
+    //ContractorAddressinitialize('');
 }
 
 //Load application details based on application id
@@ -567,6 +666,7 @@ $.fn.SubmitApplication = function () {
 $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
     $("#EftLoader").hide();
     $("#MasterpassLoader").hide();
+    //alert($('#GPS_START_ADDRESS').val());
     var formData = new FormData();
     var DeclarationList = [];
     $.fn.GetFormdataValues();

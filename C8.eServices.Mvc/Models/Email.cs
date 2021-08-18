@@ -15,7 +15,7 @@ namespace C8.eServices.Mvc.Models
 
         public Email()
         {
-            IdentityManager = new IdentityManager(db);
+            //IdentityManager = new IdentityManager(db);
         }
 
         public IdentityManager IdentityManager { get; set; }
@@ -53,7 +53,7 @@ namespace C8.eServices.Mvc.Models
                     CcList = (ccList != "") ? ccList : null,
                     BccList = (bccList != "") ? bccList : null,
                     Subject = subject,
-                    Body = emailBody,
+                    Body = body,
                     IsHtml = true,
                     FailureCount = 0,
                     ReferenceId = referenceId,

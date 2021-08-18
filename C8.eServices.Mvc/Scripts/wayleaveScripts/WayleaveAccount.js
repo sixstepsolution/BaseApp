@@ -21,15 +21,29 @@ $.fn.showcollapse = function () {
     });
 };
 
+function ValidateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value)) {
+        return (true)
+    }
+    alert("You have entered an invalid email address!")
+    return (false)
+}
 //Email validation
 $.fn.validateEmail = function (id) {
-    var emailFormat1 = re.test($("#"+id).val()); // This return result in Boolean type
-    if (!emailFormat1) {
-        $("#"+id).css('color', 'red');
+
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($("#" + id).val())) {
+        $("#" + id).css('color', 'black');
+        return (true)
     }
-    else {
-        $("#"+id).css('color', 'black');
-    }
+    $("#" + id).css('color', 'red');
+    return false;
+    //var emailFormat1 = re.test($("#"+id).val()); // This return result in Boolean type
+    //if (!emailFormat1) {
+    //    $("#"+id).css('color', 'red');
+    //}
+    //else {
+    //    $("#"+id).css('color', 'black');
+    //}
 };
 //alert(localStorage.getItem('apiBaseUrl'));
 
@@ -279,13 +293,18 @@ Password : <b style='color:#00337f'>`+ data.accountPassword + `</b>
                         window.location.href = "../Home/WayleaveLogin";
                     }, 25000);
                 }
-                else {
-                    toastr.error('Error in Operation');
+                else if (data.exception) {
+                    //console.log(textStatus);
+                    //console.log(errorThrown);
+                    toastr.error(data.exception);
                 }
             },
             error: function (xhr, textStatus, errorThrown) {
-                //console.log('Error in Operation');
-                toastr.error('Error in Operation');
+                console.log(xhr);
+                alert(xhr);
+                //console.log(textStatus);
+                //console.log(errorThrown);
+                toastr.error(errorThrown);
             }
         });
     }

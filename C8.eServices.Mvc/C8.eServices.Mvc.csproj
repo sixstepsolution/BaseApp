@@ -3792,6 +3792,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\AccountHelper.cs" />
+    <Compile Include="Helpers\ADLogin.cs" />
     <Compile Include="Helpers\AesCrypto.cs" />
     <Compile Include="Helpers\ApplicationHelper.cs" />
     <Compile Include="Helpers\BaseHelper.cs" />

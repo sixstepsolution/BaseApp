@@ -8,6 +8,8 @@ using C8.eServices.Mvc.DataAccessLayer;
 using C8.eServices.Mvc.Models.Mapings;
 using C8.eServices.Mvc.Models.Services;
 using C8.eServices.Mvc.Keys;
+using C8.eServices.Mvc.Helpers;
+using C8.eServices.Mvc.Models.EmailBodys;
 
 namespace C8.eServices.Mvc.Models.Repository
 {
@@ -496,7 +498,7 @@ namespace C8.eServices.Mvc.Models.Repository
             {
                 return "Application Form resubmission failed!";
             }
-
+                         
         }
 
         public bool UpdateApplicationFormStaus(int appId, string appStatus,string comments, string deptComments, string deptName, string deptStatus)
@@ -514,19 +516,64 @@ namespace C8.eServices.Mvc.Models.Repository
             //    WL_DEPARTMENTS wd = GetDepartmentDataById(appId, deptName);
             //    wd.APPROVE_OR_REJECT_COMMENTS = !String.IsNullOrEmpty(deptComments)? deptComments:"";
             //    wd.APPLICATION_STATUS = deptStatus;
-            //}            
-            return SaveChanges();
+            //}
+            bool isSuccess = SaveChanges();
+            if(isSuccess)
+            {
+                EmailHelper email = new EmailHelper();
+                string applicationGrantStatus = string.Empty;
+
+                if (appStatus == "Application Granted")
+                {
+                    applicationGrantStatus = "Granted";
+                }
+                else if (appStatus == "Application Rejected")
+                {
+                    applicationGrantStatus = "Rejected";
+                }
+                email.Body = EmailNotificationBody.SentApplicationFormGrantStatus(res.PROPERTYOWNER_NAME, res.PROPERTYOWNER_SURNAME, res.APPLICATION_NUMBER, applicationGrantStatus, comments).ToString();
+                email.Recipient = res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
+                email.Subject = "Wayleave Application Status";
+                //email.SendEmail();
+                Email em = new Email();
+                em.GenerateEmail(email.Recipient, email.Subject, email.Body, res.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME, null, null, res.APPLICATION_NUMBER, null, null, null, null);                
+            }
+            return isSuccess;
         }
 
         public bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus)
-        {           
+        {
+            bool isSuccess = false;
             if (!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
-            {                
+            {
+                WL_APPLICATIONFORM res = GetApplicationFormData(appId);
                 WL_DEPARTMENTS wd = GetDepartmentDataById(appId, deptName);
                 wd.APPROVE_OR_REJECT_COMMENTS = !String.IsNullOrEmpty(deptComments) ? deptComments : "";
                 wd.APPLICATION_STATUS = deptStatus;
+                isSuccess = SaveChanges();
+                if (isSuccess)
+                {
+                    EmailHelper email = new EmailHelper();
+                    string applicationGrantStatus = string.Empty;
+
+                    if (deptStatus == "Not Affected")
+                    {
+                        applicationGrantStatus = "Not Affected";
+                    }
+                    else if (appStatus == "Affected")
+                    {
+                        applicationGrantStatus = "Affected";
+                    }
+                    email.Body = EmailNotificationBody.DepartmentResponseStatus(res.PROPERTYOWNER_NAME, res.PROPERTYOWNER_SURNAME, res.APPLICATION_NUMBER, deptStatus, deptComments, deptName).ToString();
+                    email.Recipient = res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
+                    email.Subject = "Wayleave Application Department Response Status";
+                    //email.SendEmail();
+                    Email em = new Email();
+                    em.GenerateEmail(email.Recipient, email.Subject, email.Body, res.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME, null, null, res.APPLICATION_NUMBER, null, null, null, null);
+                }
             }
-            return SaveChanges();
+            
+            return isSuccess;
         }
 
         public bool SaveChanges()

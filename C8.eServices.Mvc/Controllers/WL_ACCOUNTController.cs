@@ -260,7 +260,8 @@ namespace C8.eServices.Mvc.Controllers
                         s.MOBILE,
                         s.EMAIL,
                         s.COMPANY_FULL_NAME,
-                        s.TELEPHONE_NUMBER
+                        s.TELEPHONE_NUMBER,
+                        s.STREET_NAME,s.CITY ,s.PROVINCE, s.COUNTRY ,s.POST_CODE
                     }).FirstOrDefault();
 
                 if (res != null)
