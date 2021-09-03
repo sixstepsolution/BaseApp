@@ -142,7 +142,7 @@ namespace C8.eServices.Mvc.Controllers
                 voteNumber = "4TESTVOTENOmkzzzzz16",
                 pgMerchantReference = applicationNumber,
                 pgMerchantDescription = "Town Planning Fee",
-                Amount = "10",
+                Amount = "500",
                 pgEmail = applicationData!=null? applicationData.PROPERTYOWNER_EMAIL:"",
                 pgMobile = applicationData != null ? applicationData.PROPERTYOWNER_MOBILENO : "",
                 customerFirstName = applicationData != null ? applicationData.PROPERTYOWNER_NAME : "",

@@ -3,9 +3,11 @@ using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using C8.eServices.Mvc.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+
 namespace C8.eServices.Mvc.DataAccessLayer
 {   
-    public partial class WayleaveDbContext : DbContext
+    public partial class WayleaveDbContext : IdentityDbContext<User>
     {
         public WayleaveDbContext()
 

@@ -119,8 +119,12 @@ namespace C8.eServices.Mvc.Keys
         public const string EmailNotificationTemplate = "nt_statement_load_notification";
 
         //Active Directory Login
+        //public const string ActiveDirectoryActive = "active_directory_active";
+        //public const string ActiveDirectoryDomain = "active_directory_domain";
+
         public const string ActiveDirectoryActive = "active_directory_active";
-        public const string ActiveDirectoryDomain = "active_directory_domain";
+        public const string activeDirectoryDomain = "active_directory_domain";
+
 
     }
 }
