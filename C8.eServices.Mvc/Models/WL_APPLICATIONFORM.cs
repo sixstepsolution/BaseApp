@@ -185,7 +185,12 @@ namespace C8.eServices.Mvc.Models
         public string PAYMENT_MODE { get; set; }
         public string PAYMENT_DESCRIPTION { get; set; }
         public string PAYMENT_DATE { get; set; }
-        
+        [StringLength(15)]
+        public string IDENTIFICATION_NUMBER { get; set; }
+
+        [StringLength(10)]
+        public string GENDER { get; set; }
+
         public int CREATED_BY { get; set; }
 
         public DateTime CREATED_DATE { get; set; }

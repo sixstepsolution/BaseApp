@@ -115,6 +115,14 @@ namespace C8.eServices.Mvc.Models
         [Required]
         public string PASSWORD { get; set; }
 
+        [StringLength(15)]
+        public string IDENTIFICATION_NUMBER { get; set; }
+
+        [StringLength(10)]
+        public string GENDER { get; set; }
+        
+        public string SUBURB { get; set; }    
+
         [ForeignKey("STATUS_ID")]
         public virtual MASTER_STATUS_TYPES MASTER_STATUS_TYPES { get; set; }
         public virtual ICollection<WL_ACCO_CONTACT> WL_ACCO_CONTACT { get; set; }

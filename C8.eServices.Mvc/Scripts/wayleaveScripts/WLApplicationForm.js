@@ -1212,6 +1212,7 @@ var apiBaseUrl = localStorage.getItem('apiBaseUrl');
 var BaseUrl = localStorage.getItem('BaseUrl');
 //alert(apiBaseUrl);
 var accountID = localStorage.getItem('wayleaveAccountNumber');
+var isDepartmentResponseReceived = false;
 //var appId = localStorage.getItem('appId');
 $("#IsViewApplication").show();
 //Show and hide collapse panel
@@ -1968,7 +1969,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
         dataType: 'json',
         //data: formData,
         success: function (data, textStatus, xhr) {
-            console.log("======Service DocumentList Result=========");
+            console.log("======Service DocumentList from server Result=========");
             console.log(data);
             console.log(ServiceDocumentListFromServer);
             //MasterRegions = data;
@@ -1995,11 +1996,29 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
                     var sid = ServiceDocumentList[i].id + "SupportDocument";
                     var index = i + 1;
                     var isAppend = false;
+                    //for (let j = 0; j < ServiceDocumentListFromServer.length; j++) {
+                    //    var id = ServiceDocumentListFromServer[j].sD_ID + "SupportDocument";
+                    //    if (sid == id) {
+                    //        isAppend = true;
+                    //        var ttt = ServiceDocumentListFromServer[j].documenT_NAME;
+                    //        //alert(ServiceDocumentListFromServer[j].documenT_NAME);
+                    //        $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' /><a id=' + id + ' onclick="ViewDocument("'+ ttt + '")" style="color:darkblue">'+ServiceDocumentListFromServer[j].documenT_NAME+'</a></td></tr>');
+                    //    }
+                    //};
                     for (let j = 0; j < ServiceDocumentListFromServer.length; j++) {
                         var id = ServiceDocumentListFromServer[j].sD_ID + "SupportDocument";
+                        var linkId = ServiceDocumentListFromServer[j].sD_ID + "LinkSupportDocument";
                         if (sid == id) {
                             isAppend = true;
-                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' /><a id=' + id + ' onclick="ViewDocument("' + ServiceDocumentListFromServer[j].documenT_NAME + '")" style="color:darkblue">View</a></td></tr>');
+                            var ttttgt = ServiceDocumentListFromServer[j].documenT_NAME;
+                            var docUrl = "../uploads/" + ttttgt;
+                            //menulink.href = "javascript: void (0)";
+                            //menulink.onclick = ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME);
+                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' /><a id=' + linkId + ' target="_blank" href="' + docUrl + '" style="text-decoration:none!important;color:#000!important" rel="noopener noreferrer" name="LinkA">View</a></td></tr>');
+                            //var menulink = document.getElementById(linkId);
+                            //menulink.setAttribute("onclick", "ViewDocument('" + ServiceDocumentListFromServer[j].documenT_NAME + "')");
+                            //$('#ServiceDocumentListFromServer').append(menulink);
+                            //AddEvent(menulink, "click", ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME));
                         }
                     };
                     if (!isAppend) {
@@ -2025,6 +2044,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
 
 $.fn.LoadDepartmentsByAppid = function (deptdata) {
     //alert('dept');
+    isDepartmentResponseReceived = false;
     ServiceDepartmentList = [];
     circulatedDepartmentList = [];
     circulatedDepartmentList = deptdata;
@@ -2044,6 +2064,7 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
             var dt = formatDate(circulatedDepartmentList[i].createD_ON);
             //;
             if (dptInfo.applicatioN_STATUS != null && dptInfo.applicatioN_STATUS != '') {
+                
                 status = dptInfo.applicatioN_STATUS;
             }
 
@@ -2051,6 +2072,10 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
                 dptComment = dptInfo.approvE_OR_REJECT_COMMENTS;
             }
             var tt = "";
+            if (status == "Not Affected" || status == "Affected") {
+                isDepartmentResponseReceived = true;
+                tt = "text-success";
+            }
             if (status == "Not Affected") {
                 tt = "text-success";
             }
@@ -2080,44 +2105,50 @@ function formatDate(date) {
 // Update application status only
 $.fn.UpdateApplicationFormStaus = function () {
     if (appFormData.AppStatus != null && appFormData.AppStatus != undefined && appFormData.AppStatus != "") {
-        $('#isAppLoading').show();
-        var departmentName = $("#CurrentUserDepartmentName").val();
-        if (departmentName == "Energy") {
-            departmentName = "Electricity";
-        }  
-        var inpuclaims = {
-            appId: appFormData.APP_ID,
-            appStatus: appFormData.AppStatus,
-            comments: $("#APPLICATION_COMMENTS").val(),
-            deptComments: $("#DEPARTMENT_COMMENTS").val(),
-            deptName: departmentName,
-            deptStatus: $("#DEPARTMENT_STATUS").val(),
-        };
-        $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            'type': 'POST',
-            'url': apiBaseUrl + 'update-application-form-status',
-            'data': JSON.stringify(inpuclaims),
-            'dataType': 'json',            
-            'success': function (data, textStatus, xhr) {
-                console.log("======Application update Result=========");
-                console.log(data);
-                if (data) {
-                    toastr.success('Application status has been updated successfully!');
-                    setTimeout(function () {
-                        window.location.href = "../WL/index";
-                    }, 1000)
-                }
-                $('#isAppLoading').hide();
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                //console.log('Error in Operation');
-                toastr.error('Error in Operation');
+        if (isDepartmentResponseReceived) {
+            $('#isAppLoading').show();
+            var departmentName = $("#CurrentUserDepartmentName").val();
+            if (departmentName == "Energy") {
+                departmentName = "Electricity";
             }
-        });
+            var inpuclaims = {
+                appId: appFormData.APP_ID,
+                appStatus: appFormData.AppStatus,
+                comments: $("#APPLICATIONReject_COMMENTS").val(),
+                deptComments: $("#DEPARTMENT_COMMENTS").val(),
+                deptName: departmentName,
+                deptStatus: $("#DEPARTMENT_STATUS").val(),
+            };
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                'type': 'POST',
+                'url': apiBaseUrl + 'update-application-form-status',
+                'data': JSON.stringify(inpuclaims),
+                'dataType': 'json',
+                'success': function (data, textStatus, xhr) {
+                    console.log("======Application update Result=========");
+                    console.log(data);
+                    if (data) {
+                        toastr.success('Application submitted successfully!');
+                        setTimeout(function () {
+                            window.location.href = "../WL/index";
+                        }, 1000)
+                    }
+                    $('#isAppLoading').hide();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    //console.log('Error in Operation');
+                    toastr.error('Error in Operation');
+                }
+            });
+        }
+        else {
+            toastr.warning('At least one department response is required');
+        }
+        
     }
     else {
         toastr.warning('Please select status!');
@@ -2186,6 +2217,7 @@ $.fn.UpdateDepartmentStaus = function () {
 }
 
 function ViewDocument(DOCUMENT_NAME) {
+    //alert(DOCUMENT_NAME);
     var filename = window.href = '../uploads/' + DOCUMENT_NAME;
     window.open(filename);
 }

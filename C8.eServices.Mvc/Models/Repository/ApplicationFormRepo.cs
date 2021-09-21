@@ -329,8 +329,8 @@ namespace C8.eServices.Mvc.Models.Repository
                         string serviceDocId = files.AllKeys[i];
                         string documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId.Substring(0, 1) : "0";
 
-                        string documentType = tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault() != null ? tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault().DESCRIPTION : "";
-
+                        //string documentType = tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault() != null ? tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault().DESCRIPTION : "";
+                        string documentTypee = _context.MASTER_SERVICE_DOCUMENTS.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault() != null ? _context.MASTER_SERVICE_DOCUMENTS.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault().DESCRIPTION : "";
                         HttpPostedFile file = files[i];
                         //string fd = serviceDocId.Substring(1, 1);
                         if (browser == "IE" || browser == "INTERNETEXPLORER")
@@ -349,7 +349,7 @@ namespace C8.eServices.Mvc.Models.Repository
                         file.SaveAs(fileName);
 
                         ws.SD_ID = Convert.ToInt32(documentId ?? "0");
-                        ws.DOCUMENT_TYPE = documentType;
+                        ws.DOCUMENT_TYPE = documentTypee;
                         ws.DOCUMENT_NAME = file_Name;
                         ws.CREATED_BY = 1;
                         ws.CREATED_DATE = DateTime.Now;
@@ -428,11 +428,11 @@ namespace C8.eServices.Mvc.Models.Repository
             {  //  Get all files from Request object 
                //return null;
                 var list=_context.WL_SUPPORTING_DOCUMENTS.Where(w => w.APP_ID == applicationForm.APP_ID).ToList();
-                if(list.Count()>0)
-                {
-                    _context.WL_SUPPORTING_DOCUMENTS.RemoveRange(list);
-                    SaveChanges();
-                }
+                //if(list.Count()>0)
+                //{
+                //    _context.WL_SUPPORTING_DOCUMENTS.RemoveRange(list);
+                //    SaveChanges();
+                //}
                 
                 for (int i = 0; i < files.AllKeys.Count(); i++)
                 {
@@ -532,7 +532,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     applicationGrantStatus = "Rejected";
                 }
                 email.Body = EmailNotificationBody.SentApplicationFormGrantStatus(res.PROPERTYOWNER_NAME, res.PROPERTYOWNER_SURNAME, res.APPLICATION_NUMBER, applicationGrantStatus, comments).ToString();
-                email.Recipient = res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
+                email.Recipient = "prasadthummala@gmail.com"; //res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
                 email.Subject = "Wayleave Application Status";
                 //email.SendEmail();
                 Email em = new Email();

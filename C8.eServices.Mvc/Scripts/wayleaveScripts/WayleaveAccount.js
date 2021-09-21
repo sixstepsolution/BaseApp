@@ -45,6 +45,27 @@ $.fn.validateEmail = function (id) {
     //    $("#"+id).css('color', 'black');
     //}
 };
+
+//Identification number validation
+$.fn.validateIdentificationNumber = function (id) {
+    //var identificationNumber = $("#" + id).val();
+    //var idLength = $("#" + id).val();
+    if ($("#" + id).val().length==13) {
+        $("#" + id).css('color', 'black');
+        return (true)
+    }
+    $("#" + id).css('color', 'red');
+
+    return false;
+    //var emailFormat1 = re.test($("#"+id).val()); // This return result in Boolean type
+    //if (!emailFormat1) {
+    //    $("#"+id).css('color', 'red');
+    //}
+    //else {
+    //    $("#"+id).css('color', 'black');
+    //}
+};
+
 //alert(localStorage.getItem('apiBaseUrl'));
 
 //Show and hide New/Renewel Account details
@@ -211,7 +232,7 @@ $.fn.SaveWlAccountForm = function () {
     $.fn.GetFormdataValues();
 
     formData.append("AccountData", JSON.stringify(wayleaveAccount));
-
+    console.log(wayleaveAccount);
     for (var i = 0; i < files.length; i++) {
         formData.append("tradeLicensefile", files[i]);
     }
@@ -301,7 +322,7 @@ Password : <b style='color:#00337f'>`+ data.accountPassword + `</b>
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log(xhr);
-                alert(xhr);
+                //alert(xhr);
                 //console.log(textStatus);
                 //console.log(errorThrown);
                 toastr.error(errorThrown);
@@ -443,6 +464,9 @@ $.fn.GetFormdataValues = function () {
     wayleaveAccount.province = $('#province').val();
     wayleaveAccount.country = $('#country').val();
     wayleaveAccount.postCode = $('#postCode').val();
+    wayleaveAccount.identificationNumber = $('#identificationNumber').val();
+    wayleaveAccount.contactPersonGender = $('#contactPersonGender').val();
+    wayleaveAccount.suburb = $('#suburb').val();
 };
 
 $.fn.CheckFormValidations = function () {
@@ -457,7 +481,10 @@ $.fn.CheckFormValidations = function () {
     var des=$('#designation').val();
     //$('#telephoneNumber').val();
     var mb=$('#mobileNumber').val();
-    var em=$('#email').val();
+    var em = $('#email').val();
+    var inum = $('#identificationNumber').val();
+    var cpg = $('#contactPersonGender').val();
+    var sub = $('#suburb').val();
     //$('#fax').val();
     var sn=$('#streetName').val();
     var ct=$('#city').val();
@@ -466,7 +493,8 @@ $.fn.CheckFormValidations = function () {
     var pc = $('#postCode').val();
     if (ut != undefined && ut != "" && cn != undefined && cn != "" && cf != undefined && cf != "" && cpf != undefined && cpf != ""
         && cpl != undefined && cpl != "" && des != undefined && des != "" && mb != undefined && mb != "" && em != undefined && em != ""
-        && sn != undefined && sn != "" && ct != undefined && ct != "" && pv != undefined && pv != "" && cn != undefined && cn != "" && pc != undefined && pc != "") {
+        && sn != undefined && sn != "" && ct != undefined && ct != "" && pv != undefined && pv != "" && cn != undefined && cn != "" &&
+        pc != undefined && pc != "" && inum != undefined && inum != "" && inum.length == 13 && cpg != undefined && cpg != "" && sub != undefined && sub != "") {
         isFormValid = true;
         return isFormValid;
     }

@@ -555,41 +555,41 @@
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Account Number</label>
                                                         <input type="text" style="border-radius: 4px"
-                                                               class="form-control" name="PROPERTYOWNER_ACCOUNT_NO" id="PROPERTYOWNER_ACCOUNT_NO" />
+                                                               class="form-control" readonly name="PROPERTYOWNER_ACCOUNT_NO" id="PROPERTYOWNER_ACCOUNT_NO" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Applicant Name</label>
-                                                        <input type="text" style="border-radius: 4px" id="PROPERTYOWNER_NAME"
+                                                        <input type="text" readonly style="border-radius: 4px" id="PROPERTYOWNER_NAME"
                                                                class="form-control" name="PROPERTYOWNER_NAME" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Applicant Surname</label>
-                                                        <input type="text" style="border-radius: 4px" id="PROPERTYOWNER_SURNAME"
+                                                        <input type="text" readonly style="border-radius: 4px" id="PROPERTYOWNER_SURNAME"
                                                                class="form-control" name="PROPERTYOWNER_SURNAME" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Tel Number</label>
-                                                        <input type="text" maxlength="10" numbers-only style="border-radius: 4px" id="PROPERTYOWNER_CONTACTNO"
+                                                        <input type="text" readonly maxlength="10" style="border-radius: 4px" id="PROPERTYOWNER_CONTACTNO"
                                                                class="form-control numbersOnly" name="PROPERTYOWNER_CONTACTNO" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Mobile Number</label>
-                                                        <input type="text" maxlength="10" style="border-radius: 4px" id="PROPERTYOWNER_MOBILENO"
+                                                        <input type="text" readonly maxlength="10" style="border-radius: 4px" id="PROPERTYOWNER_MOBILENO"
                                                                class="form-control numbersOnly" name="PROPERTYOWNER_MOBILENO" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%" colspan="2">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Email</label>
-                                                        <input type="text" @*onkeyup="$.fn.validateEmail('PROPERTYOWNER_EMAIL')"*@ style="border-radius: 4px" id="PROPERTYOWNER_EMAIL"
+                                                        <input type="text" readonly @*onkeyup="$.fn.validateEmail('PROPERTYOWNER_EMAIL')"*@ style="border-radius: 4px" id="PROPERTYOWNER_EMAIL"
                                                                class="form-control" name="PROPERTYOWNER_EMAIL" />
                                                     </div>
                                                 </td>
@@ -614,6 +614,13 @@
                                     <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
                                         <table>
                                             <tr>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Identification Number</label>
+                                                        <input type="text" style="border-radius: 4px" maxlength="13" id="identificationNumber"
+                                                               class="form-control numbersOnly" name="identificationNumber" />
+                                                    </div>
+                                                </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Name</label>

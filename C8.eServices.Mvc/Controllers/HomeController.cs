@@ -66,23 +66,23 @@ namespace C8.eServices.Mvc.Controllers
                 //}
 
 
-                var identity = User.Identity as ClaimsIdentity;
+                //var identity = User.Identity as ClaimsIdentity;
 
-                var claims1 = from c in identity.Claims
-                              select new
-                              {
-                                  subject = c.Subject.Name,
-                                  type = c.Type,
-                                  value = c.Value
-                              };
+                //var claims1 = from c in identity.Claims
+                //              select new
+                //              {
+                //                  subject = c.Subject.Name,
+                //                  type = c.Type,
+                //                  value = c.Value
+                //              };
 
-                //var d=contex.testMigrations;
-                bool IsAuthenticated = ClaimsPrincipal.Current.Identities.First().IsAuthenticated;
-                if (!IsAuthenticated)
-                {
-                    // if IsAuthenticated is false return to login code here....
+                ////var d=contex.testMigrations;
+                //bool IsAuthenticated = ClaimsPrincipal.Current.Identities.First().IsAuthenticated;
+                //if (!IsAuthenticated)
+                //{
+                //    // if IsAuthenticated is false return to login code here....
 
-                }
+                //}
 
                 ViewBag.ReturnUrl = returnUrl;
                 ViewBag.Error = "";
@@ -161,25 +161,25 @@ namespace C8.eServices.Mvc.Controllers
             
             try
             {
-                var identity = User.Identity as ClaimsIdentity;
+                //var identity = User.Identity as ClaimsIdentity;
 
-                var claims1 = from c in identity.Claims
-                              select new
-                              {
-                                  subject = c.Subject.Name,
-                                  type = c.Type,
-                                  value = c.Value
-                              };
+                //var claims1 = from c in identity.Claims
+                //              select new
+                //              {
+                //                  subject = c.Subject.Name,
+                //                  type = c.Type,
+                //                  value = c.Value
+                //              };
 
-                //var d=contex.testMigrations;
-                bool IsAuthenticated = ClaimsPrincipal.Current.Identities.First().IsAuthenticated;
-                if (!IsAuthenticated)
-                {
-                    // if IsAuthenticated is false return to login code here....
+                ////var d=contex.testMigrations;
+                //bool IsAuthenticated = ClaimsPrincipal.Current.Identities.First().IsAuthenticated;
+                //if (!IsAuthenticated)
+                //{
+                //    // if IsAuthenticated is false return to login code here....
 
-                }
+                //}
 
-                ViewBag.ReturnUrl = returnUrl;
+                //ViewBag.ReturnUrl = returnUrl;
                 return View();
             }
             catch (Exception ex)
@@ -238,175 +238,252 @@ namespace C8.eServices.Mvc.Controllers
         }
         #endregion
 
-        #region Account Login POST
-        //
-        // POST: /Account/Login
+        ////#region Account Login POST
+        //////
+        ////// POST: /Account/Login
+        ////[HttpPost]
+        ////[AllowAnonymous]
+        ////[ValidateAntiForgeryToken]
+        ////public async Task<ActionResult> Index(LoginViewModel model, string returnUrl)
+        ////{
+        ////    ///return RedirectToAction("Index", "WayleaveAccount");
+        ////    using (var context = new WayleaveDbContext())
+        ////    {
+        ////        //_base.Initialise(context);
+
+        ////        //incremental delay to prevent brute force attacks
+        ////        int incrementalDelay;
+        ////        var error = "";
+
+        ////        if (HttpContext.Application[Request.UserHostAddress] != null)
+        ////        {
+        ////            // wait for delay if there is one
+        ////            incrementalDelay = (int)HttpContext.Application[Request.UserHostAddress];
+        ////            await Task.Delay(incrementalDelay * 1000);
+        ////        }
+
+        ////        if (ModelState.IsValid)
+        ////        {
+        ////            //var result = context.Users.Where(s => s.username == model.UserName && s.password == model.Password).FirstOrDefault();
+        ////            //if (result != null)
+        ////            //{
+        ////            //    //CommonModel ekurhuleniData = new CommonModel();
+        ////            //    //ekurhuleniData.userId = result.userid;
+        ////            //    //ekurhuleniData.userName = result.username;
+        ////            //    //ekurhuleniData.deptartmentname = result.deptartmentname;
+        ////            //    Session["ekurhuleniData"] = result;
+        ////            //    Session["ekurhuleniUserName"] = result.username;
+        ////            //    Session["ekurhuleniUserDeptName"] = result.deptartmentname;
+        ////            //    Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
+        ////            //    return RedirectToAction("Index", "WL");
+        ////            //}
+        ////            //else
+        ////            //{
+        ////            //    TempData["LoginError"] = "Invalid username or password!";
+        ////            //    error = "Invalid username or password!";
+        ////            //    return RedirectToAction("Index", "Home");
+        ////            //}
+
+
+
+        ////            var store = new UserStore<SystemIdentityUser>(context);
+        ////            var UserManager = new UserManager<SystemIdentityUser>(store);
+        ////            UserManager.UserValidator = new UserValidator<SystemIdentityUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
+        ////            // var user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
+        ////            var user = new SystemIdentityUser();
+        ////            ADLogin adLogin = new ADLogin();
+        ////            //var test = db.AppSettings.Where(x => x.Key == "active_directory_domain").FirstOrDefault();
+        ////            //var test33 = db.AppSettings.Where(x => x.Id == 1180).FirstOrDefault();
+
+        ////            var activeDirectoryOn = db.AppSettings.Where(x => x.Key == AppSettingKeys.ActiveDirectoryActive).FirstOrDefault().Value;
+        ////            var activeDirectoryDomain = db.AppSettings.Where(x => x.Key == AppSettingKeys.ActiveDirectoryDomain).FirstOrDefault().Value;
+
+        ////            var Ad = false;
+        ////            //var activeDirectoryOn = "True";
+        ////            if (activeDirectoryOn == "True")
+        ////            {
+        ////                try
+        ////                {
+        ////                    //user = await UserManager.FindByNameAsync(model.UserName.Trim());
+
+        ////                    //if (user != null)
+        ////                    //{
+
+        ////                    //if (user.isInternalUser == true && user.isActiveDirectoryUser == true)
+        ////                    //{
+        ////                    var Domain = new PrincipalContext(ContextType.Domain, activeDirectoryDomain);
+
+        ////                    if (Domain != null)
+        ////                    {
+        ////                        //model.UserName = "Xetgroup";
+        ////                        //model.Password = "/*@VPN2020!@#$*/";
+        ////                        //model.UserName = "SCM_user";
+        ////                        //model.Password = "@Eku2020$";
+
+        ////                        Ad = adLogin.ValidateUser(model.UserName, model.Password);
+        ////                        if (Ad)
+        ////                        {
+        ////                            var result = context.Users.Where(s => s.username == model.UserName && s.password == model.Password).FirstOrDefault();
+        ////                            if (result != null)
+        ////                            {
+        ////                                //CommonModel ekurhuleniData = new CommonModel();
+        ////                                //ekurhuleniData.userId = result.userid;
+        ////                                //ekurhuleniData.userName = result.username;
+        ////                                //ekurhuleniData.deptartmentname = result.deptartmentname;
+        ////                                Session["IsInternalUser"] = true;
+        ////                                Session["ekurhuleniData"] = result;
+        ////                                Session["ekurhuleniUserName"] = result.username;
+        ////                                Session["ekurhuleniUserDeptName"] = result.deptartmentname;
+        ////                                Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
+        ////                                return RedirectToAction("Index", "WL");
+        ////                            }
+        ////                            else
+        ////                            {
+        ////                                TempData["LoginError"] = "Invalid username or password!";
+        ////                                error = "Invalid username or password!";
+        ////                                return RedirectToAction("Index", "Home");
+        ////                            }
+        ////                        }
+        ////                        else
+        ////                        {
+        ////                            TempData["LoginError"] = "Incorrect Active Directory username or password";
+        ////                            //ModelState.AddModelError("", "Invalid Active Directory username or password.");
+        ////                            //ViewBag.Error = error;
+        ////                            //return View(model);
+        ////                            return RedirectToAction("Index", "Home");
+        ////                        }
+        ////                    }
+        ////                    //}
+        ////                    //else
+        ////                    //{
+
+        ////                    //    var Counter = user.AccessFailedCount;
+        ////                    //    if (Counter > 20)
+        ////                    //    {
+        ////                    //        ViewBag.Error = "Your Account has been locked due to the wrong password entered multiple time, Please Use The Forgot Password To Unlock Your Account.";
+        ////                    //        //AuthenticationManager.SignOut();
+        ////                    //        return View(model);
+        ////                    //    }
+        ////                    //    else
+        ////                    //    {
+        ////                    //        user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
+        ////                    //        if (user == null)
+        ////                    //        {
+        ////                    //            var user3 = await UserManager.FindByNameAsync(model.UserName.Trim());
+
+        ////                    //            //user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim());
+        ////                    //            user3.AccessFailedCount = user3.AccessFailedCount + 1;
+        ////                    //            await UserManager.UpdateAsync(user3);
+        ////                    //            context.SaveChanges();
+        ////                    //        }
+
+
+        ////                    //    }
+        ////                    //}
+
+        ////                    //}
+        ////                    //else
+        ////                    //{
+        ////                    //    user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
+        ////                    //}
+        ////                }
+        ////                catch (PrincipalServerDownException ex)
+        ////                {
+        ////                    // show your error message
+        ////                    //user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
+        ////                    TempData["LoginError"] = ex.Message;
+        ////                    //ModelState.AddModelError("", "Invalid Active Directory username or password.");
+        ////                    //ViewBag.Error = error;
+        ////                    //return View(model);
+        ////                    return RedirectToAction("Index", "Home");
+        ////                }
+        ////            }
+        ////        }
+
+        ////        // If we got this far, something failed, redisplay form
+        ////        ViewBag.Error = error;
+        ////        return View(model);
+        ////    }
+        ////    //return View();
+        ////}
+        ////#endregion
+        ///
+
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(LoginViewModel model, string returnUrl)
         {
-            ///return RedirectToAction("Index", "WayleaveAccount");
-            using (var context = new WayleaveDbContext())
+            WayleaveDbContext context = new WayleaveDbContext();
+            // var result = context.WL_ACCOUNTS.ToList();
+            //if (result != null)
+            //{
+
+            try
             {
-                //_base.Initialise(context);
+                // Please store the 2 line below in the db and call/ them from there
+                var activeDirectoryOn = "True";
+                var activeDirectoryDomain = "10.31.3.51";
+                //
 
-                //incremental delay to prevent brute force attacks
-                int incrementalDelay;
-                var error = "";
-
-                if (HttpContext.Application[Request.UserHostAddress] != null)
+                var Ad = false;
+                bool ADSuccess = false;
+                string email = "";
+                AdLogin adLogin = new AdLogin();
+                if (activeDirectoryOn == "True")
                 {
-                    // wait for delay if there is one
-                    incrementalDelay = (int)HttpContext.Application[Request.UserHostAddress];
-                    await Task.Delay(incrementalDelay * 1000);
-                }
+                    var Domain2 = new PrincipalContext(ContextType.Domain, activeDirectoryDomain);
 
-                if (ModelState.IsValid)
-                {
-                    //var result = context.Users.Where(s => s.username == model.UserName && s.password == model.Password).FirstOrDefault();
-                    //if (result != null)
-                    //{
-                    //    //CommonModel ekurhuleniData = new CommonModel();
-                    //    //ekurhuleniData.userId = result.userid;
-                    //    //ekurhuleniData.userName = result.username;
-                    //    //ekurhuleniData.deptartmentname = result.deptartmentname;
-                    //    Session["ekurhuleniData"] = result;
-                    //    Session["ekurhuleniUserName"] = result.username;
-                    //    Session["ekurhuleniUserDeptName"] = result.deptartmentname;
-                    //    Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
-                    //    return RedirectToAction("Index", "WL");
-                    //}
-                    //else
-                    //{
-                    //    TempData["LoginError"] = "Invalid username or password!";
-                    //    error = "Invalid username or password!";
-                    //    return RedirectToAction("Index", "Home");
-                    //}
-
-
-
-                    var store = new UserStore<SystemIdentityUser>(context);
-                    var UserManager = new UserManager<SystemIdentityUser>(store);
-                    UserManager.UserValidator = new UserValidator<SystemIdentityUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
-                    // var user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
-                    var user = new SystemIdentityUser();
-                    ADLogin adLogin = new ADLogin();
-                    //var test = db.AppSettings.Where(x => x.Key == "active_directory_domain").FirstOrDefault();
-                    //var test33 = db.AppSettings.Where(x => x.Id == 1180).FirstOrDefault();
-
-                    var activeDirectoryOn = db.AppSettings.Where(x => x.Key == AppSettingKeys.ActiveDirectoryActive).FirstOrDefault().Value;
-                    var activeDirectoryDomain = db.AppSettings.Where(x => x.Key == AppSettingKeys.ActiveDirectoryDomain).FirstOrDefault().Value;
-
-                    var Ad = false;
-                    //var activeDirectoryOn = "True";
-                    if (activeDirectoryOn == "True")
+                    if (Domain2 != null)
                     {
-                        try
+                        Ad = await adLogin.ValidateUser(model.UserName, model.Password);
+                        if (Ad)
                         {
-                            //user = await UserManager.FindByNameAsync(model.UserName.Trim());
+                            ADSuccess = true;
 
-                            //if (user != null)
-                            //{
-
-                            //if (user.isInternalUser == true && user.isActiveDirectoryUser == true)
-                            //{
-                            var Domain = new PrincipalContext(ContextType.Domain, activeDirectoryDomain);
-
-                            if (Domain != null)
+                            var addets = await adLogin.Validate(activeDirectoryDomain, true, model);
+                            if (addets != null)
                             {
-                                //model.UserName = "Xetgroup";
-                                //model.Password = "/*@VPN2020!@#$*/";
-                                //model.UserName = "SCM_user";
-                                //model.Password = "@Eku2020$";
-
-                                Ad = adLogin.ValidateUser(model.UserName, model.Password);
-                                if (Ad)
+                                var result = context.Users.Where(s => s.username == model.UserName).FirstOrDefault();
+                                if (result != null)
                                 {
-                                    var result = context.Users.Where(s => s.username == model.UserName && s.password == model.Password).FirstOrDefault();
-                                    if (result != null)
-                                    {
-                                        //CommonModel ekurhuleniData = new CommonModel();
-                                        //ekurhuleniData.userId = result.userid;
-                                        //ekurhuleniData.userName = result.username;
-                                        //ekurhuleniData.deptartmentname = result.deptartmentname;
-                                        Session["IsInternalUser"] = true;
-                                        Session["ekurhuleniData"] = result;
-                                        Session["ekurhuleniUserName"] = result.username;
-                                        Session["ekurhuleniUserDeptName"] = result.deptartmentname;
-                                        Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
-                                        return RedirectToAction("Index", "WL");
-                                    }
-                                    else
-                                    {
-                                        TempData["LoginError"] = "Invalid username or password!";
-                                        error = "Invalid username or password!";
-                                        return RedirectToAction("Index", "Home");
-                                    }
+                                    Session["ekurhuleniData"] = result;
+                                    Session["ekurhuleniUserName"] = result.username;
+                                    Session["ekurhuleniUserDeptName"] = result.deptartmentname;
+                                    Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
+                                    return RedirectToAction("Index", "WL");
                                 }
                                 else
                                 {
-                                    TempData["LoginError"] = "Incorrect Active Directory username or password";
-                                    //ModelState.AddModelError("", "Invalid Active Directory username or password.");
-                                    //ViewBag.Error = error;
-                                    //return View(model);
+                                    TempData["LoginError"] = "Invalid username or password!";
+                                    //error = "Invalid username or password!";
                                     return RedirectToAction("Index", "Home");
                                 }
+
                             }
-                            //}
-                            //else
-                            //{
-
-                            //    var Counter = user.AccessFailedCount;
-                            //    if (Counter > 20)
-                            //    {
-                            //        ViewBag.Error = "Your Account has been locked due to the wrong password entered multiple time, Please Use The Forgot Password To Unlock Your Account.";
-                            //        //AuthenticationManager.SignOut();
-                            //        return View(model);
-                            //    }
-                            //    else
-                            //    {
-                            //        user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
-                            //        if (user == null)
-                            //        {
-                            //            var user3 = await UserManager.FindByNameAsync(model.UserName.Trim());
-
-                            //            //user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim());
-                            //            user3.AccessFailedCount = user3.AccessFailedCount + 1;
-                            //            await UserManager.UpdateAsync(user3);
-                            //            context.SaveChanges();
-                            //        }
-
-
-                            //    }
-                            //}
-
-                            //}
-                            //else
-                            //{
-                            //    user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
-                            //}
                         }
-                        catch (PrincipalServerDownException ex)
+                        else
                         {
-                            // show your error message
-                            //user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
-                            TempData["LoginError"] = ex.Message;
-                            //ModelState.AddModelError("", "Invalid Active Directory username or password.");
-                            //ViewBag.Error = error;
-                            //return View(model);
+
+                            TempData["LoginError"] = "Invalid username or password For active directory login!";
                             return RedirectToAction("Index", "Home");
+
                         }
                     }
                 }
 
-                // If we got this far, something failed, redisplay form
-                ViewBag.Error = error;
-                return View(model);
+
+
             }
-            //return View();
+            catch (Exception)
+            {
+                TempData["LoginError"] = "Invalid username or password For active directory login!";
+                return RedirectToAction("Index", "Home");
+                // throw;
+            }            
+            return View();
         }
-        #endregion
 
         public ActionResult LogOut()
         {

@@ -32,6 +32,11 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string registartionCertificate { get; set; }
         public string taxCertificate { get; set; }
         public string status { get; set; }
+
+        public string identificationNumber { get; set; }
+        public string contactPersonGender { get; set; }
+        public string suburb { get; set; }
+
         public int statusId { get; set; }
         public string isActive { get; set; }
         public string comments { get; set; }

@@ -227,7 +227,10 @@ namespace C8.eServices.Mvc.Controllers
                         s.MOBILE,
                         s.EMAIL,
                         s.COMPANY_FULL_NAME,
-                        s.TELEPHONE_NUMBER
+                        s.TELEPHONE_NUMBER,
+                        s.IDENTIFICATION_NUMBER,
+                        s.GENDER,
+                        s.SUBURB
                     }).FirstOrDefault();
 
                 if (res != null)

@@ -1,0 +1,611 @@
+﻿@{
+    ViewBag.Title = "ViewPatients";
+
+    Layout = "~/Views/Shared/_LayoutPage_user.cshtml";
+}
+
+@*@model List<DOCTOR_PROJECT.Models.BookAppoinment>
+    @{
+        ViewBag.Title = "DoctorPatientInfoList";
+        Layout = "~/Views/Shared/_LayoutPage_user.cshtml";
+    }*@
+
+@*<script src="~/assets/js/jquery.min.js"></script>
+    <link href="~/Content/ResponsiveNew.css" rel="stylesheet" />
+    <script src="~/AngularJs/Controllers/DoctorPatientListCntrl.js"></script>
+    <script src="~/AngularJs/Services/DoctorPatientListService.js"></script>
+    <script src="~/AngularJs/Services/CommonSerive.js"></script>
+    <script src="~/AngularJs/Services/LabService.js"></script>*@
+
+<script src="~/AngularJs/Controllers/LabCntrl.js"></script>
+<script src="~/AngularJs/Services/LabService.js"></script>
+<style>
+    th {
+        font-weight: 300 !important;
+    }
+
+    .faqHeader {
+        font-size: 27px;
+        margin: 20px;
+    }
+
+    .panel-heading [data-toggle="collapse"]:after {
+        /*background-image: url('../../DOCTOR_ICONS/down-arrow1.png');*/
+        content: "\2212"; /* "play" icon */
+        float: right;
+        color: white !important;
+        font-size: 30px;
+        line-height: 22px;
+        /* rotate "play" icon from > (right arrow) to down arrow */
+        /*-webkit-transform: rotate(-90deg);
+        -moz-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+        -o-transform: rotate(-90deg);
+        transform: rotate(-90deg);*/
+    }
+
+    .panel-heading [data-toggle="collapse"].collapsed:after {
+        /* rotate "play" icon from > (right arrow) to ^ (up arrow) */
+        content: "\2b"; /* "play" icon */
+        /*-webkit-transform: rotate(90deg) !important;
+        -moz-transform: rotate(90deg) !important;
+        -ms-transform: rotate(90deg) !important;
+        -o-transform: rotate(90deg) !important;
+        transform: rotate(90deg) !important;*/
+        color: #454444;
+    }
+
+    input[type="text"], input[type="password"] {
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        -ms-border-radius: 3px;
+        -o-border-radius: 3px;
+        border-radius: 3px;
+        -webkit-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgb(0 0 0 / 8%) inset;
+        -moz-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+        -ms-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+        -o-box-shadow: 0 1px 0 #fff, 0 -2px 5px rgba(0,0,0,0.08) inset;
+        box-shadow: 0 1px 0 #fff, 0 -2px 5px rgb(0 0 0 / 8%) inset;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -ms-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        border: 1px solid #c8c8c8;
+        color: #777;
+        font: 15px Helvetica, Arial, sans-serif;
+        margin: 0 0 10px;
+        padding: 15px 10px 15px 40px;
+        padding-left: 33px;
+        width: 250px;
+        height: 20px !important
+    }
+
+    .panel-info > .panel-heading {
+        color: #ffffff;
+        background-color: #6e6e6f;
+        border-color: #6c757d !important;
+        height: 25px !important;
+        padding: 3px !important;
+    }
+
+    .callout {
+        border-radius: .25rem;
+        box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+        background-color: #fff;
+        border-left: 3px solid #e9ecef;
+        margin-bottom: 1rem;
+        padding: 5px;
+    }
+
+    .callout-info {
+        /* width: 20% !important;
+        float: left !important;
+        border-left: 3px solid #117287;
+        border-radius: 5px;
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        border-right: 1px solid #ccc;*/
+        border-left-color: #117a8b;
+    }
+
+    p {
+        font-family: "Open Sans";
+        word-spacing: 3px;
+        font-size: 13px;
+    }
+
+    .container-fluid {
+        margin: 0px !important;
+        padding: 0px !important
+    }
+
+    .Doctor-Image-Display {
+        height: 50px;
+        width: 50px;
+        margin-left: 10px !important;
+        padding-top: -20px !important;
+        border-radius: 50px !important;
+    }
+
+    .form-control-sm {
+        height: 20px !important;
+        margin: 0px !important;
+    }
+
+    .form-group {
+        margin: 0px !important;
+    }
+
+    .btn-sm, .btn-group-sm > .btn {
+        padding: 5px 7px;
+        font-size: 12px;
+        line-height: 0.5;
+        border-radius: 3px;
+    }
+
+    .container {
+        padding: 0px !important;
+    }
+</style>
+<link href="~/Content/CustomTabs.css" rel="stylesheet" />
+<script>
+    $(function () {
+        var $tabButtonItem = $('#tab-button li'),
+            $tabSelect = $('#tab-select'),
+            $tabContents = $('.tab-contents'),
+            activeClass = 'is-active';
+        $tabButtonItem.first().addClass(activeClass);
+        $tabContents.not(':first').hide();
+        $tabButtonItem.find('a').on('click', function (e) {
+            var target = $(this).attr('href');
+            $tabButtonItem.removeClass(activeClass);
+            $(this).parent().addClass(activeClass);
+            $tabSelect.val(target);
+            $tabContents.hide();
+            $(target).show();
+            e.preventDefault();
+        });
+        $tabSelect.on('change', function () {
+            var target = $(this).val(),
+                targetSelectNum = $(this).prop('selectedIndex');
+            $tabButtonItem.removeClass(activeClass);
+            $tabButtonItem.eq(targetSelectNum).addClass(activeClass);
+            $tabContents.hide();
+            $(target).show();
+        });
+    });
+</script>
+
+<div ng-controller="LabCntrl" class="container-fluid" ng-cloak ng-init="GetPatientsBydocId(@Session["Doct_Reg_ID"],'')">
+
+    <div class="container" style="margin-top:-50px!important">
+        <style>
+            .breadcrumb-item a {
+                color: #125e1d !important;
+            }
+
+            .nav-item a {
+                color: #000;
+                text-decoration: none;
+                background-color: transparent;
+                font-size: 11pt !important
+            }
+
+                .nav-item a:hover {
+                    color: #000;
+                    text-decoration: none;
+                    background-color: transparent;
+                    font-size: 11pt !important
+                }
+
+            label {
+                font-weight: 400 !important;
+                /*font-size: 10pt !important;*/
+                margin-bottom: -5px !important;
+                margin-top: -10px !important;
+            }
+
+            .form-control {
+                /*font-size: 10pt !important*/
+            }
+
+            .content-header .breadcrumb {
+                background-color: transparent;
+                line-height: 0.7rem !important;
+                margin-bottom: 0;
+                padding: 0;
+            }
+
+            .card-title {
+                float: left;
+                font-size: 0.9rem !important;
+                font-weight: 400;
+                margin: 0;
+            }
+
+            .table td, .table th {
+                padding: 0.1rem !important;
+                vertical-align: top;
+                /*border-top: 1px solid #dee2e6;*/
+            }
+
+            .text-success-custom {
+                color: #057a52 !important;
+            }
+        </style>
+
+
+        <form novalidate="novalidate" ng-hide="ShowPersonDetails" style="height:200px!important">
+            <div class="appointcolorall">
+                <div style="height: 30px; background-color: #8e8e8e !important; text-align: center !important; font-weight: bold; padding-left: 10px; padding-top: 2px !important; ">
+                    <b style="color:white;font-size:12pt;padding-top:5px!important">Patient Search</b>
+                    @*<a href="../User/DoctorHome" style=" float:left; padding-left: 10px; cursor: pointer"> <img src="/Images/left222.png"></a>*@
+
+                </div>
+                <div class="row" style="margin-top:10px">
+                    <div class="col-lg-12">
+                        <div class="col-md-3 form-group text-left">
+                            <label>Patient Reference No</label>
+                            <input type="text" class="form-control form-control-sm" name="Patient_Id" ng-model="searchKey" @*ng-model="PatientModel.Patient_Id"*@ placeholder="" />
+                        </div>
+                        <div class="col-md-3 form-group text-left">
+                            <label>Patient Name</label>
+                            <input type="text" class="form-control form-control-sm" name="Patient_name" @*ng-model="PatientModel.Patient_name"*@ placeholder="" />
+                        </div>
+                        <div class="col-md-3 form-group text-left">
+                            <label>Lab ReferenceNo</label>
+                            <input type="text" class="form-control form-control-sm" name="Patient_surname" ng-model="PatientModel.Patient_surname" placeholder="" />
+                        </div>
+                        <div class="col-md-3 form-group text-left">
+                            <label>Lab Name</label>
+                            <input type="text" class="form-control form-control-sm" name="Patient_Mobile" ng-model="PatientModel.Patient_Mobile" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+
+                        <div class="col-md-3 form-group text-center">
+                            <div style="height:35px;margin-top:19px!important">
+                                <div class="btn-group" role="group">
+                                    <button type="button" id="saveImage" ng-click="search(@Session["Doct_Reg_ID"],searchKey)" class="btn btn-primary btn-hover-green" data-action="save" role="button" @*ng-click="LabSaveLoading===false?Save(@Session["Doct_Reg_ID"]):''"*@>
+                                        <span class="fa fa-spin fa-spinner" ng-show="PatientSearchLoading"></span>
+                                        <i class="fa fa-search" ng-hide="PatientSearchLoading"></i>&nbsp;Filter
+                                    </button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="reset" class="btn btn-danger"><i class="fa fa-times"></i>&nbsp;Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="AppointmentTimeSloteTableView" ng-show="IsShowSearchdata" style="margin-top:5px!important;height:auto!important;overflow:auto!important;overflow-x:hidden;overflow-y:auto!important;min-height:150px">
+                    <table id="example1" class="table table-bordered">
+                        <thead>
+                            <tr style="background:#057a528c!important">
+                                <th>#</th>
+                                <th> Patient Reference No</th>
+                                <th> Patient Name</th>
+                                @*<th>Surname</th>*@
+                                <th>Lab Reference No</th>
+                                <th>Lab Name</th>
+                                <th>Date</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        <tbody @*ng-if="listCount>0"*@>
+                            <tr ng-repeat="p in PatientList">
+                                <td>&nbsp;{{$index+1}}</td>
+                                @*<td class="text-left"><a href="#" ng-click="ShowPersonDetails1()">JB5144</a></td>*@
+                                <td class="text-left">&nbsp; {{p.Patient_Reference_No}}</td>
+                                <td class="text-left">&nbsp; {{p.PatientName}}</td>
+                                <td class="text-left">&nbsp; {{p.Lab_Reference_No}}</td>
+                                <td class="text-left">&nbsp; {{p.LabName}}</td>
+                                <td class="text-left">&nbsp; {{p.Created_Date.replace('/Date(','').replace(')/','') | date:"dd-MM-yyyy hh:mm a"}}</td>
+                                <td>
+                                    <a style="outline: none" href="#" data-toggle="modal" data-target="#tests" ng-click="view(d)">
+
+                                        <i class="fa fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center text-danger" ng-if="listCount==0" style="border:none!important;margin-top:10px!important;color:#cb2e2e!important">No result found!</div>
+                </div>
+                <br />
+            </div>
+        </form>
+        @*<div  ng-show="displayTable">*@
+        <a href="../User/LabTest" style="font-size:14pt;padding-top:30px;text-decoration:none;color:#46a1b4"> Add Lab Tests</a>
+        @*<a herf="../User/LabTest" class="pull-right">Add Test </a>*@
+        <table id="example1" class="table table-bordered" style="margin-top:0px!important">
+
+            <tbody>
+
+
+
+
+                <tr style=" background-color: #46a1b4; padding-left: 10px; ">
+                    <th style="color: #fff">Patient Reference No</th>
+                    <th style="color: #fff">Patient Name</th>
+
+                    <th style="color: #fff">Lab ReferenceNo</th>
+                    <th style="color: #fff">Lab Name</th>
+                    <th style="color: #fff">Date</th>
+
+                    <th style="color: #fff">
+                        View Tests
+                    </th>
+                    <th style="color: #fff">
+                        Edit Tests
+                    </th>
+
+
+                </tr>
+                <tr style="height:auto;text-align:left" ng-repeat="d in PatientList">
+
+                    <td @*style="color: #46a1b4;*@>
+                        {{d.Patient_Reference_No}}
+
+                    </td>
+                    <td>
+                        {{d.PatientName}}
+
+                    </td>
+
+                    <td>
+                        {{d.Lab_Reference_No}}
+
+                    </td>
+                    <td>
+                        {{d.LabName}}
+
+                    </td>
+                    <td>
+                        {{d.Created_Date.replace('/Date(','').replace(')/','') | date:"dd-MM-yyyy hh:mm a"}}
+                    </td>
+
+                    <td>
+                        <a style="outline: none" href="#" data-toggle="modal" data-target="#tests" ng-click="view(d)">
+
+                            <i class="fa fa-eye"></i>
+                        </a>
+
+                    </td>
+                    <td>
+                        <a ng-click="" href="#"
+                           data-toggle="modal" data-target="#modalForm"
+                           style="color:darkblue"><i class="fa fa-edit"></i></a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="10" class="text-center">
+                        <span class="fa fa-spinner fa-spin" ng-if="patientLoading"></span>
+                        <div class="text-danger">
+                            {{errorMessage}}
+                        </div>
+                    </td>
+                </tr>
+
+        </table>
+
+        @*</div>*@
+
+        <div class="modal fade" id="tests" tabindex="-1" role="dialog" aria-labelledby="tests" style="display: none;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header  modal-header-success">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" style="font:bold">Tests</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                <div class="form-group">
+                                    <div class="col-lg-3" style="margin-top:20px">
+                                        Patient Name
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-9">
+                                        : {{patient_Name}}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                <div class="form-group">
+                                    <div class="col-lg-3" style="margin-top:20px">
+                                        Doctor Name
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-9">
+                                        : {{doctor_Name}}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="appointcolor" id="dtsResult" style=" background-color: #46a1b4; padding-left: 10px;margin-top:10px  ">
+                            <tr style="background-color: #46a1b4;color: white">
+                                <th>Lab Group Name</th>
+                                <th>Lab Test Name</th>
+                                <th>Created On</th>
+                                <th>Status</th>
+
+                            </tr>
+                            <tr style="height:auto;" ng-repeat="l in LabGroupList">
+                                <td>
+                                    {{l.Lab_Group_Name}}
+                                </td>
+                                <td>
+                                    {{l.Lab_Sub_Test_Name}}
+                                </td>
+                                <td>
+                                    {{l.Created_Date.replace('/Date(','').replace(')/','') | date:"dd-MM-yyyy hh:mm a"}}
+                                </td>
+                                <td>{{l.Status}}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="10" class="text-center">
+                                    <span class="fa fa-spinner fa-spin" ng-if="LabGroupLoading"></span>
+                                    <div class="text-danger">
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light-grey" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="modalForm">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header  modal-header-success">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" style="font:bold">Update Tests Status</h4>
+                </div>
+                <form novalidate="novalidate" name="EditForm">
+
+                    <div class="modal-body" style="display: inline-block;">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                <div class="form-group">
+                                    <div class="col-lg-3" style="margin-top:20px">
+                                        Patient Name
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-9">
+                                        : {{patient_Name}}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                <div class="form-group">
+                                    <div class="col-lg-3" style="margin-top:20px">
+                                        Doctor Name
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-9">
+                                        : {{doctor_Name}}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <div class="col-lg-3" style="margin-top:20px">
+                                    Tests
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9">
+                                    <select class="form-control" name="SelectedPatientLabGroup" ng-model="updateLabTestsModel.Lab_Group_Id" ng-change="loadSelectedSubTestsGroups(labTestsId,updateLabTestsModel.Lab_Group_Id)">
+                                        <option value="">--select lab group--</option>
+                                        <option ng-repeat="l in SelectedLabGroupList" value="{{l.Lab_Group_Id}}">{{l.Lab_Group_Name}}</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <div class="col-lg-3" style="margin-top:20px">
+                                    Sub Tests
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9">
+                                    <select class="form-control" name="SelectedLabGroupTest" ng-model="updateLabTestsModel.Lab_Sub_Test_Id">
+                                        <option value="">--select lab group--</option>
+                                        <option ng-repeat="l in SelectedLabGroupTestsList" value="{{l.Lab_Sub_Test_Id}}">{{l.Lab_Sub_Test_Name}}</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div class="col-lg-12">
+                            <div class="form-group">
+                                <div class="col-lg-3" style="margin-top:20px">
+                                    Status
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-lg-9">
+                                    <select class="form-control" name="Status" ng-model="updateLabTestsModel.Status">
+                                        <option value="">--select --</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="completed">In Progress</option>
+                                        <option value="completed"> Not Completed</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>*@
+
+                        <div class="col-lg-12" style="margin: 10px auto;">
+                            <div class="col-lg-3" style="margin-top: 10px;">
+                                Comments<span></span>
+                            </div>
+
+                            <div class="col-lg-9">
+
+                                <textarea rows="4" class="form-control"
+                                          placeholder=" Comments" name="Comments"
+                                          ng-model="updateLabTestsModel.Comments"
+                                          required>
+</textarea>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <div class="btn-group" role="group">
+                            <button type="button" ng-click="isSavingLoading==false?Save():''" class="btn btn-primary btn-hover-green">
+                                <span class="fa fa-spin fa-spinner" ng-if="isSavingLoading"></span>
+                                Update
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+

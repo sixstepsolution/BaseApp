@@ -493,6 +493,8 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
             console.log("========Wayleave Application form data by app id==========");
             console.log(data);
             if (data) {
+                console.log("data.wL_SUPPORTING_DOCUMENTS");
+                console.log(data.wL_SUPPORTING_DOCUMENTS);
                 //$.fn.GetContractorOrConsultant(consultanT_NO);
                 appFormData.APP_ID = data.apP_ID;
                 ServiceDocumentListFromServer = [];
@@ -561,6 +563,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     $('#IsViewApplication').hide();
                 }
 
+                
 
                 if (data.applicatioN_STEP_DESCRIPTION == "Request for documents") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
@@ -653,12 +656,68 @@ $.fn.AddLocations = function () {
 //Open Payment gateway modal
 $.fn.SubmitApplication = function () {
     if (appFormData.APPLICATION_STEP_DESCRIPTION == "" || appFormData.APPLICATION_STEP_DESCRIPTION == null || appFormData.APPLICATION_STEP_DESCRIPTION == undefined) {
-        $("#ShowPaynowButtons").show();
-        $("#ShowEftMasterpass").hide();
-        $("#PaymentModel").modal();        
+        
+        if (ServiceDocumentList.length > 0) {
+            var isFileUploaded = false;
+            console.log(ServiceDocumentList);
+            $.each(ServiceDocumentList, function (data, value) {
+                var decsionID = value.id + "SupportDocument";
+                
+                var fileslist = $('#' + decsionID).get(0).files;
+                for (var i = 0; i < fileslist.length; i++) {
+                    isFileUploaded = true;
+                    //formData.append(decsionID, fileslist[i]);
+                    //alert(fileslist[i]);
+                }
+                
+            });
+            if (!isFileUploaded) {
+                toastr.warning('Please upload minimum one supporting document (Not EFT Payment Receipt)!');
+                return;
+            }
+            else {
+                $("#ShowPaynowButtons").show();
+                $("#ShowEftMasterpass").hide();
+                $("#PaymentModel").modal();
+            }
+        }
+        else {
+            toastr.warning('Please upload minimum one supporting document (Not EFT Payment Receipt)!');
+            return;
+        }
     }
     else {
-        $.fn.SaveApplicationForm("", "");
+        //alert(appFormData.APPLICATION_STEP_DESCRIPTION);
+        if (appFormData.APPLICATION_STEP_DESCRIPTION == "Pending Payment") {
+            if (ServiceDocumentList.length > 0) {
+                var isEFTFileUploaded = false;
+                console.log(ServiceDocumentList);
+                $.each(ServiceDocumentList, function (data, value) {
+                    var decsionID = value.id + "SupportDocument";
+                    //alert(decsionID);
+                    var fileslist = $('#5SupportDocument').get(0).files;
+                    if (fileslist.length >0) {
+                        isEFTFileUploaded = true;
+                    }
+                    else {  
+                        isEFTFileUploaded = false;
+                    }
+
+                });
+                if (!isEFTFileUploaded) {
+                    toastr.warning('Please upload EFT Payment Receipt!');
+                    return;
+                }
+                else {
+                    $.fn.SaveApplicationForm("", "");
+                }
+            }
+            else {
+                toastr.warning('Please upload EFT Payment Receipt!');
+                return;
+            }
+        }
+        
     }
 }
 
@@ -666,6 +725,8 @@ $.fn.SubmitApplication = function () {
 $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
     $("#EftLoader").hide();
     $("#MasterpassLoader").hide();
+    //alert(paymentStatus);
+    //alert(alertStatus);
     //alert($('#GPS_START_ADDRESS').val());
     var formData = new FormData();
     var DeclarationList = [];
@@ -699,6 +760,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
     formData.append("PaymentStatus", JSON.stringify(paymentStatus));
 
     if (ServiceDocumentList.length > 0) {
+        //alert(ServiceDocumentList.length);
         var isFileUploaded = false;
         console.log(ServiceDocumentList);
         $.each(ServiceDocumentList, function (data, value) {
@@ -709,10 +771,10 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
                 formData.append(decsionID, fileslist[i]);
             }
         });
-        if (!isFileUploaded) {
-            toastr.warning('Please upload supporting documents!');
-            return;
-        }
+        //if (!isFileUploaded) {
+        //    toastr.warning('Please upload supporting documents!');
+        //    return;
+        //}
     }
 
     $("#isAppLoading").show();
@@ -745,6 +807,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
             //console.log(data.accountUserName);
             $('#isAppLoading').hide();
             $("#PayLaterLoader").hide();
+            //alert(data);
             if (alertStatus == "resubmission") {
                 toastr.success('Application form re-submitted successfully');
             }
@@ -925,7 +988,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
         dataType: 'json',
         //data: formData,
         success: function (data, textStatus, xhr) {
-            console.log("======Service DocumentList Result=========");
+            console.log("======Service DocumentList from server Result=========");
             console.log(data);
             console.log(ServiceDocumentListFromServer);
             //MasterRegions = data;
@@ -948,19 +1011,50 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
                 $("#ServiceDocumentListFromServer").show();
                 console.log("ServiceDocumentListFromServer details");
                 console.log(ServiceDocumentListFromServer);
+                var isRequiredEFT = "";
                 for (let i = 0; i < ServiceDocumentList.length; i++) {
                     var sid = ServiceDocumentList[i].id + "SupportDocument";
                     var index = i + 1;
                     var isAppend = false;
                     for (let j = 0; j < ServiceDocumentListFromServer.length; j++) {
-                        var id = ServiceDocumentListFromServer[j].sD_ID + "SupportDocument";                        
+                        var id = ServiceDocumentListFromServer[j].sD_ID + "SupportDocument";
+                        var linkId = ServiceDocumentListFromServer[j].sD_ID + "LinkSupportDocument";
                         if (sid == id) {
                             isAppend = true;
-                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' /><a id=' + id + ' onclick="ViewDocument("' + ServiceDocumentListFromServer[j].documenT_NAME + '")" style="color:darkblue">View</a></td></tr>');
-                        }                        
+                            var ttttgt = ServiceDocumentListFromServer[j].documenT_NAME;
+                            var docUrl = "../uploads/" + ttttgt;
+                            var docDescription = ServiceDocumentList[i].description;
+                            //alert($("#APPLICATION_STEP_DESCRIPTION_STATUS").text());
+                            if ($("#APPLICATION_STEP_DESCRIPTION_STATUS").text() == "Pending Payment") {
+                                if (docDescription == "EFT Payment Receipt") {
+                                    isRequiredEFT = "*";
+                                }
+                                else {
+                                    isRequiredEFT = "";
+                                }
+                            }
+                            
+
+                            //menulink.href = "javascript: void (0)";
+                            //menulink.onclick = ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME);
+                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '&nbsp;<b style="color:red !important">' + isRequiredEFT + '</b></td><td><input type="file" name="Add" id=' + id + ' /><a id=' + linkId + ' target="_blank" href="' + docUrl +'" style="text-decoration:none!important;color:#000!important" rel="noopener noreferrer" name="LinkA">View</a></td></tr>');
+                            var menulink = document.getElementById(linkId);
+                            //menulink.setAttribute("onclick", "ViewDocument('" + ServiceDocumentListFromServer[j].documenT_NAME + "')");
+                            //$('#ServiceDocumentListFromServer').append(menulink);
+                            //AddEvent(menulink, "click", ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME));
+                        }
                     };
                     if (!isAppend) {
-                        $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + sid + ' /></td></tr>');
+                        var docDescription = ServiceDocumentList[i].description;
+                        if ($("#APPLICATION_STEP_DESCRIPTION_STATUS").text() == "Pending Payment") {
+                            if (docDescription == "EFT Payment Receipt") {
+                                isRequiredEFT = "*";
+                            }
+                            else {
+                                isRequiredEFT = "";
+                            }
+                        }
+                        $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '&nbsp;<b style="color:red !important">' + isRequiredEFT + '</b></td><td><input type="file" name="Add" id=' + sid + ' /></td></tr>');
                     }
                 };
             }
@@ -969,7 +1063,16 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
                 for (let j = 0; j < ServiceDocumentListFromServer.length; j++) {
                     var id = ServiceDocumentListFromServer[j].id + "SupportDocument";
                     var index = j + 1;
-                    $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentListFromServer[j].description + '</td><td><input type="file" name="Add" id=' + id + ' /></td></tr>');
+                    var docDescription = ServiceDocumentListFromServer[j].description;
+                    if ($("#APPLICATION_STEP_DESCRIPTION_STATUS").text() == "Pending Payment") {
+                        if (docDescription == "EFT Payment Receipt") {
+                            isRequiredEFT = "*";
+                        }
+                        else {
+                            isRequiredEFT = "";
+                        }
+                    }
+                    $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentListFromServer[j].description + '&nbsp;<b style="color:red !important">' + isRequiredEFT + '</b></td><td><input type="file" name="Add" id=' + id + ' /></td></tr>');
                 };
             }
         },
@@ -980,6 +1083,20 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
    
 }
 
+function AddEvent(obj, eventType, functionName) {
+    if (obj.addEventListener) {
+        obj.addEventListener(eventType, functionName, false);//W3C standard
+    }
+    else if (obj.attachEvent) {
+        obj.attachEvent("on" + eventType, functionName);//ie
+    }
+    else {
+        obj["on" + eventType] = functionName;//dom
+    }
+}
+function test(tt) {
+    //alert(tt);
+}
 function ViewDocument(filename) {
     window.location.href = "~/uploads/" + filename;
 }

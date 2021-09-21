@@ -1,24 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.DirectoryServices.AccountManagement;
-using System.DirectoryServices;
-using System.Web.Services.Description;
-using C8.eServices.Mvc.ViewModels;
-using C8.eServices.Mvc.DataAccessLayer;
+﻿using C8.eServices.Mvc.DataAccessLayer;
 using C8.eServices.Mvc.Keys;
+using C8.eServices.Mvc.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.DirectoryServices;
+using System.DirectoryServices.AccountManagement;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace C8.eServices.Mvc.Helpers
 {
-    public class ADLogin
+    public class AdLogin
     {
+
         private eServicesDbContext db = new eServicesDbContext();
+
         public bool Valid { get; private set; }
         public string UniqueName { get; private set; }
         public string EmailAddress { get; private set; }
 
-        public List<string> Validate(string domain, bool searchUid, LoginViewModel model)
+        public async Task<List<string>> Validate(string domain, bool searchUid, LoginViewModel model)
         {
             List<string> userInfo = new List<string>();
             try
@@ -58,12 +60,13 @@ namespace C8.eServices.Mvc.Helpers
         }
 
 
-        public bool ValidateUser(string UserName, string Password)
+        public async Task<bool> ValidateUser(string UserName, string Password)
         {
             try
             {
-                var activeDirectoryDomain = db.AppSettings.Where(x => x.Key == AppSettingKeys.ActiveDirectoryDomain).FirstOrDefault().Value;
-
+                // Please store the  line below in the db and call/ them from there
+                var activeDirectoryDomain = "10.31.3.51";
+                //
                 UserName = UserName.Trim();
                 using (var context = new PrincipalContext(ContextType.Domain, activeDirectoryDomain))
                 {
@@ -109,4 +112,5 @@ namespace C8.eServices.Mvc.Helpers
             return UserNameExists;
         }
     }
+
 }

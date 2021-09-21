@@ -98,6 +98,9 @@ namespace C8.eServices.Mvc.Models.Repository
                     CREATED_DATE = dt,
                     STATUS_ID = 6,
                     IS_ACTIVE = "Y",
+                    IDENTIFICATION_NUMBER= account.IDENTIFICATION_NUMBER,
+                    SUBURB = account.SUBURB,
+                    GENDER = account.GENDER,
                     PASSWORD = CommonModel.CreateRandomPassword(8)
 
                 };
@@ -128,13 +131,13 @@ namespace C8.eServices.Mvc.Models.Repository
                     dct.Add("accountNumber", accountNumber);
                     dct.Add("accountUserName", acc.EMAIL);
                     dct.Add("accountPassword", acc.PASSWORD);
-                    EmailHelper email = new EmailHelper();
-                    email.Body= EmailNotificationBody.SentUserNamePassword(acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME, acc.EMAIL, acc.PASSWORD, accountNumber).ToString();
-                    email.Recipient = acc.EMAIL;//"prasadthummala558@gmail.com";
-                    email.Subject= "Wayleave Account Credentials";
-                    //email.SendEmail();
-                    Email em = new Email();
-                    em.GenerateEmail(email.Recipient, email.Subject, email.Body, accountNumber,false, AppSettingKeys.EmailNotificationTemplate, acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME,null,null, accountNumber,null,null,null,null);
+                    //EmailHelper email = new EmailHelper();
+                    //email.Body= EmailNotificationBody.SentUserNamePassword(acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME, acc.EMAIL, acc.PASSWORD, accountNumber).ToString();
+                    //email.Recipient = acc.EMAIL;//"prasadthummala558@gmail.com";
+                    //email.Subject= "Wayleave Account Credentials";
+                    ////email.SendEmail();
+                    //Email em = new Email();
+                    //em.GenerateEmail(email.Recipient, email.Subject, email.Body, accountNumber,false, AppSettingKeys.EmailNotificationTemplate, acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME,null,null, accountNumber,null,null,null,null);
 
                     //EmailNotifications.SentUserNamePassword(acc.EMAIL, acc.CONTACT_PERSON_FIRST_NAME+" "+ acc.CONTACT_PERSON_LAST_NAME, acc.EMAIL, acc.PASSWORD, accountNumber);
                     msg = "Wayleave account created sucessfully!";

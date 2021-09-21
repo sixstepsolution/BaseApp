@@ -138,11 +138,11 @@ namespace C8.eServices.Mvc.Controllers
             //Paymentgateway process
             PaymentHelper ph = new PaymentHelper
             {
-                pgMerchantId = "pg_app_tps",
+                pgMerchantId = "pg_app_tps",//"pg_crm_app_wls",// 
                 voteNumber = "4TESTVOTENOmkzzzzz16",
                 pgMerchantReference = applicationNumber,
-                pgMerchantDescription = "Town Planning Fee",
-                Amount = "10",
+                pgMerchantDescription = "Wayleave Application Fee",
+                Amount = "500",
                 pgEmail = applicationData!=null? applicationData.PROPERTYOWNER_EMAIL:"",
                 pgMobile = applicationData != null ? applicationData.PROPERTYOWNER_MOBILENO : "",
                 customerFirstName = applicationData != null ? applicationData.PROPERTYOWNER_NAME : "",

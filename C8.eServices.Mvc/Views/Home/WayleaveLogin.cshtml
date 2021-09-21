@@ -49,7 +49,7 @@
                             <div class="col-lg-12 col-lg-offset-0">
                                 <div class="form-group" style="margin:10px;">
                                     <div class="input-group">
-                                        <span class="input-group-addon bg-green-custom" ng-click="showPassword()">
+                                        <span class="input-group-addon bg-green-custom" onclick="showPassword()">
                                             <img src="~/Content/wayleaveStyles/assets/Images/Asset 37@4x.png" width="20" height="15" />
                                         </span>
                                         @Html.PasswordFor(m => m.Password, new { @class = "form-control bradius", @required = true, @autocomplete = "new-password", autofocus = "on", id = "pass", name = "password", placeholder = "Enter password" })
@@ -69,19 +69,21 @@
                                 <button type="submit" onclick="showLoader()" class="btn bg-blue btn-md btn-custom" style="background-color: #004785 !important">
                                     <i id="isLoading" class="fa fa-spinner fa-spin" style="font-size:9pt;display:none"></i>&nbsp;Log in
                                 </button>
-                                <button type="reset" class="btn bg-green-custom btn-md btn-custom" style="color:white!important">
-                                    Cancel
-                                </button>
+                                <a href="../">
+                                    <button type="button" class="btn bg-green-custom btn-md btn-custom" style="color:white!important">
+                                        Cancel
+                                    </button>
+                                </a>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-2 text-center">
 
                             </div>
-                            <div class="col-sm-4 text-center">
+                            @*<div class="col-sm-4 text-center">
                                 <a href="../" class="Anch_Back"><i class="fa fa-arrow-left"></i>&nbsp;Back to Home</a>
-                            </div>
-                            <div class="col-sm-4 text-center">
+                            </div>*@
+                            <div class="col-sm-8 text-center">
                                 <a href="../WayleaveAccount/WayleaveAccount" class="Anch_Back"><i class="fa fa-user"></i>&nbsp;Register</a>
                             </div>
                             <div class="col-sm-2 text-center">
@@ -136,5 +138,13 @@
 
     function showLoader() {
         $("#isLoading").show();
+    }
+    function showPassword() {
+        var x = document.getElementById("pass");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
     }
 </script>

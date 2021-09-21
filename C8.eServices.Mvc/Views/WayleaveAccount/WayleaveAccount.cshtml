@@ -307,45 +307,64 @@
                                     <div class="panel-body" style="padding: 10px;">
                                         <table width="100%">
                                             <tr>
-                                                <td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Identification Number</label>
+                                                        <input type="text" style="border-radius: 4px" maxlength="13" onkeyup="$.fn.validateIdentificationNumber('identificationNumber')" id="identificationNumber"
+                                                               class="form-control numbersOnly" name="identificationNumber" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Contact Person First Name</label>
                                                         <input type="text" style="border-radius: 4px" id="contactPersonFirstName"
                                                                class="form-control" name="ContactPersonFirstName" required />
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Contact Person Last Name</label>
                                                         <input type="text" style="border-radius: 4px" id="contactPersonLastName"
                                                                class="form-control" name="ContactPersonLastName" required />
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Gender</label>
+                                                        <select style="border-radius: 4px" required
+                                                                class="form-control" name="contactPersonGender" id="contactPersonGender">
+                                                            <option value="" selected>Make a selection</option>
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                
+                                            </tr>
+
+                                            <tr>
+                                                <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Designation</label>
                                                         <input type="text" style="border-radius: 4px" id="designation"
                                                                class="form-control" name="Designation" required />
                                                     </div>
                                                 </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>
+                                                <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Telephone Number</label>
                                                         <input type="text" style="border-radius: 4px" maxlength="10" min="10" max="10" numbers-only id="telephoneNumber"
                                                                class="form-control numbersOnly" name="TelephoneNumber" />
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Mobile Number</label>
                                                         <input type="text" style="border-radius: 4px" id="mobileNumber"
                                                                class="form-control numbersOnly" name="MobileNumber" maxlength="10" min="10" max="10" required />
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Email</label>
                                                         <input type="text" style="border-radius: 4px" onkeyup="$.fn.validateEmail('email')" @*ng-pattern="emailFormat"*@ id="email"
@@ -354,7 +373,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
+                                                <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Fax No</label>
                                                         <input type="text" style="border-radius: 4px" id="fax"
@@ -405,6 +424,13 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td>
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Suburb</label>
+                                                        <input type="text" style="border-radius: 4px" id="suburb"
+                                                               class="form-control" name="suburb" required />
+                                                    </div>   
+                                                </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Country</label>
