@@ -1,0 +1,173 @@
+﻿
+@model C8.eServices.Mvc.Models.WL_APPLICATIONFORM
+@{
+    Layout = null;
+}
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<style>
+    table {
+        border-collapse: collapse;
+    }
+
+    tr:nth-child(3) {
+        border: solid thin;
+    }
+
+    .tdCustom {
+        padding: 7px !important
+    }
+</style>
+<div class="main-container">
+    <table width="100%" border="1" style="font-size:12pt!important">
+        <tr style="outline: none!important">
+            <td style="text-align:center!important;padding:10px!important;width:20%!important">
+                <img src="~/assets/Images/Ekurhuleni_Logo.jpg" width="150" height="100" />
+            </td>
+            <td colspan="3" style="text-align:center!important;font-size:16pt!important">
+                WAYLEAVE<br /> CERTIFICATE OF COMPLETION<br /> ROADS AND TRANSPORT
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:center!important;padding:10px!important">
+                WAYLEAVE NO<br /> AND DETAIL DESCRIPTION OF WORKS AND ADDRESS:
+            </td>
+            <td colspan="3" style="padding: 5px !important">
+                <b style="font-size:14pt!important">@Model.APPLICATION_NUMBER</b><br />
+                @Model.PROJECT_DESCRIPTION
+                <br /><br />
+                Street address:@ViewBag.streetAddress
+            </td>
+        </tr>
+        <tr style="height:35px">
+            <td rowspan="3" style="padding:30px 10px 10px 10px!important">CONSULTANT<br /><br />CONTRACTOR</td>
+            <td class="tdCustom">Company name</td>
+            <td class="tdCustom">Contact person</td>
+            <td class="tdCustom">Cell /contact number</td>
+        </tr>
+        @if (ViewBag.UserType == "Consultant")
+        {
+            <tr style="height:35px">
+                <td class="tdCustom">@Model.CONSULTANT_COMPANYNAME</td>
+                <td class="tdCustom">@Model.CONSULTANT_NAME &nbsp; @Model.CONSULTANT_SURNAME</td>
+                <td class="tdCustom">@Model.CONSULTANT_CONTACTNO</td>
+            </tr>
+            <tr style="height:35px">
+                <td class="tdCustom"></td>
+                <td class="tdCustom"></td>
+                <td class="tdCustom"></td>
+            </tr>
+        }
+        else
+        {
+            <tr style="height:35px">
+                <td class="tdCustom"></td>
+                <td class="tdCustom"></td>
+                <td class="tdCustom"></td>
+            </tr>
+            <tr style="height:35px">
+                <td class="tdCustom">@Model.CONSULTANT_COMPANYNAME</td>
+                <td class="tdCustom">@Model.PROPERTYOWNER_NAME &nbsp; @Model.PROPERTYOWNER_SURNAME</td>
+                <td class="tdCustom">@Model.PROPERTYOWNER_CONTACTNO</td>
+            </tr>
+        }
+        <tr style="height:35px">
+            <td colspan="4" style="padding:10px!important">DATE OF INSPECTION:@ViewBag.inspectionDate</td>
+        </tr>
+        <tr style="height:35px">
+            <td colspan="2" style="padding:10px!important">EFFECTIVE DATE OF<br /> CERTIFICATE:@ViewBag.applicationDate </td>
+            <td colspan="2" style="padding:10px!important">DATE OF END OF DEFECTS<br /> LIABILITY PERIOD:@ViewBag.applicationDate to @ViewBag.applicationEndDate </td>
+        </tr>
+        <tr style="height:35px">
+            <td colspan="4" style="padding:10px!important;font-size:11pt!important;font-weight:600">
+                <table border="0">
+                    <tr>
+                        <td style="padding-right:30px!important"><input type="checkbox" name="chkbox" />&nbsp;&nbsp;</td>
+                        <td>
+                            <b>It is hereby certified, that the works on above contract is completed, inspected, and passed all quality control tests, in terms of the approved construction drawings and the latest City of Tshwane’s Standard Specifications for Municipal Civil Engineering Works.</b>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr style="height:35px">
+            <td></td>
+            <td class="tdCustom">Name</td>
+            <td class="tdCustom">Signature</td>
+            <td class="tdCustom">Date</td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom">Professional Engineer</td>
+            <td class="tdCustom"></td>
+            <td rowspan="2"></td>
+            <td rowspan="2"></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom">ECSA registration No:</td>
+            <td class="tdCustom"></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom">Contractor</td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+        </tr>
+        <tr style="height:35px;background-color:#ccc!important">
+            <td colspan="4" class="tdCustom"><b>INFRASTRUCTURE ASSET MANAGEMENT (IAM)</b></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom"><b>Road Assets</b></td>
+            <td class="tdCustom">Region ⅗/7</td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom"><b>Traffic Signs and Related Asset</b></td>
+            <td class="tdCustom">Region ⅗/7</td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom"><b>Stormwater and Sidewalks, Bridges, Railway Signs and Facilities</b></td>
+            <td class="tdCustom">Region ⅗/7</td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+        </tr>
+        <tr style="height:35px;background-color:#f79b59!important">
+            <td colspan="4" class="tdCustom"><b>INTELLIGENT TRANSPORT SYSTEMS AND TRAFFIC ENGINEERING SECTION</b></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom"><b>Traffic Signal System Management</b></td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom"><b>Traffic System Management, Traffic calming, NMT, (Pedestrians facilities, cycle-ways)</b></td>
+            <td class="tdCustom">Region ⅗/7</td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+        </tr>
+        <tr style="height:35px;background-color:#b8dd5c!important">
+            <td colspan="4" class="tdCustom"><b>Infrastructure Provision (IP)</b></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom">Structural Engineering</td>
+            <td class="tdCustom">Jan Mc Cabe</td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+        </tr>
+        <tr style="height:35px">
+            <td class="tdCustom">Official representative</td>
+            <td class="tdCustom">Gerrit Janse van Rensburg</td>
+            <td class="tdCustom"></td>
+            <td class="tdCustom"></td>
+        </tr>
+    </table>
+    <div style="width:100%!important;padding-left:10px!important">(If not applicable (NA) the Official Representative need to indicate accordingly).</div>
+</div>
+
+
+
+
+

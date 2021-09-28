@@ -1,0 +1,650 @@
+﻿@using C8.eServices.Mvc.Models;
+@using C8.eServices.Mvc.DataAccessLayer;
+@using C8.eServices.Mvc.Keys;
+@{
+    var tt = new AesCrypto();
+}
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
+}
+
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+
+    select {
+        vertical-align: top;
+        height: 30px;
+    }
+
+    input, select {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        border-radius: 4px !important
+    }
+
+    .badge {
+        display: inline-block;
+        width: 80px;
+        padding: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #777;
+        border-radius: 10px;
+    }
+
+    .headindg-size {
+        margin-left: -26px;
+        font-size: 14px;
+        padding: 2px;
+    }
+
+    span {
+        height: 24px !important;
+        font-size: 10px !important;
+    }
+
+    .panel-default-custom {
+        border: 0.5px solid transparent;
+    }
+
+        .panel-default-custom > .panel-heading {
+            color: #000;
+            background-color: #f3f0e1;
+            /* border-color: #ddd; */
+            border: none;
+            border-radius: 0;
+            height: 22px;
+        }
+
+    .panel-group {
+        margin-bottom: 0px;
+    }
+
+    role {
+        margin-right: 80px;
+        margin-left: 20px;
+        font-weight: normal;
+        float: left;
+        margin: 0px;
+        margin-top: 8px;
+        margin-left: 10px;
+        font-size: 11px !important;
+    }
+
+    label {
+        font-size: 10px;
+        padding: 0;
+        /*font-weight: 500;*/
+        padding-left: 3px;
+        margin-bottom: -10px;
+    }
+
+    /*
+    .ng-select .ng-arrow-wrapper .ng-arrow.SRID  {
+      display: none !important;
+    }
+    .ng-select .ng-arrow-wrapper .SRID {
+      display: none !important;
+    }
+
+    .ng-select span.ng-arrow-wrapper.SRID :before {
+      display: none !important;
+    } */
+
+
+    /* Scroll bar custom css */
+
+    /* width */
+    /* ::-webkit-scrollbar {
+      width: 2px;
+    } */
+
+    /* Track */
+    /* ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    } */
+
+    /* Handle */
+    /* ::-webkit-scrollbar-thumb {
+      background: #888;
+    } */
+
+    /* Handle on hover */
+    /* ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    } */
+
+</style>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        var userRole = '@Session["ekurhuleniUserRole"]';
+        //alert(userRole);
+        if (userRole ==="Admin") {
+            $.fn.LoadApplicationsAlertsWithCounts("Y");
+        }
+        else {
+            $.fn.LoadApplicationsAlertsWithCounts("N")
+            //$.fn.LoadApplicationsAlertsWithCounts("N")
+        }
+        //Init();
+    });
+</script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<style>
+    label {
+        display: inline-block;
+        max-width: 100%;
+        font-size: 10px;
+        padding: 0;
+        font-weight: 500;
+        padding-left: 3px;
+        margin-bottom: -10px;
+    }
+
+    .input-group-addon {
+        padding: 6px 12px;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1;
+        color: #fff !important;
+        text-align: center;
+        background-color: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .panel-default > .panel-heading {
+        color: #fdfdfd;
+        background-color: #f5f5f5;
+        border-color: #ddd;
+    }
+</style>
+<script src="~/Scripts/wayleaveScripts/WLApplicationFormDashboard.js"></script>
+<section class="content" style="padding-right: 0;padding-top:0;">
+    <form name="FilterForm" novalidate>
+        <div class="panel-group" style="margin-left: -25px;margin-bottom: 0px;margin-right: -14px;">
+            <div class="panel panel-default" style="border: none;">
+                <div class="panel-heading" style="background:#00A65A">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordionSerach" href="#collapse_search_1">
+                            <i class="fa fa-plus" style="display: none;font-size: 12px;top: 0;"></i>
+                            <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                            Search
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse_search_1" class="panel-collapse collapse in" style="border: 2px solid #00A65A;">
+                    <div class="panel-body" style="padding: 0;">
+                        <table>
+                            <tr>
+                                <td style="width:  15.5%">
+                                    <label>Account Number</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Account Number">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-sort-numeric-asc"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>First name</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="First Name">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Last Name</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="LastName" placeholder="Last Name">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label>Service Type</label>
+                                        <select style="border-radius: 4px" ng-model="FilterModels.service_type_id" ng-options="s.id as s.id  for s in SeriveTypesList track by s.id "
+                                                class="form-control" name="SeriveType">
+                                            <option value="" selected>Make a selection</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label>Service Sub Type</label>
+                                        <select style="border-radius: 4px" ng-model="FilterModels.service_type_sub_id" ng-options="sub.id as sub.id for sub in ServiceSubTypeList track by sub.id "
+                                                class="form-control" name="SeriveSubType">
+                                            <option value="" selected>Make a selection</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label>Status Type</label>
+                                        <select style="border-radius: 4px" ng-model="FilterModels.status_type" ng-options="app.id as app.description for app in AppStatusTypesList track by app.id "
+                                                class="form-control" name="AppStatusType">
+                                            <option value="" selected>Make a selection</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td style="width:  15.5%">
+                                    <div class=" input-label-date">
+                                        <label>Date Requested From</label>
+                                        <div class="input-group" style="width: 100%;">
+                                            <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Date Requested From" datepicker ng-model="FilterModels.date_requested_from">
+
+                                            <span class="input-group-addon"
+                                                  style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class=" input-label-date">
+                                        <label>Date Requested To</label>
+                                        <div class="input-group" style="width: 100%;">
+                                            <input class="form-control" name="date_requested_from" placeholder="Date Requested To" datepicker ng-model="FilterModels.date_requested_to" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important">
+                                            <span class="input-group-addon"
+                                                  style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Created by</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Created by">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Consultant Number</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Consultant Number">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-sort-numeric-asc"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Consultant Company Name</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Consultant Company Name">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-sort-asc"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Consultant First name</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Date Requested From">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td style="width:  15.5%">
+                                    <label>Consultant Last Name</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Consultant Last Name">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-sort-asc"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Consultant Email</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Consultant Email">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-envelope"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Project Name</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Project Name">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-sort-asc"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Region Code</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Region Code">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Contact person</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Contact person">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-address-book"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <label>Email</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Email">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-envelope"></i>
+                                        </span>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td style="width:  15.5%">
+                                    <label>Mobile</label>
+                                    <div class="input-group" style="width: 100%;">
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="date_requested_from" placeholder="Mobile">
+
+                                        <span class="input-group-addon"
+                                              style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                            <i class="fa fa-mobile"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class=" input-label-date">
+                                        <label>Created Date</label>
+                                        <div class="input-group" style="width: 100%;">
+                                            <input class="form-control" name="created_date" placeholder="Created date" datepicker ng-model="FilterModels.created_date" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important">
+                                            <span class="input-group-addon"
+                                                  style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%;text-align: center;">
+                                    <div class="col-md-3" style="margin-top:13px">
+                                        <button type="submit" class="btn btn-green-custom" style="height: 24px; padding: 2px; font-size: 12px; width: 100px;color:#fff!important;"
+                                                tabindex="20">
+                                            <i class="fa fa-spinner fa-spin" style="font-size:9pt;display:none"></i>
+                                            Filter
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3" style="margin-top:13px;margin-left:60px">
+                                        <button type="reset" onclick=""
+                                                class="btn btn-warning" style="height: 24px; padding: 2px; font-size: 12px; width: 100px;"
+                                                tabindex="20">
+                                            Clear
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div style="background-color:#e0e0e0!important;margin-top:4px">
+        <div id="myTabContent" class="tab-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div style="margin-bottom: 0;margin-right: -14px;">
+                        <table class="table table-striped table-bordered table-hover tabel-condensed"
+                               style="font-size: 11px;">
+                            <thead style="background-color:#00A65A !important; font-size:11px !important;color:#fff !important;margin-bottom: 0;">
+                                <tr>
+                                    <td style="width:13% !important" onclick="sort('NAME')">
+                                        <a class="anchor_sorting" href="">
+                                            ID
+                                        </a>&nbsp;
+                                    </td>
+                                    <td style="width:13% !important" onclick="sort('NAME')">
+                                        <a class="anchor_sorting" href="">
+                                            Application Number
+                                        </a>&nbsp;
+                                    </td>
+                                    <td style="width:13% !important" onclick="sort('STATUS')">
+                                        <a class="anchor_sorting" href="">
+                                            Step Status
+                                        </a>&nbsp;
+                                    </td>
+                                    <td style="width:13% !important" onclick="sort('NAME')">
+                                        <a class="anchor_sorting" href="">
+                                            Name
+                                        </a>&nbsp;
+                                    </td>
+                                    @*<td style="width:13% !important" onclick="sort('NAME')">
+                                        <a class="anchor_sorting" href="">
+                                            Service
+                                            Type
+                                        </a>&nbsp;
+                                    </td>
+                                    <td style="width:13% !important" onclick="sort('CREATED_DATE')">
+                                        <a class="anchor_sorting" href="">
+                                            Service Sub
+                                            Type
+                                        </a>&nbsp;
+                                    </td>
+                                    <td style="width:12% !important" onclick="sort('CREATED_DATE')">
+                                        <a class="anchor_sorting" href="">
+                                            Immediate Attention
+                                        </a>&nbsp;
+                                    </td>*@
+                                    <td style="width:13% !important" onclick="sort('CREATED_DATE')">
+                                        <a class="anchor_sorting" href="">
+                                            Created On
+                                        </a>&nbsp;
+                                    </td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="8" style="padding:0">
+                                        <div class="panel-group">
+                                            <div class="bs-example">
+                                                <div class="panel-group" id="accordionpatient"
+                                                     style="background-color: white;">
+                                                    @*<i ng-if="applicationCounts.length==0" class="fa fa-spinner fa-spin" style="font-size:9pt;color:#006940!important"></i>*@
+                                                    <div class="panel panel-default-custom">
+                                                        @if (ViewBag.ApplicationDataCount > 0)
+                                                        {
+                                                            foreach (var rc in (List<C8.eServices.Mvc.Models.Mapings.ApplicationInputModel>)ViewBag.ApplicationData)
+                                                            {
+                                                                if (rc.id != 8 && rc.id != 1)
+                                                                {
+                                                                    <div class="panel-heading" style="padding: 4px 14px;" id="panelSection_@rc.id">
+                                                                        <h4 class="panel-title">
+                                                                            <a data-toggle="collapse"
+                                                                               onclick="addIconCollapse('@rc.name','@rc.id')"
+                                                                               data-parent="#accordionpatient"
+                                                                               href="#collapse_@rc.id" class="collapsed"
+                                                                               aria-expanded="false"
+                                                                               onMouseOver="this.style.color='#000'"
+                                                                               onMouseOut="this.style.color='#000'">
+                                                                                <span class="glyphicon glyphicon-triangle-bottom span-overide"
+                                                                                      style="left: -40px;color: #00A65A;"></span><span style="margin-left: -26px;font-size: 14px;padding: 2px;">
+                                                                                    @rc.name (@rc.count)
+                                                                                </span>
+                                                                                @if (rc.id == 0)
+                                                                                {
+                                                                                    <i class="fa fa-spinner fa-spin" style="font-size:9pt;color:#cc0c00"></i>
+                                                                                }
+
+                                                                            </a>
+                                                                        </h4>
+                                                                    </div>
+                                                                    <div id="collapse_@rc.id"
+                                                                         class="panel-collapse collapse"
+                                                                         aria-expanded="false"
+                                                                         onMouseOver="this.style.color='#000'"
+                                                                         onMouseOut="this.style.color='#000'"
+                                                                         style="height: 0px;">
+                                                                        <div class="panel-body"
+                                                                             style="overflow-y:scroll ;padding: 0;min-height: 20px !important;max-height: 300px !important;">
+                                                                            <table class="table table-striped table-hover tabel-condensed">
+                                                                                <tbody>
+                                                                                    @foreach (var app in rc.applicationList)
+                                                                                    {
+                                                                                        <tr style="border-collapse:collapse;">
+                                                                                            <td style="width:13% !important">
+                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                   style="cursor: pointer;"
+                                                                                                   class="ggb-a"><u>  @app.id</u></a>
+                                                                                            </td>
+                                                                                            <td style="width:15% !important">
+                                                                                                @app.applicationNumber
+                                                                                            </td>
+                                                                                            <td style="width:13% !important">
+                                                                                                @if (rc.id == 4)
+                                                                                                {
+                                                                                                    <div style="color:red">
+                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                           style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
+                                                                                                    </div>
+                                                                                                }
+                                                                                                @if (rc.id==1)
+                                                                                                {
+                                                                                                    <div style="color:greenyellow">
+                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                           style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
+                                                                                                    </div>
+                                                                                                }
+                                                                                                @*@if (app.applicationStepStatus == "Request for approvals")
+                                                                                                {
+                                                                                                    <div style="color:blueviolet">
+                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                           style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
+                                                                                                    </div>
+                                                                                                }*@
+                                                                                                @*@if (app.applicationStepStatus == "Approved")
+                                                                                                {
+                                                                                                    <div style="color:green">
+                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                           style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
+                                                                                                    </div>
+                                                                                                }*@
+                                                                                                @if (rc.id == 3)
+                                                                                                {
+                                                                                                    <div style="color:green">
+                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                           style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
+                                                                                                    </div>
+                                                                                                }
+                                                                                                @if (rc.id==2)
+                                                                                                {
+                                                                                                    <div style="color:peru">
+                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                           style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
+                                                                                                    </div>
+                                                                                                }
+                                                                                            </td>
+                                                                                            <td style="width:13% !important">
+                                                                                                @app.full_name
+                                                                                            </td>
+                                                                                            <td style="width:13% !important">
+                                                                                                @app.createdDate
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+
+                                                                }
+                                                            }
+                                                        }
+                                                        else
+                                                        { 
+                                                        <div class="text-center"><b class="text-red">No result found!</b></div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane active in" id="AuditLog">
+        </div>
+        <div class="tab-pane" id="Documents">
+        </div>
+        <div class="tab-pane" id="Communication">
+        </div>
+        <div class="tab-pane" id="CivilLawsuits">
+        </div>
+        <div class="tab-pane" id="Finding">
+        </div>
+        <div class="tab-pane" id="Recommendation">
+        </div>
+        <div class="tab-pane" id="Case">
+        </div>
+    </div>
+
+</section>
+
+
+
+
+

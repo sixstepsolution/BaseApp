@@ -1,0 +1,725 @@
+﻿@using System.Configuration
+@using C8.eServices.Mvc.Models;
+@using C8.eServices.Mvc.DataAccessLayer;
+@using C8.eServices.Mvc.Keys;
+@{
+    var tt = new AesCrypto();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="msapplication-config" content="none" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/Content/wayleaveStyles/assets/Images/Way_Title.png" />
+    <title>Wayleave</title>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @*<script src="~/Scripts/angular.min.js"></script>*@
+    <!-- jquery 1.10.2 -->
+    @*<script src="~/Content/wayleaveStyles/assets/Scripts/jquery-1.10.2.js"></script>*@
+    <!-- Bootstrap 3.3.6 -->
+    @*<script src="~/Content/wayleaveStyles/assets/Content/bootstrap/js/bootstrap.min.js"></script>*@
+    <script src="~/Content/wayleaveStyles/assets/Content/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- iCheck 1.0.1 -->
+    <script src="~/Content/wayleaveStyles/assets/Content/plugins/iCheck/icheck.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/Content/wayleaveStyles/assets/Content/plugins/fastclick/fastclick.js"></script>
+    <!-- fullCalendar -->
+    <script src="~/Content/wayleaveStyles/assets/bower_components/moment/moment.js"></script>
+    <script src="~/Content/wayleaveStyles/assets/bower_components/fullcalendar/fullcalendar.js"></script>
+    <script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>
+    <script src="~/Content/wayleaveStyles/assets/Content/dist/js/app.min.js"></script>
+    <link rel="shortcut icon" href="~/Content/wayleaveStyles/assets/Images/Way_Title.png" type="image/x-icon">
+    @*<link href="~/Content/wayleaveStyles/assets/Content/bootstrap.min.css" rel="stylesheet" />*@
+
+    <link href="~/Content/wayleaveStyles/assets/Content/bootstrap-select.css" rel="stylesheet" />
+    <link href="~/Content/wayleaveStyles/assets/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- daterange picker -->
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link href="~/Content/wayleaveStyles/assets/Content/plugins/iCheck/all.css" rel="stylesheet" />
+    <!-- Bootstrap Color Picker -->
+    <link href="~/Content/wayleaveStyles/assets/Content/plugins/colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet" />
+    <!-- Bootstrap time Picker -->
+    <link href="~/Content/wayleaveStyles/assets/Content/plugins/timepicker/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <!-- Select2 -->
+    <link href="~/Content/wayleaveStyles/assets/Content/plugins/select2/select2.min.css" rel="stylesheet" />
+    <!-- fullCalendar -->
+    <link href="~/Content/wayleaveStyles/assets/bower_components/fullcalendar/fullcalendar.css" rel="stylesheet" />
+    <link href="~/Content/wayleaveStyles/assets/bower_components/fullcalendar/fullcalendar.print.css" rel="stylesheet" media="print" />
+    <!-- Theme style -->
+    <link href="~/Content/wayleaveStyles/assets/Content/dist/css/AdminLTE.css" rel="stylesheet" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link href="~/Content/wayleaveStyles/assets/Content/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/Content/wayleaveStyles/assets/Content/Timeline_New.css" rel="stylesheet" />
+    <link href="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/style.css" rel="stylesheet" />
+
+    <!-- JavaScript -->
+    @*<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>*@
+
+    <!-- CSS -->
+    @*<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />*@
+    <!-- Default theme -->
+    @*<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css" />*@
+    <!-- Semantic UI theme -->
+    @*<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/semantic.min.css" />*@
+    <!-- Load calender ui js and css -->
+    @*<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>*@
+    <script src="~/Scripts/wayleaveScripts/Jquery-ui-migrate.js"></script>
+    @*<script src="https://momentjs.com/downloads/moment.min.js"></script>*@
+    <script src="~/Scripts/wayleaveScripts/moment.min.js"></script>
+    @*<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />*@
+    <link href="~/Content/wayleaveStyles/assets/Content/jquery-ui.css" rel="stylesheet" />
+    <!-- Load toastr css -->
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" />*@
+
+    <style>
+        a.active {
+            color: #fff;
+            background: #00337f;
+        }
+
+        .ggb-menu-icon {
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+        }
+
+        .control-sidebar-subheading {
+            font-size: 12px;
+        }
+
+
+        .btn-header {
+            margin: 5px;
+            margin-top: 14px;
+        }
+
+        .ggb-menu-icon {
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+        }
+
+        .control-sidebar-subheading {
+            font-size: 12px;
+        }
+
+        span {
+            height: 24px !important;
+            font-size: 14px !important;
+        }
+
+        .btn-success {
+            background-color: #d2930b !important;
+            color: #fff !important;
+            border: 1px solid #d2930b !important;
+        }
+
+        .has-error {
+            border: 1px solid red !important;
+        }
+
+        .btn-success {
+            background-color: #d2930b !important;
+            color: #fff !important;
+            border: 1px solid #d2930b !important;
+        }
+
+        .custom-hide {
+            display: none !important;
+        }
+
+        .input-group-addon {
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1;
+            color: #fff !important;
+            text-align: center;
+            background-color: #eee;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .panel-default > .panel-heading {
+            color: #fdfdfd;
+            background-color: #f5f5f5;
+            border-color: #ddd;
+        }
+    </style>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+            $('.numbersOnly').bind('keyup blur', function () {
+                var node = $(this);
+                node.val(node.val().replace(/[^0-9]/g, ''));
+            });
+            $('.stringOnly').bind('keyup blur', function () {
+                var node = $(this);
+                node.val(node.val().replace(/[^a-zA-Z]/g, ''));
+            });
+            $('.allowDecimalNumbers').bind('keyup blur', function () {
+                var $input = $(this);
+                var value = $input.val();
+                value = value.replace(/[^0-9\.]/g, '')
+                var findsDot = new RegExp(/\./g)
+                var containsDot = value.match(findsDot)
+                if (containsDot != null && ([46, 110, 190].indexOf(event.which) > -1)) {
+                    event.preventDefault();
+                    return false;
+                }
+                $input.val(value);
+                if (event.shiftKey && ([48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64].indexOf(event.which) > -1)) {
+                    event.preventDefault();
+                }
+                if (event.which == 64 || event.which == 16) {
+                    // numbers
+                    return false;
+                } if ([8, 13, 27, 37, 38, 39, 40, 110].indexOf(event.which) > -1) {
+                    // backspace, enter, escape, arrows
+                    return true;
+                } else if (event.which >= 48 && event.which <= 57) {
+                    // numbers
+                    return true;
+                } else if (event.which >= 96 && event.which <= 105) {
+                    // numpad number
+                    return true;
+                } else if ([46, 110, 190].indexOf(event.which) > -1) {
+                    // dot and numpad dot
+                    return true;
+                } else {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            localStorage.clear();
+            localStorage.setItem("apiBaseUrl", "@ConfigurationManager.AppSettings["Api_Url"].ToString()");
+            localStorage.setItem("BaseUrl", "@ConfigurationManager.AppSettings["Base_Url"].ToString()");
+            var navs = $('.right-pane-inv');
+            var sessionInfo = '@Session["wayleaveaccountId"]';
+            if (sessionInfo != undefined && sessionInfo != "") {
+                localStorage.setItem("wayleaveAccountNumber", sessionInfo);
+            }
+            // Add class .active to current link
+            navs.find('a').each(function (s) {
+
+                var cUrl = String(window.location).split('?')[0];
+                var ss = $($(this))[0].href;
+                cUrl = cUrl.split('#')[0];
+                if (cUrl.substr(cUrl.length - 1) === '#') {
+                    cUrl = cUrl.slice(0, -1);
+                }
+                //alert(cUrl + "=" + ss);
+                //if (ss.substr(cUrl.length - 1) === '#') {
+                //    ss = ss.slice(0, -1);
+                //}
+
+                if ($($(this))[0].href === cUrl) {
+                    $(this).addClass('active');
+                    $(this).parents('ul').add(this).each(function () {
+                        console.log($(this).parent())
+                        $(this).parent().addClass('menu-open');
+                        $(this).parent().children().addClass('active');
+
+                    });
+                }
+
+            });
+        });
+    </script>
+
+
+    @*<script src="~/Scripts/wayleaveScripts/paginationUi.js"></script>*@
+    <script src="~/Scripts/wayleaveScripts/toastr.min.js"></script>
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>*@
+    <link href="~/Content/wayleaveStyles/Content/toastr.css" rel="stylesheet" />
+    <style>
+        .bg-green-custom {
+            background-color: #006940 !important
+        }
+
+        .skin-green .main-header .logo {
+            background-color: #006940 !important;
+            color: #fff;
+            border-bottom: 0 solid transparent;
+        }
+
+        .skin-green .sidebar-menu > li:hover > a, .skin-green .sidebar-menu > li.active > a {
+            color: #ccc !important;
+            background: #1e282c;
+            border-left-color: #00a65a;
+        }
+
+        .btn-green-custom {
+            background-color: #1E8449 !important
+        }
+
+        bradius {
+            border-top-right-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+        }
+    </style>
+    @*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">*@
+    @*<link href="~/Content/font-awesome.min.css" rel="stylesheet" />*@
+    @*<script src="~/Scripts/wayleaveScripts/WayleaveAlerts.js"></script>*@
+    @*<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">*@
+    @*<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">*@
+</head>
+
+<body id="pagewrap" class="hold-transition skin-green" style="background-color:#ccc!important">
+    <script src="~/Scripts/wayleaveScripts/WayleaveAlerts.js"></script>
+    <div class="wrapper">
+        <!--header content-->
+        <header class="main-header">
+            <a class="logo">
+                @*<img src="~/Content/wayleaveStyles/assets/Images/Way_Title.png" height="100%" width="215" />*@
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini" style="font-size:15px;z-index:99999!important;border:1px solid red"><img src="~/Content/wayleaveStyles/assets/Images/Way_Title.png" /></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg" style="z-index: 99999!important;border:0px solid red;margin-top:-1px!important"><img src="~/Content/wayleaveStyles/assets/Images/Way_Title.png" height="50" width="100%" /></span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+
+            <nav class="navbar navbar-static-top bg-green-custom">
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        @if (Session["wayleaveaccountId"] != null)
+                        {
+                            <li class="dropdown user user-menu right-pane">
+                                <a href="#" class="dropdown-toggle" title="User profile" data-toggle="dropdown" style="border:0px solid red;height:50px">
+                                    @*<img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" class="user-image" style="color:#fff!important" alt="User Image" />*@
+                                    <i class="fa fa-user" style="font-size:15pt!important"></i>
+                                    <span class="hidden-xs"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <!-- User image -->
+                                    <li class="user-header" style="background-color:#fff !important">
+                                        <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" class="img-circle" alt="User Image" />
+
+                                        <div>
+                                            <!-- <b style="font-weight:100;text-transform:capitalize"> Test</b> -->
+                                            <div style="color:#000;font-weight:100">
+                                                @if (Session["wayleaveaccountId"] != null)
+                                                {
+                                                    <p>@Session["wayleaveUserName"]</p>
+                                                }
+
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <!-- <b style="font-weight:100;text-transform:capitalize"> Test</b> -->
+                                            <div style="color:#000;font-weight:100">
+                                                <a href="../WayleaveAccount/WayleaveAccount" style="color:#00a65a"> View Account</a>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li class="user-footer bg-green-custom">
+                                        <div class="pull-left">
+                                        </div>
+                                        <div class="pull-right">
+                                            <a href="../Home/LogOut" onclick="$.fn.Logout()" class="btn btn-warning" style="color:#fff">
+                                                Sign out
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </nav>
+
+
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        @if (Session["wayleaveaccountId"] == null)
+        {
+            <aside class="main-sidebar" style="background-color:#ccc !important">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar" style="height: auto;background-color: #ccc;">
+                    <!-- Sidebar user panel -->
+                    <a href="../wl/index">
+                        <div class="user-panel" style="cursor:pointer">
+                            <div class="text-center image">
+                                <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" style="width:35%!important;margin-top:10px!important" alt="GGB Image" />
+                            </div>
+                        </div>
+                    </a>
+
+                    <div class="user-panel" style="background-color: white;cursor:pointer">
+                        <div class="small-box bg-yellow">
+                            <div class="col-md-12" style="padding: 0;">
+                                <p class="text-yellow" style="text-align: center;margin: 0;font-size: 25px;font-weight: bold;padding-top:10px"></p>
+                                <div class="col-md-6" style="padding: 2px;padding-right: 4px;padding-bottom: 4px;padding-top: 0px;">
+                                    <a href="../home/index">
+                                        <div class="small-box bg-yellow" style="margin: 0;padding: 8px;background-color:#036335 !important">
+                                            <div class="inner" style="text-align: center;">
+                                                <p style="margin: 0;font-size: 11px;">Ekurhuleni Login</p>
+                                            </div>
+                                            <div class="icon">
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-md-6" style="padding: 2px;padding-left: 4px;padding-bottom: 4px;padding-top: 0;">
+                                    <a href="../Home/WayleaveLogin">
+                                        <div class="small-box bg-yellow" style="margin: 0;padding: 8px;background-color:#00337f !important">
+                                            <div class="inner" style="text-align: center;">
+                                                <p style="margin: 0;font-size: 11px;">WL Account Login</p>
+
+                                            </div>
+                                            <div class="icon">
+
+                                            </div>
+
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- /.sidebar -->
+            </aside>
+        }
+
+
+        <!--left slider menu-->
+        <!-- Left side column. contains the logo and sidebar -->
+        @if (Session["wayleaveaccountId"] != null)
+        {
+            <aside class="main-sidebar" style="background-color:#ccc !important">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar" style="height: auto;background-color: #ccc!important;">
+                    <!-- Sidebar user panel -->
+                    <a href="../WayleaveAccount/Index">
+                        <div class="user-panel" style="cursor:pointer">
+                            <div class="text-center image">
+                                <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" style="width:35%!important;margin-top:10px!important" alt="GGB Image" />
+                            </div>
+                        </div>
+                    </a>
+                    <div class="user-panel text-center">
+                        <div style="font-size:11pt!important;margin-bottom:5px!important">Hello</div>
+                        <div style="font-size:12pt!important;border:0px solid red;margin-top:-10px!important">
+                            @if (Session["wayleaveaccountId"] != null)
+                            {
+                                <p>@Session["wayleaveUserName"]</p>
+                            }
+                            <hr style="width:95%!important;border:0.5px solid #8b8b8b!important;margin-top:5px!important" />
+                        </div>
+                    </div>
+                    <div class="user-panel" style="background-color: #ccc!important;cursor:pointer">
+                        <div class="small-box">
+                            <div class="col-md-12" style="padding: 0;margin-bottom:10px!important;">
+                                <p style="text-align: center;margin: 0;font-size: 25px;color:#5f5f5f!important">Alerts</p>
+                                <div id="ShowAlerts">
+                                    <div id="LeftMenuAlerts">
+                                    </div>
+                                </div>
+                                <div class="text-center" id="ShowAlerts">
+                                    <i class="fa fa-spinner fa-spin text-green" style="font-size:10pt;color:#006940!important"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center" style="border:0px solid red;margin-top:20px!important">
+                            <hr style="width:95%!important;border:1px solid #8b8b8b!important;" />
+                        </div>
+                    </div>
+                    @if (Session["wayleaveaccountId"] != null)
+                    {
+                        <ul class="sidebar-menu tree" data-widget="tree" style="height: 400px;margin-top:-10px!important" ng-if="AccountStatus==6">
+                            <li class="treeview">
+                                <!-- 6 means approved    -->
+                                @*<a href="#" style="background: white;padding:13px;">
+                                        <span class="pull-right-container" style="background: #d2930b;padding: 6px 9px 9px 8px;">
+                                            <i class="fa fa-align-justify pull-right"></i>
+                                        </span>
+                                    </a>*@
+
+
+                                <ul class="control-sidebar-menu" style="margin: 0;margin-top: 5px; background-color: #ccc;padding: 0;">
+                                    <li class="right-pane-inv">
+                                        <a class="right-pane-inv" href="../WayleaveAccount/WayleaveApplicationNew">
+
+                                            <div class="menu-info" style="padding:15px!important;">
+                                                <h3 class="control-sidebar-subheading"><i class="fa fa-user"></i> &nbsp;Application Form</h3>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="right-pane-inv">
+                                        <a class="right-pane-inv" href="../WayleaveAccount/WayleaveAccount?q=@tt.Encrypt(Session["wayleaveAccountNumber"].ToString())">
+
+                                            <div class="menu-info" style="padding:15px!important;">
+                                                <h3 class="control-sidebar-subheading"><i class="fa fa-user"></i> &nbsp;Update User Profile</h3>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                    @*<li class="right-pane-inv">
+                                            <a class="right-pane-inv" href="../WL/WayleaveAccount">
+                                                <i class="menu-icon fa fa-bank bg-green ggb-menu-icon"></i>
+
+                                                <div class="menu-info" style="padding:15px!important;">
+                                                    <h3 class="control-sidebar-subheading">WayLeave Account</h3>
+                                                </div>
+                                            </a>
+                                        </li>*@
+
+                                    @*<li class="right-pane-inv">
+                                            <a class="right-pane-inv" href="javascript:void(0)">
+                                                <i class="menu-icon fa  fa-h-square bg-red ggb-menu-icon"></i>
+
+                                                <div class="menu-info" style="padding:4px;">
+                                                    <h4 class="control-sidebar-subheading">Personal Details</h4>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="right-pane-inv">
+                                            <a class="right-pane-inv" href="javascript:void(0)">
+                                                <i class="menu-icon fa  fa-transgender-alt bg-light-blue ggb-menu-icon"></i>
+
+                                                <div class="menu-info" style="padding:4px;">
+                                                    <h4 class="control-sidebar-subheading">Equipment Details</h4>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="right-pane-inv">
+                                            <a class="right-pane-inv" href="javascript:void(0)">
+                                                <i class="menu-icon fa fa-files-o bg-aqua-active ggb-menu-icon"></i>
+
+                                                <div class="menu-info" style="padding:4px;">
+                                                    <h4 class="control-sidebar-subheading">Documents</h4>
+
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="right-pane-inv">
+                                            <a class="right-pane-inv" href="javascript:void(0)">
+                                                <i class="menu-icon fa  fa-line-chart bg-purple ggb-menu-icon"></i>
+
+                                                <div class="menu-info" style="padding:4px;">
+                                                    <h4 class="control-sidebar-subheading">Performance</h4>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="right-pane-inv">
+                                            <a class="right-pane-inv" href="javascript:void(0)">
+                                                <i class="menu-icon fa  fa-file-image-o bg-maroon-active ggb-menu-icon"></i>
+
+                                                <div class="menu-info" style="padding:4px;">
+                                                    <h4 class="control-sidebar-subheading">Reports</h4>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="right-pane-inv">
+                                            <a class="right-pane-inv" href="javascript:void(0)">
+                                                <i class="menu-icon fa  fa-home bg-green-active ggb-menu-icon"></i>
+
+                                                <div class="menu-info" style="padding:4px;">
+                                                    <h4 class="control-sidebar-subheading">Asset</h4>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li class="right-pane-inv">
+                                            <a class="right-pane-inv" href="javascript:void(0)">
+                                                <i class="menu-icon fa  fa-money bg-purple-active ggb-menu-icon"></i>
+
+                                                <div class="menu-info" style="padding:4px;">
+                                                    <h4 class="control-sidebar-subheading">Budget</h4>
+                                                </div>
+                                            </a>
+                                        </li>*@
+
+                                </ul>
+                            </li>
+
+                        </ul>
+                    }
+                </section>
+
+                <!-- /.sidebar -->
+            </aside>
+        }
+        <!--right slider menu-->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark Isrightmenu">
+            <ul class="control-sidebar-menu" style="margin: 0; background-color: #7f1933;">
+                <!-- <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv" >
+                        <i class="menu-icon fa fa-2x fa-files-o bg-aqua-active"></i>
+
+                        <div class="menu-info" style="padding:10px;">
+                            <h4 class="control-sidebar-subheading">Documents</h4>
+
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv" >
+                        <i class="menu-icon fa fa-2x fa-line-chart bg-green"></i>
+
+                        <div class="menu-info" style="padding:10px;">
+                            <h4 class="control-sidebar-subheading">Performance</h4>
+                        </div>
+                    </a>
+                </li> -->
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-h-square bg-red ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Leave</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-transgender-alt bg-light-blue ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Traning</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-plane bg-purple  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Travel</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-cubes bg-maroon-active  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Inventory</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-money bg-purple-active  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Budget</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-home bg-green-active  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Asset</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-bullhorn bg-light-blue  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">FM OPS</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-bug bg-maroon-active  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Risk</h4>
+                        </div>
+                    </a>
+                </li>
+
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-dollar bg-maroon-active  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Remuneration</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-file-sound-o bg-maroon-active  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding:4px;">
+                            <h4 class="control-sidebar-subheading">Disciplinary</h4>
+                        </div>
+                    </a>
+                </li>
+                <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv">
+                        <i class="menu-icon fa fa-bank bg-maroon-active  ggb-menu-icon"></i>
+
+                        <div class="menu-info" style="padding: 4px;">
+                            <h4 class="control-sidebar-subheading">Orginazation Structure</h4>
+                        </div>
+                    </a>
+                </li>
+                <!-- <li class="right-pane-inv" style="border-bottom: 1px solid #b59b5a;">
+                    <a class="right-pane-inv" >
+                        <i class="menu-icon fa fa-2x fa-file-image-o bg-maroon-active"></i>
+
+                        <div class="menu-info" style="padding:10px;">
+                            <h4 class="control-sidebar-subheading">Reports</h4>
+                        </div>
+                    </a>
+                </li> -->
+            </ul>
+        </aside>
+
+        <div class="wrapper" style="background-color:#e0e0e0 !important;height: auto !important;min-height: 0px !important;">
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper" style="background-color:#e0e0e0 !important;min-height: 0 !important;height: auto !important;">
+                <!-- Content Header (Page header) -->
+                <!-- <section class="content-header"></section> -->
+                <!-- Main content -->
+                <section class="content">
+                    <!--router links for all components-->
+                    @RenderBody()
+                </section>
+                <!-- /.content -->
+            </div>
+            <!-- /.content-wrapper -->
+            <div class="control-sidebar-bg" style="background-color: #7f1933;"></div>
+        </div>
+        <!--footer content-->
+        <!-- <app-footer></app-footer> -->
+        <!-- Add the sidebar's background. This div must be placed
+        immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+    </div>
+    @*<footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 9.5
+            </div>
+            <strong>Copyright &copy; 2019-2020 </strong> All rights
+            reserved.
+        </footer>*@
+
+    <a href="#0" class="cd-top">Top</a>
+
+
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>

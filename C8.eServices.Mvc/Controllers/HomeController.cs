@@ -416,10 +416,6 @@ namespace C8.eServices.Mvc.Controllers
         public async Task<ActionResult> Index(LoginViewModel model, string returnUrl)
         {
             WayleaveDbContext context = new WayleaveDbContext();
-            // var result = context.WL_ACCOUNTS.ToList();
-            //if (result != null)
-            //{
-
             try
             {
                 // Please store the 2 line below in the db and call/ them from there
@@ -449,6 +445,7 @@ namespace C8.eServices.Mvc.Controllers
                                 if (result != null)
                                 {
                                     Session["ekurhuleniData"] = result;
+                                    Session["ekurhuleniUserID"] = result.userid;
                                     Session["ekurhuleniUserName"] = result.username;
                                     Session["ekurhuleniUserDeptName"] = result.deptartmentname;
                                     Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
@@ -457,7 +454,6 @@ namespace C8.eServices.Mvc.Controllers
                                 else
                                 {
                                     TempData["LoginError"] = "Invalid username or password!";
-                                    //error = "Invalid username or password!";
                                     return RedirectToAction("Index", "Home");
                                 }
 
@@ -472,15 +468,11 @@ namespace C8.eServices.Mvc.Controllers
                         }
                     }
                 }
-
-
-
             }
             catch (Exception)
             {
                 TempData["LoginError"] = "Invalid username or password For active directory login!";
                 return RedirectToAction("Index", "Home");
-                // throw;
             }            
             return View();
         }

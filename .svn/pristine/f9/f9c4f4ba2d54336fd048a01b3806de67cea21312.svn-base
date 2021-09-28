@@ -1,0 +1,402 @@
+﻿
+@{
+    ViewBag.Title = "InspectionList";
+    Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
+}
+
+
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+
+    select {
+        vertical-align: top;
+        height: 30px;
+    }
+
+    input, select {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        border-radius: 4px !important
+    }
+
+    .badge {
+        display: inline-block;
+        width: 80px;
+        padding: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #777;
+        border-radius: 10px;
+    }
+
+    .headindg-size {
+        margin-left: -26px;
+        font-size: 14px;
+        padding: 2px;
+    }
+
+    span {
+        height: 24px !important;
+        font-size: 10px !important;
+    }
+
+    .panel-default-custom {
+        border: 0.5px solid transparent;
+    }
+
+        .panel-default-custom > .panel-heading {
+            color: #000;
+            background-color: #f3f0e1;
+            /* border-color: #ddd; */
+            border: none;
+            border-radius: 0;
+            height: 22px;
+        }
+
+    .panel-group {
+        margin-bottom: 0px;
+    }
+
+    role {
+        margin-right: 80px;
+        margin-left: 20px;
+        font-weight: normal;
+        float: left;
+        margin: 0px;
+        margin-top: 8px;
+        margin-left: 10px;
+        font-size: 11px !important;
+    }
+
+    label {
+        font-size: 10px;
+        padding: 0;
+        font-weight: 500;
+        padding-left: 3px;
+        margin-bottom: -10px;
+    }
+
+    /*
+    .ng-select .ng-arrow-wrapper .ng-arrow.SRID  {
+      display: none !important;
+    }
+    .ng-select .ng-arrow-wrapper .SRID {
+      display: none !important;
+    }
+
+    .ng-select span.ng-arrow-wrapper.SRID :before {
+      display: none !important;
+    } */
+
+
+    /* Scroll bar custom css */
+
+    /* width */
+    /* ::-webkit-scrollbar {
+      width: 2px;
+    } */
+
+    /* Track */
+    /* ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    } */
+
+    /* Handle */
+    /* ::-webkit-scrollbar-thumb {
+      background: #888;
+    } */
+
+    /* Handle on hover */
+    /* ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    } */
+
+</style>
+
+<style>
+    .angucomplete-holder {
+        position: relative;
+        /*  font: 15px Verdana;*/
+    }
+
+    .angucomplete-dropdown {
+        font: inherit;
+        border-color: #ececec;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 2px;
+        /*        width: 300px;*/
+        width: 100%;
+        padding: 6px;
+        cursor: pointer;
+        position: absolute;
+        z-index: 9999;
+        top: 25px;
+        left: 0px;
+        /*        margin-top: -6px;*/
+        background-color: #fff;
+        overflow-y: auto;
+        max-height: 200px;
+    }
+
+    .angucomplete-searching {
+        font: inherit;
+        font-size: 12px;
+        color: #999;
+        /*        letter-spacing: 1px;*/
+    }
+
+    .angucomplete-row {
+        padding: 0px;
+        margin-bottom: 4px;
+        color: #00A65A;
+        clear: both;
+        color: #00A65A;
+    }
+
+    .angucomplete-selected-row {
+        /*        background-color: #428bca;*/
+        color: #00A65A;
+    }
+
+    .angucomplete-image-holder {
+        padding: 2px;
+        float: left;
+        margin-right: 10px;
+        margin-left: 5px;
+    }
+
+    .angucomplete-image {
+        /* height: 34px;
+        width: 34px;
+        border-radius: 50%;
+        border-color: #ececec;
+        border-style: solid;
+        border-width: 1px;*/
+        height: 25px;
+    }
+
+    .angucomplete-image-default {
+        /* Add your own default image here
+     background-image: url('/assets/default.png');
+    */
+        background-position: center;
+        background-size: contain;
+        height: 34px;
+        width: 34px;
+    }
+    /*    .form-control {
+        outline: 0;
+        border-color: #ECECEC;
+        border-style: solid;
+        border-width: 1px;
+        width: 300px;
+        background-color: #fff;
+        padding: 6px;
+        border-radius: 2px;
+        margin-bottom: 5px;
+        font: inherit;
+        font-size: 90%;
+    }*/
+
+    .highlight {
+        font-weight: bold;
+        color: #dc143c;
+    }
+
+    #Account_Number_value, #First_Name_value, #Last_Name_value, #MobileAutocomplete_value, #EmailAutocomplete_value {
+        border-radius: 4px !important
+    }
+</style>
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        var userRole = '@Session["ekurhuleniUserRole"]';
+        //alert(userRole);
+        if (userRole ==="Admin") {
+            $.fn.LoadApplicationsAlertsWithCounts("Y");
+        }
+        else {
+            $.fn.LoadApplicationsAlertsWithCounts("N")
+        }
+        //Init();
+    });
+</script>
+<script src="~/Scripts/wayleaveScripts/InspectionList.js"></script>
+<div>
+    <div>
+        <section class="content" style="padding-right: 0;padding-top:0;" @*ng-init="LoadApplicationsWithCounts()"*@>
+            <div style="background-color:#e0e0e0!important;margin-top:4px">
+                <h4 class="text-center">Application Status List</h4>
+                <table class="table table-striped table-hover tabel-condensed" style="font-size: 11px;">
+                    <thead style="background-color:#00A65A !important; font-size:11px !important;color:#fff !important;margin-bottom: 0;">
+                        <tr>
+                            <td style="width:5% !important" ng-click="sort('NAME')"
+                                ng-class="sortClass('NAME')">
+                                <a class="anchor_sorting" href="">
+                                    ID
+                                </a>&nbsp;
+                            </td>
+                            <td style="width:13% !important" ng-click="sort('NAME')"
+                                ng-class="sortClass('NAME')">
+                                <a class="anchor_sorting" href="">
+                                    Application Number
+                                </a>&nbsp;
+                            </td>
+                            <td style="width:13% !important" ng-click="sort('STATUS')"
+                                ng-class="sortClass('STATUS')">
+                                <a class="anchor_sorting" href="">
+                                    Step Status
+                                </a>&nbsp;
+                            </td>
+                            <td style="width:13% !important" ng-click="sort('NAME')"
+                                ng-class="sortClass('NAME')">
+                                <a class="anchor_sorting" href="">
+                                    Name
+                                </a>&nbsp;
+                            </td>
+                            @*<td style="width:13% !important" ng-click="sort('NAME')"
+                            ng-class="sortClass('NAME')">
+                            <a class="anchor_sorting" href="">
+                                Service
+                                Type
+                            </a>&nbsp;
+                        </td>
+                        <td style="width:13% !important" ng-click="sort('CREATED_DATE')"
+                            ng-class="sortClass('CREATED_DATE')">
+                            <a class="anchor_sorting" href="">
+                                Service Sub
+                                Type
+                            </a>&nbsp;
+                        </td>*@
+                            @*<td style="width:12% !important" ng-click="sort('CREATED_DATE')"
+                                ng-class="sortClass('CREATED_DATE')">
+                                <a class="anchor_sorting" href="">
+                                    Immediate Attention
+                                </a>&nbsp;
+                            </td>*@
+
+
+                            <td style="width:10% !important" ng-click="sort('CREATED_DATE')"
+                                ng-class="sortClass('CREATED_DATE')">
+                                <a class="anchor_sorting" href="">
+                                    Created On
+                                </a>&nbsp;
+                            </td>
+                            <td style="width:10% !important">
+                                <a class="anchor_sorting" href="">
+
+                                </a>&nbsp;
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var app in (List<C8.eServices.Mvc.Models.Mapings.ApplicationFormDashboardView>)ViewBag.ApplicationStatusList)
+                        {
+                            <tr
+                                style="border-collapse:collapse;">
+                                <td style="width:5% !important">
+                                    <a ng-click="OpenWayleaveApplicationForm(@app.id)"
+                                       style="cursor: pointer;"
+                                       class="ggb-a"><u>  @app.id</u></a>
+                                </td>
+                                <td style="width:15% !important">
+                                    @app.applicationNumber
+                                </td>
+                                <td style="width:13% !important">
+                                    <div style="color:green">
+                                        <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                           style="cursor: pointer;color:green"><u>  Application Granted</u></a>
+                                    </div>
+                                </td>
+                                <td style="width:13% !important">
+                                    @app.full_name
+                                </td>
+                                @*<td style="width:12% !important">
+                                    @if (app.wayleaveAttention == "Yes")
+                                    {
+                                        <div style="color:red">
+                                            <span class="fa fa-flag" style="color:red;font-size: 14px !important;"></span>
+                                            @app.wayleaveAttention
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div style="color:blueviolet">
+                                            <span class="fa fa-flag" style="color:blueviolet;font-size: 14px !important;"></span>
+                                            @app.wayleaveAttention
+                                        </div>
+                                    }
+                                </td>*@
+                                <td style="width:8% !important">
+                                    @app.createdDate
+                                </td>
+                                <td style="width:20% !important">
+                                    <button type="button" onclick=UpdateInspectiondata('@app.applicationNumber',@app.id) class="btn btn-sm btn-ggb-orange" data-toggle="modal" data-target="#myModal"><i class="fa fa-user-secret"></i>&nbsp;Inspection</button>
+                                    <button type="button" class="btn btn-sm btn-ggb-orange" onclick="$.fn.downloadCertificate('loaderId'+@app.id,'cloudId'+@app.id,@app.id)"><i class="fa fa-spin fa-spinner" id="@("loaderId"+app.id)" style="display:none!important"></i> <i class="fa fa-cloud-download" id="@("cloudId"+app.id)" ></i>&nbsp;Reinstatement Certificate</button>
+                                    @*<a href="#" title="Download Certificate"><i class="fa fa-file-pdf-o text-danger" title="Download Certificate"></i></a>*@
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                    
+                    @*<tbody ng-hide="ShowAppStatusList">
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <i class="fa fa-spinner fa-spin text-green" style="font-size:10pt;color:#006940!important"></i>
+                            </td>
+                        </tr>
+                    </tbody>*@
+                </table>
+            </div>
+            <div class="modal fade" id="InspectionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3 class="modal-title text-center" style="font-size:16pt!important">Inspection details</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div style="text-align:center!important"><b style="color:#e83232" id="ErrorMsg"></b></div>
+                            <div style="height:200px!important;margin:20px 0px 50px 50px!important;overflow-x:hidden;overflow-y:auto">
+                                <table width="100%">
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="2" style="text-align:left!important">Application No: <b class="text-red" style="font-size:12pt!important" id="modalApplicationNo"></b></td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody id="InspectionListData">
+                                    </tbody>
+                                    <tbody id="showInspectionList">
+                                        <tr>
+                                            <td colspan="2" style="text-align:center!important">
+                                                <i class="fa fa-spinner fa-spin text-green" style="font-size:16pt!important;color:#006940!important"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-ggb-orange" onclick="$.fn.SaveInspectionDetails('post')"><i class="fa fa-spin fa-spinner" id="isLoading" style="display:none"></i>Submit</button>
+                            <button type="button" class="btn btn-ggb-orange" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
