@@ -33,7 +33,7 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public virtual DbSet<MASTER_SERVICE_DOCUMENTS> MASTER_SERVICE_DOCUMENTS { get; set; }
         public virtual DbSet<MASTER_DEPARTMENTS> MASTER_DEPARTMENTS { get; set; }
         public virtual DbSet<WL_DEPARTMENTS> WL_DEPARTMENTS { get; set; }
-
+        public virtual DbSet<APPLICATION_PAYMENT_PRICE> APPLICATION_PAYMENT_PRICE { get; set; }
         public virtual DbSet<testMigration> testMigrations { get; set; }
         public virtual DbSet<MASTER_INSPECTIONS> MASTER_INSPECTIONS { get; set; }
         public virtual DbSet<WL_INSPECTION_LIST> WL_INSPECTION_LIST { get; set; }

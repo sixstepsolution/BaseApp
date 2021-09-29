@@ -90,6 +90,31 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
 
+        public ActionResult AddDepartmentUsers()
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+
+            }
+
+            return View();
+        }
+
+        public ActionResult UpdatePaymentPrice()
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+
+            }
+            var Pricedata = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
+            ViewBag.ApplicationPrice = Pricedata != null ? Convert.ToString(Pricedata.APPLICATION_PRICE) : "";
+            return View();
+        }
+
         public ActionResult ApplicationFormNew(string id=null)
         {
             if (Session["ekurhuleniData"] == null)

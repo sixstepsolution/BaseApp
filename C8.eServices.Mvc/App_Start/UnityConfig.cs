@@ -294,6 +294,35 @@ namespace C8.eServices.Mvc
 
 
 
+                cfg.CreateMap<User, AddUserModal>()
+               .ForMember(dest => dest.userid, opt => opt.MapFrom(src => src.userid))
+               .ForMember(dest => dest.username, opt => opt.MapFrom(src => src.username))
+               .ForMember(dest => dest.deptartmentname, opt => opt.MapFrom(src => src.deptartmentname))
+               .ForMember(dest => dest.firstName, opt => opt.MapFrom(src => src.firstName))
+               .ForMember(dest => dest.lastName, opt => opt.MapFrom(src => src.lastName))
+               .ForMember(dest => dest.emailAddress, opt => opt.MapFrom(src => src.emailAddress))
+               .ForMember(dest => dest.cellPhone, opt => opt.MapFrom(src => src.cellPhone))
+               .ForMember(dest => dest.isActiveDirectory, opt => opt.MapFrom(src => src.isActiveDirectory))
+               //.ForMember(dest => dest.createdDate, opt => opt.MapFrom(src => src.createdDate))
+
+               .ReverseMap();
+
+                cfg.CreateMap<AddUserModal, User>()
+               .ForMember(dest => dest.userid, opt => opt.MapFrom(src => src.userid))
+               .ForMember(dest => dest.username, opt => opt.MapFrom(src => src.username))
+               //.ForMember(dest => dest.password, opt => opt.MapFrom(src => src.password))
+               .ForMember(dest => dest.deptartmentname, opt => opt.MapFrom(src => src.deptartmentname))
+               .ForMember(dest => dest.firstName, opt => opt.MapFrom(src => src.firstName))
+               .ForMember(dest => dest.lastName, opt => opt.MapFrom(src => src.lastName))
+               .ForMember(dest => dest.emailAddress, opt => opt.MapFrom(src => src.emailAddress))
+               .ForMember(dest => dest.cellPhone, opt => opt.MapFrom(src => src.cellPhone))
+               .ForMember(dest => dest.isActiveDirectory, opt => opt.MapFrom(src => src.isActiveDirectory))
+               //.ForMember(dest => dest.createdDate, opt => opt.MapFrom(src => src.createdDate))
+
+               .ReverseMap();
+
+
+
 
                 cfg.CreateMap<WL_APPLICATIONFORM, ApplicationModel>()
                .ForMember(dest => dest.APP_ID, opt => opt.MapFrom(src => src.APP_ID))

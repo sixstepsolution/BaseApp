@@ -403,6 +403,8 @@ namespace C8.eServices.Mvc.Controllers
         }
 
 
+
+
         //Prasad
         [Route("api/add-application-form")]
         //[Authorize]
@@ -470,6 +472,53 @@ namespace C8.eServices.Mvc.Controllers
 
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
         }
+
+        //Prasad
+        [Route("api/update-application-price")]
+        //[Authorize]
+        public async Task<IHttpActionResult> PostApplicationPrice()
+        {
+            try
+            {
+                Dictionary<string, object> res = new Dictionary<string, object>();
+                var FormData = HttpContext.Current.Request.Form["FormData"];
+                var applicationFormResponse = JsonConvert.DeserializeObject<APPLICATION_PAYMENT_PRICE>(FormData);
+                var priceData = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
+                if (priceData!=null)
+                {
+                    priceData.APPLICATION_PRICE = applicationFormResponse.APPLICATION_PRICE;
+                    priceData.MODIFIED_DATE = DateTime.Now;
+                    db.SaveChanges();
+                    res.Add("update", "Application price updated successfully!");
+                    return Ok(res);
+                }
+                else
+                {
+                    APPLICATION_PAYMENT_PRICE ap = new APPLICATION_PAYMENT_PRICE();
+                    ap.APPLICATION_PRICE = applicationFormResponse.APPLICATION_PRICE;
+                    ap.CREATED_DATE = DateTime.Now;
+                    db.APPLICATION_PAYMENT_PRICE.Add(ap);
+                    db.SaveChanges();
+                    res.Add("success", "Application price saved successfully!");
+                    return Ok(res);
+                }
+            }
+            catch (DbEntityValidationException ex)
+            {
+                string result = "";
+                foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in entityValidationErrors.ValidationErrors)
+                    {
+                        result = "Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage;
+                    }
+                }
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
+        }
+
 
         public string EncryptPaymentRequest(PaymentHelper ph)
         {            

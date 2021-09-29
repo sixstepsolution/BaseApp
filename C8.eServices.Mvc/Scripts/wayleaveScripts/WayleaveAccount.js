@@ -607,7 +607,8 @@ $.fn.UpdateWlAccountForm = function () {
 
 
     var formValid = $.fn.CheckFormValidations();
-    if (formValid) {
+    var validIdNumber = $.fn.ValidateRSAIDNo(document.getElementById('identificationNumber').value);
+    if (formValid && validIdNumber) {
         $('#isAppLoading').show();
         var emailFormat = re.test($("#email").val()); // This return result in Boolean type
         if (!emailFormat) {
@@ -686,6 +687,7 @@ $.fn.UpdateWlAccountForm = function () {
     }
     else {
         $('#isAppUpdateLoading').hide();
+        if (!formValid)
         toastr.warning('* Fields are required!');
     }
 }

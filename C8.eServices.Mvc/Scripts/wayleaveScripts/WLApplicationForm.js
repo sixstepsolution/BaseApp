@@ -2022,7 +2022,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
                             var docUrl = "../uploads/" + ttttgt;
                             //menulink.href = "javascript: void (0)";
                             //menulink.onclick = ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME);
-                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' /><a id=' + linkId + ' target="_blank" href="' + docUrl + '" style="text-decoration:none!important;color:#000!important" rel="noopener noreferrer" name="LinkA">View</a></td></tr>');
+                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><a id=' + linkId + ' target="_blank" href="' + docUrl + '" style="text-decoration:none!important;color:#000!important" rel="noopener noreferrer" name="LinkA">View</a></td></tr>');
                             //var menulink = document.getElementById(linkId);
                             //menulink.setAttribute("onclick", "ViewDocument('" + ServiceDocumentListFromServer[j].documenT_NAME + "')");
                             //$('#ServiceDocumentListFromServer').append(menulink);
@@ -2030,7 +2030,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
                         }
                     };
                     if (!isAppend) {
-                        $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + sid + ' /></td></tr>');
+                        $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td></td></tr>');
                     }
                 };
             }
@@ -2039,7 +2039,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
                 for (let j = 0; j < ServiceDocumentListFromServer.length; j++) {
                     var id = ServiceDocumentListFromServer[j].id + "SupportDocument";
                     var index = j + 1;
-                    $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentListFromServer[j].description + '</td><td><input type="file" name="Add" id=' + id + ' /></td></tr>');
+                    $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentListFromServer[j].description + '</td><td></td></tr>');
                 };
             }
         },

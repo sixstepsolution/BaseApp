@@ -380,6 +380,22 @@ namespace C8.eServices.Mvc.Models.Repository
 
                 if (n)
                 {
+                    var departmentUsers = _context.Users.Where(s=>s.deptartmentname!= "Roads & Storm Water").ToList();
+                    //Send email notifications to departments
+                    foreach (User u in departmentUsers)
+                    {
+                        if (!String.IsNullOrEmpty(u.emailAddress))
+                        {
+                            string departmentUserName = u != null ? u.firstName + " " + u.lastName : u.username;
+                             EmailHelper email = new EmailHelper();
+                            email.Body = EmailNotificationBody.SentApplicationtoDepartments(departmentUserName, applicationNumber,u.deptartmentname, applicationForm.APPLICATION_STEP_DESCRIPTION, applicationForm.APPLICATION_DATE, applicationForm.COMPLETION_DATE).ToString();
+                            email.Recipient = u.emailAddress;
+                            email.Subject = "New Wayleave Application";
+                            //email.SendEmail();
+                            Email em = new Email();
+                            em.GenerateEmail(email.Recipient, email.Subject, email.Body, applicationNumber, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationNumber, null, null, null, null);
+                        }                        
+                    }
                     dct.Add("success", true);
                     return applicationForm.APPLICATION_NUMBER;
                 }
@@ -577,7 +593,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     applicationGrantStatus = "Rejected";
                 }
                 email.Body = EmailNotificationBody.SentApplicationFormGrantStatus(res.PROPERTYOWNER_NAME, res.PROPERTYOWNER_SURNAME, res.APPLICATION_NUMBER, applicationGrantStatus, comments).ToString();
-                email.Recipient = "prasadthummala@gmail.com"; //res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
+                email.Recipient = res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
                 email.Subject = "Wayleave Application Status";
                 //email.SendEmail();
                 Email em = new Email();

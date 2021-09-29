@@ -2874,6 +2874,7 @@
     <Content Include="Scripts\readonly.js" />
     <Content Include="Scripts\ResponsiveDataTables.min.js" />
     <Content Include="Scripts\sidPopup.min.js" />
+    <Content Include="Scripts\wayleaveScripts\AddDepartmentUsers.js" />
     <Content Include="Scripts\wayleaveScripts\angular-animate.js" />
     <Content Include="Scripts\wayleaveScripts\angular-animate.min.js" />
     <Content Include="Scripts\wayleaveScripts\angular-aria.js" />
@@ -3946,6 +3947,10 @@
     <Compile Include="Migrations\202109270226137_addingPropinUserform.Designer.cs">
       <DependentUpon>202109270226137_addingPropinUserform.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202109290910388_addingApplicationPrice.cs" />
+    <Compile Include="Migrations\202109290910388_addingApplicationPrice.Designer.cs">
+      <DependentUpon>202109290910388_addingApplicationPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountInformation.cs" />
@@ -3957,6 +3962,7 @@
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="Models\ApplicationUserRole.cs" />
+    <Compile Include="Models\APPLICATION_PAYMENT_PRICE.cs" />
     <Compile Include="Models\AppSetting.cs" />
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Audits\AccountAudit.cs" />
@@ -4070,6 +4076,7 @@
     <Compile Include="Models\LinkedMobile.cs" />
     <Compile Include="Models\Mapings\AccountContactModel.cs" />
     <Compile Include="Models\Mapings\AccountsView.cs" />
+    <Compile Include="Models\Mapings\AddUserModal.cs" />
     <Compile Include="Models\Mapings\ApplicationFormView.cs" />
     <Compile Include="Models\Mapings\ApplicationInputClaimModel.cs" />
     <Compile Include="Models\Mapings\ApplicationInputModel.cs" />
@@ -4640,6 +4647,8 @@
     <Content Include="Views\WayleaveAccount\Payment_Test.cshtml" />
     <Content Include="Views\WayleaveAccount\ReturnBackUrl.cshtml" />
     <Content Include="Views\WL\UploadSignature.cshtml" />
+    <Content Include="Views\WL\AddDepartmentUsers.cshtml" />
+    <Content Include="Views\WL\UpdatePaymentPrice.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4701,6 +4710,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202109270226137_addingPropinUserform.resx">
       <DependentUpon>202109270226137_addingPropinUserform.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202109290910388_addingApplicationPrice.resx">
+      <DependentUpon>202109290910388_addingApplicationPrice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

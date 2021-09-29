@@ -329,6 +329,7 @@ $.fn.GetServiceTypes = function () {
 
 // loading supporting documents and departments on page load
 $.fn.LoadSupportingDocumentsOnPageLoad = function () {
+    //alert();
     ServiceDocumentList = [];
     ServiceDepartmentList = [];
     $.ajax({
@@ -355,7 +356,10 @@ $.fn.LoadSupportingDocumentsOnPageLoad = function () {
                 for (let i = 0; i < ServiceDocumentList.length; i++) {
                     var id = ServiceDocumentList[i].id + "SupportDocument";
                     var index = i + 1;
-                    $('#ServiceDocumentList').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' />&nbsp;<b style="color:blue;font-weight:400!important">(Max. 5mb)</b></td></tr>');
+                    if (ServiceDocumentList[i].description != "EFT Payment Receipt") {
+                        $('#ServiceDocumentList').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' />&nbsp;<b style="color:blue;font-weight:400!important">(Max. 5mb)</b></td></tr>');
+                    }
+                    
                 };
             }
         },
@@ -662,40 +666,43 @@ $.fn.AddLocations = function () {
 
 //Open Payment gateway modal
 $.fn.SubmitApplication = function () {
-    //$.each(ServiceDocumentList, function (data, value) {
-    //    var checkValue = false;
-    //    var decsionID = value.id + "SupportDocument";
-    //    var fileslist = $('#' + decsionID).get(0).files;
-    //    for (var i = 0; i < fileslist.length; i++) {
-    //        isFileUploaded = true;
-    //        checkValue=$.fn.CheckFileSize(decsionID, fileslist);
-    //        //formData.append(decsionID, fileslist[i]);
-    //    }
-    //});
+    var startAdrs = $("#GPS_START_ADDRESS").val();
+    var endAdrs = $("#GPS_END_ADDRESS").val();
+    if (startAdrs != "" && startAdrs != undefined && endAdrs != "" && endAdrs != undefined) {
+
+    }
+    else {
+        toastr.warning('* Fields are required!');
+        return;
+    }
     if (appFormData.APPLICATION_STEP_DESCRIPTION == "" || appFormData.APPLICATION_STEP_DESCRIPTION == null || appFormData.APPLICATION_STEP_DESCRIPTION == undefined) {
         
-        if (ServiceDocumentList.length > 0) {
+        if (ServiceDocumentList.length > 0) {           
             var isFileUploaded = false;
             console.log(ServiceDocumentList);
             var isUploadDocumentSizeNotValid = false;
             $.each(ServiceDocumentList, function (data, value) {
                 var decsionID = value.id + "SupportDocument";
-                
-                var fileslist = $('#' + decsionID).get(0).files;
-                for (var i = 0; i < fileslist.length; i++) {
-                    
-                    var isFileSizeValid = $.fn.CheckFileSize(decsionID, fileslist);
-                    if (isFileSizeValid) {
-                        isFileUploaded = true;
+                //alert(decsionID);
+                var input = document.getElementById(decsionID);
+                if (input) {
+                    if (document.getElementById(decsionID).files.length > 0) {
+                        var fileslist = $('#' + decsionID).get(0).files;
+                        for (var i = 0; i < fileslist.length; i++) {
+
+                            var isFileSizeValid = $.fn.CheckFileSize(decsionID, fileslist);
+                            if (isFileSizeValid) {
+                                isFileUploaded = true;
+                            }
+                            else {
+                                isFileUploaded = false;
+                                isUploadDocumentSizeNotValid = true;
+                            }
+                            //formData.append(decsionID, fileslist[i]);
+                            //alert(fileslist[i]);
+                        }
                     }
-                    else {
-                        isFileUploaded = false;
-                        isUploadDocumentSizeNotValid = true;
-                    }
-                    //formData.append(decsionID, fileslist[i]);
-                    //alert(fileslist[i]);
                 }
-                
             });
             if (isUploadDocumentSizeNotValid) {
                 return;
@@ -724,14 +731,18 @@ $.fn.SubmitApplication = function () {
                 $.each(ServiceDocumentList, function (data, value) {
                     var decsionID = value.id + "SupportDocument";
                     //alert(decsionID);
-                    var fileslist = $('#5SupportDocument').get(0).files;
-                    if (fileslist.length >0) {
-                        isEFTFileUploaded = true;
+                    var input = document.getElementById('5SupportDocument');
+                    if (input) {
+                        if (document.getElementById('5SupportDocument').files.length > 0) {
+                            var fileslist = $('#5SupportDocument').get(0).files;
+                            if (fileslist.length > 0) {
+                                isEFTFileUploaded = true;
+                            }
+                            else {
+                                isEFTFileUploaded = false;
+                            }
+                        }
                     }
-                    else {  
-                        isEFTFileUploaded = false;
-                    }
-
                 });
                 if (!isEFTFileUploaded) {
                     toastr.warning('Please upload EFT Payment Receipt!');
@@ -763,6 +774,9 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
     var formData = new FormData();
     var DeclarationList = [];
     $.fn.GetFormdataValues();
+
+
+    
 
     $.each(ServiceDeclarationList, function (data, value) {
         if ($("#CheckBox_" + value.id).is(":checked")) {
@@ -798,17 +812,23 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
         console.log(ServiceDocumentList);
         $.each(ServiceDocumentList, function (data, value) {
             var decsionID = value.id + "SupportDocument";
-            var fileslist = $('#' + decsionID).get(0).files;
-            for (var i = 0; i < fileslist.length; i++) {
-                isFileUploaded = true;
-                var isFileSizeValid = $.fn.CheckFileSize(decsionID, fileslist);
-                if (isFileSizeValid) {
-                    formData.append(decsionID, fileslist[i]);
+            var input = document.getElementById(decsionID);
+            if (input) {
+                if (document.getElementById(decsionID).files.length > 0) {
+                    var fileslist = $('#' + decsionID).get(0).files;
+                    for (var i = 0; i < fileslist.length; i++) {
+                        isFileUploaded = true;
+                        var isFileSizeValid = $.fn.CheckFileSize(decsionID, fileslist);
+                        if (isFileSizeValid) {
+                            formData.append(decsionID, fileslist[i]);
+                        }
+                        else {
+                            isUploadDocumentSizeNotValid = true;
+                        }
+                    }
                 }
-                else {
-                    isUploadDocumentSizeNotValid = true;
-                }                
             }
+            
         });
         //if (!isFileUploaded) {
         //    toastr.warning('Please upload supporting documents!');
@@ -1160,10 +1180,10 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
 
                             //menulink.href = "javascript: void (0)";
                             //menulink.onclick = ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME);
-                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '&nbsp;<b style="color:red !important">' + isRequiredEFT + '</b></td><td><input type="file" name="Add" id=' + id + ' /><a id=' + linkId + ' target="_blank" href="' + docUrl +'" style="text-decoration:none!important;color:#000!important" rel="noopener noreferrer" name="LinkA">View</a></td></tr>');
+                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '&nbsp;<b style="color:red !important">' + isRequiredEFT + '</b></td><td><a id=' + linkId + ' target="_blank" href="' + docUrl +'" style="text-decoration:none!important;color:#000!important" rel="noopener noreferrer" name="LinkA">View</a></td></tr>');
                             var menulink = document.getElementById(linkId);
                             //menulink.setAttribute("onclick", "ViewDocument('" + ServiceDocumentListFromServer[j].documenT_NAME + "')");
-                            //$('#ServiceDocumentListFromServer').append(menulink);
+                            //$('#ServiceDocumentListFromServer').append(menulink);693
                             //AddEvent(menulink, "click", ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME));
                         }
                     };

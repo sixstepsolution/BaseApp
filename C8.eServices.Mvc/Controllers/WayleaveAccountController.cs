@@ -134,6 +134,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             q = q.Replace(" ", "+");
             string applicationNumber= new AesCrypto(encp).Decrypt(q);
+            var applicationPrice = dbWayleave.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
             var applicationData = dbWayleave.WL_APPLICATIONFORM.Where(s => s.APPLICATION_NUMBER == applicationNumber).FirstOrDefault();
             //Paymentgateway process
             PaymentHelper ph = new PaymentHelper
@@ -142,7 +143,7 @@ namespace C8.eServices.Mvc.Controllers
                 voteNumber = "4TESTVOTENOmkzzzzz16",
                 pgMerchantReference = applicationNumber,
                 pgMerchantDescription = "Wayleave Application Fee",
-                Amount = "500",
+                Amount = applicationPrice!=null?Convert.ToString(applicationPrice.APPLICATION_PRICE):"500",
                 pgEmail = applicationData!=null? applicationData.PROPERTYOWNER_EMAIL:"",
                 pgMobile = applicationData != null ? applicationData.PROPERTYOWNER_MOBILENO : "",
                 customerFirstName = applicationData != null ? applicationData.PROPERTYOWNER_NAME : "",

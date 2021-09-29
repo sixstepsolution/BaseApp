@@ -1,0 +1,397 @@
+﻿
+@model C8.eServices.Mvc.Models.User
+
+@{
+    ViewBag.Title = "AddDepartmentUsers";
+    Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
+}
+
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+
+    select {
+        vertical-align: top;
+        height: 30px;
+    }
+
+    input, select {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+
+    .badge {
+        display: inline-block;
+        width: 80px;
+        padding: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #777;
+        border-radius: 10px;
+    }
+
+    .headindg-size {
+        margin-left: -26px;
+        font-size: 14px;
+        padding: 2px;
+    }
+
+    span {
+        height: 24px !important;
+        font-size: 10px !important;
+    }
+
+    .panel-default-custom {
+        border: 0.5px solid transparent;
+    }
+
+        .panel-default-custom > .panel-heading {
+            color: #fff;
+            background-color: #f3f0e1;
+            /* border-color: #ddd; */
+            border: none;
+            border-radius: 0;
+            height: 22px;
+        }
+
+    .panel-group {
+        margin-bottom: 0px;
+    }
+
+    role {
+        margin-right: 80px;
+        margin-left: 20px;
+        font-weight: normal;
+        float: left;
+        margin: 0px;
+        margin-top: 8px;
+        margin-left: 10px;
+        font-size: 11px !important;
+    }
+
+    label {
+        font-size: 10.5px !important;
+        padding: 0;
+        font-weight: 500;
+        padding-left: 3px;
+        margin-bottom: -10px;
+    }
+
+    .checkbox-custom-label {
+        font-size: 10.5px !important;
+        font-weight: 500;
+    }
+
+    .pac-container {
+        z-index: 10000 !important;
+        /*width:70% !important;*/
+    }
+    .checkbox-custom {
+         opacity: 1!important; 
+        position: absolute!important;
+    }
+</style>
+<style type="text/css">
+    #right-panel {
+        font-family: "Roboto", "sans-serif";
+        line-height: 30px;
+        padding-left: 10px;
+    }
+
+        #right-panel select,
+        #right-panel input {
+            font-size: 15px;
+        }
+
+        #right-panel select {
+            width: 100%;
+        }
+
+        #right-panel i {
+            font-size: 12px;
+        }
+
+
+    #right-panel {
+        float: right;
+        width: 34%;
+        height: 100%;
+    }
+
+    .panel {
+        height: 100%;
+        overflow: auto;
+    }
+
+    .errorNew {
+        border: 2px solid red !important;
+        border-color: red !important;
+        color: red !important;
+    }
+
+    .payment-custom img {
+        border: 1px solid #ccc !important;
+    }
+
+        .payment-custom img:hover {
+            border: 2px solid green !important;
+        }
+</style>
+<script src="~/Scripts/wayleaveScripts/AddDepartmentUsers.js?dt=@DateTime.Now.Millisecond"></script>
+
+<script>
+    $(document).ready(function () {
+        var departmentName = '@Session["ekurhuleniUserDeptName"]';
+        var applicationId = '@ViewBag.ApplicationId';
+        //var wayleaveAppId = localStorage.getItem('WLAppId');
+        //if (wayleaveAppId != undefined && wayleaveAppId != "") {
+        //    $.fn.bindApplicationDataFrom(wayleaveAppId);
+        //    $("#CurrentUserDepartmentName").val(departmentName);
+        //}
+        if (applicationId != undefined && applicationId != "") {
+            //$.fn.LoadApplicationsDetailsByAppId(applicationId);
+            $("#CurrentUserDepartmentName").val(departmentName);
+        }
+        else {
+            //$.fn.LoadSupportingDocumentsOnPageLoad();
+            //$.fn.LoadDeclarationsOnPageLoad();
+        }
+        var userRole = '@Session["ekurhuleniUserRole"]';
+        //alert(userRole);
+        if (userRole ==="Admin") {
+            $.fn.LoadApplicationsAlertsWithCounts("Y");
+        }
+        else {
+            $.fn.LoadApplicationsAlertsWithCounts("N")
+        }
+
+    });
+</script>
+<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important">
+    <form name="DepartmentUserForm">
+        <div class="panel-group" style="margin-left: -25px;
+        margin-bottom: 3px !important;">
+            <div class="panel panel-default" style="border:none!important">
+                <div class="panel-heading" style="background:#00A65A;padding-top:5px!important">
+                    <h4 class="panel-title text-center" style="font-size:16pt!important">
+                        Add User <b class="pull-right" style="font-size:10pt!important;background-color:#fff!important;padding:5px!important;margin-top:-2px!important;border-radius:3px!important;display:none" id="APPLICATION_STEP_DESCRIPTION_STATUS"></b>
+                    </h4>
+                </div>
+                <div style="border:1px solid #00A65A;">
+                    <div class="panel-body" style="padding: 5px!important;">
+                        <table>
+                            <tr>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">User Type</label>
+                                        <select style="border-radius: 4px"
+                                                class="form-control" name="userType" id="userType" required>
+                                            <option value="" selected>Make a selection</option>
+                                            <option value="New">New User</option>
+                                            <option value="Existing">Existing User</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">First Name</label>
+                                        <input type="text" style="border-radius: 4px" id="firstName" required
+                                               class="form-control" name="firstName" />
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Last Name</label>
+                                        <input type="text" style="border-radius: 4px" id="lastName" required
+                                               class="form-control" name="lastName" />
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Username</label>
+                                        <input type="text" style="border-radius: 4px" id="username" required
+                                               class="form-control" name="username" />
+                                    </div>
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Email Address</label>
+                                        <input type="text" onkeyup="$.fn.validateEmail('emailAddress')" style="border-radius: 4px" id="emailAddress"
+                                               class="form-control" name="emailAddress" required />
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Cell Phone</label>
+                                        <input type="text" maxlength="10" style="border-radius: 4px" id="cellPhone" required
+                                               class="form-control numbersOnly" name="cellPhone" />
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Department</label>
+                                        <select style="border-radius: 4px"
+                                                class="form-control" name="deptartmentname" id="deptartmentname" required>
+                                            <option value="" selected>Make a selection</option>
+                                            <option value="City Planning">City Planning</option>
+                                            <option value="Energy">Energy</option>
+                                            <option value="Roads & Storm Water">Roads & Storm Water</option>
+                                            <option value="Water">Water</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <table style="width:100%!important">
+                                        <tr>
+                                            <td>
+                                                <div style="padding-top:10px!important"><label class="checkbox-custom-label" for="isActiveDirectory">Active Directory</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" class="checkbox-custom" name="isActiveDirectory" id="isActiveDirectory" value="Y"></div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Role</label>
+                                        <select style="border-radius: 4px"
+                                                class="form-control" name="userRole" id="userRole">
+                                            <option value="" selected>Make a selection</option>
+                                            <option value="Admin">Admin</option>
+                                            <option value="application" selected>Department User</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>                     
+                        <table width="100%" style="margin-top:10px!important">
+                            <tr>
+                                <td colspan="4" class="text-center" id="isNewApplication">
+                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 100px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.AddDepartmentUser()">
+                                        <i id="isAppLoading" class="fa fa-spinner fa-spin" style="display:none!important"></i>
+                                        Create
+                                    </button>
+                                    <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 100px; padding: 0; font-size: 11px">Cancel</button></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="locationPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="border-radius:5px!important;width:80% !important;">
+                <div class="modal-content">
+                    <div class="modal-header modal-danger">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            x
+                        </button>
+                        <h1 class="modal-title text-center" style="color:green;font-size:20px !important">Address Location</h1>
+                    </div>
+                    <div class="modal-body">
+                        @*<div id="map" style="display:none!important"></div>*@
+                        <div class="soria" id="ArcGisSearchMap">
+                            <div id="search"></div>
+                            <div id="map"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="PageLoaderModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="border-radius:5px!important;width:5%;height:50px!important;top:30%;border-radius:20px!important">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h3 class="text-center"><i class="fa fa-spinner fa-spin text-success"></i></h3>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="PaymentModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="top:10%!important;border-radius:5px!important">
+                <div class="modal-content">
+                    <div class="modal-header modal-danger">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            x
+                        </button>
+                        <h4 class="modal-title text-center" style="color:green">Payment Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div style="font-size:9pt !important;height:200px !important;overflow:auto;overflow-x:hidden">
+                            <table border="0" width="100%">
+                                <tr style="height:50px!important">
+                                    <td style="width:10%!important"></td>
+                                    <td colspan="2"><b>Select Payment Method:</b></td>
+                                    <td style="width:10%!important"></td>
+                                </tr>
+                                <tr style="display:none" id="ShowEftMasterpass">
+                                    <td style="width:10%!important"></td>
+                                    <td class="text-center">
+                                        <i class="fa fa-spinner fa-spin text-success" id="EftLoader" style="display:none;"></i>
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('EFT','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/EFT_Logo.jpg" width="200" height="100" /></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-spinner fa-spin text-success" id="MasterpassLoader" style="display:none;"></i>
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('MasterPass','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/Masterpass-logo.png" width="200" height="100" /></a>
+                                    </td>
+                                    <td style="width:10%!important"></td>
+                                </tr>
+                                <tr id="ShowPaynowButtons" style="height:100px!important">
+                                    <td style="width:30%!important"></td>
+                                    <td class="text-center">
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('PayNow','')" style="color:#fff!important;text-decoration:none!important" class="btn btn-green-custom"><i class="fa fa-spinner fa-spin text-success" id="PayNowLoader" style="display:none;color:#fff!important"></i>&nbsp;Pay Now</a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('PayLater','')" style="color:#fff!important;text-decoration:none" class="btn btn-green-custom"><i class="fa fa-spinner fa-spin text-success" id="PayLaterLoader" style="display:none;color:#fff!important"></i>&nbsp;Pay Later</a>
+                                    </td>
+                                    <td style="width:30%!important"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-success" value="Close" data-dismiss="modal" />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </form>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+

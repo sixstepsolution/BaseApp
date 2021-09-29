@@ -155,6 +155,32 @@ namespace C8.eServices.Mvc.Models.EmailBodys
             strBulBodyContent.Append("</html>");
             return strBulBodyContent;
         }
+
+        public static StringBuilder SentApplicationtoDepartments(string userName, string applicationNumber, string department, string stepDescription,DateTime? createdDate, DateTime? completionDate)
+        {
+            StringBuilder strBulBodyContent = new StringBuilder();
+            strBulBodyContent.Append("<html>");
+            strBulBodyContent.Append("<head>");
+            strBulBodyContent.Append("</head>");
+            strBulBodyContent.Append("<body>");
+            strBulBodyContent.Append("<div>");
+            strBulBodyContent.Append("<div>Dear " + userName +  ",</div><br /><br/>");
+            strBulBodyContent.Append("<div>New Wayleave application <b>" + applicationNumber + "</b> has been distributed to <b>" + department + " department</b>.</div><br />");
+            //if (!String.IsNullOrEmpty(applicationComment))
+            //{
+            strBulBodyContent.Append("<div>Please find the below application details</div><br/>");
+            strBulBodyContent.Append("<div>Application Number: <b>" + applicationNumber + "</b></div><br />");
+            strBulBodyContent.Append("<div>Application Status: <b>" + stepDescription + "</b></div><br />");
+            strBulBodyContent.Append("<div>Application date: <b>" + createdDate + "</b></div><br />");
+            strBulBodyContent.Append("<div>Completion date: <b>" + completionDate + "</b></div><br />");
+            //}
+            strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
+            strBulBodyContent.Append("Wayleave");
+            strBulBodyContent.Append("</div>");
+            strBulBodyContent.Append("</body>");
+            strBulBodyContent.Append("</html>");
+            return strBulBodyContent;
+        }
         public static StringBuilder DepartmentResponseStatus(string firstName, string lastName, string accountNumber, string grantStatus, string applicationComment, string department)
         {
             StringBuilder strBulBodyContent = new StringBuilder();

@@ -80,6 +80,65 @@ namespace C8.eServices.Mvc.Controllers
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
         }
 
+        [Route("api/add-department-user")]
+        //[Authorize]
+        public async Task<IHttpActionResult> PostDepartmentUser()
+        {
+            try
+            {
+                Dictionary<string, object> dct = new Dictionary<string, object>();
+                var AccountData = HttpContext.Current.Request.Form["UserData"];
+                var accountResponse = JsonConvert.DeserializeObject<AddUserModal>(AccountData);
+                _context.Configuration.LazyLoadingEnabled = true;
+                var acc = _mapper.Map<AddUserModal, User>(accountResponse);
+
+                if (acc != null)
+                {
+                    var isEmailExist = _context.Users.Count(c => c.emailAddress == acc.emailAddress) > 0;
+                    var isUsernameExist = _context.Users.Count(c => c.username == acc.username) > 0;
+                    if (isUsernameExist)
+                    {
+                        dct.Add("usernameExists", true);
+                        return Ok(dct);
+                    }
+                    if (isEmailExist)
+                    {
+                        dct.Add("emailExists", true);
+                        return Ok(dct);
+                    }                   
+                                     
+
+                    acc.password = "Test";
+                    acc.createdDate = DateTime.Now;
+                    _context.Users.Add(acc);
+                    int n = _context.SaveChanges();
+
+                    if (n > 0) {
+                        var tt = acc;
+                        Role userRole = new Role();
+                        userRole.userid = acc.userid;
+                        userRole.role_name = accountResponse.userRole;
+                        _context.Roles.Add(userRole);
+                        int p = _context.SaveChanges();
+                        dct.Add("success", "User created successfully!");
+                    }
+                    else
+                    {
+                        dct.Add("exception", "User creation failed!");
+                    }
+                    return Ok(dct);
+                }               
+               
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+
+
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
+        }
+
         //Prasad
         [Route("api/update-wl-accounts")]
         //[Authorize]
