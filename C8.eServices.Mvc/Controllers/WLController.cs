@@ -645,22 +645,38 @@ namespace C8.eServices.Mvc.Controllers
             }
             ViewBag.applicationList = null;
             ViewBag.applicationNo = null;
+            ViewBag.applicationStatus = null;
             ViewBag.errorStatus = null;
             return View();
         }
         [HttpPost]
-        public ActionResult AuditTrail(string searchKeyword)
+        public ActionResult AuditTrail(string searchKeyword,string status)
         {
-
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
                 return Redirect("../home/index");
             }
             ViewBag.applicationNo = searchKeyword;
+            ViewBag.applicationStatus = status;
             ViewBag.applicationList = null;
             ViewBag.errorStatus = null;
-            var appDetails = db.WL_APPLICATIONFORM_AUDIT.Where(s=>s.APPLICATION_NUMBER== searchKeyword).OrderBy(d=>d.AUDIT_ID).ToList();
+            if (String.IsNullOrEmpty(searchKeyword) && String.IsNullOrEmpty(status))
+            {
+                ViewBag.errorStatus = "No result found!";
+                ViewBag.applicationList = null;
+                return View();
+            }
+            var appDetails = db.WL_APPLICATIONFORM_AUDIT.OrderBy(d => d.AUDIT_ID).ToList();
+            if (!String.IsNullOrEmpty(searchKeyword))
+            {
+                appDetails= appDetails.Where(s => s.APPLICATION_NUMBER == searchKeyword).ToList();
+            }
+            if (!String.IsNullOrEmpty(status))
+            {
+                appDetails = appDetails.Where(s => s.APPLICATION_STEP_DESCRIPTION.Contains(status)).ToList();
+            }
+           
             if (appDetails.Count > 0)
             {
                 ViewBag.applicationList = appDetails;

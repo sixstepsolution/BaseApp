@@ -274,6 +274,7 @@
         }
     </style>
     @*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">*@
+
 </head>
 
 <body id="pagewrap" class="hold-transition skin-green" style="background-color:#ccc!important">
@@ -342,13 +343,28 @@
             <!-- sidebar: style can be found in sidebar.less -->
             <section class="sidebar" style="height: auto;background-color: #ccc!important;">
                 <!-- Sidebar user panel -->
-                <a href="#" @*ng-click="goToDashboard()"*@>
-                    <div class="user-panel" style="cursor:pointer">
-                        <div class="text-center image">
-                            <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" style="width:35%!important;margin-top:10px!important" alt="GGB Image" />
+                @if (Session["ekurhuleniData"] != null)
+                {
+                    <a href="../WL/Index">
+                        <div class="user-panel" style="cursor:pointer">
+                            <div class="text-center image">
+                                <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" style="width:35%!important;margin-top:10px!important" alt="GGB Image" />
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                }
+                else
+                {
+                    <a href="../Home/Index">
+                        <div class="user-panel" style="cursor:pointer">
+                            <div class="text-center image">
+                                <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" style="width:35%!important;margin-top:10px!important" alt="GGB Image" />
+                            </div>
+                        </div>
+                    </a>
+
+                }
+
                 <div class="user-panel text-center">
                     <div style="font-size:11pt!important;margin-bottom:5px!important">Hello</div>
                     <div style="font-size:12pt!important;border:0px solid red;margin-top:-10px!important">
@@ -430,7 +446,7 @@
                                                 <h3 class="control-sidebar-subheading">Inspection List</h3>
                                             </div>
                                         </a>
-                                    </li>                                    
+                                    </li>
                                 </ul>
                             </li>
                         }
@@ -504,7 +520,8 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>                            
+                            </li>
+
                         }
                     }
                 </ul>

@@ -106,7 +106,9 @@ $.fn.LoadApplicationsAlertsWithCounts = function (isAdmin) {
         });
     }, 5000);
 }
+$.fn.goToDashboard = function () {
 
+}
 $.fn.Logout = function () {
     localStorage.clear();
 }

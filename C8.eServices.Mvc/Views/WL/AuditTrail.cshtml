@@ -23,10 +23,24 @@
 
         $.fn.showLoader = function () {
             var an = $("#searchKeyword").val();
+            var st = $("#status").val();
             if (an != "" && an != undefined)
             {
                 $("#isLoading").show();
             }
+            if (st != "" && st != undefined) {
+                $("#isLoading").show();
+            }
+        }
+
+        var actionValue = '@ViewBag.applicationStatus';
+        var appNo = '@ViewBag.applicationNo';
+        
+        if (actionValue != "" && actionValue != undefined) {
+            $("#status").val(actionValue);
+        }
+        if (appNo != "" && appNo != undefined) {
+            $("#searchKeyword").val(appNo);
         }
     });
 </script>
@@ -50,16 +64,28 @@
                                     }
 
                                 </td>
-                                <td style="width: 15.5% !important"></td>
+
                                 <td colspan="2" style="height: 40px !important; width: 15.5%!important">
                                     <div class="input-group" style="width: 100%;">
-                                        <label></label>
-                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="searchKeyword" placeholder="Application Number" id="searchKeyword" required>
+                                        <label style="color:#000!important;font-size:10pt!important">Application Number</label>
+                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="searchKeyword" placeholder="Application Number" id="searchKeyword">
 
                                     </div>
                                 </td>
-
-                                <td style="padding-top: 0px !important; height: 40px !important;width: 15.5% !important ">
+                                <td colspan="2" style="width:  15.5%">
+                                    <div class="input-group" style="width: 100%">
+                                        <label style="color:#000!important;font-size:10pt!important">Status</label>
+                                        <select style="border-radius: 4px"
+                                                class="form-control" name="status" id="status">
+                                            <option value="" selected>Make a selection</option>
+                                            <option value="Application Granted">Granted Applications</option>
+                                            <option value="Application Rejected">Rejected Applications</option>
+                                            <option value="Affected">Affected (All departments)</option>
+                                            <option value="Not Affected">Not Affected (All departments)</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td colspan="2" style="padding-top: 23px !important; height: 40px !important;width: 15.5% !important ">
                                     <button type="submit" class="btn btn-sm btn-green-custom" onclick="$.fn.showLoader()" style="color:#fff!important;height:28px!important">
                                         <i id="isLoading" class="fa fa-spinner fa-spin" style="font-size:9pt;display:none"></i>&nbsp;Search
                                     </button>
@@ -69,7 +95,7 @@
                                 </td>
                                 <td style="width: 15.5% !important"></td>
                                 <td style="width: 15.5% !important"></td>
-                            <tr>
+<tr>
                         </thead>
                     </table>
                 }
