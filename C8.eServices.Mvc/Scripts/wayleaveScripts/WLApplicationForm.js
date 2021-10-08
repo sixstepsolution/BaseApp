@@ -1549,6 +1549,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 
                 ServiceDocumentListFromServer = [];
                 $('#APPLICATION_STEP_DESCRIPTION_STATUS').show();
+                $('#SERVICE_TYPE_NEW').val(data.servicE_TYPE_NEW);
                 $('#PROPERTYOWNER_ACCOUNT_NO').val(data.propertyowneR_ACCOUNT_NO);
                 $('#PROPERTYOWNER_NAME').val(data.propertyowneR_NAME);
                 $('#PROPERTYOWNER_SURNAME').val(data.propertyowneR_SURNAME);
@@ -2118,6 +2119,19 @@ function formatDate(date) {
 // Update application status only
 $.fn.UpdateApplicationFormStaus = function () {
     if (appFormData.AppStatus != null && appFormData.AppStatus != undefined && appFormData.AppStatus != "") {
+
+        if ($("#AppStatus").val() == "Application Rejected") {
+            var arc = $("#APPLICATIONReject_COMMENTS").val();
+            if (arc != "" && arc != undefined) {
+
+            }
+            else {
+                toastr.warning('* Fields are required!');
+                return;
+            }
+        }
+
+
         if (isDepartmentResponseReceived) {
             $('#isAppLoading').show();
             var departmentName = $("#CurrentUserDepartmentName").val();
@@ -2131,6 +2145,7 @@ $.fn.UpdateApplicationFormStaus = function () {
                 deptComments: $("#DEPARTMENT_COMMENTS").val(),
                 deptName: departmentName,
                 deptStatus: $("#DEPARTMENT_STATUS").val(),
+                first_name: $("#CurrentUserName").val(),
             };
             $.ajax({
                 headers: {
@@ -2195,6 +2210,7 @@ $.fn.UpdateDepartmentStaus = function () {
             deptComments: $("#DEPARTMENT_COMMENTS").val(),
             deptName: departmentName,
             deptStatus: $("#DEPARTMENT_STATUS").val(),
+            first_name: $("#CurrentUserName").val(),
         };
         console.log("====inpuclaims===========");
         console.log(inpuclaims);

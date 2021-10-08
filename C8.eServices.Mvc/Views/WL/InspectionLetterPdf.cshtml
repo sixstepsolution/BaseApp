@@ -1,4 +1,5 @@
 ﻿@model C8.eServices.Mvc.Models.WL_APPLICATIONFORM
+@using System.Configuration;
 @{
     Layout = null;
 }
@@ -9,7 +10,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <div class="main-container">
-   <br /><br />
+    <br /><br />
     <table width="100%" style="font-size:13pt!important">
         <tr>
             <td colspan="3">
@@ -122,7 +123,18 @@
                 <div style="margin-top:10pt!important">Name:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_NAME" /></div>
             </td>
             <td>
-                <div style="margin-top:10pt!important">Signed:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" /></div>
+                @if (ViewBag.signature != null)
+                {
+                    var baseUrl = ConfigurationManager.AppSettings["Base_Url"].ToString();
+                    baseUrl = baseUrl + "uploads/" + ViewBag.signature;
+
+                                <div style = "margin-top:10pt!important" > Signed:<img class="img img-thumbnail" src="@baseUrl" width="150" height="50" /></div>
+                    }
+                    else
+                    {
+    <div style="margin-top:10pt!important">Signed:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" /></div>
+                    }
+
             </td>
         </tr>
         <tr style="height:50px!important">

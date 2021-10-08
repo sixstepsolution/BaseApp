@@ -16,6 +16,7 @@ using C8.eServices.Mvc.Models.Services;
 using C8.eServices.Mvc.DataAccessLayer;
 using C8.eServices.Mvc.Helpers;
 using C8.eServices.Mvc.Keys;
+using C8.eServices.Mvc.Models.Comm;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -24,14 +25,16 @@ namespace C8.eServices.Mvc.Controllers
         private readonly IWlAccount _accou = null;
         private readonly IWlAccountContact _wlcontact = null;
         private readonly IMasterStatusTypes _StatusTypes = null;
+        private readonly IWayleave _wayleave = null;
         private IMapper _mapper = null;
         private WayleaveDbContext _context;
 
-        public WL_ACCOUNTController(IWlAccount accou, IWlAccountContact wlcontact, IMasterStatusTypes StatusTypes,
+        public WL_ACCOUNTController(IWlAccount accou, IWlAccountContact wlcontact, IWayleave wayleave, IMasterStatusTypes StatusTypes,
             IMapper mapper, WayleaveDbContext context)
         {
             _accou = accou;
             _StatusTypes = StatusTypes;
+            _wayleave = wayleave;
             _mapper = mapper;
             _wlcontact = wlcontact;
             _context = context;
@@ -114,6 +117,15 @@ namespace C8.eServices.Mvc.Controllers
                     int n = _context.SaveChanges();
 
                     if (n > 0) {
+                        //Insert audit data
+                        //UserAudit audit_app = new UserAudit();
+                        //CopyClass.CopyObject(acc, ref audit_app);
+                        //audit_app.ACTION = "Modified";
+                        //audit_app.CREATED_DATE = DateTime.Now;
+                        //audit_app.MODIFIED_DATE = DateTime.Now;
+                        //_context.WL_ACCOUNT_AUDIT.Add(audit_app);
+                        //_context.SaveChanges();
+
                         var tt = acc;
                         Role userRole = new Role();
                         userRole.userid = acc.userid;
@@ -255,21 +267,48 @@ namespace C8.eServices.Mvc.Controllers
                 Dictionary<string, object> res = new Dictionary<string, object>();
                 var userData = HttpContext.Current.Request.Form["userData"];
                 var file = HttpContext.Current.Request.Files;
-                var accountResponse = JsonConvert.DeserializeObject<UploadDepartmentSignature>(userData);
+                var accountResponse = JsonConvert.DeserializeObject<WL_UPLOAD_SIGNATURE>(userData);
 
-                HttpPostedFile f1 = file["signaturefile"];                
-                var ddss = _mapper.Map<UploadDepartmentSignature, User>(accountResponse);
+                HttpPostedFile f1 = file["signaturefile"];
+                //var ddss = _mapper.Map<UploadDepartmentSignature, User>(accountResponse);
 
-                if (ddss != null)
+                var signatureDetails = _context.WL_UPLOAD_SIGNATURE.ToList();
+                if (signatureDetails.Count > 0)
                 {
-                    //res = _accou.UpdateWL_ACCOUNT(ddss, ddss1, f1, f2, f3, HttpContext.Current.Request.Browser.Browser.ToUpper(), Count);
+                    if (f1 != null)
+                    {
+                        var updateSign= signatureDetails.FirstOrDefault();
+                        updateSign.DOCUMENT_NAME = _wayleave.SaveUploadedFile(f1, HttpContext.Current.Request.Browser.Browser.ToUpper());
+                        updateSign.MODIFIED_DATE = DateTime.Now;
+                        updateSign.IS_ACTIVE = accountResponse.IS_ACTIVE;
+                        res.Add("update", "Signature updated successfully!");
+                    }
+                }
+                else
+                {
+                    if (f1 != null)
+                    {
+                        WL_UPLOAD_SIGNATURE wps = new WL_UPLOAD_SIGNATURE();
+                        wps.DOCUMENT_NAME = _wayleave.SaveUploadedFile(f1, HttpContext.Current.Request.Browser.Browser.ToUpper());
+                        wps.CREATED_DATE = DateTime.Now;
+                        wps.IS_ACTIVE = accountResponse.IS_ACTIVE;
+                        _context.WL_UPLOAD_SIGNATURE.Add(wps);
+                        res.Add("add", "Signature uploaded successfully!");
+                    }
                 }
 
-                if (res != null)
+                var result = _context.SaveChanges();
+
+                if(result==1)
                 {
-                    //var mpres = _mapper.Map<List<MasterInputCalimsModel>>(res);
                     return Ok(res);
                 }
+
+                //if (res != null)
+                //{
+                //    //var mpres = _mapper.Map<List<MasterInputCalimsModel>>(res);
+                //    return Ok(res);
+                //}
             }
             catch (Exception ex)
             {
@@ -288,7 +327,6 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 var res = _accou.GetWL_ACCOUNT(accountNo);
-
                 if (res != null)
                 {
                     var mpres = _mapper.Map<WL_ACCOUNT, WLAccountsModel>(res);
@@ -300,12 +338,8 @@ namespace C8.eServices.Mvc.Controllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
             }
-
-
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
         }
-
-
 
         [Route("api/get-WLAccount-contractorOrConsultant")]
         // [Authorize]
@@ -331,7 +365,6 @@ namespace C8.eServices.Mvc.Controllers
 
                 if (res != null)
                 {
-
                     return Ok(res);
                 }
             }
@@ -355,7 +388,7 @@ namespace C8.eServices.Mvc.Controllers
                 if (res != null)
                 {
                     EmailHelper email = new EmailHelper();
-                    email.Body = EmailNotificationBody.SentForgotPasswordDetails(res.CONTACT_PERSON_FIRST_NAME + " " + res.CONTACT_PERSON_LAST_NAME, res.EMAIL, res.PASSWORD, res.ACCOUNT_NUMBER).ToString();
+                    email.Body = EmailNotificationBody.SentForgotPasswordDetails(res.CONTACT_PERSON_FIRST_NAME + " " + res.CONTACT_PERSON_LAST_NAME, res.EMAIL, "WayleaveTempPassword", res.ACCOUNT_NUMBER).ToString();
                     email.Recipient = res.EMAIL;//"prasadthummala558@gmail.com";
                     email.Subject = "Forgot Password Details";
                     //email.SendEmail();

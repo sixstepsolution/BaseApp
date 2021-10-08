@@ -154,8 +154,9 @@
 <script type="text/javascript" language="javascript">   
     $(document).ready(function () {
         var departmentName = '@Session["ekurhuleniUserDeptName"]';      
-       
+        var userName = '@Session["ekurhuleniUserName"]';
         var userRole = '@Session["ekurhuleniUserRole"]';
+        $("#CurrentUserName").val(userName);
         //alert(userRole);
         if (userRole ==="Admin") {
             $.fn.LoadApplicationsAlertsWithCounts("Y");
@@ -172,18 +173,18 @@
             <div class="panel panel-default" style="border:none!important">
                 <div class="panel-heading" style="background:#00A65A;padding-top:5px!important">
                     <h4 class="panel-title text-center" style="font-size:16pt!important">
-                        Update Application Price 
+                        Update Application Price
                         @if (ViewBag.ApplicationPrice != null)
-                        { 
-                        <b class="pull-right" style="font-size:10pt!important;background-color:#fff!important;padding:5px!important;margin-top:-2px!important;border-radius:3px!important;color:#cc0c00!important">Application Price:R @ViewBag.ApplicationPrice</b>
-                        }                        
+                        {
+                            <b class="pull-right" style="font-size:10pt!important;background-color:#fff!important;padding:5px!important;margin-top:-2px!important;border-radius:3px!important;color:#cc0c00!important">Application Price:R @ViewBag.ApplicationPrice</b>
+                        }
                     </h4>
                 </div>
                 <div style="border:1px solid #00A65A;height:300px!important">
                     <div class="panel-body" style="padding: 5px!important;padding-top:50px!important">
                         <table>
                             <tr>
-                                <td style="width:  15.5%">                                    
+                                <td style="width:  15.5%">
                                 </td>
                                 <td style="width:  15.5%" colspan="2">
                                     <div class="input-group input-label" style="width: 100%">
@@ -192,9 +193,9 @@
                                                class="form-control" name="APPLICATION_PRICE" />
                                     </div>
                                 </td>
-                                <td style="width:  15.5%">                                   
+                                <td style="width:  15.5%">
                                 </td>
-                            </tr>                           
+                            </tr>
                         </table>
                         <table width="100%" style="margin-top:10px!important">
                             <tr>
@@ -212,6 +213,7 @@
             </div>
         </div>
         <input type="hidden" id="CurrentUserDepartmentName" />
+        <input type="hidden" id="CurrentUserName" />
     </form>
 </section>
 

@@ -173,7 +173,7 @@
         var sessionInfo = '@Session["wayleaveaccountId"]';
         var applicationId = '@ViewBag.ApplicationId';
 
-        
+
         if (sessionInfo != undefined && sessionInfo != "") {
             $.fn.LoadApplicationsAlertsWithCounts('o');
         }
@@ -182,6 +182,8 @@
     $(document).ready(function () {
         var departmentName = '@Session["ekurhuleniUserDeptName"]';
         var applicationId = '@ViewBag.ApplicationId';
+        var userName = '@Session["ekurhuleniUserName"]';
+        $("#CurrentUserName").val(userName);
         //var wayleaveAppId = localStorage.getItem('WLAppId');
         //if (wayleaveAppId != undefined && wayleaveAppId != "") {
         //    $.fn.bindApplicationDataFrom(wayleaveAppId);
@@ -227,6 +229,27 @@
                                             APPLICATION IS HEREBY MADE BY THE UNDERSIGNED TO DO WORK IN THE ROAD RESERVE AS DETAILED BELOW<br />
                                             The application undertakes to do the work according to the latest edition of the CODE OF PRACTICE FOR WORK IN THE PUBLIC ROAD RESERVE. NO WORK SHALL COMMENCE BEFORE A WAYLEAVE IS ISSUED.<br />
                                         </label>
+                                        <table>
+                                            <tr>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Service Type</label>
+                                                        <select style="border-radius: 4px" disabled
+                                                                class="form-control" name="SERVICE_TYPE_NEW" id="SERVICE_TYPE_NEW">
+                                                            <option value="" selected>Make a selection</option>
+                                                            <option value="New Services">New Services</option>
+                                                            <option value="Maintenance Work">Maintenance Work</option>
+                                                            <option value="Emergency Work">Emergency Work</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -820,7 +843,7 @@
                                                 <div class="col-lg-12">
                                                     <div class="input-group input-label">
                                                         <label class="control-label">Comments</label>
-                                                        <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="APPLICATION_COMMENTS" id="APPLICATIONReject_COMMENTS"></textarea>
+                                                        <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="APPLICATIONReject_COMMENTS" id="APPLICATIONReject_COMMENTS"></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -840,7 +863,7 @@
                                                 Submit
                                             </button>
                                             <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
-</td>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -857,7 +880,7 @@
                                                 Submit
                                             </button>
                                             <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
-</td>
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -938,6 +961,8 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
+
+        <input type="hidden" id="CurrentUserName" />
     </form>
 </section>
 

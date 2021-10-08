@@ -90,8 +90,7 @@
                             <div class="col-sm-2 text-center">
 
                             </div>
-                        </div>
-                    }
+                        </div>                    }
                 </div>
                 @if (TempData["LoginError"] != null)
                 {
@@ -133,6 +132,17 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+        var result = '@TempData["changePasswordResult"]';
+        //alert(result);
+        if (result != "" && result != undefined) {
+
+            toastr.success(`Password changed successfully`, "Success", {
+                "timeOut": "10000",
+                "extendedTImeout": "20000",
+                "closeButton": true,
+            });
+        }
+
         $("#loginButtons").show();
         $("#loginPage").hide();
     });

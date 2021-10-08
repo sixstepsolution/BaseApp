@@ -137,6 +137,7 @@ $.fn.UpdatePaymentPrice = function () {
     if (pc != "" && pc != undefined) {
         var paymentData = new Object();
         paymentData.APPLICATION_PRICE = pc;
+        paymentData.DEPARTMENT_USER = $('#CurrentUserName').val();;
         var formData = new FormData();        
         formData.append("FormData", JSON.stringify(paymentData));
 

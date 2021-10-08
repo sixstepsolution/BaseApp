@@ -200,9 +200,24 @@
                                                 <td style="width:15.5%"></td>
                                                 <td style="width:15.5%" colspan="2">
                                                     <div class="input-group input-label" id="tradeLicenseSection" style="width: 100%">
-                                                        <label>Upload Signature</label>
+                                                        <label class="control-label">Upload Signature</label>
                                                         <input type="file" id="signaturefile" style="border-radius: 4px;padding: 3px !important"
                                                                class="form-control" name="signaturefile" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:15.5%"></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:15.5%"></td>
+                                                <td style="width:15.5%" colspan="2">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Status</label>
+                                                        <select style="border-radius: 4px"
+                                                                class="form-control" name="IS_ACTIVE" id="IS_ACTIVE" required>
+                                                            <option value="" selected>Make a selection</option>
+                                                            <option value="Y">Active</option>
+                                                            <option value="N">Inactive</option>
+                                                        </select>
                                                     </div>
                                                 </td>
                                                 <td style="width:15.5%"></td>
@@ -225,6 +240,18 @@
                                 </td>
                             </tr>
                         </table>
+                        <table width="100%">
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    <div style="margin-top:20px!important">
+                                        @if (ViewBag.signatureList != null)
+                                        {
+                                            <img class="img img-thumbnail" src="../uploads/@ViewBag.signatureList" width="150" height="150" />
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>                        
                     </div>
                 </div>
             </div>

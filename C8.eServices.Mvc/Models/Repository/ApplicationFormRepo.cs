@@ -10,6 +10,7 @@ using C8.eServices.Mvc.Models.Services;
 using C8.eServices.Mvc.Keys;
 using C8.eServices.Mvc.Helpers;
 using C8.eServices.Mvc.Models.EmailBodys;
+using C8.eServices.Mvc.Models.Comm;
 
 namespace C8.eServices.Mvc.Models.Repository
 {
@@ -376,10 +377,25 @@ namespace C8.eServices.Mvc.Models.Repository
                     _context.WL_DECLARATIONS.Add(dec);
                 }
 
+                
+
                 bool n = SaveChanges();
 
                 if (n)
                 {
+                    string createdUser= applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
+                    WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    CopyClass.CopyObject(applicationForm, ref audit_app);
+                    audit_app.ACTION = "Added";
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    audit_app.CREATED_USER = createdUser;
+                    audit_app.MODIFIED_USER = createdUser;
+                    //PROPERTYOWNER_NAME
+                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
+
+
                     var departmentUsers = _context.Users.Where(s=>s.deptartmentname!= "Roads & Storm Water").ToList();
                     //Send email notifications to departments
                     foreach (User u in departmentUsers)
@@ -546,13 +562,48 @@ namespace C8.eServices.Mvc.Models.Repository
                 {
                     department.APPLICATION_STATUS = (departmentPaymentSuccess != null ? departmentPaymentSuccess.Description : "");
                     department.APP_ID = applicationForm.APP_ID;
-                    n=SaveChanges();
+
+                    //string createdUser = res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME;
+                    //WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    //CopyClass.CopyObject(res, ref audit_app);
+                    //audit_app.ACTION = "Modified";
+                    //audit_app.APPLICATION_STEP_DESCRIPTION = "Distributed to " + department.DEPARTMENT_NAME + " department";
+                    //audit_app.CREATED_DATE = DateTime.Now;
+                    //audit_app.MODIFIED_DATE = DateTime.Now;
+                    //audit_app.CREATED_USER = createdUser;
+                    //audit_app.MODIFIED_USER = createdUser;
+                    //_context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    //_context.SaveChanges();
+                    n =SaveChanges();
                 }
             }
             //_context.Entry(res).State = System.Data.Entity.EntityState.Modified;
              n = SaveChanges();
             if (n)
             {
+                string createdUser = res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME;
+                WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                CopyClass.CopyObject(res, ref audit_app);
+                audit_app.ACTION = "Modified";
+                _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                _context.SaveChanges();
+
+                foreach (WL_DEPARTMENTS department in departmentsDataResponse)
+                {                    
+                    WL_APPLICATIONFORM_AUDIT audit_appp = new WL_APPLICATIONFORM_AUDIT();
+                    CopyClass.CopyObject(res, ref audit_appp);
+                    audit_appp.ACTION = "Modified";
+                    audit_appp.APPLICATION_STEP_DESCRIPTION = "Distributed to " + department.DEPARTMENT_NAME + " department";
+                    audit_appp.CREATED_DATE = DateTime.Now;
+                    audit_appp.MODIFIED_DATE = DateTime.Now;
+                    audit_appp.CREATED_USER = createdUser;
+                    audit_appp.MODIFIED_USER = createdUser;
+                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
+                    n = SaveChanges();
+                }
+
+
+                
                 return "Application Form resubmitted successfully.";
             }
             else
@@ -562,7 +613,7 @@ namespace C8.eServices.Mvc.Models.Repository
                          
         }
 
-        public bool UpdateApplicationFormStaus(int appId, string appStatus,string comments, string deptComments, string deptName, string deptStatus)
+        public bool UpdateApplicationFormStaus(int appId, string appStatus,string comments, string deptComments, string deptName, string deptStatus,string firstName)
         {           
             WL_APPLICATIONFORM res = GetApplicationFormData(appId);
             var grantWayleave = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
@@ -581,6 +632,17 @@ namespace C8.eServices.Mvc.Models.Repository
             bool isSuccess = SaveChanges();
             if(isSuccess)
             {
+                WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                CopyClass.CopyObject(res, ref audit_app);
+                audit_app.ACTION = "Modified";
+                audit_app.CREATED_DATE = DateTime.Now;
+                audit_app.MODIFIED_DATE = DateTime.Now;
+                audit_app.CREATED_USER = firstName;
+                audit_app.MODIFIED_USER = firstName;
+                //audit_app.cre
+                _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                _context.SaveChanges();
+
                 EmailHelper email = new EmailHelper();
                 string applicationGrantStatus = string.Empty;
 
@@ -602,7 +664,7 @@ namespace C8.eServices.Mvc.Models.Repository
             return isSuccess;
         }
 
-        public bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus)
+        public bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus,string firstName)
         {
             bool isSuccess = false;
             if (!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
@@ -615,6 +677,17 @@ namespace C8.eServices.Mvc.Models.Repository
                 isSuccess = SaveChanges();
                 if (isSuccess)
                 {
+                    WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    CopyClass.CopyObject(res, ref audit_app);
+                    audit_app.ACTION = "Modified";
+                    audit_app.APPLICATION_STEP_DESCRIPTION = deptStatus+" status has been received from "+ deptName +" department.";
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    audit_app.CREATED_USER = firstName;
+                    audit_app.MODIFIED_USER = firstName;
+                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
+
                     EmailHelper email = new EmailHelper();
                     string applicationGrantStatus = string.Empty;
 
@@ -662,6 +735,13 @@ namespace C8.eServices.Mvc.Models.Repository
             bool n = SaveChanges();
             if (n)
             {
+                WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    CopyClass.CopyObject(res, ref audit_app);
+                    audit_app.ACTION = "Modified";
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
                 return 1;
             }
             else

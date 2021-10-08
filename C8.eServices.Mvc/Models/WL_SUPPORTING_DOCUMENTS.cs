@@ -32,6 +32,8 @@ namespace C8.eServices.Mvc.Models
 
         [ForeignKey("APP_ID")]
         public virtual WL_APPLICATIONFORM WL_APPLICATIONFORM { get; set; }
-        
+        //[ForeignKey("AUDIT_ID")]
+        //public virtual WL_APPLICATIONFORM_AUDIT WL_APPLICATIONFORM_AUDIT { get; set; }
+
     }
 }

@@ -38,6 +38,11 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public virtual DbSet<MASTER_INSPECTIONS> MASTER_INSPECTIONS { get; set; }
         public virtual DbSet<WL_INSPECTION_LIST> WL_INSPECTION_LIST { get; set; }
         public virtual DbSet<WL_DECLARATIONS> WL_DECLARATIONS { get; set; }
+        public virtual DbSet<WL_UPLOAD_SIGNATURE> WL_UPLOAD_SIGNATURE { get; set; }
+        public virtual DbSet<WL_APPLICATIONFORM_AUDIT> WL_APPLICATIONFORM_AUDIT { get; set; }
+        public virtual DbSet<WL_ACCOUNT_AUDIT> WL_ACCOUNT_AUDIT { get; set; }
+        public virtual DbSet<UserAudit> UserAudit { get; set; }
+        public virtual DbSet<APPLICATION_PAYMENT_PRICE_AUDIT> APPLICATION_PAYMENT_PRICE_AUDIT { get; set; }
         public virtual DbSet<MASTER_CUSTOMERCARE_CENTERS_REGIONS> MASTER_CUSTOMERCARE_CENTERS_REGIONS { get; set; }
         //public DbSet<SystemUser> SystemUsers { get; set; }
         //public DbSet<SystemUserException> SystemUserException { get; set; }

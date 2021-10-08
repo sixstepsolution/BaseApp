@@ -396,6 +396,7 @@ namespace C8.eServices.Mvc
              .ForMember(dest => dest.KERBS, opt => opt.MapFrom(src => src.KERBS))
              .ForMember(dest => dest.GPS_START_ADDRESS, opt => opt.MapFrom(src => src.GPS_START_ADDRESS))
              .ForMember(dest => dest.GPS_END_ADDRESS, opt => opt.MapFrom(src => src.GPS_END_ADDRESS))
+             .ForMember(dest => dest.SERVICE_TYPE_NEW, opt => opt.MapFrom(src => src.SERVICE_TYPE_NEW))
 
              //.ForMember(dest => dest.ASPH_FOOTWAY, opt => opt.MapFrom(src => src.ASPH_FOOTWAY))
              //.ForMember(dest => dest.INTERL_BLOCK, opt => opt.MapFrom(src => src.INTERL_BLOCK))

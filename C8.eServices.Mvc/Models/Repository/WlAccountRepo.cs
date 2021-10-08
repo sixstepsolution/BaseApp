@@ -127,6 +127,14 @@ namespace C8.eServices.Mvc.Models.Repository
 
                 if (n)
                 {
+                    WL_ACCOUNT_AUDIT audit_app = new WL_ACCOUNT_AUDIT();
+                    CopyClass.CopyObject(acc, ref audit_app);
+                    audit_app.ACTION = "Added";
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    _context.WL_ACCOUNT_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
+
                     dct.Add("success", true);
                     dct.Add("accountNumber", accountNumber);
                     dct.Add("accountUserName", acc.EMAIL);
@@ -197,28 +205,28 @@ namespace C8.eServices.Mvc.Models.Repository
                 //acc.COMPANY_ID = 1;
                 acc.COMPANY_NAME = account.COMPANY_NAME;
                 acc.COMPANY_FULL_NAME = account.COMPANY_FULL_NAME;
-                     acc.COMPANY_REGISTRATION_NUMBER = account.COMPANY_REGISTRATION_NUMBER;
-                     acc.TRADE_LICENSE_EXPIRE_DATE = account.TRADE_LICENSE_EXPIRE_DATE;
-                     //acc.TRADE_LICENSE_FILE = account.TRADE_LICENSE_FILE;
-                     acc.CONTACT_PERSON_FIRST_NAME = account.CONTACT_PERSON_FIRST_NAME;
-                     acc.CONTACT_PERSON_LAST_NAME = account.CONTACT_PERSON_LAST_NAME;
-                     acc.DESIGNATION = account.DESIGNATION;
-                     acc.TELEPHONE_NUMBER = account.TELEPHONE_NUMBER;
-                     acc.MOBILE = account.MOBILE;
-                     acc.EMAIL = account.EMAIL;
-                     acc.FAX = account.FAX;
-                     acc.STREET_NAME = account.STREET_NAME;
-                     acc.CITY = account.CITY;
-                     acc.PROVINCE = account.PROVINCE;
-                     acc.COUNTRY = account.COUNTRY;
-                     acc.POST_CODE = account.POST_CODE;
-                     //acc.REGISTRATION_CERTIFICATE_NAME = account.REGISTRATION_CERTIFICATE_NAME;
-                     //acc.TAX_CERTIFICATE_NAME = account.TAX_CERTIFICATE_NAME;
-                     acc.MODIFIED_BY = 1;
-                     acc.MODIFIED_DATE = dt;
-                     acc.STATUS_ID = account.STATUS_ID;
+                acc.COMPANY_REGISTRATION_NUMBER = account.COMPANY_REGISTRATION_NUMBER;
+                acc.TRADE_LICENSE_EXPIRE_DATE = account.TRADE_LICENSE_EXPIRE_DATE;
+                //acc.TRADE_LICENSE_FILE = account.TRADE_LICENSE_FILE;
+                acc.CONTACT_PERSON_FIRST_NAME = account.CONTACT_PERSON_FIRST_NAME;
+                acc.CONTACT_PERSON_LAST_NAME = account.CONTACT_PERSON_LAST_NAME;
+                acc.DESIGNATION = account.DESIGNATION;
+                acc.TELEPHONE_NUMBER = account.TELEPHONE_NUMBER;
+                acc.MOBILE = account.MOBILE;
+                acc.EMAIL = account.EMAIL;
+                acc.FAX = account.FAX;
+                acc.STREET_NAME = account.STREET_NAME;
+                acc.CITY = account.CITY;
+                acc.PROVINCE = account.PROVINCE;
+                acc.COUNTRY = account.COUNTRY;
+                acc.POST_CODE = account.POST_CODE;
+                //acc.REGISTRATION_CERTIFICATE_NAME = account.REGISTRATION_CERTIFICATE_NAME;
+                //acc.TAX_CERTIFICATE_NAME = account.TAX_CERTIFICATE_NAME;
+                acc.MODIFIED_BY = 1;
+                acc.MODIFIED_DATE = dt;
+                acc.STATUS_ID = account.STATUS_ID;
                 acc.IDENTIFICATION_NUMBER = account.IDENTIFICATION_NUMBER;
-                    acc.SUBURB = account.SUBURB;
+                acc.SUBURB = account.SUBURB;
                 acc.GENDER = account.GENDER;
                 //acc.IS_ACTIVE = "Y",
                 //PASSWORD = CommonModel.CreateRandomPassword(8)
@@ -259,6 +267,13 @@ namespace C8.eServices.Mvc.Models.Repository
 
                 if (n)
                 {
+                    WL_ACCOUNT_AUDIT audit_app = new WL_ACCOUNT_AUDIT();
+                    CopyClass.CopyObject(acc, ref audit_app);
+                    audit_app.ACTION = "Modified";
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    _context.WL_ACCOUNT_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
                     dct.Add("success", true);
                      //EmailNotifications.SentUserNamePassword(acc.EMAIL, acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME, acc.EMAIL, acc.PASSWORD);
                    // msg = "Wayleave account created sucessfully!";

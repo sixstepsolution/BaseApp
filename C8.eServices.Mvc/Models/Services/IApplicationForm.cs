@@ -16,8 +16,8 @@ namespace C8.eServices.Mvc.Models.Services
         int AddApplicationForm(WL_APPLICATIONFORM applicationForm);
         string UpdateApplicationForm(WL_APPLICATIONFORM applicationForm, HttpFileCollection files, string browser);
         int UpdateApplicationInspectiondata(int appId,string inspectionStatus,DateTime? inspectiondate, List<PreInspectionDataModel> pid);
-        bool UpdateApplicationFormStaus(int appId, string appStatus,string comments,string deptComments, string deptName, string deptStatus);
-        bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus);
+        bool UpdateApplicationFormStaus(int appId, string appStatus,string comments,string deptComments, string deptName, string deptStatus, string deptUsername);
+        bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus, string deptUsername);
         WL_APPLICATIONFORM GetApplicationFormData(int id);
         int DeleteApplicationForm(int id);
 

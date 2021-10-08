@@ -86,7 +86,6 @@ namespace C8.eServices.Mvc.Controllers
                 return Redirect("../home/index");
 
             }
-
             return View();
         }
 
@@ -549,11 +548,14 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.inspectionDate = "";
             ViewBag.applicationDate = "";
             ViewBag.applicationEndDate = "";
+            ViewBag.signature = "";
             ViewBag.suburb = "";
             ViewBag.UserType = "";
             var res = db.WL_APPLICATIONFORM.Find(pdf.AppId);
             if (res != null)
             {
+                var signatureDetails = db.WL_UPLOAD_SIGNATURE.Where(s=>s.IS_ACTIVE=="Y").FirstOrDefault();
+                ViewBag.signature = signatureDetails!=null? signatureDetails.DOCUMENT_NAME:"";
                 //int acNo = Convert.ToInt32(res.PROPERTYOWNER_ACCOUNT_NO??"0");
                 var address = db.WL_ACCOUNTS.Where(s => s.ACCOUNT_NUMBER == res.PROPERTYOWNER_ACCOUNT_NO).FirstOrDefault();//!=null? db.WL_ACCOUNTS.Where(s => s.ACCOUNT_ID == acNo).FirstOrDefault().
                 //ViewBag.inspectionDate =res.INSPECTION_DATE != null ? Convert.ToDateTime(res.INSPECTION_DATE).ToString("yyyy-MM-dd") : "";
@@ -620,6 +622,54 @@ namespace C8.eServices.Mvc.Controllers
 
         public ActionResult UploadSignature()
         {
+            var signDetails = db.WL_UPLOAD_SIGNATURE.ToList();
+            ViewBag.signatureList = signDetails.Count>0? signDetails.FirstOrDefault().DOCUMENT_NAME:null;
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+
+            }
+
+            return View();
+        }
+
+        public ActionResult AuditTrail()
+        {
+            //var appDetails = db.WL_APPLICATIONFORM_AUDIT.ToList();
+
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            ViewBag.applicationList = null;
+            ViewBag.applicationNo = null;
+            ViewBag.errorStatus = null;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult AuditTrail(string searchKeyword)
+        {
+
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            ViewBag.applicationNo = searchKeyword;
+            ViewBag.applicationList = null;
+            ViewBag.errorStatus = null;
+            var appDetails = db.WL_APPLICATIONFORM_AUDIT.Where(s=>s.APPLICATION_NUMBER== searchKeyword).OrderBy(d=>d.AUDIT_ID).ToList();
+            if (appDetails.Count > 0)
+            {
+                ViewBag.applicationList = appDetails;
+            }
+            else
+            {
+                ViewBag.errorStatus = "No result found!";
+                ViewBag.applicationList = null;
+            }            
             return View();
         }
     }

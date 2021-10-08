@@ -2323,6 +2323,7 @@
     <Content Include="Content\wayleaveStyles\assets\Content\select.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\select.min.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\Site.css" />
+    <Content Include="Content\wayleaveStyles\assets\Content\Timeline.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\Timeline_New.css" />
     <Content Include="Content\wayleaveStyles\assets\Content\toggle.css" />
     <Content Include="Content\wayleaveStyles\assets\fonts\glyphicons-halflings-regular.svg" />
@@ -3951,6 +3952,58 @@
     <Compile Include="Migrations\202109290910388_addingApplicationPrice.Designer.cs">
       <DependentUpon>202109290910388_addingApplicationPrice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202110040635141_addingPropertiesinApplicationform.cs" />
+    <Compile Include="Migrations\202110040635141_addingPropertiesinApplicationform.Designer.cs">
+      <DependentUpon>202110040635141_addingPropertiesinApplicationform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110060608519_adduploadsignatureclass.cs" />
+    <Compile Include="Migrations\202110060608519_adduploadsignatureclass.Designer.cs">
+      <DependentUpon>202110060608519_adduploadsignatureclass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110060611379_adduploadsignaturetable.cs" />
+    <Compile Include="Migrations\202110060611379_adduploadsignaturetable.Designer.cs">
+      <DependentUpon>202110060611379_adduploadsignaturetable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110070640309_addfileduploadsignaturetable.cs" />
+    <Compile Include="Migrations\202110070640309_addfileduploadsignaturetable.Designer.cs">
+      <DependentUpon>202110070640309_addfileduploadsignaturetable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071142330_addaudijtta.cs" />
+    <Compile Include="Migrations\202110071142330_addaudijtta.Designer.cs">
+      <DependentUpon>202110071142330_addaudijtta.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071205338_addwayleaveaccountaudit.cs" />
+    <Compile Include="Migrations\202110071205338_addwayleaveaccountaudit.Designer.cs">
+      <DependentUpon>202110071205338_addwayleaveaccountaudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071610290_adduserauditt.cs" />
+    <Compile Include="Migrations\202110071610290_adduserauditt.Designer.cs">
+      <DependentUpon>202110071610290_adduserauditt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071618365_deleteuserauditt.cs" />
+    <Compile Include="Migrations\202110071618365_deleteuserauditt.Designer.cs">
+      <DependentUpon>202110071618365_deleteuserauditt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071638414_adddduserauditt.cs" />
+    <Compile Include="Migrations\202110071638414_adddduserauditt.Designer.cs">
+      <DependentUpon>202110071638414_adddduserauditt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071658437_addpaymentpriceaudit.cs" />
+    <Compile Include="Migrations\202110071658437_addpaymentpriceaudit.Designer.cs">
+      <DependentUpon>202110071658437_addpaymentpriceaudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071815478_addfieldinapplicationformudit.cs" />
+    <Compile Include="Migrations\202110071815478_addfieldinapplicationformudit.Designer.cs">
+      <DependentUpon>202110071815478_addfieldinapplicationformudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071819316_updatefieldinwayleaveaccountaudit.cs" />
+    <Compile Include="Migrations\202110071819316_updatefieldinwayleaveaccountaudit.Designer.cs">
+      <DependentUpon>202110071819316_updatefieldinwayleaveaccountaudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110071941046_updatecreateduseraudit.cs" />
+    <Compile Include="Migrations\202110071941046_updatecreateduseraudit.Designer.cs">
+      <DependentUpon>202110071941046_updatecreateduseraudit.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountInformation.cs" />
@@ -3963,6 +4016,7 @@
     <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="Models\ApplicationUserRole.cs" />
     <Compile Include="Models\APPLICATION_PAYMENT_PRICE.cs" />
+    <Compile Include="Models\APPLICATION_PAYMENT_PRICE_AUDIT.cs" />
     <Compile Include="Models\AppSetting.cs" />
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Audits\AccountAudit.cs" />
@@ -4055,6 +4109,7 @@
     <Compile Include="Models\CesarSMS.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Comm\CommonModel.cs" />
+    <Compile Include="Models\Comm\CopyClass.cs" />
     <Compile Include="Models\Comm\Pagenation.cs" />
     <Compile Include="Models\Comm\PaymentHelper.cs" />
     <Compile Include="Models\Comm\SessionControllerHandler.cs" />
@@ -4081,6 +4136,7 @@
     <Compile Include="Models\Mapings\ApplicationInputClaimModel.cs" />
     <Compile Include="Models\Mapings\ApplicationInputModel.cs" />
     <Compile Include="Models\Mapings\ApplicationModel.cs" />
+    <Compile Include="Models\Mapings\ApplicationPaymentPriceModel.cs" />
     <Compile Include="Models\Mapings\MasterCustomercareCentersModel.cs" />
     <Compile Include="Models\Mapings\MasterInputCalimsModel.cs" />
     <Compile Include="Models\Mapings\PreInspectionDataModel.cs" />
@@ -4239,6 +4295,7 @@
     <Compile Include="Models\TitleType.cs" />
     <Compile Include="Models\UnitOfmeasureType.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserAudit.cs" />
     <Compile Include="Models\UserIEFTTReport.cs" />
     <Compile Include="Models\UserIEFTReport.cs" />
     <Compile Include="Models\UserMasterpassTReport.cs" />
@@ -4252,14 +4309,17 @@
     <Compile Include="Models\UserLoginsReport.cs" />
     <Compile Include="Models\UserRegistrationReports.cs" />
     <Compile Include="Models\WL_ACCOUNT.cs" />
+    <Compile Include="Models\WL_ACCOUNT_AUDIT.cs" />
     <Compile Include="Models\WL_ACCO_CONTACT.cs" />
     <Compile Include="Models\WL_APPLICATIONFORM.cs" />
+    <Compile Include="Models\WL_APPLICATIONFORM_AUDIT.cs" />
     <Compile Include="Models\WL_CONTACT_PERSONS.cs" />
     <Compile Include="Models\WL_DECLARATIONS.cs" />
     <Compile Include="Models\WL_DEPARTMENTS.cs" />
     <Compile Include="Models\WL_INSPECTION_LIST.cs" />
     <Compile Include="Models\WL_REGIONS.cs" />
     <Compile Include="Models\WL_SUPPORTING_DOCUMENTS.cs" />
+    <Compile Include="Models\WL_UPLOAD_SIGNATURE.cs" />
     <Compile Include="Models\WL_WORK_LOCATIONS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Proxies\Copy.cs" />
@@ -4649,6 +4709,8 @@
     <Content Include="Views\WL\UploadSignature.cshtml" />
     <Content Include="Views\WL\AddDepartmentUsers.cshtml" />
     <Content Include="Views\WL\UpdatePaymentPrice.cshtml" />
+    <Content Include="Views\Home\ChangePassword.cshtml" />
+    <Content Include="Views\WL\AuditTrail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4713,6 +4775,45 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202109290910388_addingApplicationPrice.resx">
       <DependentUpon>202109290910388_addingApplicationPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110040635141_addingPropertiesinApplicationform.resx">
+      <DependentUpon>202110040635141_addingPropertiesinApplicationform.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110060608519_adduploadsignatureclass.resx">
+      <DependentUpon>202110060608519_adduploadsignatureclass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110060611379_adduploadsignaturetable.resx">
+      <DependentUpon>202110060611379_adduploadsignaturetable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110070640309_addfileduploadsignaturetable.resx">
+      <DependentUpon>202110070640309_addfileduploadsignaturetable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071142330_addaudijtta.resx">
+      <DependentUpon>202110071142330_addaudijtta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071205338_addwayleaveaccountaudit.resx">
+      <DependentUpon>202110071205338_addwayleaveaccountaudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071610290_adduserauditt.resx">
+      <DependentUpon>202110071610290_adduserauditt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071618365_deleteuserauditt.resx">
+      <DependentUpon>202110071618365_deleteuserauditt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071638414_adddduserauditt.resx">
+      <DependentUpon>202110071638414_adddduserauditt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071658437_addpaymentpriceaudit.resx">
+      <DependentUpon>202110071658437_addpaymentpriceaudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071815478_addfieldinapplicationformudit.resx">
+      <DependentUpon>202110071815478_addfieldinapplicationformudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071819316_updatefieldinwayleaveaccountaudit.resx">
+      <DependentUpon>202110071819316_updatefieldinwayleaveaccountaudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110071941046_updatecreateduseraudit.resx">
+      <DependentUpon>202110071941046_updatecreateduseraudit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

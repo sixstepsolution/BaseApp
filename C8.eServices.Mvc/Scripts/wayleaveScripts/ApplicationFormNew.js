@@ -505,7 +505,9 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 appFormData.APP_ID = data.apP_ID;
                 ServiceDocumentListFromServer = [];
                 $('#APPLICATION_STEP_DESCRIPTION_STATUS').show();
+                $('#SERVICE_TYPE_NEW').val(data.servicE_TYPE_NEW);
                 $('#PROPERTYOWNER_ACCOUNT_NO').val(data.propertyowneR_ACCOUNT_NO);
+                $('#SERVICE_TYPE_NEW').val(data.servicE_TYPE_NEW);
                 $('#PROPERTYOWNER_NAME').val(data.propertyowneR_NAME);
                 $('#PROPERTYOWNER_SURNAME').val(data.propertyowneR_SURNAME);
                 $('#PROPERTYOWNER_CONTACTNO').val(data.propertyowneR_CONTACTNO);
@@ -666,9 +668,13 @@ $.fn.AddLocations = function () {
 
 //Open Payment gateway modal
 $.fn.SubmitApplication = function () {
+    //var startAdrs = $("#GPS_START_ADDRESS").val('Nellore');
+    //var endAdrs = $("#GPS_END_ADDRESS").val('Chennai');
     var startAdrs = $("#GPS_START_ADDRESS").val();
     var endAdrs = $("#GPS_END_ADDRESS").val();
-    if (startAdrs != "" && startAdrs != undefined && endAdrs != "" && endAdrs != undefined) {
+    var startDt = $("#STARTING_DATE").val();
+    var serviceType = $("#SERVICE_TYPE_NEW").val();
+    if (startAdrs != "" && startAdrs != undefined && endAdrs != "" && endAdrs != undefined && startDt != "" && startDt != undefined && serviceType != "" && serviceType != undefined) {
 
     }
     else {
@@ -961,6 +967,7 @@ $.fn.RemoveUploadedFile = function (id) {
 
 // Set form data values
 $.fn.GetFormdataValues = function () {
+    appFormData.SERVICE_TYPE_NEW = $('#SERVICE_TYPE_NEW').val();
     appFormData.PROPERTYOWNER_ACCOUNT_NO = $('#PROPERTYOWNER_ACCOUNT_NO').val();
     appFormData.PROPERTYOWNER_NAME = $('#PROPERTYOWNER_NAME').val();
     appFormData.PROPERTYOWNER_SURNAME = $('#PROPERTYOWNER_SURNAME').val();

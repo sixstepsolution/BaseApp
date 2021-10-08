@@ -144,22 +144,35 @@ $.fn.uploadDepartmentSignature = function () {
     $('#isAppLoading').show();
     var formData = new FormData();
     var files = $('#signaturefile').get(0).files;
-    
+    var ia = $('#IS_ACTIVE').val();
 
-    if (files.length > 0) {
+    if (files.length > 0 && (ia != "" && ia != undefined)) {
 
-        uploadSignatureData.departmentName = $('#CurrentUserDepartmentName').val();
-        uploadSignatureData.userName = $('#CurrentUserName').val();
-        uploadSignatureData.userId = $('#CurrentUserId').val();
-        uploadSignatureData.userRole = $('#CurrentUserRole').val();
+        uploadSignatureData.IS_ACTIVE = $('#IS_ACTIVE').val();
+        //uploadSignatureData.userName = $('#CurrentUserName').val();
+        //uploadSignatureData.userId = $('#CurrentUserId').val();
+        //uploadSignatureData.userRole = $('#CurrentUserRole').val();
         //alert(files.length);
         ////$.fn.GetFormdataValues();
         //alert($("#CurrentUserDepartmentName").val());
         //alert($("#CurrentUserName").val());
         formData.append("userData", JSON.stringify(uploadSignatureData));
         //console.log(wayleaveAccount);
+        var isUploadDocumentSizeNotValid = false;
         for (var i = 0; i < files.length; i++) {
-            formData.append("signaturefile", files[i]);
+            var isFileSizeValid = $.fn.CheckFileSize("signaturefile", files);
+            if (isFileSizeValid) {
+                formData.append("signaturefile", files[i]);
+            }
+            else {
+                isUploadDocumentSizeNotValid = true;
+            }
+            
+        }
+
+
+        if (isUploadDocumentSizeNotValid) {
+            return;
         }
 
         $.ajax({
@@ -175,7 +188,27 @@ $.fn.uploadDepartmentSignature = function () {
                 console.log("======Result=========");
                 console.log(data);
                 //console.log(data.accountUserName);
-                $('#isAppLoading').hide();                
+                $('#isAppLoading').hide();
+                if (data.update) {
+                    toastr.success(data.update, "Success", {
+                        "timeOut": "3000",
+                        "extendedTImeout": "5000",
+                        "closeButton": true,
+                    });
+                    setTimeout(function () {
+                        window.location.href = "../WL/UploadSignature";
+                    }, 5000);
+                }
+                else if (data.add) {
+                    toastr.success(data.add, "Success", {
+                        "timeOut": "3000",
+                        "extendedTImeout": "5000",
+                        "closeButton": true,
+                    });
+                    setTimeout(function () {
+                        window.location.href = "../WL/UploadSignature";
+                    }, 5000);
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
                 console.log(xhr);
@@ -186,7 +219,38 @@ $.fn.uploadDepartmentSignature = function () {
             }
         });
     }
+    else {
+        $('#isAppLoading').hide();
+        toastr.warning('* fields are required!');
+    }
     
+}
+
+$.fn.CheckFileSize = function (id, fileContent) {
+    console.log(fileContent);
+    //$('#' + decsionID).get(0).files;
+    if (!(document.getElementById(id).files[0].type.match(/image.*/))) {
+        //alert('You can\'t upload this type of file.');
+        $('#isAppLoading').hide();
+        toastr.warning('Please upload image file!', "Warning", {
+            "timeOut": "30000",
+            "extendedTImeout": "50000",
+            "closeButton": true
+        });
+        return;
+    }
+    if (fileContent[0].size > 5000000) {
+        toastr.warning('Please upload file size less than 5MB <br/><b style="font-size:9pt!important">' + fileContent[0].name + '</b>', "Warning", {
+            "timeOut": "30000",
+            "extendedTImeout": "50000",
+            "closeButton": true
+        });
+        $('#' + id).val(null);
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
 

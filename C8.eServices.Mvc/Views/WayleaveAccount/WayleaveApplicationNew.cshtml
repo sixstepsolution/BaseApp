@@ -377,6 +377,29 @@
                                             APPLICATION IS HEREBY MADE BY THE UNDERSIGNED TO DO WORK IN THE ROAD RESERVE AS DETAILED BELOW<br />
                                             The application undertakes to do the work according to the latest edition of the CODE OF PRACTICE FOR WORK IN THE PUBLIC ROAD RESERVE. NO WORK SHALL COMMENCE BEFORE A WAYLEAVE IS ISSUED.<br />
                                         </label>
+
+                                        <table>
+                                            <tr>
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Service Type</label>
+                                                        <select style="border-radius: 4px"
+                                                                class="form-control" name="SERVICE_TYPE_NEW" id="SERVICE_TYPE_NEW" required>
+                                                            <option value="" selected>Make a selection</option>
+                                                            <option value="New Services">New Services</option>
+                                                            <option value="Maintenance Work">Maintenance Work</option>
+                                                            <option value="Emergency Work">Emergency Work</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                                <td style="width:  15.5%"></td>
+                                            </tr>
+                                        </table>
+
                                     </div>
                                 </div>
                             </div>
@@ -625,14 +648,10 @@
                                             <tr>
                                                 <td style="width:  15.5%">
                                                     <div class="input-label-date">
-                                                        <label>Starting Date</label>
+                                                        <label class="control-label">Starting Date</label>
                                                         <div class="input-group" style="width: 100%">
-                                                            @*<span class="input-group-addon"
-                                                                      style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
-                                                                    <i class="fa fa-calendar"></i>
-                                                                </span>*@
                                                             <input type="date" onblur="testdate()" autocomplete="off" style="border-radius: 4px !important;" id="STARTING_DATE"
-                                                                   class="form-control border-radius" name="STARTING_DATE" />
+                                                                   class="form-control border-radius" name="STARTING_DATE" required />
 
                                                         </div>
                                                     </div>
@@ -942,6 +961,13 @@
                                 </td>
                                 <td style="width:10%!important"></td>
                             </tr>
+                            @if(Session["wayleaveAppFee"]!=null)
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center" style="font-size:10pt!important">Wayleave Application Fee: R <b style="color:green">@Session["wayleaveAppFee"].ToString()</b></td>
+                                </tr>
+                            }
+                            
                             <tr id="ShowPaynowButtons" style="height:100px!important">
                                 <td style="width:30%!important"></td>
                                 <td class="text-center">

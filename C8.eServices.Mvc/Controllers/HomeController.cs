@@ -23,6 +23,7 @@ namespace C8.eServices.Mvc.Controllers
     {
         //BaseHelper _base = new BaseHelper();
         private eServicesDbContext db = new eServicesDbContext();
+        private WayleaveDbContext dbWayleave = new WayleaveDbContext();
         #region Home Index
         //
         // GET: /Home/
@@ -189,7 +190,6 @@ namespace C8.eServices.Mvc.Controllers
         }
         #endregion
 
-
         #region Wayleave Account Login POST
         //
         // POST: /Account/Login
@@ -215,11 +215,18 @@ namespace C8.eServices.Mvc.Controllers
 
                 if (ModelState.IsValid)
                 {
+                    if (model.Password.Contains("TEMP!@*"))
+                    {
+                        var enc = new AesCrypto();
+                        return Redirect("../Home/ChangePassword?e1=" + enc.Encrypt(model.UserName) + "&e2=" + enc.Encrypt(model.Password));// RedirectToAction("Index", "Home");
+                    }
                     var result = context.WL_ACCOUNTS.Where(s => s.EMAIL == model.UserName && s.PASSWORD == model.Password).FirstOrDefault();
                     if (result!=null)
                     {
+                        Session["wayleaveAppFee"] = context.APPLICATION_PAYMENT_PRICE.FirstOrDefault()!=null?Convert.ToString(context.APPLICATION_PAYMENT_PRICE.FirstOrDefault().APPLICATION_PRICE):"";
                         Session["wayleaveaccountId"] = result.ACCOUNT_ID;
                         Session["wayleaveUserName"] = result.EMAIL;
+                        Session["wayleaveAccountUserName!@*"] = result.CONTACT_PERSON_FIRST_NAME+" "+result.CONTACT_PERSON_LAST_NAME;
                         Session["wayleaveCompanyId"] = result.COMPANY_ID;
                         Session["wayleaveAccountNumber"] = result.ACCOUNT_NUMBER;
                         return RedirectToAction("Index", "WayleaveAccount");
@@ -237,6 +244,73 @@ namespace C8.eServices.Mvc.Controllers
             }
         }
         #endregion
+
+        #region Change Password GET
+        //
+        // GET: /Home/ChangePassword
+        [HttpGet]
+        public ActionResult ChangePassword(string e1 = null, string e2 = null)
+        {
+            ViewBag.result = "";
+            ViewBag.errorResult = "";
+            if (e1 != null && e2 != null)
+            {
+                e1 = e1.Replace(" ", "+");
+                var enc = new AesCrypto();
+                ViewBag.username = enc.Decrypt(e1);
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("WayleaveLogin", "Home");
+            }
+        }
+        #endregion
+
+
+        #region Change Password POST
+        //
+        // GET: /Home/ChangePassword
+        [HttpPost]
+        public ActionResult ChangePassword(string hdnUserName, string oldPassword, string newPassword, string retypeNewPassword)
+        {
+            ViewBag.result = "";
+            ViewBag.errorResult = "";
+            ViewBag.username = hdnUserName;
+            TempData["changePasswordResult"] = "";
+            if (oldPassword.Contains("TEMP!@*"))
+            {
+                if (newPassword == retypeNewPassword)
+                {
+                    var accountdetails = dbWayleave.WL_ACCOUNTS.Where(s => s.EMAIL == hdnUserName).FirstOrDefault();
+                    if (accountdetails != null)
+                    {
+                        accountdetails.PASSWORD = newPassword;
+                        dbWayleave.SaveChanges();
+                        TempData["changePasswordResult"] = "Password changed successfully!";
+                        return RedirectToAction("WayleaveLogin", "Home");
+                    }
+                    else
+                    {
+                        ViewBag.errorResult = "Invalid account details";
+                        return View();
+                    }
+                }
+                else
+                {
+                    ViewBag.errorResult = "New password and re-type new password does not match!";
+                    return View();
+                }
+            }
+            else
+            {
+                ViewBag.errorResult = "Invalid current password!";
+                return View();
+            }
+        }
+
+        #endregion
+
 
         ////#region Account Login POST
         //////

@@ -482,12 +482,21 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Dictionary<string, object> res = new Dictionary<string, object>();
                 var FormData = HttpContext.Current.Request.Form["FormData"];
-                var applicationFormResponse = JsonConvert.DeserializeObject<APPLICATION_PAYMENT_PRICE>(FormData);
+                var applicationFormResponse = JsonConvert.DeserializeObject<ApplicationPaymentPriceModel>(FormData);
                 var priceData = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
                 if (priceData!=null)
                 {
                     priceData.APPLICATION_PRICE = applicationFormResponse.APPLICATION_PRICE;
                     priceData.MODIFIED_DATE = DateTime.Now;
+
+                    APPLICATION_PAYMENT_PRICE_AUDIT audit_app = new APPLICATION_PAYMENT_PRICE_AUDIT();
+                    CopyClass.CopyObject(priceData, ref audit_app);
+                    audit_app.ACTION = "Modified";
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    audit_app.CREATED_BY = applicationFormResponse.DEPARTMENT_USER;
+                    audit_app.MODIFIED_BY = applicationFormResponse.DEPARTMENT_USER;
+                    db.APPLICATION_PAYMENT_PRICE_AUDIT.Add(audit_app);
                     db.SaveChanges();
                     res.Add("update", "Application price updated successfully!");
                     return Ok(res);
@@ -498,6 +507,16 @@ namespace C8.eServices.Mvc.Controllers
                     ap.APPLICATION_PRICE = applicationFormResponse.APPLICATION_PRICE;
                     ap.CREATED_DATE = DateTime.Now;
                     db.APPLICATION_PAYMENT_PRICE.Add(ap);
+
+                    APPLICATION_PAYMENT_PRICE_AUDIT audit_app = new APPLICATION_PAYMENT_PRICE_AUDIT();
+                    CopyClass.CopyObject(ap, ref audit_app);
+                    audit_app.ACTION = "Added";
+                    audit_app.CREATED_BY = applicationFormResponse.DEPARTMENT_USER;
+                    audit_app.MODIFIED_BY = applicationFormResponse.DEPARTMENT_USER;
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    db.APPLICATION_PAYMENT_PRICE_AUDIT.Add(audit_app);
+
                     db.SaveChanges();
                     res.Add("success", "Application price saved successfully!");
                     return Ok(res);
@@ -580,7 +599,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             try
             {
-                bool res = _appFrom.UpdateApplicationFormStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus);
+                bool res = _appFrom.UpdateApplicationFormStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus,inputClaims.first_name);
 
                 if (res)
                 {                    
@@ -633,7 +652,7 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 //UpdateCirculatedDepartmentStaus
-                bool res = _appFrom.UpdateCirculatedDepartmentStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus);
+                bool res = _appFrom.UpdateCirculatedDepartmentStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus,inputClaims.first_name);
 
                 if (res)
                 {

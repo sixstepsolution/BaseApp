@@ -81,6 +81,7 @@ namespace C8.eServices.Mvc.Models.Mapings
 
         public DateTime? APPLICATION_GENERATION_DATE { get; set; }
         public string IDENTIFICATION_NUMBER { get; set; }
+        public string SERVICE_TYPE_NEW { get; set; }
         public string GENDER { get; set; }
         public DateTime? APPLICATION_DEADLINE_DATE { get; set; }
         public string IS_ACTIVE { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C8.eServices.Mvc.Models.Comm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +43,8 @@ namespace C8.eServices.Mvc.Models.EmailBodys
 
         public static StringBuilder SentForgotPasswordDetails(string name, string username, string pass, string accountNumber)
         {
-
+            string pwd = CommonModel.CreateRandomPassword(8);
+            pwd = pwd + "TEMP!@*";
             StringBuilder strBulBodyContent = new StringBuilder();
             strBulBodyContent.Append("<html>");
             strBulBodyContent.Append("<head>");
@@ -54,7 +56,7 @@ namespace C8.eServices.Mvc.Models.EmailBodys
             strBulBodyContent.Append("<div>Please find the below account details</div><br/>");
             strBulBodyContent.Append("<div>Account number: " + accountNumber + "</div><br/>");
             strBulBodyContent.Append("<div>Username: " + username + "</div><br/>");
-            strBulBodyContent.Append("<div>Password: " + pass + "</div><br/>");
+            strBulBodyContent.Append("<div>Password: " + pwd + "</div><br/>");
             string url = System.Web.HttpContext.Current.Request.Url.AbsoluteUri;
             string urlnew = url.Substring(0, url.LastIndexOf('/'));
             //strBulBodyContent.Append("<div style='width:90%;text-align:left;margin-top:20px;margin-bottom:20px;font-size:10pt;padding-left:10px'>");
