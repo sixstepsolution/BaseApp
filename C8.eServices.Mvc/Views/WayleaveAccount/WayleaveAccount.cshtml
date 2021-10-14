@@ -149,7 +149,10 @@
         if (sessionInfo != undefined && sessionInfo != "") {
             $.fn.LoadWayleaveAccountDetails(sessionInfo, updateAccount);
             $.fn.LoadApplicationsAlertsWithCounts('o');
-        }  
+        }
+        else {
+            $("#ShowConfirmPassword").show();
+        }
         if (updateAccount != undefined && updateAccount != "") {
             //alert(updateAccount);
             $('#accordionApprove').hide();
@@ -515,18 +518,32 @@
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
+                                                        <label>Fax No</label>
+                                                        <input type="text" style="border-radius: 4px" id="fax"
+                                                               class="form-control numbersOnly" name="Fax" />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>                                                
+                                                <td style="width:  15.5%">
+                                                    <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Email</label>
                                                         <input type="text" style="border-radius: 4px" onkeyup="$.fn.validateEmail('email')" @*ng-pattern="emailFormat"*@ id="email"
                                                                class="form-control" name="Email" required />
                                                     </div>
                                                 </td>
-                                            </tr>
-                                            <tr>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
-                                                        <label>Fax No</label>
-                                                        <input type="text" style="border-radius: 4px" id="fax"
-                                                               class="form-control numbersOnly" name="Fax" />
+                                                        <label class="control-label">Password</label>
+                                                        <input type="password" autocomplete="off" style="border-radius: 4px" onblur="$.fn.ValidatePassword('PASSWORD')" id="PASSWORD" required
+                                                               class="form-control" name="PASSWORD" />
+                                                    </div>
+                                                </td>
+                                                <td style="width:  15.5%;display:none!important" id="ShowConfirmPassword">
+                                                    <div class="input-group input-label" style="width: 100%">
+                                                        <label class="control-label">Confirm Password</label>
+                                                        <input type="password" style="border-radius: 4px" onblur="$.fn.CheckConfirmPassword('PASSWORD','CONFIRMPASSWORD')" id="CONFIRMPASSWORD"
+                                                               class="form-control" name="CONFIRMPASSWORD" />
                                                     </div>
                                                 </td>
                                             </tr>

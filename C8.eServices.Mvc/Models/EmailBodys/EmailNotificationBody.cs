@@ -158,6 +158,25 @@ namespace C8.eServices.Mvc.Models.EmailBodys
             return strBulBodyContent;
         }
 
+        public static StringBuilder SentApplicationFormStatustoConsultant(string firstName, string lastName, string accountNumber)
+        {
+            StringBuilder strBulBodyContent = new StringBuilder();
+            strBulBodyContent.Append("<html>");
+            strBulBodyContent.Append("<head>");
+            strBulBodyContent.Append("</head>");
+            strBulBodyContent.Append("<body>");
+            strBulBodyContent.Append("<div>");
+            strBulBodyContent.Append("<div>Dear " + firstName + " " + lastName + ",</div><br /><br/>");
+            strBulBodyContent.Append("<div>Wayleave application <b>" + accountNumber + "</b> has been distributed to departments for review.</div><br />");
+            
+            strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
+            strBulBodyContent.Append("Wayleave");
+            strBulBodyContent.Append("</div>");
+            strBulBodyContent.Append("</body>");
+            strBulBodyContent.Append("</html>");
+            return strBulBodyContent;
+        }
+
         public static StringBuilder SentApplicationtoDepartments(string userName, string applicationNumber, string department, string stepDescription,DateTime? createdDate, DateTime? completionDate)
         {
             StringBuilder strBulBodyContent = new StringBuilder();

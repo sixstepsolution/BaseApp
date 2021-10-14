@@ -101,7 +101,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     IDENTIFICATION_NUMBER= account.IDENTIFICATION_NUMBER,
                     SUBURB = account.SUBURB,
                     GENDER = account.GENDER,
-                    PASSWORD = CommonModel.CreateRandomPassword(8)
+                    PASSWORD =account.PASSWORD,//CommonModel.CreateRandomPassword(8)
 
                 };
                 // _context.Entry(account.MASTER_STATUS_TYPES).State = System.Data.Entity.EntityState.Unchanged;

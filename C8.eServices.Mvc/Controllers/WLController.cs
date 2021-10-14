@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using C8.eServices.Mvc.Helpers;
 using C8.eServices.Mvc.Keys;
+using System.Net;
+using C8.eServices.Mvc.Models.Comm;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -644,13 +646,29 @@ namespace C8.eServices.Mvc.Controllers
                 return Redirect("../home/index");
             }
             ViewBag.applicationList = null;
+            //var ttt = db.WL_ACCOUNTS.Select(s => new { s.CONTACT_PERSON_FIRST_NAME, s.CONTACT_PERSON_LAST_NAME, s.ACCOUNT_ID }).Distinct().ToList();
+            //ViewBag.VBMobileList = new SelectList(ttt, "CONTACT_PERSON_FIRST_NAME", "CONTACT_PERSON_FIRST_NAME");
+
+
+            //var oppList = (from o in db.WL_ACCOUNTS
+            //               select new SelectListItem { Value = o.CONTACT_PERSON_FIRST_NAME+""+o.CONTACT_PERSON_LAST_NAME, Text = o.CONTACT_PERSON_FIRST_NAME + "" + o.CONTACT_PERSON_LAST_NAME }).Distinct().ToList<SelectListItem>();
+
+            ////insert element at first position
+            //oppList.Insert(0, new SelectListItem() { Value = "All", Text = "Select All" });
+            //ViewBag.VBUserList = oppList;
+
+
+
             ViewBag.applicationNo = null;
             ViewBag.applicationStatus = null;
+            ViewBag.appStartDate = null;
+            ViewBag.appEndDate = null;
+            ViewBag.appUsername = null;
             ViewBag.errorStatus = null;
             return View();
         }
         [HttpPost]
-        public ActionResult AuditTrail(string searchKeyword,string status)
+        public ActionResult AuditTrail(string searchKeyword,string status,DateTime? startDate,DateTime? endDate, string username)
         {
             if (Session["ekurhuleniData"] == null)
             {
@@ -659,14 +677,19 @@ namespace C8.eServices.Mvc.Controllers
             }
             ViewBag.applicationNo = searchKeyword;
             ViewBag.applicationStatus = status;
-            ViewBag.applicationList = null;
+            ViewBag.appStartDate = startDate;
+            ViewBag.appEndDate = endDate;
+            ViewBag.appUsername = username;
             ViewBag.errorStatus = null;
-            if (String.IsNullOrEmpty(searchKeyword) && String.IsNullOrEmpty(status))
-            {
-                ViewBag.errorStatus = "No result found!";
-                ViewBag.applicationList = null;
-                return View();
-            }
+            //var ttt = db.WL_ACCOUNTS.Select(s => new { s.CONTACT_PERSON_FIRST_NAME, s.CONTACT_PERSON_LAST_NAME, s.ACCOUNT_ID }).Distinct().ToList();
+            //ViewBag.VBMobileList = new SelectList(ttt, "CONTACT_PERSON_FIRST_NAME", "CONTACT_PERSON_FIRST_NAME");
+           
+            //if (String.IsNullOrEmpty(searchKeyword) && String.IsNullOrEmpty(status))
+            //{
+            //    ViewBag.errorStatus = "No result found!";
+            //    ViewBag.applicationList = null;
+            //    return View();
+            //}
             var appDetails = db.WL_APPLICATIONFORM_AUDIT.OrderBy(d => d.AUDIT_ID).ToList();
             if (!String.IsNullOrEmpty(searchKeyword))
             {
@@ -674,9 +697,36 @@ namespace C8.eServices.Mvc.Controllers
             }
             if (!String.IsNullOrEmpty(status))
             {
-                appDetails = appDetails.Where(s => s.APPLICATION_STEP_DESCRIPTION.Contains(status)).ToList();
+                if (status == "All")
+                {
+                    appDetails = appDetails.ToList();
+                }
+                else
+                {
+                    appDetails = appDetails.Where(s => s.ACTION.Contains(status)).ToList();
+                }                
             }
-           
+            if (!String.IsNullOrEmpty(username))
+            {
+                if (username == "All")
+                {
+                    appDetails = appDetails.ToList();
+                }
+                else
+                {
+                    appDetails = appDetails.Where(s => s.CREATED_USER.Contains(username)).ToList();
+                }
+            }
+
+            if (startDate!=null)
+            {
+                appDetails = appDetails.Where(s => s.CREATED_DATE>=startDate).ToList();
+            }
+            if (endDate != null)
+            {
+                appDetails = appDetails.Where(s =>s.CREATED_DATE<= endDate).ToList();
+            }
+
             if (appDetails.Count > 0)
             {
                 ViewBag.applicationList = appDetails;
@@ -687,6 +737,291 @@ namespace C8.eServices.Mvc.Controllers
                 ViewBag.applicationList = null;
             }            
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult GetUserNames()
+        {
+            Dictionary<string, object> dct = new Dictionary<string, object>();
+            var result = db.WL_ACCOUNTS.Select(s => new { s.CONTACT_PERSON_FIRST_NAME, s.CONTACT_PERSON_LAST_NAME, s.ACCOUNT_ID }).Distinct().ToList();
+            if (result.Count > 0)
+            {
+                dct.Add("success", result);
+            }
+            else
+            {
+                dct.Add("error", false);
+            }
+            return Json(dct,JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult Reports()
+        {
+            //var appDetails = db.WL_APPLICATIONFORM_AUDIT.ToList();
+
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            TempData["ReportResult"] = "";
+            ViewBag.result = null;           
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Reports(string documentType, string reportType, DateTime? startDate, DateTime? endDate,string status)
+        {
+            //if (Session["ekurhuleniData"] == null)
+            //{
+            //    // if IsAuthenticated is false return to login code here....
+            //    return Redirect("../home/index");
+            //}
+            try
+            {
+                TempData["ReportResult"] = "";
+                ViewBag.errorStatus = null;
+                if (!String.IsNullOrEmpty(documentType) && !String.IsNullOrEmpty(reportType))
+                {
+                    Response.ClearHeaders();
+                    string f1 = string.Empty;
+                    string f2 = string.Empty;
+                    string f3 = string.Empty;
+                    eServicesDbContext context = new eServicesDbContext();
+                    AppSetting AdUser = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AdUserName);
+                    AppSetting AdPass = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AdPassword);
+                    AppSetting AdDom = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.adDomain);
+                    //AppSetting genBillLink = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.adGenBillLink);
+                    NetworkCredential nwc = new NetworkCredential(AdUser.Value, AdPass.Value);
+                    WebClient client = new WebClient();
+                    client.Credentials = nwc;
+                    //documentType = "PDF";
+                    //string yearN = "2021";// StateYear;
+                    //string month = "10";// stateMonth;
+
+                    if (documentType == "excel")
+                    {
+                        f1 = reportType + ReportKeys.ExcelExtension;
+                        f2 = ReportKeys.ExcelKey;
+                    }
+                    if (documentType == "pdf")
+                    {
+                        f1 = reportType + ReportKeys.PdfExtension;
+                        f2 = ReportKeys.PdfKey;
+                    }
+                    if (documentType == "word")
+                    {
+                        f1 = reportType + ReportKeys.WordExtension;
+                        f2 = ReportKeys.WordKey;
+                    }
+
+                    //f3 = ConvertToQuery(reportType);
+                    string fileName = f1;
+                    string file_Name = string.Format("{0}-{1}", DateTime.Now.ToString("ddMMMyyyyHHmmss"), fileName.Replace("-", ""));
+                    fileName = Path.Combine(Server.MapPath("~/uploads/"), file_Name);
+
+                    //string ttt = "Approved%20Application";
+                    //string ttt1 = "Progress%20Report";
+                    //string ttt2 = "Total%20Wayleave%20Applications%20Created";
+                    string stdate = startDate.Value.Year + "/" + startDate.Value.Month + "/" + startDate.Value.Day;
+                    string endate = endDate.Value.Year + "/" + endDate.Value.Month + "/" + endDate.Value.Day;
+                    string reportURL = string.Empty;
+                    switch (reportType)
+                    {
+                        case "ApprovedApplication":
+                            f3 = "Approved+Application";
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate;
+                            break;
+                        case "ProgressReport":
+                            f3 = "Progress+Report";
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&Status="+ status;
+                            break;
+                        case "TotalWayleaveApplicationsCreated":
+                            f3 = "Total%20Wayleave%20Applications%20Created";
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&ReportParameter1="+ status;
+                            break;
+                        default:
+                            break;
+
+                    }
+
+                    //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + startDate + "&ED=" + endDate;
+
+
+                    //string sttt = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2fApproved+Application&rs:Command=Render&rs:Format=EXCELOPENXML&SD=2021/08/01 00:00:00&ED=2021/10/12 00:00:00";
+                    //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2fApproved+Application&rs:Command=Render&rs:Format=" + documentType + "&SD=2021/08/01 00:00:00&ED=2021/10/12 00:00:00";
+                    //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2fApproved+Application&rs:Command=Render&rs:Format=" + documentType + "&SD=2021/08/01 00:00:00&ED=2021/10/12 00:00:00";
+                    //string ttt = "http://10.1.2.230:85/ProBudget_Reports/report/Wayleave/Progress%20Report?SD=7/1/2021&ED=10/31/2021&Status=8";
+                    //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fCase_Management_Reports%2fNo_of_Cases_Report&rs:Command=Render&rs:Format=PDF&year=" + yearN + "&month=" + month;
+                    client.DownloadFile(reportURL, fileName);
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(@"" + fileName);
+                    string dsss=downloadReport(fileName);
+                    //Response.Headers.Clear();
+                    //Response.BufferOutput = true;
+                    TempData["ReportResult"] = "success";
+                    //Response.Redirect("../WL/Reports", false);
+
+                    return RedirectToAction("Reports", "WL");
+                    //Response.ContentType = "application/pdf";
+                    ////Response.AppendHeader("Content-Disposition", "attachment; filename="+f1);
+                    //Response.TransmitFile(fileName);
+                    //Response.End();
+                    //TempData["ReportResult"] = "success";
+                    //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, f1);
+
+                    //return File(client.DownloadData(reportURL), "application/pdf");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string sttr = ex.Message;
+                TempData["ReportResult"] = "error";
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ReportsNew()
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            Dictionary<string, object> dct = new Dictionary<string, object>();
+            try
+            {
+                var FormData = Request.Form["FormData"];
+                var applicationFormResponse = JsonConvert.DeserializeObject<ReportRequestModel>(FormData);
+
+                TempData["ReportResult"] = "";
+                ViewBag.errorStatus = null;
+                if (!String.IsNullOrEmpty(applicationFormResponse.documentType) && !String.IsNullOrEmpty(applicationFormResponse.reportType))
+                {
+                    Response.ClearHeaders();
+                    string f1 = string.Empty;
+                    string f2 = string.Empty;
+                    string f3 = string.Empty;
+                    eServicesDbContext context = new eServicesDbContext();
+                    AppSetting AdUser = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AdUserName);
+                    AppSetting AdPass = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AdPassword);
+                    AppSetting AdDom = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.adDomain);
+                    //AppSetting genBillLink = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.adGenBillLink);
+                    NetworkCredential nwc = new NetworkCredential(AdUser.Value, AdPass.Value);
+                    WebClient client = new WebClient();
+                    client.Credentials = nwc;
+                    //documentType = "PDF";
+                    //string yearN = "2021";// StateYear;
+                    //string month = "10";// stateMonth;
+
+                    if (applicationFormResponse.documentType == "excel")
+                    {
+                        f1 = applicationFormResponse.reportType + ReportKeys.ExcelExtension;
+                        f2 = ReportKeys.ExcelKey;
+                    }
+                    if (applicationFormResponse.documentType == "pdf")
+                    {
+                        f1 = applicationFormResponse.reportType + ReportKeys.PdfExtension;
+                        f2 = ReportKeys.PdfKey;
+                    }
+                    if (applicationFormResponse.documentType == "word")
+                    {
+                        f1 = applicationFormResponse.reportType + ReportKeys.WordExtension;
+                        f2 = "WORDOPENXML"; //ReportKeys.WordKey;
+                    }
+
+                    //f3 = ConvertToQuery(reportType);
+                    string fileName = f1;
+                    string file_Name = string.Format("{0}-{1}", DateTime.Now.ToString("ddMMMyyyyHHmmss"), fileName.Replace("-", ""));
+                    fileName = Path.Combine(Server.MapPath("~/uploads/"), file_Name);
+
+                    //string ttt = "Approved%20Application";
+                    //string ttt1 = "Progress%20Report";
+                    //string ttt2 = "Total%20Wayleave%20Applications%20Created";
+                    string stdate = applicationFormResponse.startDate.Value.Year + "/" + applicationFormResponse.startDate.Value.Month + "/" + applicationFormResponse.startDate.Value.Day;
+                    string endate = applicationFormResponse.endDate.Value.Year + "/" + applicationFormResponse.endDate.Value.Month + "/" + applicationFormResponse.endDate.Value.Day;
+                    string reportURL = string.Empty;
+                    switch (applicationFormResponse.reportType)
+                    {
+                        case "ApprovedApplication":
+                            f3 = "Approved+Application";
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate;
+                            break;
+                        case "ProgressReport":
+                            f3 = "Progress+Report";
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&Status=" + applicationFormResponse.status;
+                            break;
+                        case "TotalWayleaveApplicationsCreated":
+                            f3 = "Total+Wayleave+Applications+Created";
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&Status=" + applicationFormResponse.status;
+                            break;
+                        default:
+                            break;
+
+                    }
+                    client.DownloadFile(reportURL, fileName);
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(@"" + fileName);                    
+                    dct.Add("success", file_Name);
+                    dct.Add("file", f1);                    
+                    return Json(dct, JsonRequestBehavior.AllowGet);
+
+                    //string dsss = downloadReport(fileName);
+                    //Response.Headers.Clear();
+                    //Response.BufferOutput = true;
+                    //TempData["ReportResult"] = "success";
+                    //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + startDate + "&ED=" + endDate;
+                    //string sttt = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2fTotal+Wayleave+Applications+Created&rs:Command=Render&rs:Format=EXCELOPENXML&SD=2021/08/01 00:00:00&ED=2021/10/12 00:00:00&ReportParameter1=2";
+                    //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2fApproved+Application&rs:Command=Render&rs:Format=" + documentType + "&SD=2021/08/01 00:00:00&ED=2021/10/12 00:00:00";
+                    //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2fApproved+Application&rs:Command=Render&rs:Format=" + documentType + "&SD=2021/08/01 00:00:00&ED=2021/10/12 00:00:00";
+                    //string ttt = "http://10.1.2.230:85/ProBudget_Reports/report/Wayleave/Progress%20Report?SD=7/1/2021&ED=10/31/2021&Status=8";
+                    //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fCase_Management_Reports%2fNo_of_Cases_Report&rs:Command=Render&rs:Format=PDF&year=" + yearN + "&month=" + month;
+                    //return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, f1);
+                    //return File(client.DownloadData(reportURL), "application/pdf");
+                }
+            }
+            catch (Exception ex)
+            {
+                string sttr = ex.Message;
+                dct.Add("error", ex.Message);
+                return Json(dct, JsonRequestBehavior.AllowGet);
+            }
+
+            return View();
+        }
+
+        public string downloadReport(string fileName)
+        {
+
+            string filePath = fileName;
+            Response.ClearHeaders();
+            Response.ContentType = "application/pdf";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=" + Path.GetFileName(filePath));
+            Response.WriteFile(filePath);
+            Response.End();
+            return "success";
+        }
+
+        public string ConvertToQuery(string value)
+        {
+            string result = string.Empty;
+            switch (value)
+            {
+                case "ApprovedApplication":
+                    result = "Approved+Application";
+                    break;
+                case "ProgressReport":
+                    result = "Progress+Report";
+                    break;
+                case "TotalWayleaveApplicationsCreated":
+                    result = "Total%20Wayleave%20Applications%20Created";
+                    break;
+                default:
+                    break;
+
+            }
+            return result;
         }
     }
 }

@@ -33,15 +33,75 @@
             }
         }
 
-        var actionValue = '@ViewBag.applicationStatus';
+
+        setTimeout(function () {
+            var actionValue = '@ViewBag.applicationStatus';
         var appNo = '@ViewBag.applicationNo';
-        
+        var appStDate = '@ViewBag.appStartDate';
+        var appEnDate = '@ViewBag.appEndDate';
+        var appUname ='@ViewBag.appUsername';
+            
         if (actionValue != "" && actionValue != undefined) {
             $("#status").val(actionValue);
         }
         if (appNo != "" && appNo != undefined) {
             $("#searchKeyword").val(appNo);
         }
+            if (appStDate != "" && appStDate != undefined) {
+                var input = appStDate;
+                var d = new Date(input);
+                var tt = d.setMonth(d.getMonth());
+                var m = new Date(tt);
+                var yy = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
+                $("#startDate").val(yy);
+        }
+            if (appEnDate != "" && appEnDate != undefined) {
+                var input = appEnDate;
+                var d = new Date(input);
+                var tt = d.setMonth(d.getMonth());
+                var m = new Date(tt);
+                var yy = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
+                $("#endDate").val(yy);
+        }
+        if (appUname != "" && appUname != undefined) {
+            $("#username").val(appUname);
+        }
+        }, 5000);
+
+        $.ajax({
+            url: "../WL/GetUserNames",
+            type: 'GET',
+            processData: false,
+            contentType: false,
+            //crossDomain: true,
+            cache: false,
+            enctype: 'multipart/form-data',
+            dataType: 'json',
+            //data: formData,
+            success: function (data, textStatus, xhr) {
+                console.log("======Username Result=========");
+                console.log(data);
+                //data = $.parseJSON(data);
+                if (data.success) {
+                    var userData = data.success;
+                    $("#username").append("<option value='' selected>Make a selection</option>");
+                    $("#username").append("<option value='All'>Select All</option>");
+                    $.each(userData, function (index, item) {
+                        var uName = item.CONTACT_PERSON_FIRST_NAME + " " + item.CONTACT_PERSON_LAST_NAME;
+                        $("#username").append("<option value='" + uName + "'>" + uName + "</option>");
+                    });
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                //console.log('Error in Operation');
+                $('#isLoading').hide();
+                $('#isLoading1').show();
+                toastr.error('500 (Internal Server Error)');
+            }
+        });
+
+
+
     });
 </script>
 <!------ Include the above in your HEAD tag ---------->
@@ -57,32 +117,66 @@
                            style="font-size: 11px;" id="mytable">
                         <thead style="font-size:11px !important;color:#fff !important;margin-bottom: 0;">
                             <tr>
-                                <td style="width: 15.5% !important">
-                                    @if (ViewBag.applicationNo != null)
-                                    {
-                                        <h4 class="text-primary">@ViewBag.applicationNo</h4>
-                                    }
-
-                                </td>
+                                @*<td style="width: 15.5% !important">
+            @if (ViewBag.applicationNo != null)
+            {
+                <h4 class="text-primary">@ViewBag.applicationNo</h4>
+            }
+        </td>*@
 
                                 <td colspan="2" style="height: 40px !important; width: 15.5%!important">
                                     <div class="input-group" style="width: 100%;">
-                                        <label style="color:#000!important;font-size:10pt!important">Application Number</label>
-                                        <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="searchKeyword" placeholder="Application Number" id="searchKeyword">
-
+                                        <label style="color:#000!important;font-size:9pt!important">Application Number</label>
+                                        <input class="form-control" autocomplete="off" style="border-radius: 4px" name="searchKeyword" placeholder="Application Number" id="searchKeyword">
                                     </div>
                                 </td>
                                 <td colspan="2" style="width:  15.5%">
                                     <div class="input-group" style="width: 100%">
-                                        <label style="color:#000!important;font-size:10pt!important">Status</label>
+                                        <label style="color:#000!important;font-size:9pt!important">Action</label>
                                         <select style="border-radius: 4px"
                                                 class="form-control" name="status" id="status">
                                             <option value="" selected>Make a selection</option>
+                                            <option value="All">Select All</option>
                                             <option value="Application Granted">Granted Applications</option>
                                             <option value="Application Rejected">Rejected Applications</option>
-                                            <option value="Affected">Affected (All departments)</option>
-                                            <option value="Not Affected">Not Affected (All departments)</option>
+                                            <option value="Updated to Affected">Affected (All departments)</option>
+                                            <option value="Updated to Not Affected">Not Affected (All departments)</option>
                                         </select>
+                                    </div>
+                                </td>
+                                <td colspan="2" style="width:  15.5%">
+                                    <div class="input-group" style="width: 100%">
+                                        <label style="color:#000!important;font-size:9pt!important">Username</label>
+                                       
+                                        @*@Html.DropDownList("username", (List<SelectListItem>)ViewBag.VBUserList, "Select Username")*@
+                                        @*@Html.DropDownList("VBUserList", ViewBag.VBUserList as SelectList, "Select Username", new { @class = "form-control", style = "border-radius: 4px", name = "username" })*@
+
+                                        @*@Html.DropDownList("username",
+        (IEnumerable<SelectListItem>)ViewBag.VBUserList,
+        "Select Username")*@
+                                        <select style="border-radius: 4px"
+                                                class="form-control" name="username" id="username">
+                                            @*<option value="" selected>Make a selection</option>
+                                            <option value="All">Select All</option>*@
+                                            @*<option value="Prasad">Prasad</option>
+                                            <option value="Application Rejected">Rejected Applications</option>
+                                            <option value="Updated to Affected">Affected (All departments)</option>
+                                            <option value="Updated to Not Affected">Not Affected (All departments)</option>*@
+                                        </select>
+                                    </div>
+                                </td>
+                                <td colspan="2" style="height: 40px !important; width: 15.5%!important">
+                                    <div class="input-group" style="width: 100%;">
+                                        <label style="color:#000!important;font-size:9pt!important">Start Date</label>
+                                        <input type="date" class="form-control" autocomplete="off" style="border-radius: 4px" name="startDate" id="startDate" />
+
+                                    </div>
+                                </td>
+                                <td style="height: 40px !important; width: 15.5%!important">
+                                    <div class="input-group" style="width: 100%;">
+                                        <label style="color:#000!important;font-size:9pt!important">End Date</label>
+                                        <input type="date" class="form-control" autocomplete="off" style="border-radius: 4px" name="endDate" id="endDate" />
+
                                     </div>
                                 </td>
                                 <td colspan="2" style="padding-top: 23px !important; height: 40px !important;width: 15.5% !important ">
@@ -93,8 +187,7 @@
                                         Clear
                                     </button>
                                 </td>
-                                <td style="width: 15.5% !important"></td>
-                                <td style="width: 15.5% !important"></td>
+
 <tr>
                         </thead>
                     </table>
@@ -158,20 +251,24 @@
                     <th>S.No</th>
                     <th>Application No</th>
                     <th>Action</th>
-                    <th>Step Status</th>
-                    <th>User Name</th>
+                    <th>Outcome</th>
+                    <th>Application Status</th>
+                    <th>Username</th>
                     <th>Created On</th>
+                    <th>Device IP Address</th>
                 </tr>
                 @foreach (var app in (List<C8.eServices.Mvc.Models.WL_APPLICATIONFORM_AUDIT>)ViewBag.applicationList)
                 {
-                <tr>
-                    <td>@jj</td>
-                    <td>@app.APPLICATION_NUMBER</td>
-                    <td>@app.ACTION</td>
-                    <td>@app.APPLICATION_STEP_DESCRIPTION</td>
-                    <td>@app.CREATED_USER</td>
-                    <td>@app.CREATED_DATE</td>
-                </tr>
+            <tr>
+                <td>@jj</td>
+                <td>@app.APPLICATION_NUMBER</td>
+                <td>@app.ACTION</td>
+                <td>@app.OUTCOME</td>
+                <td>@app.APPLICATION_STEP_DESCRIPTION</td>
+                <td>@app.CREATED_USER</td>
+                <td>@app.CREATED_DATE</td>
+                <td>@app.DEVICE_IP_ADDRESS</td>
+            </tr>
                     jj++;
                 }
         

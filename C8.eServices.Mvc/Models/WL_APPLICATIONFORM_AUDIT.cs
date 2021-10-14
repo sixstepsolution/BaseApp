@@ -20,8 +20,7 @@ namespace C8.eServices.Mvc.Models
         //}
 
         [Key]
-        public int AUDIT_ID { get; set; }
-        [StringLength(50)]
+        public int AUDIT_ID { get; set; }       
         public string ACTION { get; set; }
         [StringLength(100)]
         public string APPLICATION_NUMBER { get; set; }
@@ -200,6 +199,8 @@ namespace C8.eServices.Mvc.Models
         public DateTime? MODIFIED_DATE { get; set; }
         public string CREATED_USER { get; set; }
         public string MODIFIED_USER { get; set; }
+        public string OUTCOME { get; set; }
+        public string DEVICE_IP_ADDRESS { get; set; }
 
         //[ForeignKey("SERVICE_TYPE")]
         //public virtual MASTER_SERVICE_TYPES MASTER_SERVICE_TYPES { get; set; }

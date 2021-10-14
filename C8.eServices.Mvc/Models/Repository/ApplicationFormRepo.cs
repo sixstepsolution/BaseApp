@@ -17,6 +17,7 @@ namespace C8.eServices.Mvc.Models.Repository
     public class ApplicationFormRepo : IApplicationForm
     {
         private WayleaveDbContext _context;
+        IPAddressModel Ip = new IPAddressModel();
         private readonly IServiceDocument _serviceDocument = null;
         private eServicesDbContext _dbeService;// = new eServicesDbContext();
         public ApplicationFormRepo(WayleaveDbContext context, IServiceDocument serviceDocument, eServicesDbContext dbeService)
@@ -383,14 +384,17 @@ namespace C8.eServices.Mvc.Models.Repository
 
                 if (n)
                 {
-                    string createdUser= applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
+                    string createdUser = applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
                     WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
                     CopyClass.CopyObject(applicationForm, ref audit_app);
-                    audit_app.ACTION = "Added";
+                    audit_app.ACTION = "Application submitted";
                     audit_app.CREATED_DATE = DateTime.Now;
                     audit_app.MODIFIED_DATE = DateTime.Now;
                     audit_app.CREATED_USER = createdUser;
                     audit_app.MODIFIED_USER = createdUser;
+                    audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                    audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                     //PROPERTYOWNER_NAME
                     _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                     _context.SaveChanges();
@@ -581,33 +585,64 @@ namespace C8.eServices.Mvc.Models.Repository
              n = SaveChanges();
             if (n)
             {
-                string createdUser = res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME;
-                WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
-                CopyClass.CopyObject(res, ref audit_app);
-                audit_app.ACTION = "Modified";
-                _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
-                _context.SaveChanges();
+                var isNotDistributed = _context.WL_APPLICATIONFORM_AUDIT.Where(s => s.APPLICATION_NUMBER == res.APPLICATION_NUMBER && s.APPLICATION_STEP_DESCRIPTION == AuditTrailKeys.Distributed_to_Departments).ToList();
+                if (isNotDistributed.Count() == 0)
+                {
+                    string createdUser = res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME;
+                    WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    CopyClass.CopyObject(res, ref audit_app);
+                    audit_app.ACTION = AuditTrailKeys.UploadedPaymentReciept;
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    audit_app.CREATED_USER = createdUser;
+                    audit_app.MODIFIED_USER = createdUser;
+                    audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                    audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
+                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
 
-                foreach (WL_DEPARTMENTS department in departmentsDataResponse)
-                {                    
-                    WL_APPLICATIONFORM_AUDIT audit_appp = new WL_APPLICATIONFORM_AUDIT();
-                    CopyClass.CopyObject(res, ref audit_appp);
-                    audit_appp.ACTION = "Modified";
-                    audit_appp.APPLICATION_STEP_DESCRIPTION = "Distributed to " + department.DEPARTMENT_NAME + " department";
-                    audit_appp.CREATED_DATE = DateTime.Now;
-                    audit_appp.MODIFIED_DATE = DateTime.Now;
-                    audit_appp.CREATED_USER = createdUser;
-                    audit_appp.MODIFIED_USER = createdUser;
-                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
-                    n = SaveChanges();
+                    foreach (WL_DEPARTMENTS department in departmentsDataResponse)
+                    {
+                        WL_APPLICATIONFORM_AUDIT audit_appp = new WL_APPLICATIONFORM_AUDIT();
+                        CopyClass.CopyObject(res, ref audit_appp);
+                        audit_appp.ACTION = "Distributed to " + department.DEPARTMENT_NAME + " Department";
+                        audit_appp.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
+                        audit_appp.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                        audit_appp.CREATED_DATE = DateTime.Now;
+                        audit_appp.MODIFIED_DATE = DateTime.Now;
+                        audit_appp.CREATED_USER = createdUser;
+                        audit_appp.MODIFIED_USER = createdUser;
+                        audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                        _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
+                        n = SaveChanges();
+                    }
+
+                    EmailHelper email = new EmailHelper();
+                    email.Body = EmailNotificationBody.SentApplicationFormStatustoConsultant(res.CONSULTANT_NAME, res.CONSULTANT_SURNAME, res.APPLICATION_NUMBER).ToString();
+                    email.Recipient = res.CONSULTANT_EMAIL;//"prasadthummala558@gmail.com";
+                    email.Subject = "Wayleave application status";
+                    //email.SendEmail();
+                    Email em = new Email();
+                    em.GenerateEmail(email.Recipient, email.Subject, email.Body, res.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, res.CONSULTANT_NAME + " " + res.CONSULTANT_SURNAME, null, null, res.APPLICATION_NUMBER, null, null, null, null);
                 }
-
-
-                
                 return "Application Form resubmitted successfully.";
             }
             else
             {
+                string createdUser = res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME;
+                WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                CopyClass.CopyObject(res, ref audit_app);
+                audit_app.ACTION = AuditTrailKeys.UploadedPaymentReciept;
+                audit_app.CREATED_DATE = DateTime.Now;
+                audit_app.MODIFIED_DATE = DateTime.Now;
+                audit_app.CREATED_USER = createdUser;
+                audit_app.MODIFIED_USER = createdUser;
+                audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
+                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
+                _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                _context.SaveChanges();
                 return "Application Form resubmission failed!";
             }
                          
@@ -623,6 +658,19 @@ namespace C8.eServices.Mvc.Models.Repository
             string rejectStatus = rejectWayleave != null ? rejectWayleave.Description : "";
             res.STATUS_ID = appStatus == grantStatus ? 3 : (appStatus == "Request for approvals" || appStatus == "Request for documents" ? 2 : 4);
             res.APPLICATION_COMMENTS = comments;
+
+            WL_APPLICATIONFORM_AUDIT audit_appp = new WL_APPLICATIONFORM_AUDIT();
+            CopyClass.CopyObject(res, ref audit_appp);
+            audit_appp.CREATED_DATE = DateTime.Now;
+            audit_appp.MODIFIED_DATE = DateTime.Now;
+            audit_appp.CREATED_USER = firstName;
+            audit_appp.MODIFIED_USER = firstName;
+            audit_appp.ACTION = AuditTrailKeys.Applicationviewed;
+            audit_appp.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+            audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+            audit_appp.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
+            //audit_app.cre
+            _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
             //if(!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
             //{
             //    WL_DEPARTMENTS wd = GetDepartmentDataById(appId, deptName);
@@ -630,15 +678,17 @@ namespace C8.eServices.Mvc.Models.Repository
             //    wd.APPLICATION_STATUS = deptStatus;
             //}
             bool isSuccess = SaveChanges();
-            if(isSuccess)
+            if (isSuccess)
             {
                 WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
                 CopyClass.CopyObject(res, ref audit_app);
-                audit_app.ACTION = "Modified";
                 audit_app.CREATED_DATE = DateTime.Now;
                 audit_app.MODIFIED_DATE = DateTime.Now;
                 audit_app.CREATED_USER = firstName;
                 audit_app.MODIFIED_USER = firstName;
+                audit_app.ACTION = "Updated to "+ appStatus;
+                audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
                 //audit_app.cre
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();
@@ -659,7 +709,21 @@ namespace C8.eServices.Mvc.Models.Repository
                 email.Subject = "Wayleave Application Status";
                 //email.SendEmail();
                 Email em = new Email();
-                em.GenerateEmail(email.Recipient, email.Subject, email.Body, res.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME, null, null, res.APPLICATION_NUMBER, null, null, null, null);                
+                em.GenerateEmail(email.Recipient, email.Subject, email.Body, res.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME, null, null, res.APPLICATION_NUMBER, null, null, null, null);
+            }
+            else {
+                WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                CopyClass.CopyObject(res, ref audit_app);
+                audit_app.CREATED_DATE = DateTime.Now;
+                audit_app.MODIFIED_DATE = DateTime.Now;
+                audit_app.CREATED_USER = firstName;
+                audit_app.MODIFIED_USER = firstName;
+                audit_app.ACTION = "Updated to " + appStatus;
+                audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
+                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                //audit_app.cre
+                _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                _context.SaveChanges();
             }
             return isSuccess;
         }
@@ -674,13 +738,32 @@ namespace C8.eServices.Mvc.Models.Repository
                 wd.APPROVE_OR_REJECT_COMMENTS = !String.IsNullOrEmpty(deptComments) ? deptComments : "";
                 wd.APPLICATION_STATUS = deptStatus;
                 wd.RESPONSE_DATE = DateTime.Now;
+
+                WL_APPLICATIONFORM_AUDIT audit_appp = new WL_APPLICATIONFORM_AUDIT();
+                CopyClass.CopyObject(res, ref audit_appp);
+                audit_appp.CREATED_DATE = DateTime.Now;
+                audit_appp.MODIFIED_DATE = DateTime.Now;
+                audit_appp.CREATED_USER = firstName;
+                audit_appp.MODIFIED_USER = firstName;
+                audit_appp.ACTION = AuditTrailKeys.Applicationviewed;
+                audit_appp.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                audit_appp.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
+                //audit_app.cre
+                _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
+
+
                 isSuccess = SaveChanges();
                 if (isSuccess)
                 {
                     WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
                     CopyClass.CopyObject(res, ref audit_app);
-                    audit_app.ACTION = "Modified";
-                    audit_app.APPLICATION_STEP_DESCRIPTION = deptStatus+" status has been received from "+ deptName +" department.";
+                    audit_app.ACTION = "Updated to " + deptStatus;
+                    audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+
+                    //audit_app.ACTION = "Modified";
+                    audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
                     audit_app.CREATED_DATE = DateTime.Now;
                     audit_app.MODIFIED_DATE = DateTime.Now;
                     audit_app.CREATED_USER = firstName;
@@ -705,6 +788,21 @@ namespace C8.eServices.Mvc.Models.Repository
                     //email.SendEmail();
                     Email em = new Email();
                     em.GenerateEmail(email.Recipient, email.Subject, email.Body, res.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME, null, null, res.APPLICATION_NUMBER, null, null, null, null);
+                }
+                else
+                {
+                    WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    CopyClass.CopyObject(res, ref audit_app);
+                    audit_app.ACTION = "Updated to " + deptStatus;
+                    audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                    audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    audit_app.CREATED_USER = firstName;
+                    audit_app.MODIFIED_USER = firstName;
+                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
                 }
             }
             

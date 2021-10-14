@@ -36,6 +36,7 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string identificationNumber { get; set; }
         public string contactPersonGender { get; set; }
         public string suburb { get; set; }
+        public string password { get; set; }
 
         public int statusId { get; set; }
         public string isActive { get; set; }

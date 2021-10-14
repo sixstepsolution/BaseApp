@@ -9,6 +9,7 @@ namespace C8.eServices.Mvc.Models
 {
     public class Request : BaseModel
     {
+        public static object ServerVariables { get; internal set; }
         [Column(Order = 54)]
         [Display(Name = "Customer")]
         public int? CustomerId { get; set; }

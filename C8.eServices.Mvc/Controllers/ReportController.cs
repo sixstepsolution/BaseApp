@@ -168,8 +168,8 @@ namespace C8.eServices.Mvc.Controllers
             }
         }
         #endregion
-        [Authorize(Roles = "Administrators" + "," + "Customers" + "," + "Super Administrators" + "," + "Clerks")]
-        [EncryptedActionParameter]
+        //[Authorize(Roles = "Administrators" + "," + "Customers" + "," + "Super Administrators" + "," + "Clerks")]
+        //[EncryptedActionParameter]
         public ActionResult GenerateDocView()
         {
             //NetworkCredential nwc = new NetworkCredential("Ekurhuleni\nataliec", "Louella@2016");

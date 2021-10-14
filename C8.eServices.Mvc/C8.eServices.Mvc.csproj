@@ -3875,6 +3875,7 @@
     <Compile Include="Keys\AccountTypeKeys.cs" />
     <Compile Include="Keys\ApplicationKeys.cs" />
     <Compile Include="Keys\AppSettingKeys.cs" />
+    <Compile Include="Keys\AuditTrailKeys.cs" />
     <Compile Include="Keys\BankAccountTypeKeys.cs" />
     <Compile Include="Keys\BankKeys.cs" />
     <Compile Include="Keys\BillingAccountTypeKeys.cs" />
@@ -4003,6 +4004,14 @@
     <Compile Include="Migrations\202110071941046_updatecreateduseraudit.cs" />
     <Compile Include="Migrations\202110071941046_updatecreateduseraudit.Designer.cs">
       <DependentUpon>202110071941046_updatecreateduseraudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110121613428_addingnEWPropertiesinApplicationformaudit.cs" />
+    <Compile Include="Migrations\202110121613428_addingnEWPropertiesinApplicationformaudit.Designer.cs">
+      <DependentUpon>202110121613428_addingnEWPropertiesinApplicationformaudit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202110121635188_changedatalengthinApplicationformaudit.cs" />
+    <Compile Include="Migrations\202110121635188_changedatalengthinApplicationformaudit.Designer.cs">
+      <DependentUpon>202110121635188_changedatalengthinApplicationformaudit.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
@@ -4711,6 +4720,7 @@
     <Content Include="Views\WL\UpdatePaymentPrice.cshtml" />
     <Content Include="Views\Home\ChangePassword.cshtml" />
     <Content Include="Views\WL\AuditTrail.cshtml" />
+    <Content Include="Views\WL\Reports.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4814,6 +4824,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202110071941046_updatecreateduseraudit.resx">
       <DependentUpon>202110071941046_updatecreateduseraudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110121613428_addingnEWPropertiesinApplicationformaudit.resx">
+      <DependentUpon>202110121613428_addingnEWPropertiesinApplicationformaudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110121635188_changedatalengthinApplicationformaudit.resx">
+      <DependentUpon>202110121635188_changedatalengthinApplicationformaudit.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -8,6 +8,7 @@ $('#isAppUpdateLoading').hide();
 $('#accordionApprove').hide();
 $('#WlAccountComments').hide();
 $("#ShowUpdateButton").hide();
+$("#ShowConfirmPassword").show();
 
 //Show and hide collapse panel
 $.fn.showcollapse = function () {
@@ -283,6 +284,18 @@ $.fn.SaveWlAccountForm = function () {
                 "extendedTImeout": "0",
                 "closeButton": true
             });
+            $('#isAppLoading').hide();
+            return;
+        }
+
+        var checkPwd = $.fn.ValidatePassword('PASSWORD');// This return result in Boolean type
+        var checkConfirmPwd = $.fn.CheckConfirmPassword('PASSWORD', 'CONFIRMPASSWORD');// This return result in Boolean type
+        if (!checkPwd) {
+            $('#isAppLoading').hide();
+            return;
+        }
+        if (!checkConfirmPwd) {
+            $('#isAppLoading').hide();
             return;
         }
         //alert(validIdNumber);
@@ -345,7 +358,7 @@ Password : <b style='color:#00337f'>`+ data.accountPassword + `</b>
                     });
                     setTimeout(function () {
                         window.location.href = "../Home/WayleaveLogin";
-                    }, 25000);
+                    }, 15000);
                 }
                 else if (data.exception) {
                     //console.log(textStatus);
@@ -396,11 +409,14 @@ $.fn.LoadWayleaveAccountDetails = function (accountNumber,status) {
         success: function (data, textStatus, xhr) {
             console.log("======Account Data Result=========");
             console.log(data);
+            $("#ShowConfirmPassword").hide();
             var alternateContactdata = data.accountContactModelDto;
             wayleaveAccount.statusId = data.statusId;
             wayleaveAccount.account_id = data.account_id;
             $('#IsWayleaveAccountSubmit').hide();
             $('#accordionApprove').hide();
+            $('#PASSWORD').val(data.password);
+            $('#CONFIRMPASSWORD').val(data.password);
             $('#userType').val(data.userType);
             $('#companyName').val(data.companyName);
             $('#companyFullName').val(data.companyFullName);
@@ -507,6 +523,7 @@ $.fn.GetFormdataValues = function () {
     wayleaveAccount.identificationNumber = $('#identificationNumber').val();
     wayleaveAccount.contactPersonGender = $('#contactPersonGender').val();
     wayleaveAccount.suburb = $('#suburb').val();
+    wayleaveAccount.password = $('#PASSWORD').val();
 };
 
 $.fn.CheckFormValidations = function () {
@@ -531,10 +548,13 @@ $.fn.CheckFormValidations = function () {
     var pv=$('#province').val();
     var cn=$('#country').val();
     var pc = $('#postCode').val();
+
+    var pwd = $('#PASSWORD').val();
+    var cpwd = $('#CONFIRMPASSWORD').val();
     if (ut != undefined && ut != "" && cn != undefined && cn != "" && cf != undefined && cf != "" && cpf != undefined && cpf != ""
         && cpl != undefined && cpl != "" && des != undefined && des != "" && mb != undefined && mb != "" && em != undefined && em != ""
         && sn != undefined && sn != "" && ct != undefined && ct != "" && pv != undefined && pv != "" && cn != undefined && cn != "" &&
-        pc != undefined && pc != "" && inum != undefined && inum != "" && cpg != undefined && cpg != "" && sub != undefined && sub != "") {
+        pc != undefined && pc != "" && inum != undefined && inum != "" && cpg != undefined && cpg != "" && sub != undefined && sub != "" && pwd != undefined && pwd != "" && cpwd != undefined && cpwd != "") {
         isFormValid = true;
         return isFormValid;
     }
@@ -708,5 +728,37 @@ $.fn.CheckFileSize = function (id, fileContent) {
         return true;
     }
 }
+
+$.fn.CheckConfirmPassword = function (id, confirmId) {
+    var isPasswordMatch = false;
+    var p1 = $("#" + id).val();
+    var p2 = $("#" + confirmId).val();
+    if (p1 === p2) {
+        isPasswordMatch = true;
+    }
+    else {
+        isPasswordMatch = false;
+        toastr.error('Password and confirm password does not match!');
+    }
+    return isPasswordMatch;
+}
+
+$.fn.ValidatePassword = function (id) {
+    var p1 = $("#" + id).val();
+    var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    var result = re.test(p1);
+    if (!result) {
+        toastr.error(`Password must contain:<br/>
+- Minimum 8 characters<br/>
+- Minimum 1 uppercase character<br/>
+- Minimum 1 numeric character<br/>
+- Minimum 1 special character`);
+    }
+    return result;
+}
+
+
+
+
 
 

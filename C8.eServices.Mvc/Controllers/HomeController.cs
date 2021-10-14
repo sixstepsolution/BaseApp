@@ -16,6 +16,7 @@ using Microsoft.AspNet.Identity;
 using C8.eServices.Mvc.Models.Comm;
 using System.Net;
 using System.DirectoryServices.AccountManagement;
+using System.Collections.Generic;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -568,6 +569,26 @@ namespace C8.eServices.Mvc.Controllers
         {
             var result = new AesCrypto().Decrypt(id);
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult getpdfReportORG(string cusAcc, string StateYear, string stateMonth)
+        {
+            eServicesDbContext context = new eServicesDbContext();
+            AppSetting AdUser = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AdUserName);
+            AppSetting AdPass = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AdPassword);
+            AppSetting AdDom = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.adDomain);
+            AppSetting genBillLink = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.adGenBillLink);
+            NetworkCredential nwc = new NetworkCredential(AdUser.Value, AdPass.Value);
+            WebClient client = new WebClient();
+            client.Credentials = nwc;
+            string accNo = cusAcc;
+            string yearN = "2021";// StateYear;
+            string month = "10";// stateMonth;
+            string test = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2fApproved+Application&rs:Command=Render&rs:Format=PDF&SD=2021/08/01 00:00:00&ED=2021/10/12 00:00:00";
+            string ttt = "http://10.1.2.230:85/ProBudget_Reports/report/Wayleave/Progress%20Report?SD=7/1/2021&ED=10/31/2021&Status=8";
+            string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fCase_Management_Reports%2fNo_of_Cases_Report&rs:Command=Render&rs:Format=PDF&year="+yearN+"&month=" + month;
+            
+            return File(client.DownloadData(test), "application/pdf");
         }
     }
 }

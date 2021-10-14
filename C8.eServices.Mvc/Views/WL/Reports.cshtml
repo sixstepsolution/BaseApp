@@ -1,0 +1,272 @@
+﻿
+@{
+    ViewBag.Title = "Reports";
+    Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
+}
+
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        var userRole = '@Session["ekurhuleniUserRole"]';
+        //var isSuccess = 'TempData["ReportResult"]';
+        //alert(isSuccess);
+        if (userRole ==="Admin") {
+            $.fn.LoadApplicationsAlertsWithCounts("Y");
+        }
+        else {
+            $.fn.LoadApplicationsAlertsWithCounts("N")
+        }
+
+        //if (isSuccess === "success") {
+        //    window.location.href = "../WL/Reports";
+        //}
+
+       
+
+        $.fn.showLoader = function () {
+            $("#isLoading").hide();
+            $("#isLoading1").show();
+            var sd = $("#startDate").val();
+            var ed = $("#endDate").val();
+            var st = $("#status").val();
+            //&& st != "" && st != undefined
+            if (sd != "" && sd != undefined && ed != "" && ed != undefined) {
+                $("#isLoading").show();
+                $("#isLoading1").hide();
+                if ($("#" + id).val() != "ApprovedApplication") {
+                    if (st != "" && st != undefined) {
+                    }
+                    else {
+                        toastr.error('* Fields are required!');
+                        return;
+                    }
+                }
+                var formData = new FormData();
+                var appFormData = new Object();
+                appFormData.documentType = $('#documentType').val();
+                appFormData.reportType = $('#reportType').val();
+                appFormData.startDate = $('#startDate').val();
+                appFormData.endDate = $('#endDate').val();
+                appFormData.status = $('#status').val();
+                formData.append("FormData", JSON.stringify(appFormData));
+                $.ajax({
+                    url: "../WL/ReportsNew",
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    //crossDomain: true,
+                    cache: false,
+                    enctype: 'multipart/form-data',
+                    dataType: 'json',
+                    data: formData,
+                    success: function (data, textStatus, xhr) {
+                        console.log("======Result=========");
+                        console.log(data);
+                        $('#isLoading').hide();
+                        $('#isLoading1').show();
+                        if (data.success) {
+                            download("../uploads/" + data.success,data.file);
+                            setTimeout(function () {
+                                //window.location.href = "../WL/Reports";
+                                clearinputs();
+                            }, 2000);
+                        }
+                        else if (data.error) {
+                            toastr.error(data.error);
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        //console.log('Error in Operation');
+                        $('#isLoading').hide();
+                        $('#isLoading1').show();
+                        toastr.error('500 (Internal Server Error)');
+                    }
+                });
+            }
+            else {
+                toastr.error('* Fields are required!');
+                return;
+            }
+           
+            
+        }
+
+        @*var actionValue = '@ViewBag.applicationStatus';
+        var appNo = '@ViewBag.applicationNo';
+
+        if (actionValue != "" && actionValue != undefined) {
+            $("#status").val(actionValue);
+        }
+        if (appNo != "" && appNo != undefined) {
+            $("#searchKeyword").val(appNo);
+        }*@
+    });
+
+    function clearinputs() {
+        $("#ReportTypeSection").hide();
+        $("#ReportTypeSearchSection").hide();
+        $("#ShowStatusSection").hide();
+        $('#documentType').val('');
+        $('#reportType').val('');
+        $('#startDate').val('');
+        $('#endDate').val('');
+        $('#status').val('');
+    }
+
+
+    function showReportType(id) {
+        if ($("#" + id).val() != "" && $("#" + id).val() != undefined) {
+            $("#ReportTypeSection").show();
+        }
+        else {
+            $("#ReportTypeSection").hide();
+            toastr.warning('Please select document type!');
+        }
+    }
+    function showReportTypeSearch(id) {
+        if ($("#" + id).val() != "" && $("#" + id).val() != undefined) {
+            $("#ReportTypeSearchSection").show();
+            if ($("#" + id).val() != "ApprovedApplication") {
+                $("#ShowStatusSection").show();
+            }
+        }
+        else {
+            $("#ReportTypeSearchSection").hide();
+            toastr.warning('Please select report type!');
+        }
+    }
+
+    function download(url,filename) {
+        //alert(url);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+<!------ Include the above in your HEAD tag ---------->
+<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important;background-color:#fff!important">
+    <div class="container">
+        <div style="text-align:center!important"><h4>Reports<hr /></h4></div>
+        <div class="page-header" style="margin:0px!important">
+            <div class="row">
+                @using (Html.BeginForm("ReportsNew", "WL", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @*@Html.AntiForgeryToken()*@
+                    <table border="0" style="font-size: 11px;" id="mytable" width="100%">
+                        <thead style="font-size:11px !important;color:#fff !important;margin-bottom: 0;">
+                            <tr>
+                                <td colspan="2" style="width:  15.5%">
+                                    <div class="input-group" style="width: 100%">
+                                        <label class="control-label" style="color:#000!important;font-size:9pt!important">Document Type</label>
+                                        <select style="border-radius: 4px" required
+                                                class="form-control" name="documentType" id="documentType" onchange="showReportType('documentType')">
+                                            <option value="" selected>Make a selection</option>
+                                            <option value="excel">Excel</option>
+                                            <option value="pdf">Pdf</option>
+                                            <option value="word">Word</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="width: 15.5% !important"></td>
+                                <td style="width: 15.5% !important"></td>
+                                <td style="width: 15.5% !important"></td>
+                                <td style="width: 15.5% !important"></td>
+                            </tr>
+                            <tr style="display:none" id="ReportTypeSection">
+                                <td colspan="2" style="width:  15.5%">
+                                    <div class="input-group" style="width: 100%">
+                                        <label class="control-label" style="color:#000!important;font-size:9pt!important">Report Type</label>
+                                        <select style="border-radius: 4px" onchange="showReportTypeSearch('reportType')"
+                                                class="form-control" name="reportType" id="reportType" required>
+                                            <option value="" selected>Make a selection</option>
+                                            <option value="ApprovedApplication">Approved Application</option>
+                                            <option value="ProgressReport">Progress Report</option>
+                                            <option value="TotalWayleaveApplicationsCreated">Total Wayleave Applications Created</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="width: 15.5% !important"></td>
+                                <td style="width: 15.5% !important"></td>
+                                <td style="width: 15.5% !important"></td>
+                                <td style="width: 15.5% !important"></td>
+                            </tr>
+                            <tr style="display:none" id="ReportTypeSearchSection">
+                                <td colspan="2" style="height: 40px !important; width: 15.5%!important">
+                                    <div class="input-group" style="width: 100%;">
+                                        <label class="control-label" style="color:#000!important;font-size:9pt!important">Start Date</label>
+                                        <input type="date" class="form-control" autocomplete="off" style="border-radius: 4px" name="startDate" id="startDate" required />
+
+                                    </div>
+                                </td>
+                                <td style="height: 40px !important; width: 15.5%!important">
+                                    <div class="input-group" style="width: 100%;">
+                                        <label class="control-label" style="color:#000!important;font-size:9pt!important">End Date</label>
+                                        <input type="date" class="form-control" autocomplete="off" style="border-radius: 4px" name="endDate" id="endDate" required />
+
+                                    </div>
+                                </td>
+                                <td style="height: 40px !important; width: 15.5%!important;display:none" id="ShowStatusSection">
+                                    <div class="input-group" style="width: 100%;">
+                                        <label class="control-label" style="color:#000!important;font-size:9pt!important">Status</label>
+                                        <select style="border-radius: 4px"
+                                                class="form-control" name="status" id="status" required>
+                                            <option value="" selected>Make a selection</option>
+                                            <option value="3">Application Granted</option>
+                                            <option value="4">Application Rejected</option>
+                                            <option value="2">Distributed to Departments</option>
+                                            <option value="8">Pending Payment</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="width: 15.5% !important">
+                                    <button type="button" class="btn btn-sm btn-green-custom" onclick="$.fn.showLoader()" style="color: #fff !important; height: 28px !important; margin-top: 22px !important">
+                                        <i id="isLoading" class="fa fa-spinner fa-spin" style="font-size:9pt;display:none"></i><i id="isLoading1" class="fa fa-cloud-download" style="font-size:9pt"></i>&nbsp;Report
+                                    </button>
+                                </td>
+                                <td style="width: 15.5% !important"></td>
+                                <td style="width: 15.5% !important"></td>
+                            </tr>
+
+                            @*<tr>
+                        <td style="width: 15.5% !important">
+                        </td>
+                        <td style="width: 15.5% !important"></td>
+                        <td colspan="2" style="width:  15.5%">
+                            <div class="input-group" style="width: 100%">
+                                <label style="color:#000!important;font-size:10pt!important">Report Type</label>
+                                <select style="border-radius: 4px"
+                                        class="form-control" name="documentType" id="documentType">
+                                    <option value="" selected>Make a selection</option>
+                                    <option value="ApprovedApplication">Approved Application</option>
+                                    <option value="ProgressReport">Progress Report</option>
+                                    <option value="TotalWayleaveApplicationsCreated">Total Wayleave Applications Created</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td colspan="2" style="padding-top: 23px !important; height: 40px !important;width: 15.5% !important ">
+                            <button type="submit" class="btn btn-sm btn-green-custom" onclick="$.fn.showLoader()" style="color:#fff!important;height:28px!important">
+                                <i id="isLoading" class="fa fa-spinner fa-spin" style="font-size:9pt;display:none"></i>&nbsp;Search
+                            </button>
+                            <button type="reset" class="btn btn-warning" style="font-size: 12px; width: 70px;height:28px!important" tabindex="20">
+                                Clear
+                            </button>
+                        </td>
+                        <td style="width: 15.5% !important"></td>
+                        <td style="width: 15.5% !important"></td>
+                    </tr>*@
+                        </thead>
+                    </table>
+                }
+            </div>
+        </div>
+        
+        @if (ViewBag.errorStatus != null)
+        {
+            <div style="text-align:center!important;padding-top:10px!important"><b class="text-red">@ViewBag.errorStatus</b></div>
+        }
+
+    </div>
+</section>
+

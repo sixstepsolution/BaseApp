@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Web;
 
@@ -25,5 +26,36 @@ namespace C8.eServices.Mvc.Models.Comm
         }
         public string deptartmentname { get; set; }
 
+    }
+
+    public class IPAddressModel {
+        public string GetIP4Address()
+        {
+            string IP4Address = String.Empty;
+            if (IP4Address != String.Empty)
+            {
+                return IP4Address;
+            }
+
+            foreach (IPAddress IPA in Dns.GetHostAddresses(Dns.GetHostName()))
+            {
+                if (IPA.AddressFamily.ToString() == "InterNetwork")
+                {
+                    IP4Address = IPA.ToString();
+                    break;
+                }
+            }
+
+            return IP4Address;
+        }
+    }
+
+    public class ReportRequestModel
+    {
+        public string documentType { get; set; }
+        public string reportType { get; set; }
+        public DateTime? startDate { get; set; }
+        public DateTime? endDate { get; set; }
+        public string status { get; set; }
     }
 }
