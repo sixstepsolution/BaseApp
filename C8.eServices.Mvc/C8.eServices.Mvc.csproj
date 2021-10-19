@@ -4357,6 +4357,7 @@
     <Compile Include="ViewModels\EmailViewModel.cs" />
     <Compile Include="ViewModels\EmisCaseViewModel.cs" />
     <Compile Include="ViewModels\GenerateBillViewModel.cs" />
+    <Compile Include="ViewModels\GisResponseViewModel.cs" />
     <Compile Include="ViewModels\IdentificationViewModel.cs" />
     <Compile Include="ViewModels\IncentivePolicyApplicationViewModel.cs" />
     <Compile Include="ViewModels\IncentivePolicyPropertyVM.cs" />
@@ -4721,6 +4722,7 @@
     <Content Include="Views\Home\ChangePassword.cshtml" />
     <Content Include="Views\WL\AuditTrail.cshtml" />
     <Content Include="Views\WL\Reports.cshtml" />
+    <Content Include="Views\Home\testMap.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

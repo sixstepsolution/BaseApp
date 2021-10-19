@@ -33,7 +33,9 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 Session["payments"] = null;
-
+                IPAddressModel ipad = new IPAddressModel();
+                string str=ipad.GetIP();
+                string tt = ipad.GetIP4Address();
                 // Test code.
                 //This is not needed
                 //var ca = CustomerAccountApi.GetAccounts("6911305037089");
@@ -589,6 +591,11 @@ namespace C8.eServices.Mvc.Controllers
             string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fCase_Management_Reports%2fNo_of_Cases_Report&rs:Command=Render&rs:Format=PDF&year="+yearN+"&month=" + month;
             
             return File(client.DownloadData(test), "application/pdf");
+        }
+
+        public ActionResult testMap()
+        {
+            return View();
         }
     }
 }

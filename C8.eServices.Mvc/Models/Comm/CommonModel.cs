@@ -31,6 +31,7 @@ namespace C8.eServices.Mvc.Models.Comm
     public class IPAddressModel {
         public string GetIP4Address()
         {
+            
             string IP4Address = String.Empty;
             if (IP4Address != String.Empty)
             {
@@ -47,6 +48,14 @@ namespace C8.eServices.Mvc.Models.Comm
             }
 
             return IP4Address;
+        }
+        public string GetIP()
+        {
+            string Str = "";
+            Str = System.Net.Dns.GetHostName();
+            IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(Str);
+            IPAddress[] addr = ipEntry.AddressList;
+            return addr[addr.Length - 1].ToString();
         }
     }
 

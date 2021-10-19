@@ -15,6 +15,9 @@ using System.Threading;
 using C8.eServices.Mvc.Models;
 using C8.eServices.Mvc.Models.Comm;
 using C8.eServices.Mvc.Keys;
+using RestSharp;
+using System.Web.Script.Serialization;
+using C8.eServices.Mvc.ViewModels;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -237,6 +240,25 @@ namespace C8.eServices.Mvc.Controllers
                 }
             }            
             return View();
+        }
+
+        [HttpGet]
+        public string GetAddress(string latilngi)
+        {
+            var lat = latilngi.Split(',')[0].Trim(' ');
+            var lng = latilngi.Split(',')[1].Trim(' ');
+            var uri = Uri.EscapeUriString("http://129.232.208.13/EkuArcGIS_IMS_Instance/api/EkurhuleniArcGIS/GetAddress?latitude=" + lat + "&longitude=" + lng);
+            //var uri = Uri.EscapeUriString("http://129.232.208.13:8082/api/EkurhuleniArcGIS/GetAddress?latitude="+lat+"&longitude="+lng);
+            var client = new RestClient(uri);
+            var request = new RestRequest("");
+            request.RequestFormat = DataFormat.Json;
+
+            var response = client.Execute(request);
+
+            var message = new JavaScriptSerializer().Deserialize<GisResponseViewModel>(response.Content);
+            var json = new JavaScriptSerializer().Serialize(message);
+            //var test = "";
+            return json;
         }
     }
 }

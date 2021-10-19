@@ -24,6 +24,8 @@
         $.fn.showLoader = function () {
             var an = $("#searchKeyword").val();
             var st = $("#status").val();
+            var appStDate = $("#startDate").val();
+            var appEnDate = $("#endDate").val();
             if (an != "" && an != undefined)
             {
                 $("#isLoading").show();
@@ -31,6 +33,13 @@
             if (st != "" && st != undefined) {
                 $("#isLoading").show();
             }
+            if (appStDate != "" && appStDate != undefined) {
+                $("#isLoading").show();
+            }
+            if (appEnDate != "" && appEnDate != undefined) {
+                $("#isLoading").show();
+            }
+
         }
 
 
@@ -40,7 +49,7 @@
         var appStDate = '@ViewBag.appStartDate';
         var appEnDate = '@ViewBag.appEndDate';
         var appUname ='@ViewBag.appUsername';
-            
+
         if (actionValue != "" && actionValue != undefined) {
             $("#status").val(actionValue);
         }
@@ -48,21 +57,29 @@
             $("#searchKeyword").val(appNo);
         }
             if (appStDate != "" && appStDate != undefined) {
-                var input = appStDate;
-                var d = new Date(input);
-                var tt = d.setMonth(d.getMonth());
-                var m = new Date(tt);
-                var yy = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
-                $("#startDate").val(yy);
+                //var input = appStDate;
+                //var d = new Date(input);
+                //var tt = d.setMonth(d.getMonth());
+                //var m = new Date(tt);
+                //var yy = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
+                $("#startDate").val(appStDate);
         }
             if (appEnDate != "" && appEnDate != undefined) {
-                var input = appEnDate;
-                var d = new Date(input);
-                var tt = d.setMonth(d.getMonth());
-                var m = new Date(tt);
-                var yy = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
-                $("#endDate").val(yy);
-        }
+                //var timestamp = Date.parse(appEnDate);
+
+                //if (isNaN(timestamp) == false) {
+                //    var dd = new Date(timestamp);
+                //    //var inputNew = appEnDate;
+                //    //var dd = new Date(inputNew);
+                //    var ttt = dd.setMonth(dd.getMonth());
+                //    var mm = new Date(ttt);
+                //    var yyy = mm.getFullYear() + "-" + ("0" + (mm.getMonth() + 1)).slice(-2) + "-" + ("0" + mm.getDate()).slice(-2);
+                //    alert(yyy);
+                $("#endDate").val(appEnDate);
+                }
+
+
+
         if (appUname != "" && appUname != undefined) {
             $("#username").val(appUname);
         }
@@ -87,7 +104,7 @@
                     $("#username").append("<option value='' selected>Make a selection</option>");
                     $("#username").append("<option value='All'>Select All</option>");
                     $.each(userData, function (index, item) {
-                        var uName = item.CONTACT_PERSON_FIRST_NAME + " " + item.CONTACT_PERSON_LAST_NAME;
+                        var uName = item.username;// + " " + item.CONTACT_PERSON_LAST_NAME;
                         $("#username").append("<option value='" + uName + "'>" + uName + "</option>");
                     });
                 }

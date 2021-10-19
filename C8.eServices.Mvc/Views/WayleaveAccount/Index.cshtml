@@ -487,13 +487,13 @@
                                                                                             @if (rc.id == 4)
                                                                                             {
                                                                                                 <div style="color:red">
-                                                                                                    <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                        style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>}
                                                                                             @if (rc.id == 1)
                                                                                             {
                                                                                                 <div style="color:greenyellow">
-                                                                                                    <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                        style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div> } @*@if (rc.id == 2)
                                                                                                 {
@@ -511,19 +511,19 @@
                                                                                             @if (rc.id == 3)
                                                                                             {
                                                                                                 <div style="color:green">
-                                                                                                    <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                        style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>}
                                                                                             @if (rc.id == 2)
                                                                                             {
                                                                                                 <div style="color:peru">
-                                                                                                    <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                        style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                 </div>}
                                                                                             @if (rc.id == 8)
                                                                                             {
                                                                                                 <div style="color:peru">
-                                                                                                    <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                        style="cursor: pointer;color:red"><u>  Pending Payment</u></a>
                                                                                                 </div>}
                                                                                         </td>

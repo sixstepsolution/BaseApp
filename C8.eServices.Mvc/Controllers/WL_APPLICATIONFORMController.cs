@@ -435,14 +435,14 @@ namespace C8.eServices.Mvc.Controllers
                 string res = string.Empty;
                 var payLater = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
                 var payNow = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayNow);
-
+                var ipAddress=HttpContext.Current.Request.UserHostAddress;
                 if (applicationFormResponse.APPLICATION_STEP_DESCRIPTION == (payLater != null? payLater.Description:"")|| applicationFormResponse.APPLICATION_STEP_DESCRIPTION == "Distributed to Departments")
                 {
-                    res = _appFrom.UpdateApplicationForm(applicationFormResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper());
+                    res = _appFrom.UpdateApplicationForm(applicationFormResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), ipAddress);
                 }
                 else
                 {
-                    res = _appFrom.AddApplicationForm(applicationFormResponse, DepartmentsDataResponse, DeclarationsDataResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), appCount, PaymentsDataResponse);
+                    res = _appFrom.AddApplicationForm(applicationFormResponse, DepartmentsDataResponse, DeclarationsDataResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), appCount, PaymentsDataResponse, ipAddress);
                     if (PaymentsDataResponse == (payNow != null ? payNow.Description : ""))
                     {
                         var applicationNo = new AesCrypto(encp).Encrypt(res);
@@ -599,7 +599,8 @@ namespace C8.eServices.Mvc.Controllers
         {
             try
             {
-                bool res = _appFrom.UpdateApplicationFormStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus,inputClaims.first_name);
+                var ipAddress = HttpContext.Current.Request.UserHostAddress;
+                bool res = _appFrom.UpdateApplicationFormStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus,inputClaims.first_name, ipAddress);
 
                 if (res)
                 {                    
@@ -652,7 +653,8 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 //UpdateCirculatedDepartmentStaus
-                bool res = _appFrom.UpdateCirculatedDepartmentStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus,inputClaims.first_name);
+                var ipAddress = HttpContext.Current.Request.UserHostAddress;
+                bool res = _appFrom.UpdateCirculatedDepartmentStaus(inputClaims.appId, inputClaims.appStatus, inputClaims.comments, inputClaims.deptComments, inputClaims.deptName, inputClaims.deptStatus,inputClaims.first_name,ipAddress);
 
                 if (res)
                 {

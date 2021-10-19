@@ -157,9 +157,27 @@
         var userName = '@Session["ekurhuleniUserName"]';
         var userRole = '@Session["ekurhuleniUserRole"]';
         $("#CurrentUserName").val(userName);
+        $("#ShowPriceUpdate").hide();
+        $("#HidePriceUpdate").show();
         //alert(userRole);
         if (userRole ==="Admin") {
             $.fn.LoadApplicationsAlertsWithCounts("Y");
+            if (userName == "SolarTest04") {
+                //APPLICATION_PRICE
+                //btnSubmit
+                //button
+                //ShowPriceUpdate
+                $('#btnSubmit').prop('disabled', true);
+                $('#btnCancel').prop('disabled', true);
+                $('#btnSubmit').hide();
+                $('#btnCancel').hide();
+                var price = '@ViewBag.ApplicationPrice';
+                $("#PriceSection").hide();
+                $("#APPLICATION_PRICE").val(Number(price));
+                $("#APPLICATION_PRICE").attr("disabled", "disabled");
+                $("#ShowPriceUpdate").show();
+                $("#HidePriceUpdate").hide();
+            }
         }
         else {
             $.fn.LoadApplicationsAlertsWithCounts("N")
@@ -172,15 +190,21 @@
         margin-bottom: 3px !important;">
             <div class="panel panel-default" style="border:none!important">
                 <div class="panel-heading" style="background:#00A65A;padding-top:5px!important">
-                    <h4 class="panel-title text-center" style="font-size:16pt!important">
+                    <h4 class="panel-title text-center" style="font-size:16pt!important" id="HidePriceUpdate">
                         Update Application Price
                         @if (ViewBag.ApplicationPrice != null)
                         {
                             <b class="pull-right" style="font-size:10pt!important;background-color:#fff!important;padding:5px!important;margin-top:-2px!important;border-radius:3px!important;color:#cc0c00!important">Application Price:R @ViewBag.ApplicationPrice</b>
                         }
                     </h4>
+                    <h4 class="panel-title text-center" style="font-size:16pt!important;display:none!important;margin-top:-4px!important" id="ShowPriceUpdate">
+                        @if (ViewBag.ApplicationPrice != null)
+                        {
+                            <b style="font-size:10pt!important;background-color:#fff!important;padding:5px!important;margin-top:-2px!important;border-radius:3px!important;color:#cc0c00!important">Application Price:R @ViewBag.ApplicationPrice</b>
+                        }
+                    </h4>
                 </div>
-                <div style="border:1px solid #00A65A;height:300px!important">
+                <div style="border:1px solid #00A65A;height:300px!important" id="PriceSection">
                     <div class="panel-body" style="padding: 5px!important;padding-top:50px!important">
                         <table>
                             <tr>
@@ -200,11 +224,11 @@
                         <table width="100%" style="margin-top:10px!important">
                             <tr>
                                 <td colspan="4" class="text-center" id="isNewApplication">
-                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 100px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.UpdatePaymentPrice()">
+                                    <button id="btnSubmit" type="button" class="btn btn-green-custom" style="height: 24px; width: 100px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.UpdatePaymentPrice()">
                                         <i id="isAppLoading" class="fa fa-spinner fa-spin" style="display:none!important"></i>
                                         Update
                                     </button>
-                                    <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 100px; padding: 0; font-size: 11px">Cancel</button></a>
+                                    <a href="../WL/Index"><button type="button" id="btnCancel" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 100px; padding: 0; font-size: 11px">Cancel</button></a>
                                 </td>
                             </tr>
                         </table>

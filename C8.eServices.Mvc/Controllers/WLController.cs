@@ -112,7 +112,7 @@ namespace C8.eServices.Mvc.Controllers
 
             }
             var Pricedata = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
-            ViewBag.ApplicationPrice = Pricedata != null ? Convert.ToString(Pricedata.APPLICATION_PRICE) : "";
+            ViewBag.ApplicationPrice = Pricedata != null ? Pricedata.APPLICATION_PRICE : 0;
             return View();
         }
 
@@ -677,8 +677,8 @@ namespace C8.eServices.Mvc.Controllers
             }
             ViewBag.applicationNo = searchKeyword;
             ViewBag.applicationStatus = status;
-            ViewBag.appStartDate = startDate;
-            ViewBag.appEndDate = endDate;
+            ViewBag.appStartDate = "";
+            ViewBag.appEndDate = "";
             ViewBag.appUsername = username;
             ViewBag.errorStatus = null;
             //var ttt = db.WL_ACCOUNTS.Select(s => new { s.CONTACT_PERSON_FIRST_NAME, s.CONTACT_PERSON_LAST_NAME, s.ACCOUNT_ID }).Distinct().ToList();
@@ -720,11 +720,16 @@ namespace C8.eServices.Mvc.Controllers
 
             if (startDate!=null)
             {
-                appDetails = appDetails.Where(s => s.CREATED_DATE>=startDate).ToList();
+                ViewBag.appStartDate = startDate.Value.Year+"-"+ startDate.Value.Month+"-"+ startDate.Value.Day;
+                
+                //appDetails = appDetails.Where(s => s.CREATED_DATE>=startDate).ToList();
+                appDetails = appDetails.Where(s => s.CREATED_DATE.Date >= startDate.Value.Date).ToList();
             }
             if (endDate != null)
             {
-                appDetails = appDetails.Where(s =>s.CREATED_DATE<= endDate).ToList();
+                ViewBag.appEndDate = endDate.Value.Year + "-" + endDate.Value.Month + "-" + endDate.Value.Day; ;
+                //appDetails = appDetails.Where(s =>s.CREATED_DATE<= endDate).ToList();
+                appDetails = appDetails.Where(s => s.CREATED_DATE.Date <= endDate.Value.Date).ToList();
             }
 
             if (appDetails.Count > 0)
@@ -743,7 +748,9 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult GetUserNames()
         {
             Dictionary<string, object> dct = new Dictionary<string, object>();
-            var result = db.WL_ACCOUNTS.Select(s => new { s.CONTACT_PERSON_FIRST_NAME, s.CONTACT_PERSON_LAST_NAME, s.ACCOUNT_ID }).Distinct().ToList();
+            db.Configuration.LazyLoadingEnabled = false;
+            var result = db.Users.ToList();
+            //var result = db.WL_ACCOUNTS.Select(s => new { s.CONTACT_PERSON_FIRST_NAME, s.CONTACT_PERSON_LAST_NAME, s.ACCOUNT_ID }).Distinct().ToList();
             if (result.Count > 0)
             {
                 dct.Add("success", result);

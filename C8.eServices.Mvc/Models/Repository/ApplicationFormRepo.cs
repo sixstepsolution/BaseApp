@@ -258,7 +258,7 @@ namespace C8.eServices.Mvc.Models.Repository
         //    return "";
         //}
 
-        public string AddApplicationForm(WL_APPLICATIONFORM applicationForm, List<WL_DEPARTMENTS> departmentsDataResponse, List<WL_DECLARATIONS> declarations, HttpFileCollection files, string browser, int appCount, string paymentStatus)
+        public string AddApplicationForm(WL_APPLICATIONFORM applicationForm, List<WL_DEPARTMENTS> departmentsDataResponse, List<WL_DECLARATIONS> declarations, HttpFileCollection files, string browser, int appCount, string paymentStatus,string ipAddress)
         {
             Dictionary<string, object> dct = new Dictionary<string, object>();
             string file_Name = string.Empty;
@@ -393,7 +393,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.CREATED_USER = createdUser;
                     audit_app.MODIFIED_USER = createdUser;
                     audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
-                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                     audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                     //PROPERTYOWNER_NAME
                     _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
@@ -435,7 +435,7 @@ namespace C8.eServices.Mvc.Models.Repository
             return "";
         }
 
-        public string UpdateApplicationForm(WL_APPLICATIONFORM applicationForm,HttpFileCollection files, string browser)
+        public string UpdateApplicationForm(WL_APPLICATIONFORM applicationForm,HttpFileCollection files, string browser,string ipAddress)
         {
             string file_Name = string.Empty;
             string fileName = string.Empty;
@@ -597,7 +597,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.CREATED_USER = createdUser;
                     audit_app.MODIFIED_USER = createdUser;
                     audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
-                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                     audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                     _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                     _context.SaveChanges();
@@ -613,7 +613,7 @@ namespace C8.eServices.Mvc.Models.Repository
                         audit_appp.MODIFIED_DATE = DateTime.Now;
                         audit_appp.CREATED_USER = createdUser;
                         audit_appp.MODIFIED_USER = createdUser;
-                        audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                        audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP();
                         _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
                         n = SaveChanges();
                     }
@@ -639,7 +639,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_app.CREATED_USER = createdUser;
                 audit_app.MODIFIED_USER = createdUser;
                 audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
-                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                 audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();
@@ -648,7 +648,7 @@ namespace C8.eServices.Mvc.Models.Repository
                          
         }
 
-        public bool UpdateApplicationFormStaus(int appId, string appStatus,string comments, string deptComments, string deptName, string deptStatus,string firstName)
+        public bool UpdateApplicationFormStaus(int appId, string appStatus,string comments, string deptComments, string deptName, string deptStatus,string firstName,string ipAddress)
         {           
             WL_APPLICATIONFORM res = GetApplicationFormData(appId);
             var grantWayleave = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
@@ -667,7 +667,7 @@ namespace C8.eServices.Mvc.Models.Repository
             audit_appp.MODIFIED_USER = firstName;
             audit_appp.ACTION = AuditTrailKeys.Applicationviewed;
             audit_appp.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
-            audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+            audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP();
             audit_appp.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
             //audit_app.cre
             _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
@@ -688,7 +688,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_app.MODIFIED_USER = firstName;
                 audit_app.ACTION = "Updated to "+ appStatus;
                 audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
-                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                 //audit_app.cre
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();
@@ -720,7 +720,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_app.MODIFIED_USER = firstName;
                 audit_app.ACTION = "Updated to " + appStatus;
                 audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
-                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                 //audit_app.cre
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();
@@ -728,7 +728,7 @@ namespace C8.eServices.Mvc.Models.Repository
             return isSuccess;
         }
 
-        public bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus,string firstName)
+        public bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus,string firstName,string ipAddress)
         {
             bool isSuccess = false;
             if (!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
@@ -747,7 +747,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_appp.MODIFIED_USER = firstName;
                 audit_appp.ACTION = AuditTrailKeys.Applicationviewed;
                 audit_appp.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
-                audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP();
                 audit_appp.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
                 //audit_app.cre
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
@@ -760,7 +760,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     CopyClass.CopyObject(res, ref audit_app);
                     audit_app.ACTION = "Updated to " + deptStatus;
                     audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
-                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
 
                     //audit_app.ACTION = "Modified";
                     audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
@@ -795,7 +795,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     CopyClass.CopyObject(res, ref audit_app);
                     audit_app.ACTION = "Updated to " + deptStatus;
                     audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
-                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP4Address();
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                     audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
                     audit_app.CREATED_DATE = DateTime.Now;
                     audit_app.MODIFIED_DATE = DateTime.Now;
@@ -835,9 +835,10 @@ namespace C8.eServices.Mvc.Models.Repository
             {
                 WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
                     CopyClass.CopyObject(res, ref audit_app);
-                    audit_app.ACTION = "Modified";
+                    audit_app.ACTION = "Updated to Inspection";
                     audit_app.CREATED_DATE = DateTime.Now;
                     audit_app.MODIFIED_DATE = DateTime.Now;
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                     _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                     _context.SaveChanges();
                 return 1;
