@@ -269,14 +269,20 @@ namespace C8.eServices.Mvc.Models.Repository
                 {
                     WL_ACCOUNT_AUDIT audit_app = new WL_ACCOUNT_AUDIT();
                     CopyClass.CopyObject(acc, ref audit_app);
-                    audit_app.ACTION = "Modified";
+                    audit_app.ACTION = "Update wayleave account";
                     audit_app.CREATED_DATE = DateTime.Now;
                     audit_app.MODIFIED_DATE = DateTime.Now;
                     _context.WL_ACCOUNT_AUDIT.Add(audit_app);
-                    _context.SaveChanges();
+                    _context.SaveChanges(); 
+
+                    EmailHelper email = new EmailHelper();                   
+                    email.Body = EmailNotificationBody.SentWayleaveaccountStatus(acc.CONTACT_PERSON_FIRST_NAME, acc.CONTACT_PERSON_LAST_NAME, acc.ACCOUNT_NUMBER,DateTime.Now).ToString();
+                    email.Recipient = acc.EMAIL;//"prasadthummala558@gmail.com";
+                    email.Subject = "Wayleave Account Status";
+                    //email.SendEmail();
+                    Email em = new Email();
+                    em.GenerateEmail(email.Recipient, email.Subject, email.Body, acc.ACCOUNT_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME, null, null, acc.ACCOUNT_NUMBER, null, null, null, null);
                     dct.Add("success", true);
-                     //EmailNotifications.SentUserNamePassword(acc.EMAIL, acc.CONTACT_PERSON_FIRST_NAME + " " + acc.CONTACT_PERSON_LAST_NAME, acc.EMAIL, acc.PASSWORD);
-                   // msg = "Wayleave account created sucessfully!";
                 }
                 else
                 {

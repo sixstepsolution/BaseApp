@@ -11,6 +11,7 @@ using C8.eServices.Mvc.Keys;
 using C8.eServices.Mvc.Helpers;
 using C8.eServices.Mvc.Models.EmailBodys;
 using C8.eServices.Mvc.Models.Comm;
+using System.Data.Entity;
 
 namespace C8.eServices.Mvc.Models.Repository
 {
@@ -44,67 +45,92 @@ namespace C8.eServices.Mvc.Models.Repository
         public IQueryable<WL_APPLICATIONFORM> GetAllApplicationForm(ApplicationInputClaimModel inpuclaims)
         {
             var claims = ClaimsPrincipal.Current.Identities.ToList();
-            IQueryable<WL_APPLICATIONFORM> result = _context.WL_APPLICATIONFORM;
-            if (!string.IsNullOrEmpty(inpuclaims.acount_no))
-                result = result.Where(app => app.PROPERTYOWNER_ACCOUNT_NO.Contains(inpuclaims.acount_no));
-
-            if (!string.IsNullOrEmpty(inpuclaims.first_name))
-                result = result.Where(app => app.PROPERTYOWNER_NAME.ToLower().Contains(inpuclaims.first_name.ToLower()));
-
-            if (!string.IsNullOrEmpty(inpuclaims.last_name))
-                result = result.Where(app => app.PROPERTYOWNER_SURNAME.ToLower().Contains(inpuclaims.last_name.ToLower()));
-
-            if (inpuclaims.service_type_id != 0)
-                result = result.Where(app => app.SERVICE_TYPE == inpuclaims.service_type_id);
-
-            if (inpuclaims.service_type_sub_id != 0)
-                result = result.Where(app => app.SERVICE_SUB_TYPE == inpuclaims.service_type_sub_id);
-
-            if (inpuclaims.status_type != 0)
-                result = result.Where(app => app.STATUS_ID == inpuclaims.status_type);
-
-
-            if (!string.IsNullOrEmpty(inpuclaims.mobile))
-                result = result.Where(app => app.PROPERTYOWNER_CONTACTNO.Contains(inpuclaims.mobile));
-
-            if (!string.IsNullOrEmpty(inpuclaims.email))
-                result = result.Where(app => app.PROPERTYOWNER_EMAIL.ToLower().Contains(inpuclaims.email.ToLower()));
-
-            if (inpuclaims.created_by != 0)
-                result = result.Where(app => app.CREATED_BY == inpuclaims.created_by);
-
-            if (!string.IsNullOrEmpty(inpuclaims.consultant_number))
-                result = result.Where(app => app.CONSULTANT_NO.ToLower().Contains(inpuclaims.consultant_number.ToLower()));
-
-            if (!string.IsNullOrEmpty(inpuclaims.consultant_company_name))
-                result = result.Where(app => app.CONSULTANT_COMPANYNAME.ToLower().Contains(inpuclaims.consultant_company_name.ToLower()));
-
-            if (!string.IsNullOrEmpty(inpuclaims.consultant_first_name))
-                result = result.Where(app => app.CONSULTANT_NAME.ToLower().Contains(inpuclaims.consultant_first_name.ToLower()));
-
-            if (!string.IsNullOrEmpty(inpuclaims.consultant_last_name))
-                result = result.Where(app => app.CONSULTANT_SURNAME.ToLower().Contains(inpuclaims.consultant_last_name.ToLower()));
-
-            if (!string.IsNullOrEmpty(inpuclaims.consultant_email))
-                result = result.Where(app => app.CONSULTANT_EMAIL.ToLower().Contains(inpuclaims.consultant_email.ToLower()));
-
-            if (!string.IsNullOrEmpty(inpuclaims.project_name))
-                result = result.Where(app => app.PROJECT_NAME.ToLower().Contains(inpuclaims.project_name.ToLower()));
-
-            if (!string.IsNullOrEmpty(inpuclaims.region_code))
-                result = result.Where(app => app.REGION_OR_AREA.ToLower().Contains(inpuclaims.region_code.ToLower()));
-
-            if (!string.IsNullOrEmpty(inpuclaims.Contact_Person))
-                result = result.Where(app => app.REGION_OR_AREA.ToLower().Contains(inpuclaims.region_code.ToLower()));
-
-            if (inpuclaims.created_date != null)
-                result = result.Where(app => DateTime.Compare(app.CREATED_DATE.Date, inpuclaims.created_date.Value) == 0);
-
+            IQueryable<WL_APPLICATIONFORM> result = _context.WL_APPLICATIONFORM;//.Where(s=>s.CREATED_BY== inpuclaims.created_by);
+            if(inpuclaims.created_by>0)
+            {
+                result = result.Where(s => s.CREATED_BY == inpuclaims.created_by);
+            }
+            
+            if (!string.IsNullOrEmpty(inpuclaims.application_no))
+                result = result.Where(app => app.APPLICATION_NUMBER.Contains(inpuclaims.application_no));
             if (inpuclaims.date_requested_from != null && inpuclaims.date_requested_to != null)
             {
                 inpuclaims.date_requested_to = Convert.ToDateTime(inpuclaims.date_requested_to).AddDays(1);
-                result = result.Where(app => DateTime.Compare(app.CREATED_DATE.Date, inpuclaims.date_requested_from.Value) >= 0 && DateTime.Compare(app.CREATED_DATE.Date, inpuclaims.date_requested_to.Value) <= 0);
+                result = result.Where(app => DateTime.Compare(app.CREATED_DATE, inpuclaims.date_requested_from.Value) >= 0 && DateTime.Compare(app.CREATED_DATE, inpuclaims.date_requested_to.Value) <= 0);
             }
+            //if (inpuclaims.date_requested_from != null)
+            //{
+            //    //ViewBag.appStartDate = startDate.Value.Year + "-" + startDate.Value.Month + "-" + startDate.Value.Day;
+            //    var tt = Convert.ToDateTime(inpuclaims.date_requested_from);
+            //    //appDetails = appDetails.Where(s => s.CREATED_DATE>=startDate).ToList();
+
+            //    result = result.Where(s => DbFunctions.TruncateTime(s.CREATED_DATE.Date)>= inpuclaims.date_requested_from.Value.Date);
+            //}
+            //if (inpuclaims.date_requested_to != null)
+            //{
+            //    result = result.Where(s => DbFunctions.TruncateTime(s.CREATED_DATE) >= inpuclaims.date_requested_from.Value.Date);
+            //    result = result.Where(app =>DateTime.Compare(app.CREATED_DATE.Date, inpuclaims.date_requested_to.Value) <= 0);
+            //    //ViewBag.appEndDate = endDate.Value.Year + "-" + endDate.Value.Month + "-" + endDate.Value.Day; ;
+            //    //appDetails = appDetails.Where(s =>s.CREATED_DATE<= endDate).ToList();
+            //    //appDetails = appDetails.Where(s => s.CREATED_DATE.Date <= endDate.Value.Date).ToList();
+            //}
+            //if (!string.IsNullOrEmpty(inpuclaims.first_name))
+            //    result = result.Where(app => app.PROPERTYOWNER_NAME.ToLower().Contains(inpuclaims.first_name.ToLower()));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.last_name))
+            //    result = result.Where(app => app.PROPERTYOWNER_SURNAME.ToLower().Contains(inpuclaims.last_name.ToLower()));
+
+            //if (inpuclaims.service_type_id != 0)
+            //    result = result.Where(app => app.SERVICE_TYPE == inpuclaims.service_type_id);
+
+            //if (inpuclaims.service_type_sub_id != 0)
+            //    result = result.Where(app => app.SERVICE_SUB_TYPE == inpuclaims.service_type_sub_id);
+
+            //if (inpuclaims.status_type != 0)
+            //    result = result.Where(app => app.STATUS_ID == inpuclaims.status_type);
+
+
+            //if (!string.IsNullOrEmpty(inpuclaims.mobile))
+            //    result = result.Where(app => app.PROPERTYOWNER_CONTACTNO.Contains(inpuclaims.mobile));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.email))
+            //    result = result.Where(app => app.PROPERTYOWNER_EMAIL.ToLower().Contains(inpuclaims.email.ToLower()));
+
+            //if (inpuclaims.created_by != 0)
+            //    result = result.Where(app => app.CREATED_BY == inpuclaims.created_by);
+
+            //if (!string.IsNullOrEmpty(inpuclaims.consultant_number))
+            //    result = result.Where(app => app.CONSULTANT_NO.ToLower().Contains(inpuclaims.consultant_number.ToLower()));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.consultant_company_name))
+            //    result = result.Where(app => app.CONSULTANT_COMPANYNAME.ToLower().Contains(inpuclaims.consultant_company_name.ToLower()));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.consultant_first_name))
+            //    result = result.Where(app => app.CONSULTANT_NAME.ToLower().Contains(inpuclaims.consultant_first_name.ToLower()));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.consultant_last_name))
+            //    result = result.Where(app => app.CONSULTANT_SURNAME.ToLower().Contains(inpuclaims.consultant_last_name.ToLower()));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.consultant_email))
+            //    result = result.Where(app => app.CONSULTANT_EMAIL.ToLower().Contains(inpuclaims.consultant_email.ToLower()));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.project_name))
+            //    result = result.Where(app => app.PROJECT_NAME.ToLower().Contains(inpuclaims.project_name.ToLower()));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.region_code))
+            //    result = result.Where(app => app.REGION_OR_AREA.ToLower().Contains(inpuclaims.region_code.ToLower()));
+
+            //if (!string.IsNullOrEmpty(inpuclaims.Contact_Person))
+            //    result = result.Where(app => app.REGION_OR_AREA.ToLower().Contains(inpuclaims.region_code.ToLower()));
+
+            //if (inpuclaims.created_date != null)
+            //    result = result.Where(app => DateTime.Compare(app.CREATED_DATE.Date, inpuclaims.created_date.Value) == 0);
+
+            //if (inpuclaims.date_requested_from != null && inpuclaims.date_requested_to != null)
+            //{
+            //    inpuclaims.date_requested_to = Convert.ToDateTime(inpuclaims.date_requested_to).AddDays(1);
+            //    result = result.Where(app => DateTime.Compare(app.CREATED_DATE.Date, inpuclaims.date_requested_from.Value) >= 0 && DateTime.Compare(app.CREATED_DATE.Date, inpuclaims.date_requested_to.Value) <= 0);
+            //}
             //result = result.Where(app => app.CREATED_DATE.Value >= inpuclaims.date_requested_from.Value &&app.CREATED_DATE.Value<= inpuclaims.date_requested_to.Value);
 
             return result;

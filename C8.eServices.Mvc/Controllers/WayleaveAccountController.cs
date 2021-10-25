@@ -18,6 +18,7 @@ using C8.eServices.Mvc.Keys;
 using RestSharp;
 using System.Web.Script.Serialization;
 using C8.eServices.Mvc.ViewModels;
+using GoogleMaps.LocationServices;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -27,6 +28,7 @@ namespace C8.eServices.Mvc.Controllers
         private eServicesDbContext db = new eServicesDbContext();
         private WayleaveDbContext dbWayleave = new WayleaveDbContext();
         // GET: WayleaveAccount
+        [HttpGet]
         public ActionResult Index()
         {
             //if (Session["wayleaveaccountId"] == null)
@@ -38,6 +40,9 @@ namespace C8.eServices.Mvc.Controllers
             IEnumerable<ApplicationInputModel> members = null;
             ViewBag.ApplicationData = members;
             ViewBag.ApplicationDataCount = 0;
+            ViewBag.applicationNo = "";
+            ViewBag.appStartDate = "";
+            ViewBag.appEndDate = "";
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
@@ -69,7 +74,7 @@ namespace C8.eServices.Mvc.Controllers
                     members = readTask.Result;
                     ViewBag.ApplicationData = members;
                     ViewBag.ApplicationDataCount = members.Count();
-                }   
+                }
                 else
                 {
                     //Error response received 
@@ -77,7 +82,80 @@ namespace C8.eServices.Mvc.Controllers
                     members = Enumerable.Empty<ApplicationInputModel>();
                     ModelState.AddModelError(string.Empty, "Server error try after some time.");
                 }
-            }            
+            }
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to)
+        {
+            //if (Session["wayleaveaccountId"] == null)
+            //{
+            //    // if IsAuthenticated is false return to login code here....
+            //    return Redirect("../Home/WayleaveLogin");
+
+            //}
+            IEnumerable<ApplicationInputModel> members = null;
+            ViewBag.ApplicationData = members;
+            ViewBag.ApplicationDataCount = 0;
+            ViewBag.applicationNo = "";
+            ViewBag.appStartDate = "";
+            ViewBag.appEndDate = "";
+            if (String.IsNullOrEmpty(application_no))
+            {
+                ViewBag.applicationNo = application_no;
+            }
+            if (date_requested_from!=null)
+            {
+                ViewBag.appStartDate = date_requested_from.Value.Year + "-" + date_requested_from.Value.Month + "-" + date_requested_from.Value.Day;
+            }
+            if (date_requested_to!=null)
+            {
+                ViewBag.appEndDate = date_requested_to.Value.Year + "-" + date_requested_to.Value.Month + "-" + date_requested_to.Value.Day;
+            }
+            
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
+                inpuclaims.application_no = application_no;
+                inpuclaims.date_requested_from = date_requested_from;
+                inpuclaims.date_requested_to = date_requested_to;
+                inpuclaims.created_by = Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                //inpuclaims.isAdmin = "N";
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                //Thread.Sleep(5000);
+                var responseTask = client.PostAsync("get-applications-with-counts-serach", byteContent);
+                //Thread.Sleep(50000);
+                responseTask.Wait();
+                Thread.Sleep(5000);
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ApplicationInputModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    ViewBag.ApplicationData = members;
+                    ViewBag.ApplicationDataCount = members.Count();
+                }
+                else
+                {
+                    //Error response received 
+                    ViewBag.ApplicationDataCount = 0;
+                    members = Enumerable.Empty<ApplicationInputModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
             return View();
         }
 
@@ -245,6 +323,7 @@ namespace C8.eServices.Mvc.Controllers
         [HttpGet]
         public string GetAddress(string latilngi)
         {
+            var address = latilngi;
             var lat = latilngi.Split(',')[0].Trim(' ');
             var lng = latilngi.Split(',')[1].Trim(' ');
             var uri = Uri.EscapeUriString("http://129.232.208.13/EkuArcGIS_IMS_Instance/api/EkurhuleniArcGIS/GetAddress?latitude=" + lat + "&longitude=" + lng);

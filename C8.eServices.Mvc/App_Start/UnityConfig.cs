@@ -65,6 +65,7 @@ namespace C8.eServices.Mvc
                 //.ForMember(dest => dest.serviceSubTypeName, opt => opt.MapFrom(src => src.MASTER_SERVICE_SUB_TYPES.DESCRIPTION))
                 ///.ForMember(dest => dest.wayleaveAttention, opt => opt.MapFrom(src => src.WAYLEAVE_ATTENTION))
                 .ForMember(dest => dest.createdDate, opt => opt.MapFrom(src => src.CREATED_DATE != null ? Convert.ToDateTime(src.CREATED_DATE).ToString("yyyy-MM-dd") : ""))
+                .ForMember(dest => dest.createdTime, opt => opt.MapFrom(src => src.CREATED_DATE != null ? Convert.ToDateTime(src.CREATED_DATE).ToString("hh:mm tt") : ""))
                 .ForMember(dest => dest.applicationStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.applicationStepStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.statusId, opt => opt.MapFrom(src => src.STATUS_ID))

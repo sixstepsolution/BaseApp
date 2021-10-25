@@ -11,5 +11,10 @@ namespace C8.eServices.Mvc.Keys
         public const string RatesRebate = "a_rates_rebate";
         public const string AllApplications = "a_all_applications";
         public const string IncentivePolicy = "a_incentive_policy";
+
+        public const string SystemAdminRole = "System Admin";
+        public const string AdminRole = "Admin";
+        public const string DepartmentUserRole = "application";
+        public const string UserAccountRole = "wayleave account";
     }
 }

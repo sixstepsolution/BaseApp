@@ -32,7 +32,7 @@
     <!-- fullCalendar -->
     <script src="~/Content/wayleaveStyles/assets/bower_components/moment/moment.js"></script>
     <script src="~/Content/wayleaveStyles/assets/bower_components/fullcalendar/fullcalendar.js"></script>
-    <script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>
+    @*<script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
     <script src="~/Content/wayleaveStyles/assets/Content/dist/js/app.min.js"></script>
     <link rel="shortcut icon" href="~/Content/wayleaveStyles/assets/Images/Way_Title.png" type="image/x-icon">
     @*<link href="~/Content/wayleaveStyles/assets/Content/bootstrap.min.css" rel="stylesheet" />*@
@@ -466,81 +466,88 @@
                                             </div>
                                         </a>
                                     </li>
+                                    <li class="right-pane-inv">
+                                        <a class="right-pane-inv" title="Download User Manual" style="cursor:pointer!important" onclick="DownloadUserManual('../TrainingManuals/WayleaveTrainingManual-Applicant01102021.pdf','Wayleave Training Manual - Applicant 01102021.pdf')">
+
+                                            <div class="menu-info" style="padding:15px!important;">
+                                                <h3 class="control-sidebar-subheading"><i class="fa fa-cloud-download"></i> &nbsp;User Manual</h3>
+                                            </div>
+                                        </a>
+                                    </li>                                    
+                                    @*<li class="right-pane-inv">
+            <a class="right-pane-inv" href="../WL/WayleaveAccount">
+                <i class="menu-icon fa fa-bank bg-green ggb-menu-icon"></i>
+
+                <div class="menu-info" style="padding:15px!important;">
+                    <h3 class="control-sidebar-subheading">WayLeave Account</h3>
+                </div>
+            </a>
+        </li>*@
 
                                     @*<li class="right-pane-inv">
-                                            <a class="right-pane-inv" href="../WL/WayleaveAccount">
-                                                <i class="menu-icon fa fa-bank bg-green ggb-menu-icon"></i>
+            <a class="right-pane-inv" href="javascript:void(0)">
+                <i class="menu-icon fa  fa-h-square bg-red ggb-menu-icon"></i>
 
-                                                <div class="menu-info" style="padding:15px!important;">
-                                                    <h3 class="control-sidebar-subheading">WayLeave Account</h3>
-                                                </div>
-                                            </a>
-                                        </li>*@
+                <div class="menu-info" style="padding:4px;">
+                    <h4 class="control-sidebar-subheading">Personal Details</h4>
+                </div>
+            </a>
+        </li>
+        <li class="right-pane-inv">
+            <a class="right-pane-inv" href="javascript:void(0)">
+                <i class="menu-icon fa  fa-transgender-alt bg-light-blue ggb-menu-icon"></i>
 
-                                    @*<li class="right-pane-inv">
-                                            <a class="right-pane-inv" href="javascript:void(0)">
-                                                <i class="menu-icon fa  fa-h-square bg-red ggb-menu-icon"></i>
+                <div class="menu-info" style="padding:4px;">
+                    <h4 class="control-sidebar-subheading">Equipment Details</h4>
+                </div>
+            </a>
+        </li>
+        <li class="right-pane-inv">
+            <a class="right-pane-inv" href="javascript:void(0)">
+                <i class="menu-icon fa fa-files-o bg-aqua-active ggb-menu-icon"></i>
 
-                                                <div class="menu-info" style="padding:4px;">
-                                                    <h4 class="control-sidebar-subheading">Personal Details</h4>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="right-pane-inv">
-                                            <a class="right-pane-inv" href="javascript:void(0)">
-                                                <i class="menu-icon fa  fa-transgender-alt bg-light-blue ggb-menu-icon"></i>
+                <div class="menu-info" style="padding:4px;">
+                    <h4 class="control-sidebar-subheading">Documents</h4>
 
-                                                <div class="menu-info" style="padding:4px;">
-                                                    <h4 class="control-sidebar-subheading">Equipment Details</h4>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="right-pane-inv">
-                                            <a class="right-pane-inv" href="javascript:void(0)">
-                                                <i class="menu-icon fa fa-files-o bg-aqua-active ggb-menu-icon"></i>
+                </div>
+            </a>
+        </li>
+        <li class="right-pane-inv">
+            <a class="right-pane-inv" href="javascript:void(0)">
+                <i class="menu-icon fa  fa-line-chart bg-purple ggb-menu-icon"></i>
 
-                                                <div class="menu-info" style="padding:4px;">
-                                                    <h4 class="control-sidebar-subheading">Documents</h4>
+                <div class="menu-info" style="padding:4px;">
+                    <h4 class="control-sidebar-subheading">Performance</h4>
+                </div>
+            </a>
+        </li>
+        <li class="right-pane-inv">
+            <a class="right-pane-inv" href="javascript:void(0)">
+                <i class="menu-icon fa  fa-file-image-o bg-maroon-active ggb-menu-icon"></i>
 
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="right-pane-inv">
-                                            <a class="right-pane-inv" href="javascript:void(0)">
-                                                <i class="menu-icon fa  fa-line-chart bg-purple ggb-menu-icon"></i>
+                <div class="menu-info" style="padding:4px;">
+                    <h4 class="control-sidebar-subheading">Reports</h4>
+                </div>
+            </a>
+        </li>
+        <li class="right-pane-inv">
+            <a class="right-pane-inv" href="javascript:void(0)">
+                <i class="menu-icon fa  fa-home bg-green-active ggb-menu-icon"></i>
 
-                                                <div class="menu-info" style="padding:4px;">
-                                                    <h4 class="control-sidebar-subheading">Performance</h4>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="right-pane-inv">
-                                            <a class="right-pane-inv" href="javascript:void(0)">
-                                                <i class="menu-icon fa  fa-file-image-o bg-maroon-active ggb-menu-icon"></i>
+                <div class="menu-info" style="padding:4px;">
+                    <h4 class="control-sidebar-subheading">Asset</h4>
+                </div>
+            </a>
+        </li>
+        <li class="right-pane-inv">
+            <a class="right-pane-inv" href="javascript:void(0)">
+                <i class="menu-icon fa  fa-money bg-purple-active ggb-menu-icon"></i>
 
-                                                <div class="menu-info" style="padding:4px;">
-                                                    <h4 class="control-sidebar-subheading">Reports</h4>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="right-pane-inv">
-                                            <a class="right-pane-inv" href="javascript:void(0)">
-                                                <i class="menu-icon fa  fa-home bg-green-active ggb-menu-icon"></i>
-
-                                                <div class="menu-info" style="padding:4px;">
-                                                    <h4 class="control-sidebar-subheading">Asset</h4>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="right-pane-inv">
-                                            <a class="right-pane-inv" href="javascript:void(0)">
-                                                <i class="menu-icon fa  fa-money bg-purple-active ggb-menu-icon"></i>
-
-                                                <div class="menu-info" style="padding:4px;">
-                                                    <h4 class="control-sidebar-subheading">Budget</h4>
-                                                </div>
-                                            </a>
-                                        </li>*@
+                <div class="menu-info" style="padding:4px;">
+                    <h4 class="control-sidebar-subheading">Budget</h4>
+                </div>
+            </a>
+        </li>*@
 
                                 </ul>
                             </li>

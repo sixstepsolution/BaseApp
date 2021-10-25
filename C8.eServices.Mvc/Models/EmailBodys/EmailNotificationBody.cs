@@ -158,6 +158,25 @@ namespace C8.eServices.Mvc.Models.EmailBodys
             return strBulBodyContent;
         }
 
+        public static StringBuilder SentWayleaveaccountStatus(string firstName, string lastName, string accountNumber, DateTime? updatedDate)
+        {
+            StringBuilder strBulBodyContent = new StringBuilder();
+            strBulBodyContent.Append("<html>");
+            strBulBodyContent.Append("<head>");
+            strBulBodyContent.Append("</head>");
+            strBulBodyContent.Append("<body>");
+            strBulBodyContent.Append("<div>");
+            strBulBodyContent.Append("<div>Dear " + firstName + " " + lastName + ",</div><br /><br/>");
+            strBulBodyContent.Append("<div>Your Wayleave profile <b>" + accountNumber + "</b> has been updated.</div><br />");
+            strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
+            strBulBodyContent.Append("Wayleave");
+            strBulBodyContent.Append("</div>");
+            strBulBodyContent.Append("</body>");
+            strBulBodyContent.Append("</html>");
+            return strBulBodyContent;
+        }
+
+
         public static StringBuilder SentApplicationFormStatustoConsultant(string firstName, string lastName, string accountNumber)
         {
             StringBuilder strBulBodyContent = new StringBuilder();

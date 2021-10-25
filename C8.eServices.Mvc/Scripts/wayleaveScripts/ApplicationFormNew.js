@@ -46,7 +46,93 @@ $.fn.ShowSearchMap = function (id) {
     //$("#map").html('');
     //ajaxOnComplete();
     //("#ArcGisSearchMap").load(window.location.href + " #ArcGisSearchMap");
+   
+
+   
     $("#locationPopup").modal('show');
+    //const apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
+
+    //const basemapEnum = "ArcGIS:Navigation";
+
+    //const map = L.map("map", {
+    //    minZoom: 2
+
+    //}).setView([-26.18848, 28.32078], 14); // Sydney
+
+    //L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+    //    apiKey: apiKey
+    //}).addTo(map);
+
+
+    //var searchControl = L.esri.Geocoding.geosearch({
+    //    position: "topright",
+    //    placeholder: "Enter an address or place e.g. 37 Brakpan Rd",
+    //    useMapBounds: false,
+    //    providers: [L.esri.Geocoding.arcgisOnlineProvider({
+    //        apikey: apiKey,
+    //        nearby: {
+    //            lat: -26.18848,
+    //            lng: 28.32078
+    //        },
+    //    })]
+    //}).addTo(map);
+
+    //var results = L.layerGroup().addTo(map);
+
+    //searchControl.on("results", (data) => {
+    //    alert(data.results.length);
+
+    //    results.clearLayers();
+    //    for (let i = data.results.length - 1; i >= 0; i--) {
+    //        console.log(data.results);
+    //        const lngLatString = `${Math.round(data.results[i].latlng.lng * 100000) / 100000}, ${Math.round(data.results[i].latlng.lat * 100000) / 100000}`;
+    //        const marker = L.marker(data.results[i].latlng);
+    //        marker.bindPopup(`<b>${lngLatString}</b><p>${data.results[i].properties.LongLabel}</p>`)
+    //        results.addLayer(marker);
+    //        var lat = data.results[i].latlng.lat;
+    //        var lng = data.results[i].latlng.lng;
+    //        var latilngi = lat + "," + lng;
+    //        //alert(latilngi);
+    //        //debugger;
+    //        //var streetnumber = data.results[i].properties.AddNum;
+    //        //var streetname = data.results[i].properties.StName;
+    //        //var township = data.results[i].properties.District;
+    //        //marker.openPopup();
+    //        //console.log(data.results[i]);
+    //        //debugger;
+    //        $.ajax({
+    //            type: 'GET',
+    //            url: '@Url.Action("GetAddress", "WayleaveAccount")',
+    //            data: { latilngi: latilngi },
+    //            success: function (response) {
+    //                //debugger;
+    //                console.log(response);
+    //                var obj1 = JSON.parse(response);
+    //                var obj = obj1;
+    //                if (obj.StreetName != "" || obj.StreetNumber != "" || obj.TownShip != "") {
+    //                    alert('success');
+    //                    //$("#" + GlobalSearchResult).val(evt.result.name);
+    //                    //window.parent.document.getElementById("streetnumber").value = streetnumber;
+    //                    //window.parent.document.getElementById("streetnamefield").value = streetname;
+    //                    ////window.parent.document.getElementById("streetnumber").value = obj.StreetNumber;
+    //                    ////window.parent.document.getElementById("streetnamefield").value = obj.StreetName;
+    //                    //window.parent.document.getElementById("suburbdist").value = township;
+    //                    //window.parent.document.getElementById("cityfield").value = data.results[i].properties.Subregion;
+    //                    //window.parent.document.getElementById("postalcode").value = data.results[i].properties.Postal;
+    //                    //window.parent.document.getElementById("customerLatLong").value = latilngi;
+    //                    //alert(streetnumber);
+    //                    //alert(streetname);
+
+    //                }
+    //                else {
+    //                    alert("Please note that the address provided is outside Ekurhuleni.");
+    //                    //parent.genericSystemMessage("Please note that the address provided is outside Ekurhuleni.");
+    //                }
+    //            }
+    //        });
+
+    //    }
+    //});
     
 };
 
@@ -471,7 +557,7 @@ $.fn.LoadDeclarationsOnPageLoad = function () {
 
 //Load page load events
 function Init() {
-    //alert();
+    //alert('init');
     $("#isAppLoading").hide();
     $("#IsAppEdit").hide();
     $.fn.GetContractorOrConsultant();

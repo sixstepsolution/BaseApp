@@ -23,6 +23,7 @@
        
 
         $.fn.showLoader = function () {
+            var statusArray = [];
             $("#isLoading").hide();
             $("#isLoading1").show();
             var sd = $("#startDate").val();
@@ -32,7 +33,7 @@
             if (sd != "" && sd != undefined && ed != "" && ed != undefined) {
                 $("#isLoading").show();
                 $("#isLoading1").hide();
-                if ($("#reportType").val() != "ApprovedApplication") {
+                if ($("#reportType").val() == "TotalWayleaveApplicationsCreated") {
                     if (st != "" && st != undefined) {
                     }
                     else {
@@ -40,13 +41,26 @@
                         return;
                     }
                 }
+                //alert($("#status").text());
+                if ($("#status").val() == "All") {
+                    statusArray.push("2");
+                    statusArray.push("3");
+                    statusArray.push("4");
+                    statusArray.push("8");
+                }
+                else {
+                    statusArray.push($("#status").val());
+                }
+
+
                 var formData = new FormData();
                 var appFormData = new Object();
                 appFormData.documentType = $('#documentType').val();
                 appFormData.reportType = $('#reportType').val();
                 appFormData.startDate = $('#startDate').val();
                 appFormData.endDate = $('#endDate').val();
-                appFormData.status = $('#status').val();
+                appFormData.status = statusArray;
+                //alert($('#status').val());
                 formData.append("FormData", JSON.stringify(appFormData));
                 $.ajax({
                     url: "../WL/ReportsNew",
@@ -125,8 +139,12 @@
     function showReportTypeSearch(id) {
         if ($("#" + id).val() != "" && $("#" + id).val() != undefined) {
             $("#ReportTypeSearchSection").show();
-            if ($("#" + id).val() != "ApprovedApplication") {
+            if ($("#" + id).val() == "TotalWayleaveApplicationsCreated") {
                 $("#ShowStatusSection").show();
+            }
+            else {
+                $('#status').val('');
+                $("#ShowStatusSection").hide();
             }
         }
         else {
@@ -213,6 +231,7 @@
                                         <select style="border-radius: 4px"
                                                 class="form-control" name="status" id="status" required>
                                             <option value="" selected>Make a selection</option>
+                                            <option value="All">All</option>
                                             <option value="3">Application Granted</option>
                                             <option value="4">Application Rejected</option>
                                             <option value="2">Distributed to Departments</option>

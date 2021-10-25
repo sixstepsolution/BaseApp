@@ -84,6 +84,9 @@
     <Reference Include="EPPlus">
       <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
     </Reference>
+    <Reference Include="GoogleMaps.LocationServices, Version=1.2.0.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GoogleMaps.LocationServices.1.2.0.5\lib\netstandard2.0\GoogleMaps.LocationServices.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.12.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\iTextSharp.5.5.12\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
@@ -4723,6 +4726,9 @@
     <Content Include="Views\WL\AuditTrail.cshtml" />
     <Content Include="Views\WL\Reports.cshtml" />
     <Content Include="Views\Home\testMap.cshtml" />
+    <Content Include="TrainingManuals\WayleaveTrainingManual-Applicant01102021.pdf" />
+    <Content Include="TrainingManuals\WayleaveTrainingManual-DepartmentUsers01102021.pdf" />
+    <Content Include="TrainingManuals\RoadsStormwaterDepartment01102021.pdf" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

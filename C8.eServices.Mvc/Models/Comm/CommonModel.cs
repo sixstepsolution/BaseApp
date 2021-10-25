@@ -65,6 +65,6 @@ namespace C8.eServices.Mvc.Models.Comm
         public string reportType { get; set; }
         public DateTime? startDate { get; set; }
         public DateTime? endDate { get; set; }
-        public string status { get; set; }
+        public string[] status { get; set; }
     }
 }

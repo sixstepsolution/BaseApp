@@ -117,12 +117,12 @@
         }
 
 
-    #map {
+    /*#map {
         width: 100%;
         height: 500px;
         margin: 0px !important;
         padding: 0px !important
-    }
+    }*/
 
     #right-panel {
         float: right;
@@ -165,10 +165,10 @@
 </style>
 
 <script src="~/Scripts/wayleaveScripts/ApplicationFormNew.js?dt=@DateTime.Now.Millisecond"></script>
-@*<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLOlMJLaIKTK3R1mRfv0gEI8bAmfqDxlk&sensor=false&libraries=places"></script>*@
+
 <script type="text/javascript" language="javascript">
     $(document).ready(function () {
+        //alert();
         var sessionInfo = '@Session["wayleaveaccountId"]';
         var applicationId = '@ViewBag.ApplicationId';
 
@@ -186,13 +186,24 @@
     });
 </script>
 <link rel="stylesheet" href="https://js.arcgis.com/3.37/esri/css/esri.css">
+<script src="https://js.arcgis.com/3.37/"></script>
 <style>
     #map {
         height: 500px !important;
-        width: 100%;
+        width: 100%!important;
         margin: 0;
         padding: 0;
     }
+    /*#map {
+        position: center;
+        z-index: 1002;
+        height: 500px !important;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100% !important;
+    }*/
 
     #search {
         display: block;
@@ -201,6 +212,7 @@
         top: 20px;
         left: 75px;
     }
+
     .simpleGeocoder .esriGeocoderIcon {
         float: left;
         outline: 0;
@@ -210,18 +222,21 @@
         overflow: hidden;
         margin: 11px 0 6px 6px;
     }
+
     .esriPopup .esriPopupWrapper {
         /* box-shadow: 0 0 0.75em #777777; */
         /* -webkit-box-shadow: 0 0 0.75em #777777; */
         border-radius: 5px;
         -webkit-border-radius: 5px;
-        height:100px!important
+        height: 100px !important
     }
+
     .simpleGeocoder .esriGeocoder .esriGeocoderReset {
         margin: 11px 6px 6px 0;
         float: right;
         display: block;
     }
+
     .spotlight {
         z-index: -1;
         position: absolute;
@@ -241,174 +256,141 @@
     }
 </style>
 
-<script src="https://js.arcgis.com/3.37/"></script>
+
 <script>
-    require([
-        "esri/config",
-        "esri/map",
-        "esri/dijit/Geocoder",
-        "esri/graphic",
-        "esri/symbols/SimpleMarkerSymbol",
-        "esri/geometry/screenUtils",
-        "dojo/dom",
-        "dojo/dom-construct",
-        "dojo/query",
-        "dojo/_base/Color",
-        //"esri/Graphic",
-        //"esri/layers/GraphicsLayer"
-    ], function (esriConfig, Map, Geocoder, Graphic, SimpleMarkerSymbol, screenUtils, dom, domConstruct, query, Color) {
-        // create a map and instance of the geocoder widget here
-            esriConfig.apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
-        var map = new Map("map", {
-            basemap: "topo",
-            center: [-38.8587, 31.0218],
-            zoom: 3,
-            scale: 500000
-        });
-        var geocoder = new Geocoder({
-            arcgisGeocoder: {
-                placeholder: "Choose Address"
-            },
-            autoComplete: true,
-            map: map
-        }, dom.byId("search"));
+        require([
+            "esri/config",
+            "esri/map",
+            "esri/dijit/Geocoder",
+            "esri/graphic",
+            "esri/symbols/SimpleMarkerSymbol",
+            "esri/geometry/screenUtils",
+            "dojo/dom",
+            "dojo/dom-construct",
+            "dojo/query",
+            "dojo/_base/Color",
+            //"esri/Graphic",
+            //"esri/layers/GraphicsLayer"
+        ], function (esriConfig, Map, Geocoder, Graphic, SimpleMarkerSymbol, screenUtils, dom, domConstruct, query, Color) {
+            // create a map and instance of the geocoder widget here
+                esriConfig.apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
+            var map = new Map("map", {
+                basemap: "topo",
+                center: [-38.8587, 31.0218],
+                zoom: 3,
+                scale: 500000
+            });
+            var geocoder = new Geocoder({
+                arcgisGeocoder: {
+                    placeholder: "Choose Address"
+                },
+                autoComplete: true,
+                map: map
+            }, dom.byId("search"));
 
-            //const graphicsLayer = new GraphicsLayer();
+                //const graphicsLayer = new GraphicsLayer();
 
-            //const point = { //Create a point
-            //    type: "point",
-            //    longitude: 29.8587,
-            //    latitude: 31.0218
-            //};
-            //const simpleMarkerSymbol = {
-            //    type: "simple-marker",
-            //    color: [226, 119, 40],  // Orange
-            //    outline: {
-            //        color: [255, 255, 255], // White
-            //        width: 1
-            //    }
-            //};
-            //const pointGraphic = new Graphic({
-            //    geometry: point,
-            //    symbol: simpleMarkerSymbol
-            //});
-            //graphicsLayer.add(pointGraphic);
-            //map.add(graphicsLayer);
-        map.on("load", enableSpotlight);
+                //const point = { //Create a point
+                //    type: "point",
+                //    longitude: 29.8587,
+                //    latitude: 31.0218
+                //};
+                //const simpleMarkerSymbol = {
+                //    type: "simple-marker",
+                //    color: [226, 119, 40],  // Orange
+                //    outline: {
+                //        color: [255, 255, 255], // White
+                //        width: 1
+                //    }
+                //};
+                //const pointGraphic = new Graphic({
+                //    geometry: point,
+                //    symbol: simpleMarkerSymbol
+                //});
+                //graphicsLayer.add(pointGraphic);
+                //map.add(graphicsLayer);
+            map.on("load", enableSpotlight);
 
-        geocoder.on("select", showLocation);
-        geocoder.on("clear", removeSpotlight);
+            geocoder.on("select", showLocation);
+            geocoder.on("clear", removeSpotlight);
 
-        geocoder.on("results", (data) => {
-            results.clearLayers();
-            alert('success');
-            for (let i = data.results.length - 1; i >= 0; i--) {
-                const lngLatString = `${Math.round(data.results[i].latlng.lng * 100000) / 100000}, ${Math.round(data.results[i].latlng.lat * 100000) / 100000}`;
-                const marker = L.marker(data.results[i].latlng);
-                marker.bindPopup(`<b>${lngLatString}</b><p>${data.results[i].properties.LongLabel}</p>`)
-                results.addLayer(marker);
-                var lat = data.results[i].latlng.lat;
-                var lng = data.results[i].latlng.lng;
-                alert(lat);
-                alert(lng);
-                var latilngi = lat + "," + lng;
-                debugger;
-                var streetnumber = data.results[i].properties.AddNum;
-                var streetname = data.results[i].properties.StName;
-                var township = data.results[i].properties.District;
-                //marker.openPopup();
-                //console.log(data.results[i]);
-                debugger;
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("GetAddress", "WayleaveAccount")',
-                    data: { latilngi: latilngi},
-                    success: function (response) {
-                        debugger;
-                        var obj1 = JSON.parse(response);
-                        var obj = obj1;
-                        if (obj.StreetName != "" || obj.StreetNumber != "" || obj.TownShip != "") {
 
-                            //window.parent.document.getElementById("streetnumber").value = streetnumber;
-                            //window.parent.document.getElementById("streetnamefield").value = streetname;
-                            ////window.parent.document.getElementById("streetnumber").value = obj.StreetNumber;
-                            ////window.parent.document.getElementById("streetnamefield").value = obj.StreetName;
-                            //window.parent.document.getElementById("suburbdist").value = township;
-                            //window.parent.document.getElementById("cityfield").value = data.results[i].properties.Subregion;
-                            //window.parent.document.getElementById("postalcode").value = data.results[i].properties.Postal;
-                            //window.parent.document.getElementById("customerLatLong").value = latilngi;
-                            //alert(streetnumber);
-                            //alert(streetname);
+            function showLocation(evt) {
+                //alert(evt.result.name);
+                //alert(GlobalSearchResult);
+                var selectedAddress = evt.result.name;                
+                $("#" + GlobalSearchResult).val(evt.result.name);
+                console.log(evt.result);
+                map.graphics.clear();
+                var point = evt.result.feature.geometry;
+                var symbol = new SimpleMarkerSymbol().setStyle(
+                    SimpleMarkerSymbol.STYLE_SQUARE).setColor(
+                        new Color([255, 0, 0, 0.5])
+                    );
+                var graphic = new Graphic(point, symbol);
+                map.graphics.add(graphic);
 
-                        }
-                        else {
-                            alert("Please note that the address provided is outside Ekurhuleni.");
-                            //parent.genericSystemMessage("Please note that the address provided is outside Ekurhuleni.");
+
+                map.infoWindow.setTitle("Search Result");
+                map.infoWindow.setContent(evt.result.name);
+                map.infoWindow.show(evt.result.feature.geometry);
+
+                var spotlight = map.on("extent-change", function (extentChange) {
+                    var geom = screenUtils.toScreenGeometry(map.extent, map.width, map.height, extentChange.extent);
+                    var width = geom.xmax - geom.xmin;
+                    var height = geom.ymin - geom.ymax;
+
+                    var max = height;
+                    if (width > height) {
+                        max = width;
                     }
-                }
-                });
 
+                    var margin = '-' + Math.floor(max / 2) + 'px 0 0 -' + Math.floor(max / 2) + 'px';
+
+                    query(".spotlight").addClass("spotlight-active").style({
+                        width: max + "px",
+                        height: max + "px",
+                        margin: margin
+                    });
+                    spotlight.remove();
+
+                });
+                //geocoder.on("clear", removeSpotlight);
+                //removeSpotlight();
+                //map.graphics.clear();
+            }
+
+            function enableSpotlight() {
+                var html = "<div id='spotlight' class='spotlight'></div>"
+                domConstruct.place(html, dom.byId("map_container"), "first");
+            }
+
+            function removeSpotlight() {
+                    //alert('remove');
+                    //map.graphics.remove(graphic);
+                query(".spotlight").removeClass("spotlight-active");
+                map.infoWindow.hide();
+                map.graphics.clear();
             }
         });
+    </script>
+<!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>-->
+<!-- Load Esri Leaflet from CDN -->
+<!--<script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>-->
 
-        function showLocation(evt) {
-            //alert(evt.result.name);
-            //alert(GlobalSearchResult);
-            $("#" + GlobalSearchResult).val(evt.result.name);
-            console.log(evt.result);
-            map.graphics.clear();
-            var point = evt.result.feature.geometry;
-            var symbol = new SimpleMarkerSymbol().setStyle(
-                SimpleMarkerSymbol.STYLE_SQUARE).setColor(
-                    new Color([255, 0, 0, 0.5])
-                );
-            var graphic = new Graphic(point, symbol);
-            map.graphics.add(graphic);
-
-
-            map.infoWindow.setTitle("Search Result");
-            map.infoWindow.setContent(evt.result.name);
-            map.infoWindow.show(evt.result.feature.geometry);
-
-            var spotlight = map.on("extent-change", function (extentChange) {
-                var geom = screenUtils.toScreenGeometry(map.extent, map.width, map.height, extentChange.extent);
-                var width = geom.xmax - geom.xmin;
-                var height = geom.ymin - geom.ymax;
-
-                var max = height;
-                if (width > height) {
-                    max = width;
-                }
-
-                var margin = '-' + Math.floor(max / 2) + 'px 0 0 -' + Math.floor(max / 2) + 'px';
-
-                query(".spotlight").addClass("spotlight-active").style({
-                    width: max + "px",
-                    height: max + "px",
-                    margin: margin
-                });
-                spotlight.remove();
-
-            });
-            //geocoder.on("clear", removeSpotlight);
-            //removeSpotlight();
-            //map.graphics.clear();
-        }
-
-        function enableSpotlight() {
-            var html = "<div id='spotlight' class='spotlight'></div>"
-            domConstruct.place(html, dom.byId("map_container"), "first");
-        }
-
-        function removeSpotlight() {
-                //alert('remove');
-                //map.graphics.remove(graphic);
-            query(".spotlight").removeClass("spotlight-active");
-            map.infoWindow.hide();
-            map.graphics.clear();
-        }
-    });
-</script>
+@*<script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
+<!-- Load Esri Leaflet Geocoder from CDN -->
+@*<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.css" ">
+<script src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"></script>
+<script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
+@*<link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>*@
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
     <form name="ApplicationForm">
         <div class="panel-group" style="margin-left: -25px;
@@ -513,7 +495,7 @@
                                                         <input type="text" readonly @*onkeyup="$.fn.validateEmail('PROPERTYOWNER_EMAIL')"*@ style="border-radius: 4px" id="PROPERTYOWNER_EMAIL"
                                                                class="form-control" name="PROPERTYOWNER_EMAIL" />
                                                     </div>
-                                                </td>                                                
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td style="width:  15.5%">
@@ -555,7 +537,7 @@
                                     <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
                                         <table>
                                             <tr>
-                                               
+
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Name</label>
@@ -595,7 +577,7 @@
                                             <tr>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label">
-                                                        <label>Address</label>                                                        
+                                                        <label>Address</label>
                                                         <div class="input-group" style="width: 100%;">
                                                             <input type="text" class="form-control" autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="CONSULTANT_ADDRESS"
                                                                    name="CONSULTANT_ADDRESS" />
@@ -603,7 +585,7 @@
                                                                   style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
                                                                 <i class="fa fa-map-marker"></i>
                                                             </span>
-                                                        </div> 
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -666,7 +648,7 @@
                                             <tr>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
-                                                        <label>Address</label>                                                        
+                                                        <label>Address</label>
                                                         <div class="input-group" style="width: 100%;">
                                                             <input type="text" class="form-control" autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="CONTRACTOR_ADDRESS"
                                                                    name="CONTRACTOR_ADDRESS" />
@@ -734,7 +716,7 @@
                                 </div>
                             </div>
                         </div>
-                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ProjectdetailsSection">
+                        <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ProjectdetailsSection">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
                                     <h4 class="panel-title">
@@ -820,22 +802,22 @@
                                                                class="form-control allowDecimalNumbers" name="KERBS" />
                                                     </div>
                                                 </td>
-                                                <td>                                                    
+                                                <td>
                                                     <div class="input-group input-label">
                                                         <label class="control-label">Starting Address</label>
                                                         <div class="input-group" style="width: 100%;">
                                                             <input type="text" class="form-control" readonly autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="GPS_START_ADDRESS"
                                                                    name="GPS_START_ADDRESS" required />
                                                             <span class="input-group-addon" onclick="$.fn.ShowSearchMap('GPS_START_ADDRESS')"
-                      style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
-                    <i class="fa fa-map-marker"></i>
-                </span>
+                                                                  style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
+                                                                <i class="fa fa-map-marker"></i>
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label">
-                                                        <label class="control-label">Ending Address</label>                                                        
+                                                        <label class="control-label">Ending Address</label>
                                                         <div class="input-group" style="width: 100%;">
                                                             <input type="text" class="form-control" readonly autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="GPS_END_ADDRESS"
                                                                    name="GPS_END_ADDRESS" required />
@@ -925,10 +907,10 @@
                             <tr>
                                 <td colspan="4" class="text-center" id="IsAppEdit">
                                     @*<button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
-                onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
-            <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
-            Re-Submit
-        </button>*@
+                                                onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
+                                            <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                                            Re-Submit
+                                        </button>*@
                                     <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
                                             onclick="$.fn.SubmitApplication()">
                                         <i id="isAppLoadingUpdate" style="display:none!important" class="fa fa-spinner fa-spin"></i>
@@ -942,7 +924,7 @@
                                         Submit
                                     </button>
                                     <a href="../WayleaveAccount/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button></a>
-</td>
+                                </td>
                             </tr>
                         </table>
                     </div>
@@ -961,87 +943,90 @@
                     <div class="modal-body">
                         @*<div id="map" style="display:none!important"></div>*@
                         <div class="soria" id="ArcGisSearchMap">
-                            <div id="search"></div>
-                            <div id="map"></div>
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <div class="modal fade" id="PageLoaderModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" style="border-radius:5px!important;width:5%;height:50px!important;top:30%;border-radius:20px!important">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <h3 class="text-center"><i class="fa fa-spinner fa-spin text-success"></i></h3>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-    <div class="modal fade" id="PaymentModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" style="top:10%!important;border-radius:5px!important">
-            <div class="modal-content">
-                <div class="modal-header modal-danger">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        x
-                    </button>
-                    <h4 class="modal-title text-center" style="color:green">Payment Details</h4>
-                </div>
-                <div class="modal-body">
-                    <div style="font-size:9pt !important;height:200px !important;overflow:auto;overflow-x:hidden">
-                        <table border="0" width="100%">
-                            <tr style="height:50px!important">
-                                <td style="width:10%!important"></td>
-                                <td colspan="2"><b>Select Payment Method:</b></td>
-                                <td style="width:10%!important"></td>
-                            </tr>
-                            <tr style="display:none" id="ShowEftMasterpass">
-                                <td style="width:10%!important"></td>
-                                <td class="text-center">
-                                    <i class="fa fa-spinner fa-spin text-success" id="EftLoader" style="display:none;"></i>
-                                    <a href="#" onclick="$.fn.SaveApplicationForm('EFT','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/EFT_Logo.jpg" width="200" height="100" /></a>
-                                </td>
-                                <td class="text-center">
-                                    <i class="fa fa-spinner fa-spin text-success" id="MasterpassLoader" style="display:none;"></i>
-                                    <a href="#" onclick="$.fn.SaveApplicationForm('MasterPass','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/Masterpass-logo.png" width="200" height="100" /></a>
-                                </td>
-                                <td style="width:10%!important"></td>
-                            </tr>
-                            @if(Session["wayleaveAppFee"]!=null)
-                            {
-                                <tr>
-                                    <td colspan="4" class="text-center" style="font-size:10pt!important">Wayleave Application Fee: R <b style="color:green">@Session["wayleaveAppFee"].ToString()</b></td>
-                                </tr>
-                            }
-                            
-                            <tr id="ShowPaynowButtons" style="height:100px!important">
-                                <td style="width:30%!important"></td>
-                                <td class="text-center">
-                                    <a href="#" onclick="$.fn.SaveApplicationForm('PayNow','')" style="color:#fff!important;text-decoration:none!important" class="btn btn-green-custom"><i class="fa fa-spinner fa-spin text-success" id="PayNowLoader" style="display:none;color:#fff!important"></i>&nbsp;Pay Now</a>
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" onclick="$.fn.SaveApplicationForm('PayLater','')" style="color:#fff!important;text-decoration:none" class="btn btn-green-custom"><i class="fa fa-spinner fa-spin text-success" id="PayLaterLoader" style="display:none;color:#fff!important"></i>&nbsp;Pay Later</a>
-                                </td>
-                                <td style="width:30%!important"></td>
-                            </tr>
-                        </table>
+                                <div id="search"></div>
+                                <div id="map"></div>
+                            </div>
+                        @*<div id="map"></div>*@
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <input type="button" class="btn btn-success" value="Close" data-dismiss="modal" />
-                </div>
+                <!-- /.modal-content -->
             </div>
-            <!-- /.modal-content -->
+            <!-- /.modal-dialog -->
         </div>
-        <!-- /.modal-dialog -->
-    </div>
-</form>
+        
+        <div class="modal fade" id="PageLoaderModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="border-radius:5px!important;width:5%;height:50px!important;top:30%;border-radius:20px!important">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h3 class="text-center"><i class="fa fa-spinner fa-spin text-success"></i></h3>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="PaymentModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="top:10%!important;border-radius:5px!important">
+                <div class="modal-content">
+                    <div class="modal-header modal-danger">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            x
+                        </button>
+                        <h4 class="modal-title text-center" style="color:green">Payment Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div style="font-size:9pt !important;height:200px !important;overflow:auto;overflow-x:hidden">
+                            <table border="0" width="100%">
+                                <tr style="height:50px!important">
+                                    <td style="width:10%!important"></td>
+                                    <td colspan="2"><b>Select Payment Method:</b></td>
+                                    <td style="width:10%!important"></td>
+                                </tr>
+                                <tr style="display:none" id="ShowEftMasterpass">
+                                    <td style="width:10%!important"></td>
+                                    <td class="text-center">
+                                        <i class="fa fa-spinner fa-spin text-success" id="EftLoader" style="display:none;"></i>
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('EFT','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/EFT_Logo.jpg" width="200" height="100" /></a>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-spinner fa-spin text-success" id="MasterpassLoader" style="display:none;"></i>
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('MasterPass','')" class="payment-custom"><img class="thumbnail" src="~/Content/wayleaveStyles/assets/Images/Masterpass-logo.png" width="200" height="100" /></a>
+                                    </td>
+                                    <td style="width:10%!important"></td>
+                                </tr>
+                                @if (Session["wayleaveAppFee"] != null)
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center" style="font-size:10pt!important">Wayleave Application Fee: R <b style="color:green">@Session["wayleaveAppFee"].ToString()</b></td>
+                                    </tr>
+                                }
+
+                                <tr id="ShowPaynowButtons" style="height:100px!important">
+                                    <td style="width:30%!important"></td>
+                                    <td class="text-center">
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('PayNow','')" style="color:#fff!important;text-decoration:none!important" class="btn btn-green-custom"><i class="fa fa-spinner fa-spin text-success" id="PayNowLoader" style="display:none;color:#fff!important"></i>&nbsp;Pay Now</a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="#" onclick="$.fn.SaveApplicationForm('PayLater','')" style="color:#fff!important;text-decoration:none" class="btn btn-green-custom"><i class="fa fa-spinner fa-spin text-success" id="PayLaterLoader" style="display:none;color:#fff!important"></i>&nbsp;Pay Later</a>
+                                    </td>
+                                    <td style="width:30%!important"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-success" value="Close" data-dismiss="modal" />
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+    </form>
 
 </section>
 

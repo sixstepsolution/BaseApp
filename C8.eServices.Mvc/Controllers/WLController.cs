@@ -37,6 +37,9 @@ namespace C8.eServices.Mvc.Controllers
             }
 
             IEnumerable<ApplicationInputModel> members = null;
+            ViewBag.applicationNo = "";
+            ViewBag.appStartDate = "";
+            ViewBag.appEndDate = "";
             ViewBag.ApplicationData = members;
             ViewBag.ApplicationDataCount = 0;
             using (var client = new HttpClient())
@@ -55,6 +58,80 @@ namespace C8.eServices.Mvc.Controllers
                 var responseTask = client.PostAsync("get-applications-with-counts", byteContent);
                 responseTask.Wait();
 
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ApplicationInputModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    ViewBag.ApplicationData = members;
+                    ViewBag.ApplicationDataCount = members.Count();
+                }
+                else
+                {
+                    //Error response received 
+                    ViewBag.ApplicationDataCount = 0;
+                    members = Enumerable.Empty<ApplicationInputModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to)
+        {
+            //if (Session["wayleaveaccountId"] == null)
+            //{
+            //    // if IsAuthenticated is false return to login code here....
+            //    return Redirect("../Home/WayleaveLogin");
+
+            //}
+            IEnumerable<ApplicationInputModel> members = null;
+            ViewBag.ApplicationData = members;
+            ViewBag.ApplicationDataCount = 0;
+            ViewBag.applicationNo = "";
+            ViewBag.appStartDate = "";
+            ViewBag.appEndDate = "";
+            if (String.IsNullOrEmpty(application_no))
+            {
+                ViewBag.applicationNo = application_no;
+            }
+            if (date_requested_from != null)
+            {
+                ViewBag.appStartDate = date_requested_from.Value.Year + "-" + date_requested_from.Value.Month + "-" + date_requested_from.Value.Day;
+            }
+            if (date_requested_to != null)
+            {
+                ViewBag.appEndDate = date_requested_to.Value.Year + "-" + date_requested_to.Value.Month + "-" + date_requested_to.Value.Day;
+            }
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
+                inpuclaims.application_no = application_no;
+                inpuclaims.date_requested_from = date_requested_from;
+                inpuclaims.date_requested_to = date_requested_to;
+                inpuclaims.created_by = 0;
+                //inpuclaims.isAdmin = "N";
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                //Thread.Sleep(5000);
+                var responseTask = client.PostAsync("get-applications-with-counts-serach", byteContent);
+                //Thread.Sleep(50000);
+                responseTask.Wait();
+                //Thread.Sleep(5000);
                 //To store result of web api response.   
                 var result = responseTask.Result;
 
@@ -908,9 +985,11 @@ namespace C8.eServices.Mvc.Controllers
                 if (!String.IsNullOrEmpty(applicationFormResponse.documentType) && !String.IsNullOrEmpty(applicationFormResponse.reportType))
                 {
                     Response.ClearHeaders();
+
                     string f1 = string.Empty;
                     string f2 = string.Empty;
                     string f3 = string.Empty;
+                    int statusLength = applicationFormResponse.status.Length;
                     eServicesDbContext context = new eServicesDbContext();
                     AppSetting AdUser = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AdUserName);
                     AppSetting AdPass = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AdPassword);
@@ -947,8 +1026,8 @@ namespace C8.eServices.Mvc.Controllers
                     //string ttt = "Approved%20Application";
                     //string ttt1 = "Progress%20Report";
                     //string ttt2 = "Total%20Wayleave%20Applications%20Created";
-                    string stdate = applicationFormResponse.startDate.Value.Year + "/" + applicationFormResponse.startDate.Value.Month + "/" + applicationFormResponse.startDate.Value.Day;
-                    string endate = applicationFormResponse.endDate.Value.Year + "/" + applicationFormResponse.endDate.Value.Month + "/" + applicationFormResponse.endDate.Value.Day;
+                    string stdate = applicationFormResponse.startDate.Value.Year + "/" + applicationFormResponse.startDate.Value.Month + "/" + applicationFormResponse.startDate.Value.Day+ " 00:00:00.000";
+                    string endate = applicationFormResponse.endDate.Value.Year + "/" + applicationFormResponse.endDate.Value.Month + "/" + applicationFormResponse.endDate.Value.Day+ " 23:59:49.217";
                     string reportURL = string.Empty;
                     switch (applicationFormResponse.reportType)
                     {
@@ -958,11 +1037,23 @@ namespace C8.eServices.Mvc.Controllers
                             break;
                         case "ProgressReport":
                             f3 = "Progress+Report";
-                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&Status=" + applicationFormResponse.status;
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate;
                             break;
                         case "TotalWayleaveApplicationsCreated":
                             f3 = "Total+Wayleave+Applications+Created";
-                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&Status=" + applicationFormResponse.status;
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate;
+                            if (statusLength>0)
+                            {
+                                for (int i = 0; i < statusLength; i++)
+                                {
+                                    reportURL = reportURL + "&Status=" + applicationFormResponse.status[i];
+                                }
+                                //reportURL = reportURL + "&Status="+ applicationFormResponse.status[0]+ "&Status=" + applicationFormResponse.status[1] + "&Status=" + applicationFormResponse.status[2] + ";
+                            }
+
+                            
+
+
                             break;
                         default:
                             break;

@@ -9,6 +9,7 @@ namespace C8.eServices.Mvc.Models.Mapings
     {
         public int appId { get; set; }
         public string acount_no { get; set; }
+        public string application_no { get; set; }
         public string first_name { get; set; }
         public string last_name { get; set; }
         public int service_type_id { get; set; }
