@@ -27,7 +27,7 @@ namespace C8.eServices.Mvc.Controllers
         public CustomerLinkedAccountController()
         {
             var context = new eServicesDbContext();
-            IdentityManager = new IdentityManager(context);
+            //IdentityManager = new IdentityManager(context);
             UserManager =
                 new UserManager<SystemIdentityUser>(
                 new UserStore<SystemIdentityUser>(context));
@@ -186,7 +186,7 @@ namespace C8.eServices.Mvc.Controllers
                 PopulateEmailRecipientType();
                 agentId = agentId ?? 0;
 
-                _base.Initialise(context);
+                //_base.Initialise(context);
                 _systemUserId = _base.SystemUser.Id;
 
                 var customer = context.Customers.FirstOrDefault(c => c.Id == customerId);
@@ -215,7 +215,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     var valueAssistAccounts = new List<Account>();
@@ -605,7 +605,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     //populate linked account vm
@@ -655,7 +655,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                   // _base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     if (ModelState.IsValid)
@@ -778,7 +778,7 @@ namespace C8.eServices.Mvc.Controllers
                 {
                     var emailList = new List<string>();
                     var mobileList = new List<string>();
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     var linkedaccount = context.LinkedAccounts.Include(la => la.RecipientType)
@@ -823,7 +823,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
                     var linkedAccount = context.LinkedAccounts
                                 .Include(i => i.Status)

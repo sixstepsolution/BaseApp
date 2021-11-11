@@ -62,7 +62,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Create([Bind(Include="Id,DocumentTypeId,ApplicationId,ReferenceTypeId,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] DocumentCheckList documentchecklist)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            ////_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -112,7 +112,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Edit([Bind(Include="Id,DocumentTypeId,ApplicationId,ReferenceTypeId,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] DocumentCheckList documentchecklist)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -151,7 +151,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
             DocumentCheckList documentchecklist = _context.DocumentCheckLists.Find(id);
 
             //soft deletes record on the database

@@ -21,10 +21,10 @@ namespace C8.eServices.Mvc.Models.Repository
 
         private bool disposedValue;
         private readonly IWayleave _wayleave = null;
-        private WayleaveDbContext _context;
+        private WayleaveDBContext _context;
         private eServicesDbContext _eserviceContext;
         private readonly IWlAccountContact _wlcontact = null;
-        public WlAccountRepo(WayleaveDbContext context, IWlAccountContact wlcontact, IWayleave wayleave, eServicesDbContext eserviceContext)
+        public WlAccountRepo(WayleaveDBContext context, IWlAccountContact wlcontact, IWayleave wayleave, eServicesDbContext eserviceContext)
         {
             _context = context;
             _wlcontact = wlcontact;

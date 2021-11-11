@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class WLInspectionListRepo : IWLInspectionList
     {
-        private WayleaveDbContext _context;
-        public WLInspectionListRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public WLInspectionListRepo(WayleaveDBContext context)
         {
             _context = context;
         }

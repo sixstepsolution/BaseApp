@@ -6,7 +6,7 @@ using System.Data.Entity.Spatial;
 
 namespace C8.eServices.Mvc.Models
 {
-    public partial class MASTER_CUSTOMERCARE_CENTERS_REGIONS
+    public partial class MASTER_CUSTOMERCARE_CENTERS_REGIONS : BaseModel
     {
         [Key]
         public int CCC_ID { get; set; }                

@@ -17,7 +17,7 @@ namespace C8.eServices.Mvc.Controllers
 
         public StatusTypeController()
         {
-            IdentityManager = new IdentityManager(db);
+            //IdentityManager = new IdentityManager(db);
         }
 
         IdentityManager IdentityManager {get; set;}

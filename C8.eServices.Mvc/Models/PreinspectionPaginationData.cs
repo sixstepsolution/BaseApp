@@ -15,9 +15,9 @@ namespace C8.eServices.Mvc.Models
         public string sorting { get; set; }
         public string search { get; set; }
 
-        private WayleaveDbContext _context;
+        private WayleaveDBContext _context;
         private readonly IApplicationForm _appFrom = null;
-        public PreinspectionPaginationData(WayleaveDbContext context, IApplicationForm appFrom)
+        public PreinspectionPaginationData(WayleaveDBContext context, IApplicationForm appFrom)
         {
             _context = context;
             _appFrom = appFrom;

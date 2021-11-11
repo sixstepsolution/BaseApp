@@ -11,8 +11,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class WayleaveRepo : IWayleave
     {
-        private WayleaveDbContext _context;
-        public WayleaveRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public WayleaveRepo(WayleaveDBContext context)
         {
             _context = context;
         }

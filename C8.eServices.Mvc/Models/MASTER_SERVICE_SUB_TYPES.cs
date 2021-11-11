@@ -6,7 +6,7 @@ namespace C8.eServices.Mvc.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class MASTER_SERVICE_SUB_TYPES
+    public partial class MASTER_SERVICE_SUB_TYPES : BaseModel
     {
         public MASTER_SERVICE_SUB_TYPES()
         {

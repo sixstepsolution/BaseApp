@@ -6,7 +6,7 @@ namespace C8.eServices.Mvc.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class MASTER_REGIONS
+    public partial class MASTER_REGIONS : BaseModel
     {
         [Key]
         public int REGION_ID { get; set; }

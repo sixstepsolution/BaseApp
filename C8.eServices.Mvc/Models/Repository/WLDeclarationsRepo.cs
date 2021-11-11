@@ -10,9 +10,9 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class WLDeclarationsRepo: IWLDeclarations
     {
-        private WayleaveDbContext _context;
+        private WayleaveDBContext _context;
         private readonly IWayleave _wayleave;
-        public WLDeclarationsRepo(WayleaveDbContext context, IWayleave wayleave)
+        public WLDeclarationsRepo(WayleaveDBContext context, IWayleave wayleave)
         {
             _context = context;
             _wayleave = wayleave;

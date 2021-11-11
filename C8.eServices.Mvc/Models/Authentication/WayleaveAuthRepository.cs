@@ -9,7 +9,7 @@ namespace C8.eServices.Mvc.Models.Authentication
     public class WayleaveAuthRepository: IDisposable
     {
         // GGBEntities it is your context class
-        WayleaveDbContext context = new WayleaveDbContext();
+        WayleaveDBContext context = new WayleaveDBContext();
         //This method is used to check and validate the user credentials
         public User ValidateUser(string username, string password)
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C8.eServices.Mvc.Models.Audits;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {   
-    public class WL_ACCOUNT_AUDIT
+    public class WL_ACCOUNT_AUDIT : BaseTypeAudit
     {
         //public WL_ACCOUNT()
         //{

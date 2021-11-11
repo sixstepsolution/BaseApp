@@ -27,10 +27,10 @@ namespace C8.eServices.Mvc.Controllers
         private readonly IMasterStatusTypes _StatusTypes = null;
         private readonly IWayleave _wayleave = null;
         private IMapper _mapper = null;
-        private WayleaveDbContext _context;
+        private WayleaveDBContext _context;
 
         public WL_ACCOUNTController(IWlAccount accou, IWlAccountContact wlcontact, IWayleave wayleave, IMasterStatusTypes StatusTypes,
-            IMapper mapper, WayleaveDbContext context)
+            IMapper mapper, WayleaveDBContext context)
         {
             _accou = accou;
             _StatusTypes = StatusTypes;
@@ -612,7 +612,7 @@ namespace C8.eServices.Mvc.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            WayleaveDbContext db = new WayleaveDbContext();
+            WayleaveDBContext db = new WayleaveDBContext();
             if (disposing)
             {
                 db.Dispose();

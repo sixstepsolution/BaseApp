@@ -105,16 +105,13 @@
       <HintPath>..\packages\MailKit.2.1.4\lib\net45\MailKit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.3\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.3\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.3\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Cryptography.Internal, Version=5.0.9.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Cryptography.Internal.5.0.9\lib\net461\Microsoft.AspNetCore.Cryptography.Internal.dll</HintPath>
@@ -144,13 +141,11 @@
     <Reference Include="Microsoft.Extensions.Primitives, Version=5.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.5.0.0\lib\net461\Microsoft.Extensions.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.2.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=4.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.2.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security">
       <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
@@ -3724,6 +3719,7 @@
   <ItemGroup>
     <Compile Include="ApiServices\CustomerAccountApi.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup_Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
@@ -3783,6 +3779,7 @@
     <Compile Include="Controllers\TitleTypeController.cs" />
     <Compile Include="Controllers\WayleaveAccountController.cs" />
     <Compile Include="Controllers\WayLeaveController.cs" />
+    <Compile Include="Controllers\WayleaveUserController.cs" />
     <Compile Include="Controllers\WLController.cs" />
     <Compile Include="Controllers\WL_ACCOUNTController.cs" />
     <Compile Include="Controllers\WL_APPLICATIONFORMController.cs" />
@@ -4016,6 +4013,26 @@
     <Compile Include="Migrations\202110121635188_changedatalengthinApplicationformaudit.Designer.cs">
       <DependentUpon>202110121635188_changedatalengthinApplicationformaudit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202110291405580_addingPropertyApplicationformmm.cs" />
+    <Compile Include="Migrations\202110291405580_addingPropertyApplicationformmm.Designer.cs">
+      <DependentUpon>202110291405580_addingPropertyApplicationformmm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202111030456275_addingSystemusers.cs" />
+    <Compile Include="Migrations\202111030456275_addingSystemusers.Designer.cs">
+      <DependentUpon>202111030456275_addingSystemusers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202111031817326_updateSystemuserss.cs" />
+    <Compile Include="Migrations\202111031817326_updateSystemuserss.Designer.cs">
+      <DependentUpon>202111031817326_updateSystemuserss.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202111031823391_updateSystemusersnew.cs" />
+    <Compile Include="Migrations\202111031823391_updateSystemusersnew.Designer.cs">
+      <DependentUpon>202111031823391_updateSystemusersnew.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202111031831036_adduserlogtime.cs" />
+    <Compile Include="Migrations\202111031831036_adduserlogtime.Designer.cs">
+      <DependentUpon>202111031831036_adduserlogtime.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountInformation.cs" />
@@ -4029,7 +4046,10 @@
     <Compile Include="Models\ApplicationUserRole.cs" />
     <Compile Include="Models\APPLICATION_PAYMENT_PRICE.cs" />
     <Compile Include="Models\APPLICATION_PAYMENT_PRICE_AUDIT.cs" />
+    <Compile Include="Models\AppRole.cs" />
     <Compile Include="Models\AppSetting.cs" />
+    <Compile Include="Models\AppUser.cs" />
+    <Compile Include="Models\AppUserManager.cs" />
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Audits\AccountAudit.cs" />
     <Compile Include="Models\Audits\AccountTypeAudit.cs" />
@@ -4137,10 +4157,12 @@
     <Compile Include="Models\EmailQueueProcessed.cs" />
     <Compile Include="Models\Employees.cs" />
     <Compile Include="Models\EncriptDecript\EncriptDecript.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\InspectionPdfData.cs" />
     <Compile Include="Models\InstantEFT.cs" />
     <Compile Include="Models\InstantEFTTransaction.cs" />
     <Compile Include="Models\LinkedMobile.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Mapings\AccountContactModel.cs" />
     <Compile Include="Models\Mapings\AccountsView.cs" />
     <Compile Include="Models\Mapings\AddUserModal.cs" />
@@ -4729,6 +4751,7 @@
     <Content Include="TrainingManuals\WayleaveTrainingManual-Applicant01102021.pdf" />
     <Content Include="TrainingManuals\WayleaveTrainingManual-DepartmentUsers01102021.pdf" />
     <Content Include="TrainingManuals\RoadsStormwaterDepartment01102021.pdf" />
+    <Content Include="Views\Account\AddDepartmentUsers.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4747,6 +4770,7 @@
     <Folder Include="Views\Error\" />
     <Folder Include="Views\MasterpassNotifications\" />
     <Folder Include="Views\SmartBillEFTEnc\" />
+    <Folder Include="Views\WayleaveUser\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -4838,6 +4862,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202110121635188_changedatalengthinApplicationformaudit.resx">
       <DependentUpon>202110121635188_changedatalengthinApplicationformaudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110291405580_addingPropertyApplicationformmm.resx">
+      <DependentUpon>202110291405580_addingPropertyApplicationformmm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202111030456275_addingSystemusers.resx">
+      <DependentUpon>202111030456275_addingSystemusers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202111031817326_updateSystemuserss.resx">
+      <DependentUpon>202111031817326_updateSystemuserss.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202111031823391_updateSystemusersnew.resx">
+      <DependentUpon>202111031823391_updateSystemusersnew.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202111031831036_adduserlogtime.resx">
+      <DependentUpon>202111031831036_adduserlogtime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

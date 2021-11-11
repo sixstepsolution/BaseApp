@@ -16,7 +16,7 @@ namespace C8.eServices.Mvc.Models
 
         public CesarSMS()
         {
-            IdentityManager = new IdentityManager(db);
+            //IdentityManager = new IdentityManager(db);
         }
 
         public IdentityManager IdentityManager { get; set; }

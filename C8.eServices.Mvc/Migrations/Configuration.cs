@@ -5,14 +5,14 @@ namespace C8.eServices.Mvc.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<C8.eServices.Mvc.DataAccessLayer.WayleaveDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<C8.eServices.Mvc.DataAccessLayer.WayleaveDBContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(C8.eServices.Mvc.DataAccessLayer.WayleaveDbContext context)
+        protected override void Seed(C8.eServices.Mvc.DataAccessLayer.WayleaveDBContext context)
         {
             //  This method will be called after migrating to the latest version.
 

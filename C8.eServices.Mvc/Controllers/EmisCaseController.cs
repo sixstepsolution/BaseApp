@@ -48,7 +48,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    IdentityManager = new IdentityManager(context);
+                    //IdentityManager = new IdentityManager(context);
 
                     if (User != null && User.Identity.IsAuthenticated)
                     {
@@ -101,7 +101,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 var currentEmisCases = cxt.EmisCases.Include(o => o.Status).Where(o => o.CustomerId == Customer.Id).ToList();
                 this.Customer.Data = SecureActionLinkExtension.Encrypt(string.Format("Id={0}", this.Customer.Id));
@@ -128,7 +128,7 @@ namespace C8.eServices.Mvc.Controllers
                 {
                     Initialise();
                     BaseHelper _base = new BaseHelper();
-                    _base.Initialise(cxt);
+                    //_base.Initialise(cxt);
 
                     // Setup supporting data.
                     var cust = cxt.Customers.FirstOrDefault(o => o.SystemUserId == SystemUser.Id);
@@ -198,7 +198,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -222,7 +222,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -251,7 +251,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {

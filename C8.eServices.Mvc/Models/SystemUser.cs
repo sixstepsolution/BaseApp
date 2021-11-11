@@ -42,23 +42,31 @@ namespace C8.eServices.Mvc.Models
 
         [Column(Order = 19)]
         public bool IsTemporaryPassword { get; set; }
-        [Column(Order = 22)]
+        [Column(Order = 20)]
         [Display(Name = "ID/ Passport No")]
         [MaxLength(100)]
         public string IdentificationNumber { get; set; }
-        [Column(Order = 20)]
+        [Column(Order = 21)]
         [Display(Name = "Mobile Number")]
         public string MobileNumber { get; set; }
 
 
-        [Column(Order = 21)]
+        [Column(Order = 22)]
         public string Code { get; set; }
 
         [Column(Order = 23)]
         [Display(Name = "Type of Notification")]
         public int? NotificationTypeId { get; set; }
-        [ForeignKey("NotificationTypeId")]
-        public NotificationType NotificationType { get; set; }
+
+        [Column(Order = 24)]
+        public string Password { get; set; }
+
+        [Column(Order = 25)]
+        public string DepartmentName { get; set; }
+        [Column(Order = 26)]
+        public string IsActiveDirectory { get; set; }
+        //[ForeignKey("NotificationTypeId")]
+        //public NotificationType NotificationType { get; set; }
 
         [Display(Name = "User")]
         public string FullName

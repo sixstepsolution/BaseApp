@@ -6,7 +6,7 @@ namespace C8.eServices.Mvc.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Student
+    public partial class Student : BaseModel
     {
         public int Id { get; set; }
 

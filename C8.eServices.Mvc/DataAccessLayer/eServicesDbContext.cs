@@ -203,7 +203,39 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public DbSet<TitleTypeAudit> TitleTypeAudits { get; set; }
         //public DbSet<UnitOfmeasureTypeAudit> UnitOfmeasureTypeAudits { get; set; }
 
-
+        public virtual DbSet<MASTER_ROLES> MASTER_ROLES { get; set; }
+        public virtual DbSet<MASTER_SERVICE_SUB_TYPES> MASTER_SERVICE_SUB_TYPES { get; set; }
+        public virtual DbSet<MASTER_SERVICE_TYPES> MASTER_SERVICE_TYPES { get; set; }
+        public virtual DbSet<MASTER_STATUS_TYPES> MASTER_STATUS_TYPES { get; set; }
+        public virtual DbSet<MASTER_DECLARATIONS> MASTER_DECLARATIONS { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<tblEmployee> tblEmployees { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        //public virtual DbSet<SystemUserLogTime> SystemUserLogTimes { get; set; }
+        //public virtual DbSet<SystemUser> SystemUsers { get; set; }
+        public virtual DbSet<WL_APPLICATIONFORM> WL_APPLICATIONFORM { get; set; }
+        public virtual DbSet<WL_REGIONS> WL_REGIONS { get; set; }
+        public virtual DbSet<MASTER_REGIONS> MASTER_REGIONS { get; set; }
+        public virtual DbSet<WL_CONTACT_PERSONS> WL_CONTACT_PERSONS { get; set; }
+        public virtual DbSet<WL_ACCOUNT> WL_ACCOUNTS { get; set; }
+        public virtual DbSet<WL_ACCO_CONTACT> WL_ACCO_CONTACTS { get; set; }
+        public virtual DbSet<WL_WORK_LOCATIONS> WL_WORK_LOCATIONS { get; set; }
+        public virtual DbSet<WL_SUPPORTING_DOCUMENTS> WL_SUPPORTING_DOCUMENTS { get; set; }
+        public virtual DbSet<MASTER_SERVICE_DOCUMENTS> MASTER_SERVICE_DOCUMENTS { get; set; }
+        public virtual DbSet<MASTER_DEPARTMENTS> MASTER_DEPARTMENTS { get; set; }
+        public virtual DbSet<WL_DEPARTMENTS> WL_DEPARTMENTS { get; set; }
+        public virtual DbSet<APPLICATION_PAYMENT_PRICE> APPLICATION_PAYMENT_PRICE { get; set; }
+        public virtual DbSet<testMigration> testMigrations { get; set; }
+        public virtual DbSet<MASTER_INSPECTIONS> MASTER_INSPECTIONS { get; set; }
+        public virtual DbSet<WL_INSPECTION_LIST> WL_INSPECTION_LIST { get; set; }
+        public virtual DbSet<WL_DECLARATIONS> WL_DECLARATIONS { get; set; }
+        public virtual DbSet<WL_UPLOAD_SIGNATURE> WL_UPLOAD_SIGNATURE { get; set; }
+        public virtual DbSet<WL_APPLICATIONFORM_AUDIT> WL_APPLICATIONFORM_AUDIT { get; set; }
+        public virtual DbSet<WL_ACCOUNT_AUDIT> WL_ACCOUNT_AUDIT { get; set; }
+        public virtual DbSet<UserAudit> UserAudit { get; set; }
+        public virtual DbSet<APPLICATION_PAYMENT_PRICE_AUDIT> APPLICATION_PAYMENT_PRICE_AUDIT { get; set; }
+        public virtual DbSet<MASTER_CUSTOMERCARE_CENTERS_REGIONS> MASTER_CUSTOMERCARE_CENTERS_REGIONS { get; set; }
 
         public override int SaveChanges()
         {
@@ -545,6 +577,16 @@ namespace C8.eServices.Mvc.DataAccessLayer
                         case "Query":
                             QueryAudits.Add((QueryAudit)audit);
                             break;
+                        case "APPLICATION_PAYMENT_PRICE":
+                            TitleTypeAudits.Add((APPLICATION_PAYMENT_PRICE_AUDIT)audit);
+                            break;
+                        case "WL_ACCOUNT":
+                            QueryAudits.Add((WL_ACCOUNT_AUDIT)audit);
+                            break;
+                        case "WL_APPLICATIONFORM":
+                            TitleTypeAudits.Add((WL_APPLICATIONFORM_AUDIT)audit);
+                            break;
+                       
                     }
                 }
             }

@@ -6,7 +6,7 @@ namespace C8.eServices.Mvc.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class MASTER_SERVICE_TYPES
+    public partial class MASTER_SERVICE_TYPES : BaseModel
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public MASTER_SERVICE_TYPES()

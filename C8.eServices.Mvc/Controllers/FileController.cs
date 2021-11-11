@@ -32,7 +32,7 @@ namespace C8.eServices.Mvc.Controllers
         public FileController()
         {
             eServicesDbContext _context = new eServicesDbContext();
-            IdentityManager = new IdentityManager(_context);
+            //IdentityManager = new IdentityManager(_context);
             UserManager =
                 new UserManager<SystemIdentityUser>(
                 new UserStore<SystemIdentityUser>(_context));
@@ -52,7 +52,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (eServicesDbContext _context = new eServicesDbContext())
             {
-                _base.Initialise(_context);
+                //_base.Initialise(_context);
 
                 var success = false;
                 var document = new Document();
@@ -208,7 +208,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+               // _base.Initialise(context);
 
                 try
                 {
@@ -302,7 +302,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (eServicesDbContext _context = new eServicesDbContext())
             {
-                _base.Initialise(_context);
+                //_base.Initialise(_context);
                 var isDeleted = false;
                 var document = _context.Documents.Include(d => d.Customer).FirstOrDefault(d => d.Id == documentId);
 
@@ -384,7 +384,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (eServicesDbContext _context = new eServicesDbContext())
             {
-                _base.Initialise(_context);
+                //_base.Initialise(_context);
                 SystemUserId = _base.SystemUser.Id;
 
                 var file = _context.Files.Find(fileId);

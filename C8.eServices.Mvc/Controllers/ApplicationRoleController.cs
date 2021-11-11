@@ -10,7 +10,7 @@ namespace C8.eServices.Mvc.Controllers
     public class ApplicationRoleController : Controller
     {
         #region ApplicationRole Init
-        private eServicesDbContext db = new eServicesDbContext();
+        private WayleaveDBContext db = new WayleaveDBContext();
 
         public ApplicationRoleController()
         {
@@ -78,12 +78,12 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    var currentRoleApplication = context.ApplicationRoles.Where(ar => ar.IsActive && ar.IsDeleted == false
-                                                  && ar.ApplicationId == id).Select(cr => cr.RoleId);
-                    var newRoles = context.Roles.Where(r => !currentRoleApplication.Contains(r.Id)).ToList();
+                    //var currentRoleApplication = context.ApplicationRoles.Where(ar => ar.IsActive && ar.IsDeleted == false
+                    //                              && ar.ApplicationId == id).Select(cr => cr.RoleId);
+                    //var newRoles = context.Roles.Where(r => !currentRoleApplication.Contains(r.Id)).ToList();
 
-                    ViewBag.RoleId = new SelectList(newRoles, "Id", "Name");
-                    ViewBag.ApplicationId = id;
+                    //ViewBag.RoleId = new SelectList(newRoles, "Id", "Name");
+                    //ViewBag.ApplicationId = id;
                     return View();
                 }
                 catch (Exception)

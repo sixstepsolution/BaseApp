@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class SudentRepo : ISudent
     {
-        private WayleaveDbContext _context;
-        public SudentRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public SudentRepo(WayleaveDBContext context)
         {
             _context = context;
         }

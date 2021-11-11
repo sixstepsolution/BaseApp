@@ -486,9 +486,9 @@
                                                         <label>Starting Date</label>
                                                         <div class="input-group" style="width: 100%">
                                                             @*<span class="input-group-addon"
-                                                                  style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </span>*@
+                                                  style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>*@
                                                             <input type="date" readonly autocomplete="off" style="border-radius: 4px !important;" id="STARTING_DATE"
                                                                    class="form-control border-radius" name="STARTING_DATE" />
 
@@ -693,24 +693,24 @@
                             </tbody>
                         </table>
                         @*<table width="100%" id="IsViewApplication">
-                            <tr>
-                                <td colspan="4" class="text-center" id="IsAppEdit">
-                                    <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
-                                            onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
-                                        <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
-                                        Re-Submit
-                                    </button>
-                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
-                                </td>
-                                <td colspan="4" class="text-center">
-                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()">
-                                        <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
-                                        Submit
-                                    </button>
-                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
-                                </td>
-                            </tr>
-                        </table>*@
+            <tr>
+                <td colspan="4" class="text-center" id="IsAppEdit">
+                    <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
+                            onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
+                        <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                        Re-Submit
+                    </button>
+                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                </td>
+                <td colspan="4" class="text-center">
+                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()">
+                        <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                        Submit
+                    </button>
+                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
+                </td>
+            </tr>
+        </table>*@
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;display:none;margin-top:10px!important" id="DepartmentInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
@@ -854,6 +854,60 @@
                         </div>
                         @if (Session["ekurhuleniUserRole"].ToString() == "Admin")
                         {
+                            <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;display:none;margin-top:10px!important" id="ApplicationStatus">
+                                <div class="panel panel-default" style="border:none!important">
+                                    <div class="panel-heading" style="background:#00A65A">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ApplicationStatus" href="#collapse_ApplicationStatus">
+                                                <i class="fa fa-plus" style="display: none; font-size: 12px; top: 0;"></i>
+                                                <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                                Inspection Outcome
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse_ApplicationStatus" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
+                                        <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                            <div class="col-lg-4">
+                                                <div class="input-group input-label">
+                                                    <label><strong>Current status</strong> : <b id="APPLICATION_STEP_DESCRIPTION1"></b></label>
+                                                    <br />
+                                                    <label id="APPLICATION_STEP_DESCRIPTIONComments" style="display:none"><strong>Comments</strong> : <b style="color:#cc0c00" id="APPLICATION_DESCRIPTIONComments"></b></label>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @if (Session["ekurhuleniUserRole"].ToString() == "Admin")
+                                        {
+                                            <div id="APPLICATION_STEP_DESCRIPTION_RequestStatus" style="display:none" @*ng-if="EkurhuleniRoles.indexOf('Admin') > -1 && appFormData.APPLICATION_STEP_DESCRIPTION==='Request for approvals'"*@>
+                                                <div class="panel-body" style="padding: 10px;">
+                                                    <div class="col-lg-4">
+                                                        <div class="input-group input-label">
+                                                            <label class="control-label">Status</label>
+                                                            <select style="border-radius: 4px" onchange="$.fn.ChangeAppSatus('ApproveStatus')" required
+                                                                    class="form-control" name="APPLICATION_STEP_DESCRIPTION" id="AppStatus">
+                                                                <option selected value="">Make a selection</option>
+                                                                <option value="Application Granted">Grant Wayleave Application</option>
+                                                                <option value="Application Rejected">Reject Application</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="panel-body" style="padding: 10px;display:none" id="IsStatusReject">
+                                                    <div class="col-lg-12">
+                                                        <div class="input-group input-label">
+                                                            <label class="control-label">Comments</label>
+                                                            <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="APPLICATIONReject_COMMENTS" id="APPLICATIONReject_COMMENTS"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
                             <div id="ApplicationAdminSection" style="display:none!important">
                                 <table width="100%">
                                     <tr>

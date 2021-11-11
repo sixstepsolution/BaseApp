@@ -7,7 +7,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {
-    public class WL_ACCO_CONTACT
+    public class WL_ACCO_CONTACT : BaseModel
     {
         [Key]
         public int CONTACT_ID { get; set; }

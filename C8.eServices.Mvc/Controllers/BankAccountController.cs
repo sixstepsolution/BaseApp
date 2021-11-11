@@ -59,7 +59,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    IdentityManager = new IdentityManager(context);
+                    //IdentityManager = new IdentityManager(context);
 
                     if (User != null && User.Identity.IsAuthenticated)
                     {
@@ -115,7 +115,7 @@ namespace C8.eServices.Mvc.Controllers
                 {
                     Initialise();
                     BaseHelper _base = new BaseHelper();
-                    _base.Initialise(cxt);
+                    ////_base.Initialise(cxt);
                     if (Customer == null)
                         return RedirectToAction("Index", "Profile");
 
@@ -164,7 +164,7 @@ namespace C8.eServices.Mvc.Controllers
                 {
                     Initialise();
                     BaseHelper _base = new BaseHelper();
-                    _base.Initialise(cxt);
+                    ////_base.Initialise(cxt);
 
                     var cust = cxt.Customers.FirstOrDefault(o => o.SystemUserId == SystemUser.Id);
                     cust.Data = SecureActionLinkExtension.Encrypt(string.Format("Id={0}", cust.Id));
@@ -253,7 +253,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                ////_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -277,7 +277,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                ////_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -306,7 +306,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -378,7 +378,7 @@ namespace C8.eServices.Mvc.Controllers
 
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
 
                 var cust = cxt.Customers.FirstOrDefault(o => o.SystemUserId == SystemUser.Id);
@@ -510,7 +510,7 @@ namespace C8.eServices.Mvc.Controllers
 
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
                 var cust = cxt.Customers.FirstOrDefault(o => o.SystemUserId == SystemUser.Id);
                 //initialise to Failed to cater for Blank Status
                 ViewBag.AccStatus = "Account Failed Verification";
@@ -705,7 +705,7 @@ namespace C8.eServices.Mvc.Controllers
 
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
                 var cust = cxt.Customers.FirstOrDefault(o => o.SystemUserId == SystemUser.Id);
                 try
                 {

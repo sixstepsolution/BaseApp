@@ -29,7 +29,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             var context = new eServicesDbContext();
 
-            IdentityManager = new IdentityManager(context);
+            //IdentityManager = new IdentityManager(context);
             UserManager =
                 new UserManager<SystemIdentityUser>(
                 new UserStore<SystemIdentityUser>(context));
@@ -55,7 +55,7 @@ namespace C8.eServices.Mvc.Controllers
                     int agentId;
                     var customer = new Customer();
 
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     var systemUserId = _base.SystemUser.Id;
 
                     if (systemUserId != -1)
@@ -99,7 +99,7 @@ namespace C8.eServices.Mvc.Controllers
                 try
                 {
                     var resName = User.Identity.GetUserName();
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     var customerVm = new CustomerProfileViewModel { ShowUpdateLink = true };
@@ -186,7 +186,7 @@ namespace C8.eServices.Mvc.Controllers
                 try
                 {
                     var resName = User.Identity.GetUserName();
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     var customerVm = new CustomerProfileViewModel { ShowUpdateLink = true };
@@ -273,7 +273,7 @@ namespace C8.eServices.Mvc.Controllers
                     int agentId;
                     var customer = new Customer();
 
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     // JK.20160624 - Check if user is not null.
                     if (_base.SystemUser == null)
@@ -322,7 +322,7 @@ namespace C8.eServices.Mvc.Controllers
                     int agentId;
                     var customer = new Customer();
 
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     var systemUserId = _base.SystemUser.Id;
 
                     if (systemUserId != -1)
@@ -366,7 +366,7 @@ namespace C8.eServices.Mvc.Controllers
                 try
                 {
                     var resName = User.Identity.GetUserName();
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     var customerVm = new CustomerProfileViewModel { ShowUpdateLink = true };
@@ -455,7 +455,7 @@ namespace C8.eServices.Mvc.Controllers
                 {
                     using (var cxt = new eServicesDbContext())
                     {
-                        _base.Initialise(cxt);
+                        //_base.Initialise(cxt);
                         _systemUserId = _base.SystemUser.Id;
 
                         var custAcc = cxt.CustomerAccounts.FirstOrDefault(o => o.IDNo == identityOrAccountNo || o.AccountNo == identityOrAccountNo);
@@ -534,7 +534,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
                 _systemUserId = _base.SystemUser.Id;
 
                 var customer = context.Customers.Include(c => c.CustomerType).FirstOrDefault(c => c.Id == Id.Value);
@@ -577,7 +577,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
                 _systemUserId = _base.SystemUser.Id;
 
                 var customer = context.Customers.Include(c => c.CustomerType).FirstOrDefault(c => c.Id == Id.Value);
@@ -619,7 +619,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
                 _systemUserId = _base.SystemUser.Id;
 
                 var customer = context.Customers.Include(c => c.CustomerType).FirstOrDefault(c => c.Id == Id.Value);
@@ -661,7 +661,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
                 _systemUserId = _base.SystemUser.Id;
                 var agent = context.Agents.Include(c => c.Customer).FirstOrDefault(a => a.Id == Id.Value);
 
@@ -736,7 +736,7 @@ namespace C8.eServices.Mvc.Controllers
             using (var cxt = new eServicesDbContext())
             {
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -783,7 +783,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     Agent agent = null;
@@ -934,7 +934,7 @@ namespace C8.eServices.Mvc.Controllers
                     var captchaHelper = new CaptchaHelper();
                     var captchaResponse = Request.Params["g-recaptcha-response"];
 
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     var customer = customerviewmodel.Customer;
@@ -1112,7 +1112,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
 
                 //entity
                 var entity = context.Entities.FirstOrDefault(e => e.EntityRegistrationNumber == entityRegNo);
@@ -1135,7 +1135,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     var systemUser = User.Identity.GetUserId();
                     var systemUserId = IdentityManager.CurrentUser(systemUser).Id;
 
@@ -1205,7 +1205,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     agent.CustomerId = customer.Id;
                     agent.CustomerTypeId = customer.CustomerTypeId;
@@ -1266,7 +1266,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     entity.CustomerId = customer.Id;
                     entity.EntityTypeId = entityTypeId;
@@ -1307,7 +1307,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     if (!context.AgentCustomers.Any(ac => ac.CustomerId == customer.Id))
                     {
@@ -1340,7 +1340,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     if (!context.EntityAgents.Any(ea => ea.AgentId == agent.Id))
                     {

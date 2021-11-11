@@ -3,15 +3,36 @@ using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using C8.eServices.Mvc.Models;
-namespace C8.eServices.Mvc.DataAccessLayer
-{   
-    public partial class WayleaveDbContext : DbContext
-    {
-        public WayleaveDbContext()
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
-            : base("name=WayleaveDBContext")
+namespace C8.eServices.Mvc.DataAccessLayer
+{
+    public class WayleaveDBContext : IdentityDbContext<SystemIdentityUser>
+    {
+        //public WayleaveDBContext()
+
+        //    : base("name=WayleaveDBContext")
+        //{
+        //}
+
+        public WayleaveDBContext()
+            : base("WayleaveDBContext")
         {
+            // TODO: JK.20160801a - Improve database availability check.
+            //DbInterception.Add( new DbConextCommandInterceptor() );
         }
+
+        public WayleaveDBContext(SystemUser currentSystemUser)
+            : base("WayleaveDBContext")
+        {
+            CurrentSystemUser = currentSystemUser;
+            // TODO: JK.20160801a - Improve database availability check.
+            //DbInterception.Add( new DbConextCommandInterceptor() );
+        }
+
+        public SystemUser CurrentSystemUser { get; set; }
+
 
         public virtual DbSet<MASTER_ROLES> MASTER_ROLES { get; set; }
         public virtual DbSet<MASTER_SERVICE_SUB_TYPES> MASTER_SERVICE_SUB_TYPES { get; set; }
@@ -22,6 +43,8 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<tblEmployee> tblEmployees { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<SystemUserLogTime> SystemUserLogTimes { get; set; }
+        public virtual DbSet<SystemUser> SystemUsers { get; set; }
         public virtual DbSet<WL_APPLICATIONFORM> WL_APPLICATIONFORM { get; set; }
         public virtual DbSet<WL_REGIONS> WL_REGIONS { get; set; }
         public virtual DbSet<MASTER_REGIONS> MASTER_REGIONS { get; set; }
@@ -50,9 +73,32 @@ namespace C8.eServices.Mvc.DataAccessLayer
         //public DbSet<SystemUserType> SystemUserTypes { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {            
-            Database.SetInitializer<WayleaveDbContext>(null);
+            Database.SetInitializer<WayleaveDBContext>(null);
             base.OnModelCreating(modelBuilder);
 
+            // JK.20140902a - Include this to remove cascade deletions.
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+
+            //modelBuilder.Entity<Sheet>()
+            //    .HasOptional(f => f.BulkSheet)
+            //    .WithMany()
+            //    .HasForeignKey(f => f.SheetId);
+
+            //modelBuilder.Entity<Sheet>()
+            //    .HasOptional(f => f.SheetType)
+            //    .WithMany()
+            //    .HasForeignKey(f => f.SheetId);
+
+            modelBuilder.Entity<SystemUser>()
+                .HasOptional(f => f.CreatedBySystemUser)
+                .WithMany()
+                .HasForeignKey(f => f.CreatedBySystemUserId);
+
+            modelBuilder.Entity<SystemUser>()
+                .HasOptional(f => f.ModifiedBySystemUser)
+                .WithMany()
+                .HasForeignKey(f => f.ModifiedBySystemUserId);
             //modelBuilder.Entity<SystemUser>()
             //    .HasOptional(f => f.CreatedBySystemUser)
             //    .WithMany()

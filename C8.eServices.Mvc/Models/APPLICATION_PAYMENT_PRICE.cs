@@ -6,7 +6,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {
-    public partial class APPLICATION_PAYMENT_PRICE
+    public partial class APPLICATION_PAYMENT_PRICE : BaseModel
     {
         [Key]
         public int AP_ID { get; set; }

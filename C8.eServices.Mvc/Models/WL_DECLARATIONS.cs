@@ -6,7 +6,7 @@ using System.Data.Entity.Spatial;
 
 namespace C8.eServices.Mvc.Models
 {
-    public class WL_DECLARATIONS
+    public class WL_DECLARATIONS : BaseModel
     {
         [Key]
         public int DID { get; set; }

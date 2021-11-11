@@ -9,9 +9,9 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class DepartmentsRepo : IDepartments
     {
-        private WayleaveDbContext _context;
+        private WayleaveDBContext _context;
         private readonly IWayleave _wayleave;
-        public DepartmentsRepo(WayleaveDbContext context, IWayleave wayleave)
+        public DepartmentsRepo(WayleaveDBContext context, IWayleave wayleave)
         {
             _context = context;
             _wayleave = wayleave;

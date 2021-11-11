@@ -16,7 +16,7 @@ namespace C8.eServices.Mvc.Controllers
     public class ApplicationUserRoleController : Controller
     {
         #region ApplicationUserRole Init
-        private eServicesDbContext db = new eServicesDbContext();
+        private WayleaveDBContext db = new WayleaveDBContext();
         BaseHelper _base = new BaseHelper();
 
         public ApplicationUserRoleController()
@@ -92,25 +92,26 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    if (id == null) throw new Exception("Invalid id");
+                    //if (id == null) throw new Exception("Invalid id");
 
-                    var currentRoleApplication = context.ApplicationRoles.Where(ar => ar.IsActive && ar.IsDeleted == false
-                                                 && ar.ApplicationId == id).Select(cr => cr.RoleId);
-                    var roles = context.Roles.Where(r => currentRoleApplication.Contains(r.Id) && r.Name == "Administrators" || r.Name == "Clerks").ToList();
-                    var users = context.Users.Where(u => u.Roles.Count == 0).ToList();
-                    var userIds = users.Select(u => u.SystemUserId).ToList();
-                    var unassignedSystemUsers = context.ApplicationUserRoles.Include(s => s.SystemUser)
-                                                .Where(s => userIds.Contains(s.SystemUserId)).DistinctBy(s => s.SystemUserId).ToList();
+                    //var currentRoleApplication = context.ApplicationRoles.Where(ar => ar.IsActive && ar.IsDeleted == false
+                    //                             && ar.ApplicationId == id).Select(cr => cr.RoleId);
+                    //var roles = context.Roles.Where(r => currentRoleApplication.Contains(r.Id) && r.Name == "Administrators" || r.Name == "Clerks").ToList();
+                    //var users = context.Users.Where(u => u.Roles.Count == 0).ToList();
+                    //var userIds = users.Select(u => u.SystemUserId).ToList();
+                    //var unassignedSystemUsers = context.ApplicationUserRoles.Include(s => s.SystemUser)
+                    //                            .Where(s => userIds.Contains(s.SystemUserId)).DistinctBy(s => s.SystemUserId).ToList();
 
-                    ViewBag.UserId = new SelectList(unassignedSystemUsers.DistinctBy(s => s.SystemUserId).Select(u => new
-                    {
-                        u.SystemUserId,
-                        u.SystemUser.UserName
-                    }), "SystemUserId", "UserName");
-                    ViewBag.RoleId = new SelectList(roles, "Name", "Name");
-                    ViewBag.ApplicationId = id;
+                    //ViewBag.UserId = new SelectList(unassignedSystemUsers.DistinctBy(s => s.SystemUserId).Select(u => new
+                    //{
+                    //    u.SystemUserId,
+                    //    u.SystemUser.UserName
+                    //}), "SystemUserId", "UserName");
+                    //ViewBag.RoleId = new SelectList(roles, "Name", "Name");
+                    //ViewBag.ApplicationId = id;
 
-                    return View(unassignedSystemUsers);
+                    //return View(unassignedSystemUsers);
+                    return View();
                 }
                 catch
                 {
@@ -132,175 +133,176 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
-                    var userType = Request.Form["userType"];
-                    var applicationId = Convert.ToInt32(Request.Form["applicationId"]);
-                    var ipAddress = Request.Form["ipAddress"];
-                    var role = Request.Form["RoleId"];
-                    var randomPassword = GeneratePassword(10);
-                    var email = new Email();
-                    var identityManager = new IdentityManager();
-                    var applicationUserRole = new ApplicationUserRole
-                    {
-                        IsActive = true,
-                        IsDeleted = false,
-                        IsLocked = false,
-                        ApplicationId = applicationId,
-                        RoleId = RoleManager.FindByName(role).Id
-                    };
+                    //var userType = Request.Form["userType"];
+                    //var applicationId = Convert.ToInt32(Request.Form["applicationId"]);
+                    //var ipAddress = Request.Form["ipAddress"];
+                    //var role = Request.Form["RoleId"];
+                    //var randomPassword = GeneratePassword(10);
+                    //var email = new Email();
+                    //var identityManager = new IdentityManager();
+                    //var applicationUserRole = new ApplicationUserRole
+                    //{
+                    //    IsActive = true,
+                    //    IsDeleted = false,
+                    //    IsLocked = false,
+                    //    ApplicationId = applicationId,
+                    //    RoleId = RoleManager.FindByName(role).Id
+                    //};
 
-                    var defaultCustomer = context.CustomerTypes.FirstOrDefault(c => c.Key == CustomerTypeKeys.Individual);
-                    var defaultIdentification = context.IdentificationTypes.FirstOrDefault(id => id.Key == IdentificationTypeKey.SouthAfricanID);
-                    var defaultTitleType = context.TitleTypes.FirstOrDefault(t => t.Key == TitleTypeKeys.Mister);
-                    var defaultStatus = context.Status.FirstOrDefault(s => s.Key == StatusKeys.CustomerActive);
+                    //var defaultCustomer = context.CustomerTypes.FirstOrDefault(c => c.Key == CustomerTypeKeys.Individual);
+                    //var defaultIdentification = context.IdentificationTypes.FirstOrDefault(id => id.Key == IdentificationTypeKey.SouthAfricanID);
+                    //var defaultTitleType = context.TitleTypes.FirstOrDefault(t => t.Key == TitleTypeKeys.Mister);
+                    //var defaultStatus = context.Status.FirstOrDefault(s => s.Key == StatusKeys.CustomerActive);
 
-                    if (defaultCustomer == null) throw new Exception("Invalid customer type");
-                    if (defaultIdentification == null) throw new Exception("Invalid identification");
-                    if (defaultTitleType == null) throw new Exception("Invalid title type");
-                    if (defaultStatus == null) throw new Exception("Invalid status");
+                    //if (defaultCustomer == null) throw new Exception("Invalid customer type");
+                    //if (defaultIdentification == null) throw new Exception("Invalid identification");
+                    //if (defaultTitleType == null) throw new Exception("Invalid title type");
+                    //if (defaultStatus == null) throw new Exception("Invalid status");
 
-                    var customer = new Customer()
-                    {
-                        CustomerTypeId = defaultCustomer.Id,
-                        IdentificationTypeId = defaultIdentification.Id,
-                        CountryOfIssueTypeId = null,
-                        IdentificationNumber = "1234567891011",
-                        TitleTypeId = defaultTitleType.Id,
-                        FirstName = "Test",
-                        LastName = "Profile",
-                        Gender = null,
-                        IsDeceased = false,
-                        EmailAddress = "callcentreagent@durban.gov.za",
-                        PhysicalAddressCode = 0000,
-                        PostalAddressCode = 0000,
-                        StatusId = defaultStatus.Id,
-                        IsActive = true,
-                        IsDeleted = false,
-                        IsLocked = false
-                    };
+                    //var customer = new Customer()
+                    //{
+                    //    CustomerTypeId = defaultCustomer.Id,
+                    //    IdentificationTypeId = defaultIdentification.Id,
+                    //    CountryOfIssueTypeId = null,
+                    //    IdentificationNumber = "1234567891011",
+                    //    TitleTypeId = defaultTitleType.Id,
+                    //    FirstName = "Test",
+                    //    LastName = "Profile",
+                    //    Gender = null,
+                    //    IsDeceased = false,
+                    //    EmailAddress = "callcentreagent@durban.gov.za",
+                    //    PhysicalAddressCode = 0000,
+                    //    PostalAddressCode = 0000,
+                    //    StatusId = defaultStatus.Id,
+                    //    IsActive = true,
+                    //    IsDeleted = false,
+                    //    IsLocked = false
+                    //};
 
-                    if (userType == "Existing User")
-                    {
-                        var systemUserId = Convert.ToInt32(Request.Form["UserId"]);
-                        var identityUser = context.Users.FirstOrDefault(i => i.SystemUserId == systemUserId);
+                    //if (userType == "Existing User")
+                    //{
+                    //    var systemUserId = Convert.ToInt32(Request.Form["UserId"]);
+                    //    var identityUser = context.Users.FirstOrDefault(i => i.SystemUserId == systemUserId);
 
-                        if (identityUser == null) throw new Exception("Invalid identity user");
+                    //    if (identityUser == null) throw new Exception("Invalid identity user");
 
-                        identityManager.AddUserToRole(identityUser.Id, role);
-                        applicationUserRole.SystemUserId = systemUserId;
-                        customer.SystemUserId = systemUserId;
+                    //    identityManager.AddUserToRole(identityUser.Id, role);
+                    //    applicationUserRole.SystemUserId = systemUserId;
+                    //    customer.SystemUserId = systemUserId;
 
-                        context.ApplicationUserRoles.Add(applicationUserRole);
-                        context.Customers.Add(customer);
+                    //    context.ApplicationUserRoles.Add(applicationUserRole);
+                    //    context.Customers.Add(customer);
 
-                        var applicationAccess = context.Applications.Find(applicationId);
-                        const string emailSubject = "Siyakhokha: User Application Role";
-                        var emailBody = "<b>You have been successfully added to a new system.</b><br/><br/>" +
-                                "<b>Application User Role Details:</b><br/>" +
-                                "Application Access: " + applicationAccess.Name + "<br/>" +
-                                "Role: " + role + "<br/><br/>";
+                    //    var applicationAccess = context.Applications.Find(applicationId);
+                    //    const string emailSubject = "Siyakhokha: User Application Role";
+                    //    var emailBody = "<b>You have been successfully added to a new system.</b><br/><br/>" +
+                    //            "<b>Application User Role Details:</b><br/>" +
+                    //            "Application Access: " + applicationAccess.Name + "<br/>" +
+                    //            "Role: " + role + "<br/><br/>";
 
-                        email.GenerateEmail(identityUser.Email,
-                            emailSubject, emailBody, identityUser.SystemUserId.ToString(), false,
-                            AppSettingKeys.EservicesDefaultEmailTemplate, identityUser.SystemUser.FullName);
+                    //    email.GenerateEmail(identityUser.Email,
+                    //        emailSubject, emailBody, identityUser.SystemUserId.ToString(), false,
+                    //        AppSettingKeys.EservicesDefaultEmailTemplate, identityUser.SystemUser.FullName);
 
-                        context.SaveChanges();
+                    //    context.SaveChanges();
 
-                        return RedirectToAction("Index", new { id = applicationId });
-                    }
+                    //    return RedirectToAction("Index", new { id = applicationId });
+                    //}
 
-                    var firstName = Request.Form["firstName"];
-                    var surname = Request.Form["lastName"];
-                    var username = Request.Form["userName"];
-                    var emailAddress = Request.Form["emailAddress"];
+                    //var firstName = Request.Form["firstName"];
+                    //var surname = Request.Form["lastName"];
+                    //var username = Request.Form["userName"];
+                    //var emailAddress = Request.Form["emailAddress"];
 
-                    var usernameAssigned = context.SystemUsers.Any(u => u.UserName.ToLower() == username.ToLower()
-                        && u.IsActive && u.IsDeleted == false);
-                    var emailAssigned = context.SystemUsers.Any(u => u.EmailAddress.ToLower() == emailAddress.ToLower()
-                        && u.IsActive && u.IsDeleted == false);
+                    //var usernameAssigned = context.SystemUsers.Any(u => u.UserName.ToLower() == username.ToLower()
+                    //    && u.IsActive && u.IsDeleted == false);
+                    //var emailAssigned = context.SystemUsers.Any(u => u.EmailAddress.ToLower() == emailAddress.ToLower()
+                    //    && u.IsActive && u.IsDeleted == false);
 
-                    if (!usernameAssigned && emailAssigned)
-                    {
-                        TempData["Error"] = "Email address registered. Please use an alternative email address";
-                    }
-                    else if (usernameAssigned && !emailAssigned)
-                    {
-                        TempData["Error"] = "Username registered. Please choose a unique username.";
-                    }
-                    else if (usernameAssigned && emailAssigned)
-                    {
-                        TempData["Error"] = "Username and Email address registered. Please use an alternative email address and a unique username.";
-                    }
-                    else
-                    {
-                        // JK.20140724a - Passing values from the ViewModel to the Model.
-                        var user = new SystemIdentityUser
-                        {
-                            UserName = username,
-                            Email = emailAddress,
-                            EmailConfirmed = true,
-                            SystemUser = new SystemUser()
-                            {
-                                FirstName = firstName,
-                                LastName = surname,
-                                UserName = username,
-                                EmailAddress = emailAddress,
-                                IsActive = true,
-                                IsDeleted = false,
-                                IsLocked = false,
-                                ModifiedDateTime = DateTime.Now
-                            }
-                        };
+                    //if (!usernameAssigned && emailAssigned)
+                    //{
+                    //    TempData["Error"] = "Email address registered. Please use an alternative email address";
+                    //}
+                    //else if (usernameAssigned && !emailAssigned)
+                    //{
+                    //    TempData["Error"] = "Username registered. Please choose a unique username.";
+                    //}
+                    //else if (usernameAssigned && emailAssigned)
+                    //{
+                    //    TempData["Error"] = "Username and Email address registered. Please use an alternative email address and a unique username.";
+                    //}
+                    //else
+                    //{
+                    //    // JK.20140724a - Passing values from the ViewModel to the Model.
+                    //    var user = new SystemIdentityUser
+                    //    {
+                    //        UserName = username,
+                    //        Email = emailAddress,
+                    //        EmailConfirmed = true,
+                    //        SystemUser = new SystemUser()
+                    //        {
+                    //            FirstName = firstName,
+                    //            LastName = surname,
+                    //            UserName = username,
+                    //            EmailAddress = emailAddress,
+                    //            IsActive = true,
+                    //            IsDeleted = false,
+                    //            IsLocked = false,
+                    //            ModifiedDateTime = DateTime.Now
+                    //        }
+                    //    };
 
-                        // JK.20140724a - Custom profile information.
+                    //    // JK.20140724a - Custom profile information.
 
-                        // Send email to User with Username and Temp Password
-                        identityManager.CreateUser(user, randomPassword);
-                        identityManager.AddUserToRole(user.Id, role);
+                    //    // Send email to User with Username and Temp Password
+                    //    identityManager.CreateUser(user, randomPassword);
+                    //    identityManager.AddUserToRole(user.Id, role);
 
-                        applicationUserRole.SystemUserId = user.SystemUserId;
-                        customer.SystemUserId = user.SystemUserId;
+                    //    applicationUserRole.SystemUserId = user.SystemUserId;
+                    //    customer.SystemUserId = user.SystemUserId;
 
-                        context.ApplicationUserRoles.Add(applicationUserRole);
-                        context.Customers.Add(customer);
+                    //    context.ApplicationUserRoles.Add(applicationUserRole);
+                    //    context.Customers.Add(customer);
 
-                        var applicationAccess = context.Applications.Find(applicationId);
-                        const string emailSubject = "Siyakhokha: User Registration";
-                        var emailBody = "<b>You have been successfully added onto Siyakhokha Application.</b><br/><br/>" +
-                                        "<b>Login Details:</b><br/>" +
-                                        "Username: " + user.UserName + "<br/>" +
-                                        "Temporary Password: " + randomPassword + "<br/>" +
-                                        "Application Access: " + applicationAccess.Name + "<br/>" +
-                                        "Role: " + role + "<br/><br/>" +
-                                        "<b> Please change temporary password on your first login.</b>";
+                    //    var applicationAccess = context.Applications.Find(applicationId);
+                    //    const string emailSubject = "Siyakhokha: User Registration";
+                    //    var emailBody = "<b>You have been successfully added onto Siyakhokha Application.</b><br/><br/>" +
+                    //                    "<b>Login Details:</b><br/>" +
+                    //                    "Username: " + user.UserName + "<br/>" +
+                    //                    "Temporary Password: " + randomPassword + "<br/>" +
+                    //                    "Application Access: " + applicationAccess.Name + "<br/>" +
+                    //                    "Role: " + role + "<br/><br/>" +
+                    //                    "<b> Please change temporary password on your first login.</b>";
 
-                        email.GenerateEmail(user.Email, emailSubject, emailBody, user.SystemUserId.ToString(), false, AppSettingKeys.EservicesDefaultEmailTemplate, user.SystemUser.FullName);
+                    //    email.GenerateEmail(user.Email, emailSubject, emailBody, user.SystemUserId.ToString(), false, AppSettingKeys.EservicesDefaultEmailTemplate, user.SystemUser.FullName);
 
-                        context.SaveChanges();
+                    //    context.SaveChanges();
 
-                        return RedirectToAction("Index", new { id = applicationId });
-                    }
+                    //    return RedirectToAction("Index", new { id = applicationId });
+                    //}
 
-                    var currentRoleApplication = context.ApplicationRoles.Where(ar => ar.IsActive && ar.IsDeleted == false
-                    && ar.ApplicationId == applicationId).Select(cr => cr.RoleId);
-                    var roles = context.Roles.Where(r => currentRoleApplication.Contains(r.Id) && r.Name == "Administrators" || r.Name == "Clerks").ToList();
-                    var users = context.Users.Where(u => u.Roles.Count == 0).ToList();
-                    var userIds = users.Select(u => u.SystemUserId).ToList();
+                    //var currentRoleApplication = context.ApplicationRoles.Where(ar => ar.IsActive && ar.IsDeleted == false
+                    //&& ar.ApplicationId == applicationId).Select(cr => cr.RoleId);
+                    //var roles = context.Roles.Where(r => currentRoleApplication.Contains(r.Id) && r.Name == "Administrators" || r.Name == "Clerks").ToList();
+                    //var users = context.Users.Where(u => u.Roles.Count == 0).ToList();
+                    //var userIds = users.Select(u => u.SystemUserId).ToList();
 
-                    var unassignedSystemUsers = context.ApplicationUserRoles.Include(s => s.SystemUser)
-                                .Where(s => userIds.Contains(s.SystemUserId)).DistinctBy(s => s.SystemUserId).ToList();
+                    //var unassignedSystemUsers = context.ApplicationUserRoles.Include(s => s.SystemUser)
+                    //            .Where(s => userIds.Contains(s.SystemUserId)).DistinctBy(s => s.SystemUserId).ToList();
 
-                    ViewBag.UserId = new SelectList(unassignedSystemUsers.DistinctBy(s => s.SystemUserId).Select(u => new
-                    {
-                        u.SystemUserId,
-                        u.SystemUser.UserName
-                    }), "SystemUserId", "UserName");
+                    //ViewBag.UserId = new SelectList(unassignedSystemUsers.DistinctBy(s => s.SystemUserId).Select(u => new
+                    //{
+                    //    u.SystemUserId,
+                    //    u.SystemUser.UserName
+                    //}), "SystemUserId", "UserName");
 
-                    ViewBag.RoleId = new SelectList(roles, "Name", "Name");
-                    ViewBag.ApplicationId = applicationId;
+                    //ViewBag.RoleId = new SelectList(roles, "Name", "Name");
+                    //ViewBag.ApplicationId = applicationId;
 
-                    return View(unassignedSystemUsers);
+                    //return View(unassignedSystemUsers);
+                    return View();
                 }
                 catch
                 {
@@ -327,11 +329,11 @@ namespace C8.eServices.Mvc.Controllers
                     var systemUser = context.SystemUsers.Find(applicationuserrole.SystemUserId);
                     var currentRoleApplication = context.ApplicationRoles.Where(ar => ar.IsActive && ar.IsDeleted == false
                     && ar.ApplicationId == appId).Select(cr => cr.RoleId);
-                    var roles = context.Roles.Where(r => currentRoleApplication.Contains(r.Id) && r.Name == "Administrators" || r.Name == "Clerks").ToList();
+                    //var roles = context.Roles.Where(r => currentRoleApplication.Contains(r.Id) && r.Name == "Administrators" || r.Name == "Clerks").ToList();
 
-                    ViewBag.ApplicationId = appId;
-                    ViewBag.SystemUser = systemUser;
-                    ViewBag.RoleId = new SelectList(roles, "Name", "Name");
+                    //ViewBag.ApplicationId = appId;
+                    //ViewBag.SystemUser = systemUser;
+                    //ViewBag.RoleId = new SelectList(roles, "Name", "Name");
 
                     return View();
                 }
@@ -354,7 +356,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     var applicationId = Convert.ToInt32(Request.Form["applicationId"]);
                     var ipAddress = Request.Form["ipAddress"];
@@ -443,7 +445,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     var applicationId = Convert.ToInt32(Request.Form["applicationId"]);
                     var email = new Email();
@@ -451,7 +453,7 @@ namespace C8.eServices.Mvc.Controllers
                     if (id == null) throw new Exception("Invalid id");
 
                     var applicationuserrole = context.ApplicationUserRoles.Find(id);
-                    var user = context.Users.First(u => u.SystemUserId == applicationuserrole.SystemUserId);
+                    //var user = context.Users.First(u => u.SystemUserId == applicationuserrole.SystemUserId);
                     var currentRole = RoleManager.FindById(applicationuserrole.RoleId).Name;
                     var applicationAccess = context.Applications.Find(applicationId);
                     const string emailSubject = "Siyakhokha: Application User Role Revoked";
@@ -461,11 +463,11 @@ namespace C8.eServices.Mvc.Controllers
                             "Role: " + currentRole + "<br/><br/>" +
                             "<b>Please contact the administrator for further details.</b>";
 
-                    email.GenerateEmail(user.Email,
-                        emailSubject, emailBody, user.SystemUserId.ToString(), false, AppSettingKeys.EservicesDefaultEmailTemplate,
-                        user.SystemUser.FullName);
+                    //email.GenerateEmail(user.Email,
+                    //    emailSubject, emailBody, user.SystemUserId.ToString(), false, AppSettingKeys.EservicesDefaultEmailTemplate,
+                    //    user.SystemUser.FullName);
 
-                    IdentityManager.UserManager.RemoveFromRole(user.Id, currentRole);
+                    //IdentityManager.UserManager.RemoveFromRole(user.Id, currentRole);
 
                     applicationuserrole.IsActive = false;
                     applicationuserrole.IsDeleted = true;

@@ -29,7 +29,7 @@ namespace C8.eServices.Mvc.Controllers
     {
         public string encp = "spgencpassp";
         private eServicesDbContext dbeService = new eServicesDbContext();
-        private WayleaveDbContext db = new WayleaveDbContext();
+        private WayleaveDBContext db = new WayleaveDBContext();
         private readonly IApplicationForm _appFrom = null;
         private readonly IApplicationStatus _appStatusTypes = null;
         private readonly ISeriviceTypes _seriviceTypes = null;

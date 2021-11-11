@@ -39,7 +39,7 @@
                             <h4> Ekurhuleni Login </h4>
                         </div>
                         <div class="panel-body">
-                            @using (Html.BeginForm("Index", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                             {
                                 @Html.AntiForgeryToken()
                                 <div class="row">
@@ -58,8 +58,9 @@
                                     <div class="col-lg-12 col-lg-offset-0">
                                         <div class="form-group" style="margin:10px;">
                                             <div class="input-group">
-                                                <span class="input-group-addon bg-green-custom" onclick="showPassword()" @*ng-click="showPassword()"*@>
-                                                    <img src="~/Content/wayleaveStyles/assets/Images/Asset 37@4x.png" width="20" height="15" />
+                                                <span class="input-group-addon bg-green-custom" @*onclick="showPassword()"*@ @*ng-click="showPassword()"*@>
+                                                    <i class="fa fa-key"></i>
+    @*<img src="~/Content/wayleaveStyles/assets/Images/Asset 37@4x.png" width="20" height="15" />*@
                                                 </span>
                                                 @Html.PasswordFor(m => m.Password, new { @class = "form-control bradius", @required = true, @autocomplete = "new-password", autofocus = "on", id = "pass", name = "password", placeholder = "Enter password" })
                                             </div>

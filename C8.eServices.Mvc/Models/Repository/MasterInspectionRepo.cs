@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class MasterInspectionRepo: IMasterInspections
     {
-        private WayleaveDbContext _context;
-        public MasterInspectionRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public MasterInspectionRepo(WayleaveDBContext context)
         {
             _context = context;
         }

@@ -7,7 +7,7 @@ namespace C8.eServices.Mvc.Models
     using System.Data.Entity.Spatial;
 
     [Table("tblEmployee")]
-    public partial class tblEmployee
+    public partial class tblEmployee : BaseModel
     {
         [Key]
         public int EmployeeID { get; set; }

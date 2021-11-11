@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C8.eServices.Mvc.Models.Audits;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +9,7 @@ using System.Web;
 namespace C8.eServices.Mvc.Models
 {
     
-    public partial class UserAudit
+    public partial class UserAudit : BaseTypeAudit
     {
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         //public User()

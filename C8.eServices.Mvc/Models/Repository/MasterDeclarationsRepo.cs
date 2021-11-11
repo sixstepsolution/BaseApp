@@ -9,9 +9,9 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class MasterDeclarationsRepo : IMasterDeclarations
     {
-        private WayleaveDbContext _context;
+        private WayleaveDBContext _context;
         private readonly IWayleave _wayleave;
-        public MasterDeclarationsRepo(WayleaveDbContext context, IWayleave wayleave)
+        public MasterDeclarationsRepo(WayleaveDBContext context, IWayleave wayleave)
         {
             _context = context;
             _wayleave = wayleave;

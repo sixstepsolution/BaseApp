@@ -10,8 +10,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class MasterCustomerCareCentersRepo : IMasterCustomerCareCenters
     {
-        private WayleaveDbContext _context;
-        public MasterCustomerCareCentersRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public MasterCustomerCareCentersRepo(WayleaveDBContext context)
         {
             _context = context;
         }

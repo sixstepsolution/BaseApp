@@ -10,8 +10,8 @@ namespace wayleave.Models.Repository
 {
     public class MasterRegionsRepo : IMasterRegions
     {
-        private WayleaveDbContext _context;
-        public MasterRegionsRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public MasterRegionsRepo(WayleaveDBContext context)
         {
             _context = context;
         }

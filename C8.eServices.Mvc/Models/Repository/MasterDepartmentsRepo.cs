@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class MasterDepartmentsRepo : IMasterDepartments
     {
-        private WayleaveDbContext _context;
-        public MasterDepartmentsRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public MasterDepartmentsRepo(WayleaveDBContext context)
         {
             _context = context;
         }

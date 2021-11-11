@@ -213,8 +213,8 @@
 
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10">
-                            <input id="btnTandC" type="button" disabled class="btn btn-primary" value="Register" />
-                            <input id="btnSubmit" style="display:none" type="submit" disabled class="btn btn-primary" value="Register" />
+                            <input id="btnTandC" type="submit" class="btn btn-primary" value="Register" />
+                            <input id="btnSubmit" style="display:none" type="submit" class="btn btn-primary" value="Register" />
                         </div>
                     </div>
                     <br />
@@ -476,7 +476,7 @@ These conditions are governed by the laws of the Republic of South Africa.</text
 
     $(document).ready(function () {
         function ValidateRSAIDNo(id) {
-            try {
+            try {    
 
                 if (id.length != 13) {
                     $('#SubmitModal').modal({

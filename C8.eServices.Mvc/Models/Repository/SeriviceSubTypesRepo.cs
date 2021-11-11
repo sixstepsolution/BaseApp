@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class SeriviceSubTypesRepo : ISeriviceSubTypes
     {
-        private WayleaveDbContext _context;
-        public SeriviceSubTypesRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public SeriviceSubTypesRepo(WayleaveDBContext context)
         {
             _context = context;
         }

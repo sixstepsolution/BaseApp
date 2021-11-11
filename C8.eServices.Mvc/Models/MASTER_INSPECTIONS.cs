@@ -6,7 +6,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {
-    public partial class MASTER_INSPECTIONS
+    public partial class MASTER_INSPECTIONS : BaseModel
     {
         //public MASTER_INSPECTIONS()
         //{

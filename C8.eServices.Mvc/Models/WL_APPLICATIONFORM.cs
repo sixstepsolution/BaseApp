@@ -6,7 +6,7 @@ namespace C8.eServices.Mvc.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class WL_APPLICATIONFORM
+    public partial class WL_APPLICATIONFORM : BaseModel
     {
         public WL_APPLICATIONFORM()
         {
@@ -189,6 +189,9 @@ namespace C8.eServices.Mvc.Models
         public string PAYMENT_DATE { get; set; }
         [StringLength(15)]
         public string IDENTIFICATION_NUMBER { get; set; }
+
+        [StringLength(10)]
+        public string IS_OVERDUE { get; set; }
 
         [StringLength(10)]
         public string GENDER { get; set; }

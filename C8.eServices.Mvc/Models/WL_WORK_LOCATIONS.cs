@@ -7,7 +7,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {
-    public partial class WL_WORK_LOCATIONS
+    public partial class WL_WORK_LOCATIONS : BaseModel
     {
         [Key]
         public int WL_ID { get; set; }

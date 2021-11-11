@@ -52,7 +52,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    IdentityManager = new IdentityManager(context);
+                    //IdentityManager = new IdentityManager(context);
 
                     if (User != null && User.Identity.IsAuthenticated)
                     {
@@ -516,7 +516,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Customer == null)
                     return RedirectToAction("Index", "Profile");
@@ -557,7 +557,7 @@ namespace C8.eServices.Mvc.Controllers
                 {
                     Initialise();
                     BaseHelper _base = new BaseHelper();
-                    _base.Initialise(cxt);
+                    //_base.Initialise(cxt);
 
                     // Setup supporting data.
                     var cust = cxt.Customers.FirstOrDefault(o => o.SystemUserId == SystemUser.Id);
@@ -668,7 +668,7 @@ namespace C8.eServices.Mvc.Controllers
 
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -700,7 +700,7 @@ namespace C8.eServices.Mvc.Controllers
 
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -771,7 +771,7 @@ namespace C8.eServices.Mvc.Controllers
 
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
                 
                 //Id = 3;
                 if (Id != null && Id > 0)
@@ -808,7 +808,7 @@ namespace C8.eServices.Mvc.Controllers
                     if (customer == null) throw new Exception("Invalid Customer");
                     Initialise();
                     BaseHelper _base = new BaseHelper();
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     // Setup supporting data.
                     var cust = context.Customers.FirstOrDefault(o => o.SystemUserId == SystemUser.Id);
@@ -1040,7 +1040,7 @@ namespace C8.eServices.Mvc.Controllers
 
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 Int64 refNo = Convert.ToInt64(reference1);
                 InstantEFT instantEFT = cxt.InstantEFTs.Include(o => o.Status).SingleOrDefault( o=>o.ReferenceNumber==refNo);
@@ -1278,7 +1278,7 @@ namespace C8.eServices.Mvc.Controllers
                 {
                     Initialise();
                     BaseHelper _base = new BaseHelper();
-                    _base.Initialise(cxt);
+                    //_base.Initialise(cxt);
 
                     // Setup supporting data.
                     var cust = cxt.Customers.FirstOrDefault(o => o.SystemUserId == SystemUser.Id);

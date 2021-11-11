@@ -21,7 +21,7 @@ namespace C8.eServices.Mvc.Controllers
         public DocumentController()
         {
             eServicesDbContext _context = new eServicesDbContext();
-            IdentityManager = new IdentityManager(_context);
+            //IdentityManager = new IdentityManager(_context);
             UserManager =
                 new UserManager<SystemIdentityUser>(
                 new UserStore<SystemIdentityUser>(_context));
@@ -40,7 +40,7 @@ namespace C8.eServices.Mvc.Controllers
             eServicesDbContext _context = new eServicesDbContext();
             if (referenceId == null || referenceTypeId == null || applicationId == null)
                 return HttpNotFound();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
             var agent = _base.Agent;
 
             if (User != null && User.Identity.IsAuthenticated)

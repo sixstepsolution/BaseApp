@@ -86,7 +86,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    IdentityManager = new IdentityManager(context);
+                    //IdentityManager = new IdentityManager(context);
 
                     if (User != null && User.Identity.IsAuthenticated)
                     {

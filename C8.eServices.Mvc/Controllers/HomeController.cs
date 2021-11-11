@@ -24,7 +24,8 @@ namespace C8.eServices.Mvc.Controllers
     {
         //BaseHelper _base = new BaseHelper();
         private eServicesDbContext db = new eServicesDbContext();
-        private WayleaveDbContext dbWayleave = new WayleaveDbContext();
+        private WayleaveDBContext dbWayleave = new WayleaveDBContext();
+
         #region Home Index
         //
         // GET: /Home/
@@ -33,9 +34,9 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 Session["payments"] = null;
-                IPAddressModel ipad = new IPAddressModel();
-                string str=ipad.GetIP();
-                string tt = ipad.GetIP4Address();
+                //IPAddressModel ipad = new IPAddressModel();
+                //string str=ipad.GetIP();
+                //string tt = ipad.GetIP4Address();
                 // Test code.
                 //This is not needed
                 //var ca = CustomerAccountApi.GetAccounts("6911305037089");
@@ -88,6 +89,11 @@ namespace C8.eServices.Mvc.Controllers
 
                 //}
 
+
+
+                //OverdueApplications();
+
+
                 ViewBag.ReturnUrl = returnUrl;
                 ViewBag.Error = "";
                 return View();
@@ -98,7 +104,31 @@ namespace C8.eServices.Mvc.Controllers
             }
         }
         #endregion
-               
+
+        public static void OverdueApplications()
+        {
+            using (var db = new WayleaveDBContext())
+            {
+                var statusDetail = db.MASTER_STATUS_TYPES.Where(d => d.STATUS_ID == 2).FirstOrDefault();
+                string distributionDescription = statusDetail != null ? statusDetail.DESCRIPTION : "";
+                var DistributionData = db.WL_APPLICATIONFORM.Where(x => x.APPLICATION_STEP_DESCRIPTION == distributionDescription).ToList();
+                if (DistributionData.Count() > 0)
+                {
+                    foreach (var item in DistributionData)
+                    {
+                        DateTime todayDate = DateTime.Now;
+                        var applicationDate = item.CREATED_DATE;
+                        TimeSpan ts = todayDate - applicationDate;
+                        if (ts.Days > 7)
+                        {
+                            item.IS_OVERDUE = "Y";
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+        }
+
         #region FAQ Index
         public ActionResult FAQ()
         {
@@ -201,7 +231,7 @@ namespace C8.eServices.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> WayleaveLogin(LoginViewModel model, string returnUrl)
         {
-            using (var context = new WayleaveDbContext())
+            using (var context = new WayleaveDBContext())
             {
                 //_base.Initialise(context);
 
@@ -324,7 +354,7 @@ namespace C8.eServices.Mvc.Controllers
         ////public async Task<ActionResult> Index(LoginViewModel model, string returnUrl)
         ////{
         ////    ///return RedirectToAction("Index", "WayleaveAccount");
-        ////    using (var context = new WayleaveDbContext())
+        ////    using (var context = new WayleaveDBContext())
         ////    {
         ////        //_base.Initialise(context);
 
@@ -492,19 +522,23 @@ namespace C8.eServices.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(LoginViewModel model, string returnUrl)
         {
-            WayleaveDbContext context = new WayleaveDbContext();
+            WayleaveDBContext context = new WayleaveDBContext();
             try
             {
+                var resultNew = context.Users.Where(s => s.username == model.UserName).FirstOrDefault();
                 // Please store the 2 line below in the db and call/ them from there
-                var activeDirectoryOn = "True";
+                var activeDirectoryOn = "";
                 var activeDirectoryDomain = "10.31.3.51";
                 //
-
+                if(resultNew!=null)
+                {
+                    activeDirectoryOn = resultNew!=null? resultNew.isActiveDirectory:"N";
+                }
                 var Ad = false;
                 bool ADSuccess = false;
                 string email = "";
                 AdLogin adLogin = new AdLogin();
-                if (activeDirectoryOn == "True")
+                if (activeDirectoryOn == "Y")
                 {
                     var Domain2 = new PrincipalContext(ContextType.Domain, activeDirectoryDomain);
 
@@ -538,11 +572,28 @@ namespace C8.eServices.Mvc.Controllers
                         }
                         else
                         {
-
                             TempData["LoginError"] = "Invalid username or password For active directory login!";
                             return RedirectToAction("Index", "Home");
 
                         }
+                    }
+                }
+                else
+                {
+                    var result = context.Users.Where(s => s.username == model.UserName&&s.password==model.Password).FirstOrDefault();
+                    if (result != null)
+                    {
+                        Session["ekurhuleniData"] = result;
+                        Session["ekurhuleniUserID"] = result.userid;
+                        Session["ekurhuleniUserName"] = result.username;
+                        Session["ekurhuleniUserDeptName"] = result.deptartmentname;
+                        Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
+                        return RedirectToAction("Index", "WL");
+                    }
+                    else
+                    {
+                        TempData["LoginError"] = "Invalid username or password!";
+                        return RedirectToAction("Index", "Home");
                     }
                 }
             }

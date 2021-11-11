@@ -36,13 +36,13 @@ namespace C8.eServices.Mvc.Controllers
 
         public void Initialise()
         {
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
             SystemUser = _base.SystemUser;
-            Customer = _base.Customer;
+            //Customer = _base.Customer;
 
             var context = new eServicesDbContext();
 
-            IdentityManager = new IdentityManager(context);
+            //IdentityManager = new IdentityManager(context);
             UserManager =
                 new UserManager<SystemIdentityUser>(
                 new UserStore<SystemIdentityUser>(context));
@@ -456,7 +456,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Customer == null)
                     return RedirectToAction("Index", "Profile");
@@ -479,7 +479,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -553,7 +553,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
 
                 if (Id != null && Id > 0)
                 {
@@ -654,7 +654,7 @@ namespace C8.eServices.Mvc.Controllers
             using (var cxt = new eServicesDbContext())
             {
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
                 //return View(cxt.MasterpassTransactions.Include(o =>o.MasterpassRequest).ToList());
                 return View();
 
@@ -668,7 +668,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 Initialise();
                 BaseHelper _base = new BaseHelper();
-                _base.Initialise(cxt);
+                //_base.Initialise(cxt);
                 var query = (from a in cxt.MasterpassTransactions
                              join b in cxt.MasterpassRequests on a.MasterpassRequestId equals b.Id
                              join c in cxt.SystemUsers on b.CreatedBySystemUserId equals c.Id

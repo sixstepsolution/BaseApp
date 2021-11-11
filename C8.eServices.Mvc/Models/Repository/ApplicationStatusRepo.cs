@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class ApplicationStatusRepo : IApplicationStatus
     {
-        private WayleaveDbContext _context;
-        public ApplicationStatusRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public ApplicationStatusRepo(WayleaveDBContext context)
         {
             _context = context;
         }

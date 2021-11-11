@@ -80,7 +80,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
 
                     var email = new Email();
                     var referenceType = eServicesDbContext.ReferenceTypes.FirstOrDefault(r => r.Key == ReferenceTypeKeys.LinkedAccounts);
@@ -206,7 +206,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
 
                     var linkedaccount = eServicesDbContext.LinkedAccounts.Include(l => l.Customer)
                     .Include(l => l.Customer.CustomerType)
@@ -314,7 +314,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
 
                     var email = new Email();
                     var customerLinkedAccountController = new CustomerLinkedAccountController();
@@ -468,7 +468,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesContext);
+                    //baseHelper.Initialise(eServicesContext);
 
                     var success = false;
                     var account = new Account();
@@ -646,7 +646,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
 
                     if (ModelState.IsValid)
                     {
@@ -681,7 +681,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
 
                     var linkedaccount = eServicesDbContext.LinkedAccounts.Include(l => l.Customer)
                     .Include(l => l.Status)
@@ -712,7 +712,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
                     var email = new Email();
                     var unlinkStatus = eServicesDbContext.Status.FirstOrDefault(s => s.Key == StatusKeys.LinkedAccountUnlinked);
                     var linkedaccount = eServicesDbContext.LinkedAccounts.Include(l => l.Customer)
@@ -764,7 +764,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
 
                     var linkedaccount = eServicesDbContext.LinkedAccounts.Include(l => l.Customer)
                     .Include(l => l.Customer.CustomerType)
@@ -836,7 +836,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
                     var rows = new List<object>();
                     List<LinkedAccount> linkedAccounts;
                     int total;
@@ -975,7 +975,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
 
                     var linkedEmailId = Convert.ToInt32(id);
                     var linkedEmail = eServicesDbContext.LinkedEmails.Include(le => le.LinkedAccount.Account)
@@ -1026,7 +1026,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    baseHelper.Initialise(eServicesDbContext);
+                    //baseHelper.Initialise(eServicesDbContext);
                     var rows = new List<object>();
                     List<LinkedEmail> linkedEmails;
                     int total;

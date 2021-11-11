@@ -7,7 +7,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {
-    public partial class WL_SUPPORTING_DOCUMENTS
+    public partial class WL_SUPPORTING_DOCUMENTS : BaseModel
     {
         [Key]
         public int WSD_ID { get; set; }

@@ -19,7 +19,7 @@ namespace C8.eServices.Mvc.Controllers
 
         public LocationTypeController()
         {
-            IdentityManager = new IdentityManager(db);
+            //IdentityManager = new IdentityManager(db);
         }
 
         public IdentityManager IdentityManager {get;set;}
@@ -69,7 +69,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Create([Bind(Include="Id,Name,Description,Key,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] LocationType locationtype)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -128,7 +128,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Edit([Bind(Include="Id,Name,Description,Key,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] LocationType locationtype)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -164,7 +164,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
             LocationType locationtype = _context.LocationTypes.Find(id);
 
             //soft deleles record on the database

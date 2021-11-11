@@ -59,7 +59,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Create([Bind(Include="Id,Name,Description,Key,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] SystemUserType systemusertype)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -108,7 +108,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Edit([Bind(Include="Id,Name,Description,Key,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] SystemUserType systemusertype)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -144,7 +144,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
             SystemUserType systemusertype = _context.SystemUserTypes.Find(id);
 
             //Soft deletes the record

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using C8.eServices.Mvc.Models.Audits;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {    
-    public partial class WL_APPLICATIONFORM_AUDIT
+    public partial class WL_APPLICATIONFORM_AUDIT : BaseTypeAudit
     {
         //public WL_APPLICATIONFORM()
         //{
@@ -193,7 +194,8 @@ namespace C8.eServices.Mvc.Models
         public int CREATED_BY { get; set; }
 
         public DateTime CREATED_DATE { get; set; }
-
+        [StringLength(10)]
+        public string IS_OVERDUE { get; set; }
         public int? MODIFIED_BY { get; set; }
 
         public DateTime? MODIFIED_DATE { get; set; }

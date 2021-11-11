@@ -24,7 +24,7 @@ namespace C8.eServices.Mvc.Controllers
 {
     public class WLController : Controller
     {
-        private WayleaveDbContext db = new WayleaveDbContext();
+        private WayleaveDBContext db = new WayleaveDBContext();
         private eServicesDbContext dbeService = new eServicesDbContext();
         // GET: WL
         public ActionResult Index()
@@ -170,13 +170,51 @@ namespace C8.eServices.Mvc.Controllers
 
         public ActionResult AddDepartmentUsers()
         {
-            if (Session["ekurhuleniData"] == null)
-            {
-                // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+            //if (Session["ekurhuleniData"] == null)
+            //{
+            //    // if IsAuthenticated is false return to login code here....
+            //    return Redirect("../home/index");
 
-            }
+            //}
+            
+                        List <SelectListItem> userTypes = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "New User", Value = "New"
+                },
+                new SelectListItem {
+                    Text = "Existing User", Value = "Existing"
+                }
+            };
+            List<SelectListItem> departmentList = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "City Planning", Value = "City Planning"
+                },
+                new SelectListItem {
+                    Text = "Energy", Value = "Energy"
+                },
+                new SelectListItem {
+                    Text = "Roads & Storm Water", Value = "Roads & Storm Water"
+                },
+                new SelectListItem {
+                    Text = "Water", Value = "Water"
+                }
+            };
 
+            List <SelectListItem> userRoles = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "Admin", Value = "Admin"
+                },
+                new SelectListItem {
+                    Text = "System Admin", Value = "System Admin"
+                },
+                new SelectListItem {
+                    Text = "application", Value = "Department User"
+                }
+            };
+
+            ViewBag.datalist = userTypes;
+            ViewBag.departmentList = departmentList;
+            ViewBag.userRoles = userRoles;
             return View();
         }
 
@@ -193,7 +231,7 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
 
-        public ActionResult ApplicationFormNew(string id=null)
+        public ActionResult ApplicationFormNew(string id = null)
         {
             if (Session["ekurhuleniData"] == null)
             {
@@ -201,7 +239,7 @@ namespace C8.eServices.Mvc.Controllers
                 return Redirect("../home/index");
 
             }
-            
+
             if (id != null)
             {
                 id = id.Replace(" ", "+");
@@ -215,7 +253,7 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
 
-        public ActionResult WayleaveAccount(string id=null)
+        public ActionResult WayleaveAccount(string id = null)
         {
             if (Session["ekurhuleniData"] == null)
             {
@@ -296,7 +334,7 @@ namespace C8.eServices.Mvc.Controllers
 
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());                
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
                 var responseTask = client.GetAsync("get-application-staus-types");
                 responseTask.Wait();
 
@@ -474,7 +512,7 @@ namespace C8.eServices.Mvc.Controllers
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
                     var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
-                    tt = tt.Where(s => s.name == (grantWayleave!=null? grantWayleave.Description:"")).ToList();
+                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.Description : "")).ToList();
                     var statusResult = tt.FirstOrDefault().applicationList;
                     var finalResult = statusResult.Where(s => s.applicationNumber == searchKeyword).ToList();
                     ViewBag.ApplicationStatusList = finalResult;
@@ -633,13 +671,21 @@ namespace C8.eServices.Mvc.Controllers
             var res = db.WL_APPLICATIONFORM.Find(pdf.AppId);
             if (res != null)
             {
-                var signatureDetails = db.WL_UPLOAD_SIGNATURE.Where(s=>s.IS_ACTIVE=="Y").FirstOrDefault();
-                ViewBag.signature = signatureDetails!=null? signatureDetails.DOCUMENT_NAME:"";
+                var signatureDetails = db.WL_UPLOAD_SIGNATURE.Where(s => s.IS_ACTIVE == "Y").FirstOrDefault();
+                ViewBag.signature = signatureDetails != null ? signatureDetails.DOCUMENT_NAME : "";
                 //int acNo = Convert.ToInt32(res.PROPERTYOWNER_ACCOUNT_NO??"0");
                 var address = db.WL_ACCOUNTS.Where(s => s.ACCOUNT_NUMBER == res.PROPERTYOWNER_ACCOUNT_NO).FirstOrDefault();//!=null? db.WL_ACCOUNTS.Where(s => s.ACCOUNT_ID == acNo).FirstOrDefault().
                 //ViewBag.inspectionDate =res.INSPECTION_DATE != null ? Convert.ToDateTime(res.INSPECTION_DATE).ToString("yyyy-MM-dd") : "";
-                ViewBag.inspectionDate =DateTime.Now.ToString("yyyy-MM-dd");
-                ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
+                ViewBag.inspectionDate = DateTime.Now.ToString("yyyy-MM-dd");
+                if (address != null)
+                {
+                    ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
+                }
+                else
+                {
+                    ViewBag.streetAddress = "";
+                }
+
                 ViewBag.UserType = address.TYPE_USER;
                 ViewBag.suburb = address.CITY;
                 ViewBag.company = address.COMPANY_NAME;
@@ -702,7 +748,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult UploadSignature()
         {
             var signDetails = db.WL_UPLOAD_SIGNATURE.ToList();
-            ViewBag.signatureList = signDetails.Count>0? signDetails.FirstOrDefault().DOCUMENT_NAME:null;
+            ViewBag.signatureList = signDetails.Count > 0 ? signDetails.FirstOrDefault().DOCUMENT_NAME : null;
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
@@ -745,7 +791,7 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AuditTrail(string searchKeyword,string status,DateTime? startDate,DateTime? endDate, string username)
+        public ActionResult AuditTrail(string searchKeyword, string status, DateTime? startDate, DateTime? endDate, string username)
         {
             if (Session["ekurhuleniData"] == null)
             {
@@ -760,7 +806,7 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.errorStatus = null;
             //var ttt = db.WL_ACCOUNTS.Select(s => new { s.CONTACT_PERSON_FIRST_NAME, s.CONTACT_PERSON_LAST_NAME, s.ACCOUNT_ID }).Distinct().ToList();
             //ViewBag.VBMobileList = new SelectList(ttt, "CONTACT_PERSON_FIRST_NAME", "CONTACT_PERSON_FIRST_NAME");
-           
+
             //if (String.IsNullOrEmpty(searchKeyword) && String.IsNullOrEmpty(status))
             //{
             //    ViewBag.errorStatus = "No result found!";
@@ -770,7 +816,7 @@ namespace C8.eServices.Mvc.Controllers
             var appDetails = db.WL_APPLICATIONFORM_AUDIT.OrderBy(d => d.AUDIT_ID).ToList();
             if (!String.IsNullOrEmpty(searchKeyword))
             {
-                appDetails= appDetails.Where(s => s.APPLICATION_NUMBER == searchKeyword).ToList();
+                appDetails = appDetails.Where(s => s.APPLICATION_NUMBER == searchKeyword).ToList();
             }
             if (!String.IsNullOrEmpty(status))
             {
@@ -781,7 +827,7 @@ namespace C8.eServices.Mvc.Controllers
                 else
                 {
                     appDetails = appDetails.Where(s => s.ACTION.Contains(status)).ToList();
-                }                
+                }
             }
             if (!String.IsNullOrEmpty(username))
             {
@@ -795,10 +841,10 @@ namespace C8.eServices.Mvc.Controllers
                 }
             }
 
-            if (startDate!=null)
+            if (startDate != null)
             {
-                ViewBag.appStartDate = startDate.Value.Year+"-"+ startDate.Value.Month+"-"+ startDate.Value.Day;
-                
+                ViewBag.appStartDate = startDate.Value.Year + "-" + startDate.Value.Month + "-" + startDate.Value.Day;
+
                 //appDetails = appDetails.Where(s => s.CREATED_DATE>=startDate).ToList();
                 appDetails = appDetails.Where(s => s.CREATED_DATE.Date >= startDate.Value.Date).ToList();
             }
@@ -817,7 +863,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 ViewBag.errorStatus = "No result found!";
                 ViewBag.applicationList = null;
-            }            
+            }
             return View();
         }
 
@@ -836,7 +882,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 dct.Add("error", false);
             }
-            return Json(dct,JsonRequestBehavior.AllowGet);
+            return Json(dct, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -850,11 +896,11 @@ namespace C8.eServices.Mvc.Controllers
                 return Redirect("../home/index");
             }
             TempData["ReportResult"] = "";
-            ViewBag.result = null;           
+            ViewBag.result = null;
             return View();
         }
         [HttpPost]
-        public ActionResult Reports(string documentType, string reportType, DateTime? startDate, DateTime? endDate,string status)
+        public ActionResult Reports(string documentType, string reportType, DateTime? startDate, DateTime? endDate, string status)
         {
             //if (Session["ekurhuleniData"] == null)
             //{
@@ -918,11 +964,11 @@ namespace C8.eServices.Mvc.Controllers
                             break;
                         case "ProgressReport":
                             f3 = "Progress+Report";
-                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&Status="+ status;
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&Status=" + status;
                             break;
                         case "TotalWayleaveApplicationsCreated":
                             f3 = "Total%20Wayleave%20Applications%20Created";
-                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&ReportParameter1="+ status;
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate + "&ReportParameter1=" + status;
                             break;
                         default:
                             break;
@@ -939,7 +985,7 @@ namespace C8.eServices.Mvc.Controllers
                     //string reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fCase_Management_Reports%2fNo_of_Cases_Report&rs:Command=Render&rs:Format=PDF&year=" + yearN + "&month=" + month;
                     client.DownloadFile(reportURL, fileName);
                     byte[] fileBytes = System.IO.File.ReadAllBytes(@"" + fileName);
-                    string dsss=downloadReport(fileName);
+                    string dsss = downloadReport(fileName);
                     //Response.Headers.Clear();
                     //Response.BufferOutput = true;
                     TempData["ReportResult"] = "success";
@@ -1026,8 +1072,8 @@ namespace C8.eServices.Mvc.Controllers
                     //string ttt = "Approved%20Application";
                     //string ttt1 = "Progress%20Report";
                     //string ttt2 = "Total%20Wayleave%20Applications%20Created";
-                    string stdate = applicationFormResponse.startDate.Value.Year + "/" + applicationFormResponse.startDate.Value.Month + "/" + applicationFormResponse.startDate.Value.Day+ " 00:00:00.000";
-                    string endate = applicationFormResponse.endDate.Value.Year + "/" + applicationFormResponse.endDate.Value.Month + "/" + applicationFormResponse.endDate.Value.Day+ " 23:59:49.217";
+                    string stdate = applicationFormResponse.startDate.Value.Year + "/" + applicationFormResponse.startDate.Value.Month + "/" + applicationFormResponse.startDate.Value.Day + " 00:00:00.000";
+                    string endate = applicationFormResponse.endDate.Value.Year + "/" + applicationFormResponse.endDate.Value.Month + "/" + applicationFormResponse.endDate.Value.Day + " 23:59:49.217";
                     string reportURL = string.Empty;
                     switch (applicationFormResponse.reportType)
                     {
@@ -1042,7 +1088,7 @@ namespace C8.eServices.Mvc.Controllers
                         case "TotalWayleaveApplicationsCreated":
                             f3 = "Total+Wayleave+Applications+Created";
                             reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate;
-                            if (statusLength>0)
+                            if (statusLength > 0)
                             {
                                 for (int i = 0; i < statusLength; i++)
                                 {
@@ -1051,7 +1097,7 @@ namespace C8.eServices.Mvc.Controllers
                                 //reportURL = reportURL + "&Status="+ applicationFormResponse.status[0]+ "&Status=" + applicationFormResponse.status[1] + "&Status=" + applicationFormResponse.status[2] + ";
                             }
 
-                            
+
 
 
                             break;
@@ -1060,9 +1106,9 @@ namespace C8.eServices.Mvc.Controllers
 
                     }
                     client.DownloadFile(reportURL, fileName);
-                    byte[] fileBytes = System.IO.File.ReadAllBytes(@"" + fileName);                    
+                    byte[] fileBytes = System.IO.File.ReadAllBytes(@"" + fileName);
                     dct.Add("success", file_Name);
-                    dct.Add("file", f1);                    
+                    dct.Add("file", f1);
                     return Json(dct, JsonRequestBehavior.AllowGet);
 
                     //string dsss = downloadReport(fileName);

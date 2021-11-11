@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class ContactPersonRepo : IContactPersons
     {
-        private WayleaveDbContext _context;
-        public ContactPersonRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public ContactPersonRepo(WayleaveDBContext context)
         {
             _context = context;
         }

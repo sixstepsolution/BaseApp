@@ -6,7 +6,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {
-    public class WL_UPLOAD_SIGNATURE
+    public class WL_UPLOAD_SIGNATURE : BaseModel
     {
 
         [Key]

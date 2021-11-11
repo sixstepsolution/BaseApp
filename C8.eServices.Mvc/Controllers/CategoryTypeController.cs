@@ -22,7 +22,7 @@ namespace C8.eServices.Mvc.Controllers
 
         public void Initialise()
         {
-            _base.Initialise(db);
+            //_base.Initialise(db);
             SystemUser = _base.SystemUser;
 
         }
@@ -66,7 +66,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Create([Bind(Include="Id,Name,Description,Key,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] CategoryType categorytype)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            ////////_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -123,7 +123,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _base.Initialise(db);
+                //_base.Initialise(db);
                 db.Entry(categorytype).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -155,7 +155,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             eServicesDbContext _context = new eServicesDbContext();
             CategoryType categorytype = _context.CategoryTypes.Find(id);
-            _base.Initialise(_context);
+            ////_base.Initialise(_context);
             //soft delete record on the database
             categorytype.IsDeleted = true;
             categorytype.IsActive = false;

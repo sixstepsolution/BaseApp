@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class WorkLocationRepo : IWorkLocations
     {
-        private WayleaveDbContext _context;
-        public WorkLocationRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public WorkLocationRepo(WayleaveDBContext context)
         {
             _context = context;
         }

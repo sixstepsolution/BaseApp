@@ -117,6 +117,73 @@ namespace C8.eServices.Mvc.ViewModels
         public string StatusId { get; set; }
     }
 
+    public class RegisterViewModelNew
+    {
+        //[Required]
+        //[Display(Name = "First Name")]
+        //[RegularExpression(@"^[a-zA-Z ]+$", ErrorMessage = "The FirstName field should consist of characters only")]
+        public string FirstName { get; set; }
+
+        //[Required]
+        //[Display(Name = "Last Name")]
+        //[RegularExpression(@"^[a-zA-Z0-9_ ]*$", ErrorMessage = "The LastName field should consist of characters only")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Email Address")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        [DataType(DataType.EmailAddress)]
+        public string EmailAddress { get; set; }
+
+        //[Display(Name = "Confirm Email Address")]
+        //[DataType(DataType.EmailAddress)]
+        //[Compare("EmailAddress", ErrorMessage = "The email and confirmation email do not match.")]
+        //public string ConfirmEmailAddress { get; set; }
+
+        [Phone(ErrorMessage = "Invalid Mobile Number")]
+        [Display(Name = "Mobile Number")]
+        [DataType(DataType.PhoneNumber)]
+        public string MobileNumber { get; set; }
+
+        //[Display(Name = "Confirm Mobile Number")]
+        //[DataType(DataType.PhoneNumber)]
+        //[Compare("MobileNumber", ErrorMessage = "The mobile number and confirmation mobile number do not match.")]
+        //public string ConfirmMobileNumber { get; set; }
+
+        [Display(Name = "Designation")]
+        public string Designation { get; set; }
+
+        [Display(Name = "Company Name")]
+        public string CompanyName { get; set; }
+        [Required]
+        [Display(Name = "RSA ID No")]
+        [MaxLength(13)]
+        [MinLength(13)]
+        public string IdentificationNumber { get; set; }
+
+        [Required]
+        [Display(Name = "Username")]
+        [RegularExpression(@"^[a-zA-Z0-9]{6,20}$", ErrorMessage = "The Username field must be 6 to 20 characters long, without any special characters eg. !,@,#,$,%,&,*.")]
+        public string UserName { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,15}$", ErrorMessage = "The password must contain at least one uppercase character, one lowercase character, one numeric and one special character")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+
+        [Display(Name = "System User Type")]
+        public string SystemUserTypeId { get; set; }
+
+        [Display(Name = "Status")]
+        public string StatusId { get; set; }
+    }
+
     public class RegisterViewModelApi
     {
         [Required]

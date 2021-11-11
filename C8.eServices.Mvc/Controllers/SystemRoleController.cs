@@ -18,7 +18,7 @@ namespace C8.eServices.Mvc.Controllers
         private eServicesDbContext db = new eServicesDbContext();
         public SystemRoleController()
         {
-            IdentityManager = new IdentityManager(db);
+            //IdentityManager = new IdentityManager(db);
         }
 
         public IdentityManager IdentityManager { get; set; }
@@ -54,10 +54,10 @@ namespace C8.eServices.Mvc.Controllers
         {
             try
             {
-                IdentityRole role = new IdentityRole(roleName);
-                db.Roles.Add(role);
+                //IdentityRole role = new IdentityRole(roleName);
+                //db.Roles.Add(role);
 
-                db.SaveChanges();
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch

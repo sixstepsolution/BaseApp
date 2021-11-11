@@ -13,7 +13,8 @@ $.fn.validateEmail = function (id) {
 };
 
 //Save department users
-$.fn.AddDepartmentUser = function () {    
+$.fn.AddDepartmentUser = function () {
+    alert();
     var formData = new FormData();
     $.fn.GetFormdataValues();
     formData.append("UserData", JSON.stringify(DepartmentUsers));
@@ -22,6 +23,7 @@ $.fn.AddDepartmentUser = function () {
     //alert(validIdNumber);
     var formValid = $.fn.CheckFormValidations();
     if (formValid) {
+        alert(formValid);
         $('#isAppLoading').show();
         var emailFormat = $.fn.validateEmail('emailAddress'); // This return result in Boolean type
         if (!emailFormat) {
@@ -33,17 +35,19 @@ $.fn.AddDepartmentUser = function () {
             });
             $('#isAppLoading').hide();
             return;
-        }        
-
+        }
+        console.log(DepartmentUsers);
         $.ajax({
-            url: apiBaseUrl + 'add-department-user',
+            /*url: apiBaseUrl + 'add-department-user',*/
+            url: '../Account/Register',
             type: 'POST',
             processData: false,
             contentType: false,
             cache: false,
-            enctype: 'multipart/form-data',
-            dataType: 'json',
-            data: formData,
+            //enctype: 'multipart/form-data',
+            //dataType: 'json',
+            //data: formData,
+            data: { model: JSON.stringify(DepartmentUsers)},
             success: function (data, textStatus, xhr) {
                 console.log("======Result=========");
                 console.log(data);

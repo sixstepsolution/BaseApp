@@ -9,8 +9,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class RegionRepo : IRegion
     {
-        private WayleaveDbContext _context;
-        public RegionRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public RegionRepo(WayleaveDBContext context)
         {
             _context = context;
         }

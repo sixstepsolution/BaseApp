@@ -1,0 +1,345 @@
+﻿
+@model C8.eServices.Mvc.Models.Mapings.AddUserModal
+
+@{
+    ViewBag.Title = "AddDepartmentUsers";
+    Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
+}
+
+<style>
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        padding: 5px;
+        line-height: 1.42857143;
+        vertical-align: top;
+        border-top: 1px solid #ddd;
+    }
+
+    select {
+        vertical-align: top;
+        height: 30px;
+    }
+
+    input, select {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+    }
+
+    .badge {
+        display: inline-block;
+        width: 80px;
+        padding: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        background-color: #777;
+        border-radius: 10px;
+    }
+
+    .headindg-size {
+        margin-left: -26px;
+        font-size: 14px;
+        padding: 2px;
+    }
+
+    span {
+        height: 24px !important;
+        font-size: 10px !important;
+    }
+
+    .panel-default-custom {
+        border: 0.5px solid transparent;
+    }
+
+        .panel-default-custom > .panel-heading {
+            color: #fff;
+            background-color: #f3f0e1;
+            /* border-color: #ddd; */
+            border: none;
+            border-radius: 0;
+            height: 22px;
+        }
+
+    .panel-group {
+        margin-bottom: 0px;
+    }
+
+    role {
+        margin-right: 80px;
+        margin-left: 20px;
+        font-weight: normal;
+        float: left;
+        margin: 0px;
+        margin-top: 8px;
+        margin-left: 10px;
+        font-size: 11px !important;
+    }
+
+    label {
+        font-size: 10.5px !important;
+        padding: 0;
+        font-weight: 500;
+        padding-left: 3px;
+        margin-bottom: -10px;
+    }
+
+    .checkbox-custom-label {
+        font-size: 10.5px !important;
+        font-weight: 500;
+    }
+
+    .pac-container {
+        z-index: 10000 !important;
+        /*width:70% !important;*/
+    }
+
+    .checkbox-custom {
+        opacity: 1 !important;
+        position: absolute !important;
+    }
+</style>
+<style type="text/css">
+    #right-panel {
+        font-family: "Roboto", "sans-serif";
+        line-height: 30px;
+        padding-left: 10px;
+    }
+
+        #right-panel select,
+        #right-panel input {
+            font-size: 15px;
+        }
+
+        #right-panel select {
+            width: 100%;
+        }
+
+        #right-panel i {
+            font-size: 12px;
+        }
+
+
+    #right-panel {
+        float: right;
+        width: 34%;
+        height: 100%;
+    }
+
+    .panel {
+        height: 100%;
+        overflow: auto;
+    }
+
+    .errorNew {
+        border: 2px solid red !important;
+        border-color: red !important;
+        color: red !important;
+    }
+
+    .payment-custom img {
+        border: 1px solid #ccc !important;
+    }
+
+        .payment-custom img:hover {
+            border: 2px solid green !important;
+        }
+</style>
+<script src="~/Scripts/wayleaveScripts/AddDepartmentUsers.js?dt=@DateTime.Now.Millisecond"></script>
+
+<script>
+    $(document).ready(function () {
+        var departmentName = '@Session["ekurhuleniUserDeptName"]';
+        var applicationId = '@ViewBag.ApplicationId';
+        if (applicationId != undefined && applicationId != "") {
+            //$.fn.LoadApplicationsDetailsByAppId(applicationId);
+            $("#CurrentUserDepartmentName").val(departmentName);
+        }
+        else {
+        }
+        var userRole = '@Session["ekurhuleniUserRole"]';
+        if (userRole ==="Admin") {
+            $.fn.LoadApplicationsAlertsWithCounts("Y");
+        }
+        else {
+            $.fn.LoadApplicationsAlertsWithCounts("N")
+        }
+
+    });
+</script>
+<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important">
+   
+    @using (Html.BeginForm("AddDepartmentUsers", "Account", FormMethod.Post, new { id = "registerForm", @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="panel-group" style="margin-left: -25px;
+        margin-bottom: 3px !important;">
+            <div class="panel panel-default" style="border:none!important">
+                <div class="panel-heading" style="background:#00A65A;padding-top:5px!important">
+                    <h4 class="panel-title text-center" style="font-size:16pt!important">
+                        Add User <b class="pull-right" style="font-size:10pt!important;background-color:#fff!important;padding:5px!important;margin-top:-2px!important;border-radius:3px!important;display:none" id="APPLICATION_STEP_DESCRIPTION_STATUS"></b>
+                    </h4>
+                </div>
+                <div style="border:1px solid #00A65A;">
+                    <div class="panel-body" style="padding: 5px!important;">
+                        <div class="text-danger">@Html.ValidationSummary()</div>
+                        @if (ViewBag.Response != null)
+                        {
+                            if (ViewBag.Response == "Success")
+                            {
+                                <b class="text-success">User created successfully!</b>
+                            }
+                            else if (ViewBag.Response == "Error")
+                            {
+                                <b class="text-danger">User creation failed!</b>
+                            }
+                        }
+                        @if (TempData["ResultStatus"] != null)
+                        {
+                            <div class="alert alert-success" id="loginError" style="color:#fff!important">
+                                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                @TempData["ResultStatus"]
+                            </div>
+                        }
+                        <br />
+                        <table>
+                            <tr>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">User Type</label>
+
+                                        @Html.DropDownListFor(m => m.userType, new SelectList(ViewBag.datalist, "Value", "Text"), "Make a selection", new { style = "border-radius: 4px", @class = "form-control", name = "userType" })
+
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">First Name</label>
+                                        @Html.TextBoxFor(m => m.firstName, new { @class = "form-control", style = "border-radius: 4px", name = "firstName" })
+
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Last Name</label>
+                                        @Html.TextBoxFor(m => m.lastName, new { @class = "form-control", style = "border-radius: 4px", name = "lastName" })
+
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Username</label>
+                                        @Html.TextBoxFor(m => m.username, new { @class = "form-control", autocomplete = "off", style = "border-radius: 4px", name = "username" })
+
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Password</label>
+                                        @Html.PasswordFor(m => m.password, new { @class = "form-control", autocomplete = "off", style = "border-radius: 4px", name = "password" })
+
+                                    </div>
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Confirm Password</label>
+                                        @Html.PasswordFor(m => m.confirmpassword, new { @class = "form-control", style = "border-radius: 4px", name = "confirmpassword" })
+
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Email Address</label>
+                                        @Html.TextBoxFor(m => m.emailAddress, new { @class = "form-control", onkeyup = "$.fn.validateEmail('emailAddress')", style = "border-radius: 4px", name = "emailAddress" })
+
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Cell Phone</label>
+                                        @Html.TextBoxFor(m => m.cellPhone, new { @class = "form-control numbersOnly", maxlength = "10", style = "border-radius: 4px", name = "cellPhone" })
+
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Department</label>
+                                        @Html.DropDownListFor(m => m.deptartmentname, new SelectList(ViewBag.departmentList, "Value", "Text"), "Make a selection", new { style = "border-radius: 4px", @class = "form-control", name = "deptartmentname" })
+
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <table style="width:100%!important">
+                                        <tr>
+                                            <td>
+                                                <div style="padding-top:10px!important">
+                                                    <label class="checkbox-custom-label" for="isActiveDirectory">Active Directory</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    @Html.CheckBoxFor(m => m.isActiveDirectory, new { @class = "checkbox-custom", name = "isActiveDirectory" })
+
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">User Role</label>
+                                        @Html.DropDownListFor(m => m.userRole, new SelectList(ViewBag.userRoles, "Value", "Text"), "Make a selection", new { style = "border-radius: 4px", @class = "form-control", name = "userRole" })
+
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" style="margin-top:10px!important">
+                            <tr>
+                                <td colspan="4" class="text-center" id="isNewApplication">
+                                    <button type="submit" class="btn btn-green-custom" style="height: 24px; width: 100px; padding: 0; font-size: 11px;color:#fff!important" @*onclick="$.fn.AddDepartmentUser()"*@>
+                                        <i id="isAppLoading" class="fa fa-spinner fa-spin" style="display:none!important"></i>
+                                        Create
+                                    </button>
+                                    <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 100px; padding: 0; font-size: 11px">Cancel</button></a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="PageLoaderModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="border-radius:5px!important;width:5%;height:50px!important;top:30%;border-radius:20px!important">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h3 class="text-center"><i class="fa fa-spinner fa-spin text-success"></i></h3>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+    }
+</section>
+
+
+
+
+
+
+
+
+
+
+
+

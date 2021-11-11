@@ -164,7 +164,7 @@ public ActionResult GetQueryTypes()
                         string contactNumber, string captchaResponse)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             var result = "failed";
             var captchaHelper = new CaptchaHelper();
@@ -246,7 +246,7 @@ public ActionResult GetQueryTypes()
         public ActionResult ResolveQuery(int id, int statusId, string comment, bool isSendNotification)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
             var email = new Email();
             try
             {

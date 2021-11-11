@@ -18,7 +18,7 @@ namespace C8.eServices.Mvc.Controllers
         BaseHelper _base = new BaseHelper();
         public StatusController()
         {
-            IdentityManager = new IdentityManager(db);
+            //IdentityManager = new IdentityManager(db);
         }
 
         public IdentityManager IdentityManager { get; set; }
@@ -78,7 +78,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Create([Bind(Include="Id,Name,Description,Key,StatusTypeId,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] Status status)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -143,7 +143,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Edit([Bind(Include="Id,Name,Key,Description,StatusTypeId,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] Status status)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -181,7 +181,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
             Status status = _context.Status.Find(id);
 
             //Soft deletes the record on the database

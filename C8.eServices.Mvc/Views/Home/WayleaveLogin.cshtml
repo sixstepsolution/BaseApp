@@ -50,8 +50,9 @@
                             <div class="col-lg-12 col-lg-offset-0">
                                 <div class="form-group" style="margin:10px;">
                                     <div class="input-group">
-                                        <span class="input-group-addon bg-green-custom" onclick="showPassword()">
-                                            <img src="~/Content/wayleaveStyles/assets/Images/Asset 37@4x.png" width="20" height="15" />
+                                        <span class="input-group-addon bg-green-custom" @*onclick="showPassword()"*@>
+                                            <i class="fa fa-key"></i>
+                                            @*<img src="~/Content/wayleaveStyles/assets/Images/Asset 37@4x.png" width="20" height="15" />*@
                                         </span>
                                         @Html.PasswordFor(m => m.Password, new { @class = "form-control bradius", @required = true, @autocomplete = "new-password", autofocus = "on", id = "pass", name = "password", placeholder = "Enter password" })
                                     </div>

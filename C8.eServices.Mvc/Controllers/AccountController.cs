@@ -19,13 +19,15 @@ using C8.eServices.Mvc.Keys;
 using C8.eServices.Mvc.Helpers;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.DirectoryServices.AccountManagement;
+using C8.eServices.Mvc.Models.Mapings;
 
 namespace C8.eServices.Mvc.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        //private readonly eServicesDbContext _context = new eServicesDbContext();
+        private readonly eServicesDbContext _context = new eServicesDbContext();
         BaseHelper _base = new BaseHelper();
         private static int _loginId;
 
@@ -110,10 +112,10 @@ namespace C8.eServices.Mvc.Controllers
                     var store = new UserStore<SystemIdentityUser>(context);
                     var UserManager = new UserManager<SystemIdentityUser>(store);
                     UserManager.UserValidator = new UserValidator<SystemIdentityUser>(UserManager) { AllowOnlyAlphanumericUserNames = false };
-                    var user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
+                    //var user = await UserManager.FindByUserNameOrEmailAsync(model.UserName.Trim(), model.Password.Trim());
 
                     //Uncomment below code to bypass login with user's password 
-                    //var user = await UserManager.FindByNameAsync(model.UserName.Trim());
+                    var user = await UserManager.FindByNameAsync(model.UserName.Trim());
 
                     if (user != null)
                     {
@@ -125,129 +127,256 @@ namespace C8.eServices.Mvc.Controllers
                             AuthenticationManager.SignOut();
                             return View(model);
                         }
-                        AppSetting LockOut = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AccountLock);
+                        try
+                        {
+                            string userId = user.Id;
+
+                            // get user roles
+                            List<string> roles = UserManager.GetRoles(userId).ToList();
+                            
+                            var resultNew = context.SystemUsers.Where(s => s.UserName == model.UserName).FirstOrDefault();
+                            // Please store the 2 line below in the db and call/ them from there
+                            var activeDirectoryOn = "";
+                            var activeDirectoryDomain = "10.31.3.51";
+                            //
+                            if (resultNew != null)
+                            {
+                                activeDirectoryOn = resultNew != null ? resultNew.IsActiveDirectory : "N";
+                            }
+                            var Ad = false;
+                            bool ADSuccess = false;
+                            string email = "";
+                            AdLogin adLogin = new AdLogin();
+                            if (activeDirectoryOn == "Y")
+                            {
+                                var Domain2 = new PrincipalContext(ContextType.Domain, activeDirectoryDomain);
+
+                                if (Domain2 != null)
+                                {
+                                    Ad = await adLogin.ValidateUser(model.UserName, model.Password);
+                                    if (Ad)
+                                    {
+                                        ADSuccess = true;
+
+                                        var addets = await adLogin.Validate(activeDirectoryDomain, true, model);
+                                        if (addets != null)
+                                        {
+                                            var result = context.SystemUsers.Where(s => s.UserName == model.UserName).FirstOrDefault();
+                                            if (result != null)
+                                            {
+                                                //var appUser = await UserManager.FindByIdAsync(result.Id);
+                                                //var role = await this.AppRoleManager.FindByIdAsync(Id);
+
+                                                //if (role != null)
+                                                //{
+                                                //    return Ok(TheModelFactory.Create(role));
+                                                //}
+                                                //ApplicationUserManager userManager = HttpContext.GetOwinContext().GetUserManager();
+
+                                                //string userId = User.Identity.GetUserId();
+
+                                                // get user roles
+                                                //List<string> roles = UserManager.GetRoles(userId).ToList();
+                                                Session["ekurhuleniData"] = result;
+                                                Session["ekurhuleniUserID"] = result.Id;
+                                                Session["ekurhuleniUserName"] = result.UserName;
+                                                Session["ekurhuleniUserDeptName"] = result.DepartmentName;
+                                                if (roles.Count > 0)
+                                                {
+                                                    Session["ekurhuleniUserRole"] = roles[0];
+                                                }
+                                                else {
+                                                    Session["ekurhuleniUserRole"] = null;
+                                                }
+                                               // result.rol.FirstOrDefault().role_name;
+                                                return RedirectToAction("Index", "WL");
+                                            }
+                                            else
+                                            {
+                                                TempData["LoginError"] = "Invalid username or password!";
+                                                return RedirectToAction("Index", "Home");
+                                            }
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        TempData["LoginError"] = "Invalid username or password For active directory login!";
+                                        return RedirectToAction("Index", "Home");
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                //var result = context.Users.Where(s => s.username == model.UserName && s.password == model.Password).FirstOrDefault();
+                                //if (result != null)
+                                //{
+                                //    Session["ekurhuleniData"] = result;
+                                //    Session["ekurhuleniUserID"] = result.userid;
+                                //    Session["ekurhuleniUserName"] = result.username;
+                                //    Session["ekurhuleniUserDeptName"] = result.deptartmentname;
+                                //    Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
+                                //    return RedirectToAction("Index", "WL");
+                                //}
+                                //else
+                                //{
+                                //    TempData["LoginError"] = "Invalid username or password!";
+                                //    return RedirectToAction("Index", "Home");
+                                //}
+                                var result = context.SystemUsers.Where(s => s.UserName == model.UserName&&s.Password==model.Password).FirstOrDefault();
+                                if (result != null)
+                                {                                   
+                                    Session["ekurhuleniData"] = result;
+                                    Session["ekurhuleniUserID"] = result.Id;
+                                    Session["ekurhuleniUserName"] = result.UserName;
+                                    Session["ekurhuleniUserDeptName"] = result.DepartmentName;
+                                    if (roles.Count > 0)
+                                    {
+                                        Session["ekurhuleniUserRole"] = roles[0];
+                                    }
+                                    else
+                                    {
+                                        Session["ekurhuleniUserRole"] = null;
+                                    }
+                                    // result.rol.FirstOrDefault().role_name;
+                                    return RedirectToAction("Index", "WL");
+                                }
+                                else
+                                {
+                                    TempData["LoginError"] = "Invalid username or password!";
+                                    return RedirectToAction("Index", "Home");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            TempData["LoginError"] = "Invalid username or password For active directory login!";
+                            return RedirectToAction("Index", "Home");
+                        }
+                        //AppSetting LockOut = context.AppSettings.FirstOrDefault(o => o.Key == AppSettingKeys.AccountLock);
                         //Checks if account is locked
-                        if ((user.SystemUser.IsLocked == true && user.SystemUser.IsActive == true && user.SystemUser.IsDeleted ==false) &&(LockOut.IsActive==true))
-                        {
+                        //if ((user.SystemUser.IsLocked == true && user.SystemUser.IsActive == true && user.SystemUser.IsDeleted ==false) &&(LockOut.IsActive==true))
+                        //{
 
-                            ViewBag.Error = "Your Account has been locked due to suspicious activity, Please Contact The System Administrator To Unlock Your Account.";
-                            AuthenticationManager.SignOut();
-                            return View(model);
-                        }
+                        //    ViewBag.Error = "Your Account has been locked due to suspicious activity, Please Contact The System Administrator To Unlock Your Account.";
+                        //    AuthenticationManager.SignOut();
+                        //    return View(model);
+                        //}
 
 
-                        var applicationUser = context.ApplicationUserRoles.FirstOrDefault(a => a.SystemUserId == user.SystemUserId);
+                        //var applicationUser = context.ApplicationUserRoles.FirstOrDefault(a => a.SystemUserId == user.SystemUserId);
 
-                        if (applicationUser != null)
-                        {
-                            var ipAddressRange = context.AppSettings.FirstOrDefault(a => a.Key == AppSettingKeys.IpAddressRange);
-                            if (ipAddressRange == null) throw new Exception("Invalid appsetting");
+                        //if (applicationUser != null)
+                        //{
+                        //    var ipAddressRange = context.AppSettings.FirstOrDefault(a => a.Key == AppSettingKeys.IpAddressRange);
+                        //    if (ipAddressRange == null) throw new Exception("Invalid appsetting");
 
-                            if (!HttpContext.Request.UserHostAddress.StartsWith(ipAddressRange.Value))
-                            {
-                                AuthenticationManager.SignOut();
-                                ViewBag.Error = "Unauthorized external access. If you have any questions, please contact the website administrator.";
-                                return View(model);
-                            }
-                        }
+                        //    if (!HttpContext.Request.UserHostAddress.StartsWith(ipAddressRange.Value))
+                        //    {
+                        //        AuthenticationManager.SignOut();
+                        //        ViewBag.Error = "Unauthorized external access. If you have any questions, please contact the website administrator.";
+                        //        return View(model);
+                        //    }
+                        //}
 
-                        
-                     
-                        // JK.20190623a - Using the user.emailconfirm to also validate the phone number, but email always takes preference.
-                        if (user.EmailConfirmed == false && string.IsNullOrWhiteSpace(user.UnconfirmedEmail))
-                        {
-                            var guid = user.Id;
-                            AuthenticationManager.SignOut();
-                            ViewBag.EncodedUserId = guid;
-                            ViewBag.EncodedSystemUserId = user.SystemUserId;
-                            ViewBag.Data = user.SystemUserId;
 
-                            if (user.SystemUser.EmailAddress != null)
-                            {
-                                ViewBag.Status = "Warning";
-                                return View("_EmailActivated");
-                            }
-                            else
-                                return RedirectToAction("ActivateMobile", "Account", new { id = guid });
 
-                        }
-                        if (user.SystemUser.IsLocked != null && (!user.SystemUser.IsPasswordReset && user.SystemUser.IsTemporaryPassword && (bool)user.SystemUser.IsLocked))
-                        {
-                            AuthenticationManager.SignOut();
-                            error = "Temporary password expired. Please click forgot password link to reset password.";
-                            ModelState.AddModelError("", "Temporary password expired. Please click forgot password link to reset password.");
-                        }
-                        else
-                        {
-                            var email = new Email();
-                            var sms = new CesarSMS();
-                      
-                            var statusIdsms = context.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
-                            var systemUser = context.SystemUsers.FirstOrDefault(s => s.Id == user.SystemUserId);
+                        //// JK.20190623a - Using the user.emailconfirm to also validate the phone number, but email always takes preference.
+                        //if (user.EmailConfirmed == false && string.IsNullOrWhiteSpace(user.UnconfirmedEmail))
+                        //{
+                        //    var guid = user.Id;
+                        //    AuthenticationManager.SignOut();
+                        //    ViewBag.EncodedUserId = guid;
+                        //    ViewBag.EncodedSystemUserId = user.SystemUserId;
+                        //    ViewBag.Data = user.SystemUserId;
 
-                            //reset incremental delay on successful login
-                            if (HttpContext.Application[Request.UserHostAddress] != null)
-                            {
-                                HttpContext.Application.Remove(Request.UserHostAddress);
-                            }
+                        //    if (user.SystemUser.EmailAddress != null)
+                        //    {
+                        //        ViewBag.Status = "Warning";
+                        //        return View("_EmailActivated");
+                        //    }
+                        //    else
+                        //        return RedirectToAction("ActivateMobile", "Account", new { id = guid });
 
-                            //Uncomment below code once system is live
-                            //user's email address must be verified before using eServices
-                            var systemUserLogTime = new SystemUserLogTime
-                            {
-                                SystemUserId = user.SystemUserId,
-                                LoginTime = DateTime.Now,
-                                SessionId = HttpContext.Session.SessionID,
-                                IPAddress = HttpContext.Request.UserHostAddress
-                            };
+                        //}
+                        //if (user.SystemUser.IsLocked != null && (!user.SystemUser.IsPasswordReset && user.SystemUser.IsTemporaryPassword && (bool)user.SystemUser.IsLocked))
+                        //{
+                        //    AuthenticationManager.SignOut();
+                        //    error = "Temporary password expired. Please click forgot password link to reset password.";
+                        //    ModelState.AddModelError("", "Temporary password expired. Please click forgot password link to reset password.");
+                        //}
+                        //else
+                        //{
+                        //    var email = new Email();
+                        //    var sms = new CesarSMS();
 
-                            //email login notification
-                            if (systemUser != null)
-                                email.GenerateEmail(systemUser.EmailAddress, "Siyakhokha Login",
-                                    "Ekurhuleni Municipality Siyakhokha login notification on " + String.Format("{0:F}", DateTime.Now),
-                                    systemUser.Id.ToString(CultureInfo.InvariantCulture), false, AppSettingKeys.EservicesDefaultEmailTemplate, systemUser.FullName);
-                            if (systemUser != null && systemUser.EmailAddress == null && systemUser.MobileNumber != null)
+                        //    var statusIdsms = context.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
+                        //    var systemUser = context.SystemUsers.FirstOrDefault(s => s.Id == user.SystemUserId);
 
-                                sms.GenerateSMS(systemUser.MobileNumber,
-                                   "Ekurhuleni Municipality Siyakhokha login notification on " + String.Format("{0:F}", DateTime.Now),
-                                   systemUser.Id.ToString(CultureInfo.InvariantCulture),statusIdsms, systemUser.FullName);
-                           
-                            // SmsHelper.Send(systemUser.MobileNumber, "Siyakhokha login notification on " + String.Format("{0:F}", DateTime.Now));
+                        //    //reset incremental delay on successful login
+                        //    if (HttpContext.Application[Request.UserHostAddress] != null)
+                        //    {
+                        //        HttpContext.Application.Remove(Request.UserHostAddress);
+                        //    }
 
-                            context.SystemUserLogTimes.Add(systemUserLogTime);
+                        //    //Uncomment below code once system is live
+                        //    //user's email address must be verified before using eServices
+                        //    var systemUserLogTime = new SystemUserLogTime
+                        //    {
+                        //        SystemUserId = user.SystemUserId,
+                        //        LoginTime = DateTime.Now,
+                        //        SessionId = HttpContext.Session.SessionID,
+                        //        IPAddress = HttpContext.Request.UserHostAddress
+                        //    };
 
-                            if (!user.SystemUser.IsPasswordReset && user.SystemUser.IsTemporaryPassword)
-                            {
-                                user.SystemUser.IsActive = true;
-                                user.SystemUser.IsDeleted = false;
-                                user.SystemUser.IsLocked = true;
-                            }
+                        //    //email login notification
+                        //    if (systemUser != null)
+                        //        email.GenerateEmail(systemUser.EmailAddress, "Siyakhokha Login",
+                        //            "Ekurhuleni Municipality Siyakhokha login notification on " + String.Format("{0:F}", DateTime.Now),
+                        //            systemUser.Id.ToString(CultureInfo.InvariantCulture), false, AppSettingKeys.EservicesDefaultEmailTemplate, systemUser.FullName);
+                        //    if (systemUser != null && systemUser.EmailAddress == null && systemUser.MobileNumber != null)
 
-                            await UserManager.UpdateAsync(user);
-                            context.SaveChanges();
+                        //        sms.GenerateSMS(systemUser.MobileNumber,
+                        //           "Ekurhuleni Municipality Siyakhokha login notification on " + String.Format("{0:F}", DateTime.Now),
+                        //           systemUser.Id.ToString(CultureInfo.InvariantCulture),statusIdsms, systemUser.FullName);
 
-                            _loginId = systemUserLogTime.Id;
-                            Session["Username"] = user.UserName;
-                            Session["Password"] = model.Password.Trim();
+                        //    // SmsHelper.Send(systemUser.MobileNumber, "Siyakhokha login notification on " + String.Format("{0:F}", DateTime.Now));
 
-                            //LF.20150316 - Force to change password on the first login.
-                            if (user.SystemUser.IsPasswordReset == false)
-                            {
-                                await SignInAsync(user, model.RememberMe);
-                                return RedirectToAction("Manage", "Account");
-                            }
+                        //    context.SystemUserLogTimes.Add(systemUserLogTime);
 
-                            if (UserManager.IsInRole(user.Id, "System Administrators"))
-                            {
-                                await SignInAsync(user, model.RememberMe);
-                                return RedirectToAction("Index", "Home");
-                            }
-                            else
-                            {
-                                await SignInAsync(user, model.RememberMe);
-                                return RedirectToAction("Dashboard", "Profile");
-                            }
-                        }
+                        //    if (!user.SystemUser.IsPasswordReset && user.SystemUser.IsTemporaryPassword)
+                        //    {
+                        //        user.SystemUser.IsActive = true;
+                        //        user.SystemUser.IsDeleted = false;
+                        //        user.SystemUser.IsLocked = true;
+                        //    }
+
+                        //    await UserManager.UpdateAsync(user);
+                        //    context.SaveChanges();
+
+                        //    _loginId = systemUserLogTime.Id;
+                        //    Session["Username"] = user.UserName;
+                        //    Session["Password"] = model.Password.Trim();
+
+                        //    //LF.20150316 - Force to change password on the first login.
+                        //    if (user.SystemUser.IsPasswordReset == false)
+                        //    {
+                        //        await SignInAsync(user, model.RememberMe);
+                        //        return RedirectToAction("Manage", "Account");
+                        //    }
+
+                        //    if (UserManager.IsInRole(user.Id, "System Administrators"))
+                        //    {
+                        //        await SignInAsync(user, model.RememberMe);
+                        //        return RedirectToAction("Index", "Home");
+                        //    }
+                        //    else
+                        //    {
+                        //        await SignInAsync(user, model.RememberMe);
+                        //        return RedirectToAction("Dashboard", "Profile");
+                        //    }
+                        //}
                     }
                     else
                     {
@@ -410,36 +539,193 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
         #endregion
+        //     #region Account Register POST
+        //     //
+        //     // POST: /Account/Register
+        //     [HttpPost]
+        //     [AllowAnonymous]
+        //     [ValidateAntiForgeryToken]
+        //     public async Task<ActionResult> Register(RegisterViewModel model)
+        //     {
+        //         using (var context = new eServicesDbContext())
+        //         {
+        //             try
+        //             {
+        //                 _base.Initialise(context);
+        //                 var captchaHelper = new CaptchaHelper();
+        //                 var captchaResponse = Request.Params["g-recaptcha-response"];
+
+        //                 if (ModelState.IsValid && captchaHelper.ValidateCaptcha(captchaResponse))
+        //                 {
+        //                     var usernameAssigned = false;
+        //                     var emailAssigned = false;
+        //                     var mobileAssigned = false;
+
+        //                     usernameAssigned = context.SystemUsers.Any(u => u.UserName.ToLower() == model.UserName.ToLower() && u.IsActive && u.IsDeleted == false);
+        //                     if (model.EmailAddress != null)
+        //                         emailAssigned = context.SystemUsers.Any(u => u.EmailAddress.ToLower() == model.EmailAddress.ToLower() && u.IsActive && u.IsDeleted == false);
+        //                     if (model.MobileNumber != null)
+        //                         mobileAssigned = context.SystemUsers.Any(u => u.MobileNumber == model.MobileNumber && u.IsActive && !u.IsDeleted);
+        //                     var response = "";
+
+        //                     if (model.EmailAddress == null && model.MobileNumber == null)
+        //                     {
+        //                         response = "The email address and mobile number are both invalid. Either one has to be valid.";
+        //                     }
+        //                     else if (usernameAssigned)
+        //                     {
+        //                         response = "The username entered is already taken.";
+        //                     }
+        //                     else if (emailAssigned)
+        //                     {
+        //                         response = "The email address entered is already in use.";
+        //                     }
+        //                     else if (mobileAssigned)
+        //                     {
+        //                         response = "The mobile number entered is already in use.";
+        //                     }
+        //                     else
+        //                     {
+        //                         // JK.20140724a - Passing values from the ViewModel to the Model.
+        //                         // JK.20190623a - Sort out proper authentication and vreification on mobile/ phone number (PhoneNumber = model.MobileNumber, PhoneNumberConfirmed = true).
+        //                         //              - Currently using the customer code generated in the systemuser.code.
+        //                         var user = new SystemIdentityUser { UserName = model.UserName, Email = model.EmailAddress, PhoneNumber = model.MobileNumber, PhoneNumberConfirmed = true };
+        //                         var identityManager = new IdentityManager();
+        //                         // JK.20190620a - Code used for mobile users.
+        //                         var code = PasswordGenerator.GeneratePassword(true, true, true, false, false, 6);
+        //                         var NotificationTypeID = 0;
+        //                         //NotificationType SMSObj = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.Sms);
+        //                         //NotificationType EmailObj = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.Email);
+        //                         //NotificationType BothSMSEmail = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.EmailSms);
+
+        //                         //if (model.EmailAddress!=null && model.MobileNumber!=null)
+        //                         //{
+        //                         //    NotificationTypeID = BothSMSEmail.Id;
+        //                         //}
+        //                         //else if(model.EmailAddress != null)
+        //                         //{
+        //                         //    NotificationTypeID = EmailObj.Id;
+        //                         //}
+        //                         //else
+        //                         //{
+        //                         //    NotificationTypeID = SMSObj.Id;
+        //                         //}
+
+        //                         // JK.20140724a - Custom profile information.
+        //                         user.SystemUser = new SystemUser
+        //                         {
+        //                             FirstName = model.FirstName,
+        //                             LastName = model.LastName,
+        //                             IdentificationNumber = model.IdentificationNumber,
+        //                             UserName = model.UserName,
+        //                             Designation = model.Designation,
+        //                             CompanyName = model.CompanyName,
+        //                             EmailAddress = model.EmailAddress,
+        //                             MobileNumber = model.MobileNumber,
+        //                             IsActive = true,
+        //                             IsDeleted = false,
+        //                             IsLocked = false,
+        //                             CreatedDateTime = DateTime.Now,
+        //                             ModifiedDateTime = DateTime.Now,
+        //                             IsPasswordReset = true,
+        //                             Code = code,
+        //                             NotificationTypeId= NotificationTypeID
+        //                         };
+
+        //                         var result = await UserManager.CreateAsync(user, model.Password);
+        //                         //identityManager.AddUserToRole(user.Id, "Customers");
+
+        //                         if (result.Succeeded)
+        //                         {
+        //                             if (model.EmailAddress != null && !model.EmailAddress.Trim().Equals(string.Empty))
+        //                             {
+        //                                 //Confirmation email
+        //                                 var confirmationEmail = new Email();
+        //                                 var emailConfirmationCode =
+        //                                     await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+        //                                 emailConfirmationCode = HttpUtility.UrlEncode(emailConfirmationCode);
+        //                                 const string subject = "Ekurhuleni Siyakhokha: Email Confirmation";
+        //                                 var body = string.Format("Thank you for your registration, please click on the below link to complete your registration: <br/><a href=\"{0}\" title=\"User Email Confirm\">{0}</a>", Url.Action("ConfirmEmail", "Account", SecureActionLinkExtension.Encrypt(new { id = user.Id, token = emailConfirmationCode }), HttpContext.Request.Url.Scheme));
+        //                                 confirmationEmail.GenerateEmail(user.SystemUser.EmailAddress, subject, body, user.SystemUserId.ToString(CultureInfo.InvariantCulture), false, AppSettingKeys.EservicesDefaultEmailTemplate, user.SystemUser.FullName);
+        //                             }
+
+        //                             if (model.MobileNumber != null && !model.MobileNumber.Trim().Equals(string.Empty))
+        //                             {
+        ////                                 try
+        ////                                 {
+        ////                                     var smsConfirmation = new CesarSMS();
+        ////                                     var cxt = new eServicesDbContext();
+        ////                                     var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
+        ////                                     smsConfirmation.GenerateSMS(user.SystemUser.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", code),
+        ////user.SystemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.SystemUser.FullName);
+        ////                                     //SmsHelper.Send(model.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", code));
+        ////                                 } catch (Exception x)
+        ////                                 {
+
+        ////                                 }
+
+        //                             }
+
+        //                             response = "Success";
+        //                             ViewBag.EmailAddress = model.EmailAddress == null || model.EmailAddress.Trim() == string.Empty ? model.MobileNumber : model.EmailAddress;
+        //                         }
+        //                         else
+        //                         {
+        //                             AddErrors(result);
+        //                         }
+
+        //                         ViewBag.Response = response;
+        //                         return View();
+        //                     }
+
+        //                     ModelState.AddModelError("", response);
+        //                 }
+
+        //             }
+        //             catch (Exception ex)
+        //             {
+        //                 throw ex;
+        //                 //return View("_Error");
+        //             }
+
+        //             // If we got this far, something failed, redisplay form
+        //             return View(model);
+        //         }
+        //     }
+        //     #endregion
+
+
         #region Account Register POST
         //
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(AddUserModal model)
         {
             using (var context = new eServicesDbContext())
             {
                 try
                 {
+                    
                     _base.Initialise(context);
-                    var captchaHelper = new CaptchaHelper();
-                    var captchaResponse = Request.Params["g-recaptcha-response"];
+                    //var captchaHelper = new CaptchaHelper();
+                    //var captchaResponse = Request.Params["g-recaptcha-response"];
 
-                    if (ModelState.IsValid && captchaHelper.ValidateCaptcha(captchaResponse))
+                    if (ModelState.IsValid)
                     {
                         var usernameAssigned = false;
                         var emailAssigned = false;
                         var mobileAssigned = false;
 
-                        usernameAssigned = context.SystemUsers.Any(u => u.UserName.ToLower() == model.UserName.ToLower() && u.IsActive && u.IsDeleted == false);
-                        if (model.EmailAddress != null)
-                            emailAssigned = context.SystemUsers.Any(u => u.EmailAddress.ToLower() == model.EmailAddress.ToLower() && u.IsActive && u.IsDeleted == false);
-                        if (model.MobileNumber != null)
-                            mobileAssigned = context.SystemUsers.Any(u => u.MobileNumber == model.MobileNumber && u.IsActive && !u.IsDeleted);
+                        usernameAssigned = context.SystemUsers.Any(u => u.UserName.ToLower() == model.username.ToLower() && u.IsActive && u.IsDeleted == false);
+                        if (model.emailAddress != null)
+                            emailAssigned = context.SystemUsers.Any(u => u.EmailAddress.ToLower() == model.emailAddress.ToLower() && u.IsActive && u.IsDeleted == false);
+                        if (model.cellPhone != null)
+                            mobileAssigned = context.SystemUsers.Any(u => u.MobileNumber == model.cellPhone && u.IsActive && !u.IsDeleted);
                         var response = "";
 
-                        if (model.EmailAddress == null && model.MobileNumber == null)
+                        if (model.emailAddress == null && model.emailAddress == null)
                         {
                             response = "The email address and mobile number are both invalid. Either one has to be valid.";
                         }
@@ -460,85 +746,90 @@ namespace C8.eServices.Mvc.Controllers
                             // JK.20140724a - Passing values from the ViewModel to the Model.
                             // JK.20190623a - Sort out proper authentication and vreification on mobile/ phone number (PhoneNumber = model.MobileNumber, PhoneNumberConfirmed = true).
                             //              - Currently using the customer code generated in the systemuser.code.
-                            var user = new SystemIdentityUser { UserName = model.UserName, Email = model.EmailAddress, PhoneNumber = model.MobileNumber, PhoneNumberConfirmed = true };
+                            var user = new SystemIdentityUser { UserName = model.username, Email = model.emailAddress, PhoneNumber = model.cellPhone, PhoneNumberConfirmed = true };
                             var identityManager = new IdentityManager();
                             // JK.20190620a - Code used for mobile users.
                             var code = PasswordGenerator.GeneratePassword(true, true, true, false, false, 6);
                             var NotificationTypeID = 0;
-                            NotificationType SMSObj = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.Sms);
-                            NotificationType EmailObj = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.Email);
-                            NotificationType BothSMSEmail = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.EmailSms);
+                            //NotificationType SMSObj = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.Sms);
+                            //NotificationType EmailObj = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.Email);
+                            //NotificationType BothSMSEmail = context.NotificationTypes.FirstOrDefault(o => o.Key == NotificationTypeKeys.EmailSms);
 
-                            if (model.EmailAddress!=null && model.MobileNumber!=null)
-                            {
-                                NotificationTypeID = BothSMSEmail.Id;
-                            }
-                            else if(model.EmailAddress != null)
-                            {
-                                NotificationTypeID = EmailObj.Id;
-                            }
-                            else
-                            {
-                                NotificationTypeID = SMSObj.Id;
-                            }
-                            
+                            //if (model.EmailAddress!=null && model.MobileNumber!=null)
+                            //{
+                            //    NotificationTypeID = BothSMSEmail.Id;
+                            //}
+                            //else if(model.EmailAddress != null)
+                            //{
+                            //    NotificationTypeID = EmailObj.Id;
+                            //}
+                            //else
+                            //{
+                            //    NotificationTypeID = SMSObj.Id;
+                            //}
+
                             // JK.20140724a - Custom profile information.
                             user.SystemUser = new SystemUser
-                            {
-                                FirstName = model.FirstName,
-                                LastName = model.LastName,
-                                IdentificationNumber = model.IdentificationNumber,
-                                UserName = model.UserName,
-                                Designation = model.Designation,
-                                CompanyName = model.CompanyName,
-                                EmailAddress = model.EmailAddress,
-                                MobileNumber = model.MobileNumber,
-                                IsActive = true,
-                                IsDeleted = false,
-                                IsLocked = false,
-                                CreatedDateTime = DateTime.Now,
-                                ModifiedDateTime = DateTime.Now,
-                                IsPasswordReset = true,
-                                Code = code,
-                                NotificationTypeId= NotificationTypeID
-                            };
+                        {
+                            FirstName = model.firstName,
+                            LastName = model.lastName,
+                            //IdentificationNumber = model.IdentificationNumber,
+                            UserName = model.username,
+                            DepartmentName = model.deptartmentname,
+                            //CompanyName = model.CompanyName,
+                            EmailAddress = model.emailAddress,
+                            MobileNumber = model.cellPhone,
+                            IsActive = true,
+                            IsDeleted = false,
+                            IsLocked = false,
+                            CreatedDateTime = DateTime.Now,
+                            ModifiedDateTime = DateTime.Now,
+                            Password="Test",
+                            IsPasswordReset = true,
+                            IsActiveDirectory= model.isActiveDirectory==true?"Y":"N",
+                            Code = code,
+                            NotificationTypeId = NotificationTypeID
+                        };
 
-                            var result = await UserManager.CreateAsync(user, model.Password);
+                            var result = await UserManager.CreateAsync(user, model.password);
                             identityManager.AddUserToRole(user.Id, "Customers");
 
                             if (result.Succeeded)
                             {
-                                if (model.EmailAddress != null && !model.EmailAddress.Trim().Equals(string.Empty))
+                                if (model.emailAddress != null && !model.emailAddress.Trim().Equals(string.Empty))
                                 {
-                                    //Confirmation email
-                                    var confirmationEmail = new Email();
                                     var emailConfirmationCode =
                                         await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                                     emailConfirmationCode = HttpUtility.UrlEncode(emailConfirmationCode);
-                                    const string subject = "Ekurhuleni Siyakhokha: Email Confirmation";
-                                    var body = string.Format("Thank you for your registration, please click on the below link to complete your registration: <br/><a href=\"{0}\" title=\"User Email Confirm\">{0}</a>", Url.Action("ConfirmEmail", "Account", SecureActionLinkExtension.Encrypt(new { id = user.Id, token = emailConfirmationCode }), HttpContext.Request.Url.Scheme));
-                                    confirmationEmail.GenerateEmail(user.SystemUser.EmailAddress, subject, body, user.SystemUserId.ToString(CultureInfo.InvariantCulture), false, AppSettingKeys.EservicesDefaultEmailTemplate, user.SystemUser.FullName);
+                                    //Confirmation email
+                                    //var confirmationEmail = new Email();
+                                    //var emailConfirmationCode =
+                                    //    await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                                    //emailConfirmationCode = HttpUtility.UrlEncode(emailConfirmationCode);
+                                    //const string subject = "Ekurhuleni Siyakhokha: Email Confirmation";
+                                    //var body = string.Format("Thank you for your registration, please click on the below link to complete your registration: <br/><a href=\"{0}\" title=\"User Email Confirm\">{0}</a>", Url.Action("ConfirmEmail", "Account", SecureActionLinkExtension.Encrypt(new { id = user.Id, token = emailConfirmationCode }), HttpContext.Request.Url.Scheme));
+                                    //confirmationEmail.GenerateEmail(user.SystemUser.EmailAddress, subject, body, user.SystemUserId.ToString(CultureInfo.InvariantCulture), false, AppSettingKeys.EservicesDefaultEmailTemplate, user.SystemUser.FullName);
                                 }
 
-                                if (model.MobileNumber != null && !model.MobileNumber.Trim().Equals(string.Empty))
-                                {
-                                    try
-                                    {
-                                        var smsConfirmation = new CesarSMS();
-                                        var cxt = new eServicesDbContext();
-                                        var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
-                                        smsConfirmation.GenerateSMS(user.SystemUser.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", code),
-   user.SystemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.SystemUser.FullName);
-                                        //SmsHelper.Send(model.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", code));
-                                    } catch (Exception x)
-                                    {
+                                //if (model.cellPhone != null && !model.cellPhone.Trim().Equals(string.Empty))
+                                //{
+                                    //                                 try
+                                    //                                 {
+                                    //                                     var smsConfirmation = new CesarSMS();
+                                    //                                     var cxt = new eServicesDbContext();
+                                    //                                     var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
+                                    //                                     smsConfirmation.GenerateSMS(user.SystemUser.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", code),
+                                    //user.SystemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.SystemUser.FullName);
+                                    //                                     //SmsHelper.Send(model.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", code));
+                                    //                                 } catch (Exception x)
+                                    //                                 {
 
-                                    }
-                                    
-                                }
+                                    //                                 }
+
+                                //}
 
                                 response = "Success";
-                                ViewBag.EmailAddress = model.EmailAddress == null || model.EmailAddress.Trim() == string.Empty ? model.MobileNumber : model.EmailAddress;
+                                //ViewBag.EmailAddress = model.EmailAddress == null || model.EmailAddress.Trim() == string.Empty ? model.MobileNumber : model.EmailAddress;
                             }
                             else
                             {
@@ -564,6 +855,221 @@ namespace C8.eServices.Mvc.Controllers
             }
         }
         #endregion
+
+        [AllowAnonymous]
+        public ActionResult AddDepartmentUsers()
+        {
+            //if (Session["ekurhuleniData"] == null)
+            //{
+            //    // if IsAuthenticated is false return to login code here....
+            //    return Redirect("../home/index");
+
+            //}
+
+            List<SelectListItem> userTypes = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "New User", Value = "New"
+                },
+                new SelectListItem {
+                    Text = "Existing User", Value = "Existing"
+                }
+            };
+            List<SelectListItem> departmentList = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "City Planning", Value = "City Planning"
+                },
+                new SelectListItem {
+                    Text = "Energy", Value = "Energy"
+                },
+                new SelectListItem {
+                    Text = "Roads & Storm Water", Value = "Roads & Storm Water"
+                },
+                new SelectListItem {
+                    Text = "Water", Value = "Water"
+                }
+            };
+
+            List<SelectListItem> userRoles = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "Admin", Value = "Admin"
+                },
+                new SelectListItem {
+                    Text = "System Admin", Value = "System Admin"
+                },
+                new SelectListItem {
+                    Text = "Department User", Value = "application"
+                }
+            };
+
+            ViewBag.datalist = userTypes;
+            ViewBag.departmentList = departmentList;
+            ViewBag.userRoles = userRoles;
+            ViewBag.Response = "";
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddDepartmentUsers(AddUserModal model)
+        {
+            //if (Session["ekurhuleniData"] == null)
+            //{
+            //    // if IsAuthenticated is false return to login code here....
+            //    return Redirect("../home/index");
+
+            //}
+
+            List<SelectListItem> userTypes = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "New User", Value = "New"
+                },
+                new SelectListItem {
+                    Text = "Existing User", Value = "Existing"
+                }
+            };
+            List<SelectListItem> departmentList = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "City Planning", Value = "City Planning"
+                },
+                new SelectListItem {
+                    Text = "Energy", Value = "Energy"
+                },
+                new SelectListItem {
+                    Text = "Roads & Storm Water", Value = "Roads & Storm Water"
+                },
+                new SelectListItem {
+                    Text = "Water", Value = "Water"
+                }
+            };
+
+            List<SelectListItem> userRoles = new List<SelectListItem>() {
+                new SelectListItem {
+                    Text = "Admin", Value = "Admin"
+                },
+                new SelectListItem {
+                    Text = "System Admin", Value = "System Admin"
+                },
+                new SelectListItem {
+                    Text = "Department User", Value = "application"
+                }
+            };
+
+            ViewBag.datalist = userTypes;
+            ViewBag.departmentList = departmentList;
+            ViewBag.userRoles = userRoles;
+            ViewBag.Response = "";
+            using (var context = new eServicesDbContext())
+            {
+                try
+                {
+
+                    _base.Initialise(context);
+                    //var captchaHelper = new CaptchaHelper();
+                    //var captchaResponse = Request.Params["g-recaptcha-response"];
+
+                    if (ModelState.IsValid)
+                    {
+                        var usernameAssigned = false;
+                        var emailAssigned = false;
+                        var mobileAssigned = false;
+
+                        usernameAssigned = context.SystemUsers.Any(u => u.UserName.ToLower() == model.username.ToLower() && u.IsActive && u.IsDeleted == false);
+                        if (model.emailAddress != null)
+                            emailAssigned = context.SystemUsers.Any(u => u.EmailAddress.ToLower() == model.emailAddress.ToLower() && u.IsActive && u.IsDeleted == false);
+                        if (model.cellPhone != null)
+                            mobileAssigned = context.SystemUsers.Any(u => u.MobileNumber == model.cellPhone && u.IsActive && !u.IsDeleted);
+                        var response = "";
+
+                        if (model.emailAddress == null && model.emailAddress == null)
+                        {
+                            response = "The email address and mobile number are both invalid. Either one has to be valid.";
+                        }
+                        else if (usernameAssigned)
+                        {
+                            response = "The username entered is already taken.";
+                        }
+                        else if (emailAssigned)
+                        {
+                            response = "The email address entered is already in use.";
+                        }
+                        else if (mobileAssigned)
+                        {
+                            response = "The mobile number entered is already in use.";
+                        }
+                        else
+                        {
+                            // JK.20140724a - Passing values from the ViewModel to the Model.
+                            // JK.20190623a - Sort out proper authentication and vreification on mobile/ phone number (PhoneNumber = model.MobileNumber, PhoneNumberConfirmed = true).
+                            //              - Currently using the customer code generated in the systemuser.code.
+                            var user = new SystemIdentityUser { UserName = model.username, Email = model.emailAddress, PhoneNumber = model.cellPhone, PhoneNumberConfirmed = true };
+                            var identityManager = new IdentityManager();
+                            // JK.20190620a - Code used for mobile users.
+                            var code = PasswordGenerator.GeneratePassword(true, true, true, false, false, 6);
+                            var NotificationTypeID = 0;                           
+
+                            // JK.20140724a - Department user profile information.
+                            user.SystemUser = new SystemUser
+                            {
+                                FirstName = model.firstName,
+                                LastName = model.lastName,
+                                //IdentificationNumber = model.IdentificationNumber,
+                                UserName = model.username,
+                                DepartmentName = model.deptartmentname,
+                                //CompanyName = model.CompanyName,
+                                EmailAddress = model.emailAddress,
+                                MobileNumber = model.cellPhone,
+                                IsActive = true,
+                                IsDeleted = false,
+                                IsLocked = false,
+                                CreatedDateTime = DateTime.Now,
+                                ModifiedDateTime = DateTime.Now,
+                                Password = model.password,
+                                IsPasswordReset = true,
+                                IsActiveDirectory = model.isActiveDirectory == true ? "Y" : "N",
+                                Code = code,
+                                NotificationTypeId = NotificationTypeID
+                            };
+
+                            var result = await UserManager.CreateAsync(user, model.password);
+                            identityManager.AddUserToRole(user.Id, model.userRole);
+                            //UserManager.AddToRole(user.Id, model.userRole);
+                            if (result.Succeeded)
+                            {
+                                response = "Success";
+                                ViewBag.Response = response;
+                                ModelState.Clear();
+                                TempData["ResultStatus"] = "User created successfully!";
+                                return RedirectToAction("AddDepartmentUsers");
+                                //return View(new AddUserModal());
+                            }
+                            else
+                            {
+                                TempData["ResultStatus"] = "User creation failed!";
+                                response = "Error";
+                                AddErrors(result);
+                            }
+
+                            ViewBag.Response = response;
+                            return View();
+                        }
+
+                        ModelState.AddModelError("", response);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    //throw ex;
+                    //return View("_Error");
+                    TempData["ResultStatus"] = "User creation failed!";
+                    ViewBag.Response = "Error";
+                }
+
+                // If we got this far, something failed, redisplay form
+                return View(model);
+            }
+        }
+
 
         #region Account Confirm Email POST
         [AllowAnonymous]
@@ -610,19 +1116,19 @@ namespace C8.eServices.Mvc.Controllers
                 _base.Initialise(context);
 
                 var linkedEmailId = token;
-                var linkedEmail = context.LinkedEmails.Include(le => le.Status).FirstOrDefault(le => le.Id == linkedEmailId);
-                var linkedEmails = context.LinkedEmails.Include(le => le.Status).Where(le => le.EmailAddress == linkedEmail.EmailAddress).
-                                   ToList();
-                var emailVerifiedStatus = context.Status.FirstOrDefault(s => s.Key.Equals(StatusKeys.EmailVerified));
+                //var linkedEmail = context.LinkedEmails.Include(le => le.Status).FirstOrDefault(le => le.Id == linkedEmailId);
+                //var linkedEmails = context.LinkedEmails.Include(le => le.Status).Where(le => le.EmailAddress == linkedEmail.EmailAddress).
+                //                   ToList();
+                //var emailVerifiedStatus = context.Status.FirstOrDefault(s => s.Key.Equals(StatusKeys.EmailVerified));
 
-                if (linkedEmail == null) throw new Exception("Invalid linked email");
-                if (emailVerifiedStatus == null) throw new Exception("Invalid linked email status");
+                //if (linkedEmail == null) throw new Exception("Invalid linked email");
+                //if (emailVerifiedStatus == null) throw new Exception("Invalid linked email status");
 
-                foreach (var email in linkedEmails.Where(email => email.Status.Key != emailVerifiedStatus.Key))
-                {
-                    email.StatusId = emailVerifiedStatus.Id;
+                //foreach (var email in linkedEmails.Where(email => email.Status.Key != emailVerifiedStatus.Key))
+                //{
+                //    email.StatusId = emailVerifiedStatus.Id;
 
-                }
+                //}
 
                 context.SaveChanges();
                 ViewBag.Status = "Activated";
@@ -672,15 +1178,15 @@ namespace C8.eServices.Mvc.Controllers
                 
                 if (identityUser == null) throw new Exception("Invalid identity user");
 
-                if (user.MobileNumber != null && !user.MobileNumber.Trim().Equals(string.Empty))
-                {
-                    var smsConfirmation = new CesarSMS();
-                    var cxt = new eServicesDbContext();
-                    var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
-                    smsConfirmation.GenerateSMS(user.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", user.Code),
-user.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.FullName);
-                    //SmsHelper.Send(user.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", user.Code));
-                }
+//                if (user.MobileNumber != null && !user.MobileNumber.Trim().Equals(string.Empty))
+//                {
+//                    var smsConfirmation = new CesarSMS();
+//                    var cxt = new eServicesDbContext();
+//                    var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
+//                    smsConfirmation.GenerateSMS(user.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", user.Code),
+//user.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.FullName);
+//                    //SmsHelper.Send(user.MobileNumber, string.Format("Welcome to Siyakhokha, please confirm your account with the following code {0}.", user.Code));
+//                }
 
                 return View("_ResendConfirmationEmail");
             }
@@ -696,7 +1202,7 @@ user.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.FullName);
                 {
                     _base.Initialise(context);
                     var systemUser = context.SystemUsers.Find(systemUserId);
-                    var customer = context.Customers.FirstOrDefault(c => c.SystemUserId == systemUser.Id);
+                    //var customer = context.Customers.FirstOrDefault(c => c.SystemUserId == systemUser.Id);
                     var identityUser = UserManager.FindByName(systemUser.UserName);
 
                     //update username and email address on identity and system user if changed on manage profile
@@ -713,11 +1219,11 @@ user.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.FullName);
                     systemUser.EmailAddress = email;
                     context.Entry(systemUser).State = EntityState.Modified;
 
-                    if (customer != null)
-                    {
-                        customer.EmailAddress = email;
-                        context.Entry(customer).State = EntityState.Modified;
-                    }
+                    //if (customer != null)
+                    //{
+                    //    customer.EmailAddress = email;
+                    //    context.Entry(customer).State = EntityState.Modified;
+                    //}
 
                     context.SaveChanges();
                 }
@@ -772,15 +1278,15 @@ user.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.FullName);
                     model.PrefMethodOfCommunication = Convert.ToInt32(systemUser.NotificationTypeId);
 
                     List<NotificationType> ntype = new List<NotificationType>();
-                    ntype = context.NotificationTypes.ToList();
-                    ViewBag.NotiType = ntype;
+                    //ntype = context.NotificationTypes.ToList();
+                    //ViewBag.NotiType = ntype;
 
-                    List<Notification> nt = new List<Notification>();
-                    nt = context.Notifications.ToList();
-                    ViewBag.Chk = nt;
+                    //List<Notification> nt = new List<Notification>();
+                    //nt = context.Notifications.ToList();
+                    //ViewBag.Chk = nt;
 
                     List<NotificationSubscription> ns = new List<NotificationSubscription>();
-                    ns = context.NotificationSubscriptions.Where(x => x.SystemUserId == systemUser.Id && x.IsDeleted != true).ToList();
+                    //ns = context.NotificationSubscriptions.Where(x => x.SystemUserId == systemUser.Id && x.IsDeleted != true).ToList();
                     ViewBag.NotificationSubscriptions = ns;
 
                     ViewBag.HasLocalPassword = HasPassword();
@@ -1016,10 +1522,10 @@ user.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.FullName);
 
                         var smsConfirmation = new CesarSMS();
                         var cxt = new eServicesDbContext();
-                        var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
-                        smsConfirmation.GenerateSMS(mobile, string.Format("Siyakhokha. \\nChange of Mobile Number. \\n Your Siyakhokha account mobile number has been updated {0}.", code),
-systemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, systemUser.FullName);
-                       // SmsHelper.Send(mobile, string.Format("Siyakhokha. \\nChange of Mobile Number. \\n Your Siyakhokha account mobile number has been updated {0}.", code));
+                        //var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
+//                        smsConfirmation.GenerateSMS(mobile, string.Format("Siyakhokha. \\nChange of Mobile Number. \\n Your Siyakhokha account mobile number has been updated {0}.", code),
+//systemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, systemUser.FullName);
+//                       // SmsHelper.Send(mobile, string.Format("Siyakhokha. \\nChange of Mobile Number. \\n Your Siyakhokha account mobile number has been updated {0}.", code));
                        
 
                         return Json(new { success = true, result = "Notification sent to: " + mobile + ". Please note your mobile number has been updated on the Siyakhokha Website." });
@@ -1036,85 +1542,83 @@ systemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, systemUser.Fu
         #endregion
 
         #region Account Edit NotificationSubscriptions
-        [HttpPost]
-        public ActionResult NotificationSubscriptions(string[] NotificationKey, bool[] CheckedNotifications, int NotificationTypeID)
-        {
-            using (var context = new eServicesDbContext())
-            {
-                try
-                {
+ //       [HttpPost]
+ //       public ActionResult NotificationSubscriptions(string[] NotificationKey, bool[] CheckedNotifications, int NotificationTypeID)
+ //       {
+ //           using (var context = new eServicesDbContext())
+ //           {
+ //               try
+ //               {
+ //                   var subscription = new NotificationSubscription();
+ //                   _base.Initialise(context);
 
+ //                   var systemUser = context.SystemUsers.FirstOrDefault(su => su.Id == _base.SystemUser.Id);
+ //                   if (systemUser == null) throw new Exception("Invalid system user");
+ //                   var identityUser = UserManager.FindByName(systemUser.UserName);
+ //                   if (identityUser == null) throw new Exception("Invalid identity user");
+ //                   systemUser.NotificationTypeId = NotificationTypeID;
 
-                    var subscription = new NotificationSubscription();
-                    _base.Initialise(context);
+ //                   for (var i = 0; i <  NotificationKey.Length; i++)
+ //                   {
+ //                       var NotificationKeyTemp = NotificationKey[i];
+ //                       var notificationid = context.Notifications.Where(x => x.Key == NotificationKeyTemp).FirstOrDefault();
+ //                       NotificationSubscription SubscriptionMade = context.NotificationSubscriptions.Where(u => u.SystemUserId ==
+ //                                         systemUser.Id && u.NotificationId == notificationid.Id).FirstOrDefault();
 
-                    var systemUser = context.SystemUsers.FirstOrDefault(su => su.Id == _base.SystemUser.Id);
-                    if (systemUser == null) throw new Exception("Invalid system user");
-                    var identityUser = UserManager.FindByName(systemUser.UserName);
-                    if (identityUser == null) throw new Exception("Invalid identity user");
-                    systemUser.NotificationTypeId = NotificationTypeID;
+ //                       if (SubscriptionMade != null && SubscriptionMade.IsDeleted == false)
+ //                       {
+ //                           if (CheckedNotifications[i] == true)
+ //                           {
+ //                               SubscriptionMade.NotificationTypeId = NotificationTypeID;
 
-                    for (var i = 0; i <  NotificationKey.Length; i++)
-                    {
-                        var NotificationKeyTemp = NotificationKey[i];
-                        var notificationid = context.Notifications.Where(x => x.Key == NotificationKeyTemp).FirstOrDefault();
-                        NotificationSubscription SubscriptionMade = context.NotificationSubscriptions.Where(u => u.SystemUserId ==
-                                          systemUser.Id && u.NotificationId == notificationid.Id).FirstOrDefault();
+ //                           }
+ //                           else
+ //                           {
+ //                               SubscriptionMade.IsActive = false;
+ //                               SubscriptionMade.IsDeleted = true;
+ //                           }
+ //                           context.SaveChanges();
+ //                       }
+ //                       else if(SubscriptionMade != null && SubscriptionMade.IsDeleted == true)
+ //                       {
 
-                        if (SubscriptionMade != null && SubscriptionMade.IsDeleted == false)
-                        {
-                            if (CheckedNotifications[i] == true)
-                            {
-                                SubscriptionMade.NotificationTypeId = NotificationTypeID;
-
-                            }
-                            else
-                            {
-                                SubscriptionMade.IsActive = false;
-                                SubscriptionMade.IsDeleted = true;
-                            }
-                            context.SaveChanges();
-                        }
-                        else if(SubscriptionMade != null && SubscriptionMade.IsDeleted == true)
-                        {
-
-                            if (CheckedNotifications[i] == true)
-                            {
-                                SubscriptionMade.NotificationTypeId = NotificationTypeID;
-                                SubscriptionMade.IsActive = true;
-                                SubscriptionMade.IsDeleted = false;
-                                context.SaveChanges();
-                            }
-                            else
-                            {
+ //                           if (CheckedNotifications[i] == true)
+ //                           {
+ //                               SubscriptionMade.NotificationTypeId = NotificationTypeID;
+ //                               SubscriptionMade.IsActive = true;
+ //                               SubscriptionMade.IsDeleted = false;
+ //                               context.SaveChanges();
+ //                           }
+ //                           else
+ //                           {
                                
-                            }
+ //                           }
                             
-                        }
+ //                       }
 
-                        else
-                        {
-                            //for existing customers who have created anew notification
+ //                       else
+ //                       {
+ //                           //for existing customers who have created anew notification
 
-                            NotificationSubscription ns = new NotificationSubscription();
+ //                           NotificationSubscription ns = new NotificationSubscription();
                             
-                            ns.SystemUserId = systemUser.Id;
-                            ns.NotificationId = notificationid.Id;
-                            ns.NotificationTypeId = NotificationTypeID;
-                            context.NotificationSubscriptions.Add(ns);
-                            context.SaveChanges();
-                        }
-                    }
+ //                           ns.SystemUserId = systemUser.Id;
+ //                           ns.NotificationId = notificationid.Id;
+ //                           ns.NotificationTypeId = NotificationTypeID;
+ //                           context.NotificationSubscriptions.Add(ns);
+ //                           context.SaveChanges();
+ //                       }
+ //                   }
 
-                    return Json(new { success = true, result = "Please note your notification subscriptions have been updated." });
+ //                   return Json(new { success = true, result = "Please note your notification subscriptions have been updated." });
 
- }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-            }
-        }
+ //}
+ //               catch (Exception ex)
+ //               {
+ //                   throw;
+ //               }
+ //           }
+ //       }
         #endregion
 
 
@@ -1167,19 +1671,19 @@ systemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, systemUser.Fu
                         }
                         else if (model.MobileNumber != null)
                         {
-                            var id2 = context.Users.Where(x => x.PhoneNumber == model.MobileNumber).FirstOrDefault();
+                            //var id2 = context.Users.Where(x => x.PhoneNumber == model.MobileNumber).FirstOrDefault();
                            
-                            if (id2 == null)
-                            {
+                            //if (id2 == null)
+                            //{
     
-                                TempData["Error"] = "Please enter a registered email address or phone number.";
-                                return View(model);
+                            //    TempData["Error"] = "Please enter a registered email address or phone number.";
+                            //    return View(model);
 
-                            }
-                            else
-                            {
-                                cUser = UserManager.FindById(id2.Id);
-                            }
+                            //}
+                            //else
+                            //{
+                            //    cUser = UserManager.FindById(id2.Id);
+                            //}
 
 
                             //cUser = await UserManager.FindByEmailAsync(model.Email);
@@ -1232,9 +1736,9 @@ systemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, systemUser.Fu
                                         "Temporary Password: " + newPassword;
                                     var smsConfirmation = new CesarSMS();
                                     var cxt = new eServicesDbContext();
-                                    var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
-                                    smsConfirmation.GenerateSMS(user.MobileNumber, bodysms.ToString(),
-            user.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.FullName);
+            //                        var statusIdSms = cxt.Status.FirstOrDefault(o => o.Key == StatusKeys.SMSPending).Id;
+            //                        smsConfirmation.GenerateSMS(user.MobileNumber, bodysms.ToString(),
+            //user.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, user.FullName);
                                     //SmsHelper.Send(user.MobileNumber, bodysms.ToString());
 
                                 }
@@ -1313,11 +1817,11 @@ systemUser.Id.ToString(CultureInfo.InvariantCulture), statusIdSms, systemUser.Fu
 
                 if (_loginId != 0)
                 {
-                    var systemUserLogTime = context.SystemUserLogTimes.Find(_loginId);
-                    systemUserLogTime.LogoutTime = DateTime.Now;
+                    //var systemUserLogTime = context.SystemUserLogTimes.Find(_loginId);
+                    //systemUserLogTime.LogoutTime = DateTime.Now;
 
-                    context.Entry(systemUserLogTime).State = EntityState.Modified;
-                    context.SaveChanges();
+                    //context.Entry(systemUserLogTime).State = EntityState.Modified;
+                    //context.SaveChanges();
                 }
 
                 AuthenticationManager.SignOut();

@@ -10,8 +10,8 @@ namespace C8.eServices.Mvc.Models.Repository
     public class WlAccount_ContactRepo : IWlAccountContact
     {
         private bool disposedValue;
-        private WayleaveDbContext _context;
-        public WlAccount_ContactRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public WlAccount_ContactRepo(WayleaveDBContext context)
         {
             _context = context;
         }

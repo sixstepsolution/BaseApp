@@ -48,7 +48,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             context = new eServicesDbContext();
 
-            IdentityManager = new IdentityManager(context);
+            //IdentityManager = new IdentityManager(context);
             UserManager =
                 new UserManager<SystemIdentityUser>(
                 new UserStore<SystemIdentityUser>(context));

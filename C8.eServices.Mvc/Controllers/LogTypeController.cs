@@ -18,7 +18,7 @@ namespace C8.eServices.Mvc.Controllers
         BaseHelper _base = new BaseHelper();
         public LogTypeController()
         {
-            IdentityManager = new IdentityManager(db);
+            //IdentityManager = new IdentityManager(db);
         }
 
         public IdentityManager IdentityManager { get; set; }
@@ -68,7 +68,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Create([Bind(Include="Id,Name,Description,Key,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] LogType logtype)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -128,7 +128,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult Edit([Bind(Include="Id,Name,Description,Key,IsActive,IsDeleted,IsLocked,CreatedBySystemUserId,CreatedDateTime,ModifiedBySystemUserId,ModifiedDateTime")] LogType logtype)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
 
             if (ModelState.IsValid)
             {
@@ -164,7 +164,7 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             eServicesDbContext _context = new eServicesDbContext();
-            _base.Initialise(_context);
+            //_base.Initialise(_context);
             LogType logtype = _context.LogTypes.Find(id);
 
             //Soft deletes the record on the database 

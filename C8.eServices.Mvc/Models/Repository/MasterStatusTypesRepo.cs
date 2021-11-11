@@ -10,8 +10,8 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class MasterStatusTypesRepo : IMasterStatusTypes
     {
-        private WayleaveDbContext _context;
-        public MasterStatusTypesRepo(WayleaveDbContext context)
+        private WayleaveDBContext _context;
+        public MasterStatusTypesRepo(WayleaveDBContext context)
         {
             _context = context;
         }

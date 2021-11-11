@@ -7,7 +7,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {
-    public class WL_ACCOUNT
+    public class WL_ACCOUNT : BaseModel
     {
         public WL_ACCOUNT()
         {

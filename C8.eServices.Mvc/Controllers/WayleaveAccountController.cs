@@ -26,7 +26,7 @@ namespace C8.eServices.Mvc.Controllers
     {
         public string encp = "spgencpassp";
         private eServicesDbContext db = new eServicesDbContext();
-        private WayleaveDbContext dbWayleave = new WayleaveDbContext();
+        private WayleaveDBContext dbWayleave = new WayleaveDBContext();
         // GET: WayleaveAccount
         [HttpGet]
         public ActionResult Index()

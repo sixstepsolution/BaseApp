@@ -6,7 +6,7 @@ namespace C8.eServices.Mvc.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class WL_REGIONS
+    public partial class WL_REGIONS : BaseModel
     {
         [Key]
         public int RID { get; set; }

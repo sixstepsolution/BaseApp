@@ -17,11 +17,11 @@ namespace C8.eServices.Mvc.Models.Repository
 {
     public class ApplicationFormRepo : IApplicationForm
     {
-        private WayleaveDbContext _context;
+        private WayleaveDBContext _context;
         IPAddressModel Ip = new IPAddressModel();
         private readonly IServiceDocument _serviceDocument = null;
         private eServicesDbContext _dbeService;// = new eServicesDbContext();
-        public ApplicationFormRepo(WayleaveDbContext context, IServiceDocument serviceDocument, eServicesDbContext dbeService)
+        public ApplicationFormRepo(WayleaveDBContext context, IServiceDocument serviceDocument, eServicesDbContext dbeService)
         {
             _serviceDocument = serviceDocument;
             _context = context;

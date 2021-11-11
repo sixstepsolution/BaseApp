@@ -105,7 +105,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
 
                 var rows = new List<object>();
                 List<Customer> customers;
@@ -233,7 +233,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
 
                 try
                 {
@@ -334,7 +334,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
 
                 var email = new Email();
                 try
@@ -374,7 +374,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     var email = new Email();
                     var referenceType = context.ReferenceTypes.FirstOrDefault(r => r.Key == ReferenceTypeKeys.CustomerProfile);
@@ -522,7 +522,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                     _systemUserId = _base.SystemUser.Id;
 
                     Agent agent = null;
@@ -676,7 +676,7 @@ namespace C8.eServices.Mvc.Controllers
                     // var captchaHelper = new CaptchaHelper();
                     //var captchaResponse = Request.Params["g-recaptcha-response"];
 
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
                 _systemUserId = _base.SystemUser.Id;
 
                 var customer = customerviewmodel.Customer;
@@ -865,7 +865,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
 
                 //entity
                 var entity = context.Entities.FirstOrDefault(e => e.EntityRegistrationNumber == entityRegNo);
@@ -892,7 +892,7 @@ namespace C8.eServices.Mvc.Controllers
 
                 {
 
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                 //var systemIdUser = User.Identity.GetUserId();
 
@@ -1019,7 +1019,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     agent.CustomerId = customer.Id;
                     agent.CustomerTypeId = customer.CustomerTypeId;
@@ -1080,7 +1080,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     entity.CustomerId = customer.Id;
                     entity.EntityTypeId = entityTypeId;
@@ -1121,7 +1121,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     if (!context.AgentCustomers.Any(ac => ac.CustomerId == customer.Id))
                     {
@@ -1153,7 +1153,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     if (!context.EntityAgents.Any(ea => ea.AgentId == agent.Id))
                     {
@@ -1313,7 +1313,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                   // _base.Initialise(context);
 
                     //Confirmation email
                     var confirmationEmail = new Email();
@@ -1348,7 +1348,7 @@ namespace C8.eServices.Mvc.Controllers
             {
                 try
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
 
                     var systemUser = context.SystemUsers.Find(systemUserId);
@@ -1482,7 +1482,7 @@ namespace C8.eServices.Mvc.Controllers
                 var result = "failed";
                 using (var context = new eServicesDbContext())
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     // Delete system user
                     var systemUser = context.SystemUsers.Find(id);
@@ -1518,7 +1518,7 @@ namespace C8.eServices.Mvc.Controllers
                 var result = "failed";
                 using (var context = new eServicesDbContext())
                 {
-                    _base.Initialise(context);
+                    //_base.Initialise(context);
 
                     //Delete customer profile
                     var customer = context.Customers.FirstOrDefault(c => c.Id == id && c.IsActive && !c.IsDeleted);
@@ -1838,7 +1838,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
 
                 var rows = new List<object>();
                 List<Customer> customers;
@@ -1965,7 +1965,7 @@ namespace C8.eServices.Mvc.Controllers
         {
             using (var context = new eServicesDbContext())
             {
-                _base.Initialise(context);
+                //_base.Initialise(context);
 
                 var rows = new List<object>();
                 List<SystemUser> customers;
@@ -2093,15 +2093,15 @@ namespace C8.eServices.Mvc.Controllers
         {
             try
             {
-                using (var eServicesContext = new eServicesDbContext())
-                {
-                    var inactiveUsers = eServicesContext.Users.Where(a => a.EmailConfirmed == false).ToList();
+                //using (var eServicesContext = new eServicesDbContext())
+                //{
+                //    var inactiveUsers = eServicesContext.Users.Where(a => a.EmailConfirmed == false).ToList();
 
-                    foreach (var user in inactiveUsers)
-                    {
-                        SendActivationEmail(user.SystemUserId);
-                    }
-                }
+                //    foreach (var user in inactiveUsers)
+                //    {
+                //        SendActivationEmail(user.SystemUserId);
+                //    }
+                //}
             }
             catch (Exception ex)
             {
