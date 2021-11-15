@@ -578,15 +578,18 @@ namespace C8.eServices.Mvc.DataAccessLayer
                             QueryAudits.Add((QueryAudit)audit);
                             break;
                         case "APPLICATION_PAYMENT_PRICE":
-                            TitleTypeAudits.Add((APPLICATION_PAYMENT_PRICE_AUDIT)audit);
+                            APPLICATION_PAYMENT_PRICE_AUDIT.Add((APPLICATION_PAYMENT_PRICE_AUDIT)audit);
                             break;
                         case "WL_ACCOUNT":
-                            QueryAudits.Add((WL_ACCOUNT_AUDIT)audit);
+                            WL_ACCOUNT_AUDIT.Add((WL_ACCOUNT_AUDIT)audit);
                             break;
                         case "WL_APPLICATIONFORM":
-                            TitleTypeAudits.Add((WL_APPLICATIONFORM_AUDIT)audit);
+                            WL_APPLICATIONFORM_AUDIT.Add((WL_APPLICATIONFORM_AUDIT)audit);
                             break;
-                       
+                        case "User":
+                            UserAudit.Add((UserAudit)audit);
+                            break;
+
                     }
                 }
             }

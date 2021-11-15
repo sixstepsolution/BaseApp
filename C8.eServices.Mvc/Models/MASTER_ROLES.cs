@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 
     public partial class MASTER_ROLES : BaseModel
     {
-        [Key]
+        
         public int ROLE_ID { get; set; }
 
         [StringLength(250)]

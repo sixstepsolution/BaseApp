@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 {
     public class WL_DECLARATIONS : BaseModel
     {
-        [Key]
+
         public int DID { get; set; }
         public int MD_ID { get; set; }
 

@@ -10,7 +10,7 @@ namespace C8.eServices.Mvc.Controllers
     public class ApplicationRoleController : Controller
     {
         #region ApplicationRole Init
-        private WayleaveDBContext db = new WayleaveDBContext();
+        private eServicesDbContext db = new eServicesDbContext();
 
         public ApplicationRoleController()
         {

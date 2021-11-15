@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 {
     public class MASTER_DECLARATIONS : BaseModel
     {
-        [Key]
+       
         public int MD_ID { get; set; }
         
         public string DESCRIPTION { get; set; }        

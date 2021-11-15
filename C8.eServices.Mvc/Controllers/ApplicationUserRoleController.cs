@@ -16,7 +16,7 @@ namespace C8.eServices.Mvc.Controllers
     public class ApplicationUserRoleController : Controller
     {
         #region ApplicationUserRole Init
-        private WayleaveDBContext db = new WayleaveDBContext();
+        private eServicesDbContext db = new eServicesDbContext();
         BaseHelper _base = new BaseHelper();
 
         public ApplicationUserRoleController()

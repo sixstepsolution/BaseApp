@@ -7,9 +7,9 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {
-    public partial class APPLICATION_PAYMENT_PRICE_AUDIT:BaseTypeAudit
+    public partial class APPLICATION_PAYMENT_PRICE_AUDIT: BaseModelAudit
     {
-        [Key]
+        
         public int AUDIT_ID { get; set; }
         public string ACTION { get; set; }
         public int? AP_ID { get; set; }

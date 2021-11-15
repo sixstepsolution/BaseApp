@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 
     public partial class WL_REGIONS : BaseModel
     {
-        [Key]
+        
         public int RID { get; set; }
 
         [Required]

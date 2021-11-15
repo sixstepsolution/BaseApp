@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 {
     public partial class MASTER_CUSTOMERCARE_CENTERS_REGIONS : BaseModel
     {
-        [Key]
+        
         public int CCC_ID { get; set; }                
         public string CCC_NAME { get; set; }
         public string CCC_CODE { get; set; }

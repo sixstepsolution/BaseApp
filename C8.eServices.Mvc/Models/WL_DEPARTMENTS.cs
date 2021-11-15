@@ -9,7 +9,7 @@ namespace C8.eServices.Mvc.Models
 {
     public partial class WL_DEPARTMENTS : BaseModel
     {
-        [Key]
+        
         public int DEPARTMENT_ID { get; set; }
 
         [StringLength(250)]

@@ -12,7 +12,7 @@ namespace C8.eServices.Mvc.Models
         //{
             //WL_APPLICATIONFORM = new HashSet<WL_APPLICATIONFORM>();
         //}
-        [Key]
+        
         public int INS_ID { get; set; }        
         public string INSPECTION_NAME { get; set; }
         public string INSPECTION_TYPE { get; set; }

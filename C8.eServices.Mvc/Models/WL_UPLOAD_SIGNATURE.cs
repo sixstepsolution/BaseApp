@@ -9,7 +9,7 @@ namespace C8.eServices.Mvc.Models
     public class WL_UPLOAD_SIGNATURE : BaseModel
     {
 
-        [Key]
+        
         public int SIGN_ID { get; set; }
         
         public String DOCUMENT_NAME { get; set; }

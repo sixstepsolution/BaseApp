@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 
     public partial class MASTER_REGIONS : BaseModel
     {
-        [Key]
+        
         public int REGION_ID { get; set; }
 
         [Required]

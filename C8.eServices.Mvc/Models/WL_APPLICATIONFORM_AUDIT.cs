@@ -8,7 +8,7 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {    
-    public partial class WL_APPLICATIONFORM_AUDIT : BaseTypeAudit
+    public partial class WL_APPLICATIONFORM_AUDIT : BaseModelAudit
     {
         //public WL_APPLICATIONFORM()
         //{
@@ -20,7 +20,7 @@ namespace C8.eServices.Mvc.Models
         //    WL_DEPARTMENTS = new HashSet<WL_DEPARTMENTS>();
         //}
 
-        [Key]
+        
         public int AUDIT_ID { get; set; }       
         public string ACTION { get; set; }
         [StringLength(100)]

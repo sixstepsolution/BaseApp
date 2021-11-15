@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 {
     public partial class WL_INSPECTION_LIST : BaseModel
     {
-        [Key]
+        
         public int INSPECTION_ID { get; set; }
         public int INS_ID { get; set; }
 

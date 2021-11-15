@@ -18,7 +18,7 @@ namespace C8.eServices.Mvc.Models
             WL_DEPARTMENTS = new HashSet<WL_DEPARTMENTS>();
         }
 
-        [Key]
+       
         public int APP_ID { get; set; }
 
         [StringLength(100)]

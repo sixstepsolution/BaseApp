@@ -9,16 +9,9 @@ using System.Web;
 namespace C8.eServices.Mvc.Models
 {
     
-    public partial class UserAudit : BaseTypeAudit
+    public partial class UserAudit : BaseModelAudit
     {
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        //public User()
-        //{
-        //    Roles = new HashSet<Role>();
-        //}
-
-
-        [Key]
+        
         public int auditId { get; set; }
         public string action { get; set; }
         public string username { get; set; }

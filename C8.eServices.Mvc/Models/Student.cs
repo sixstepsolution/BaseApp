@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 
     public partial class Student : BaseModel
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
 
         [Required]
         [StringLength(200)]

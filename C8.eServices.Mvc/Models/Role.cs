@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 
     public partial class Role : BaseModel
     {
-        [Key]
+        
         public int role_id { get; set; }
 
         [Required]

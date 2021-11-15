@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 {
     public partial class APPLICATION_PAYMENT_PRICE : BaseModel
     {
-        [Key]
+        
         public int AP_ID { get; set; }
         public decimal? APPLICATION_PRICE { get; set; }
         public DateTime? CREATED_DATE { get; set; }

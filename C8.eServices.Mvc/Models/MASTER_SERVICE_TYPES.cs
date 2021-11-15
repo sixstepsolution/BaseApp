@@ -15,7 +15,7 @@ namespace C8.eServices.Mvc.Models
             WL_APPLICATIONFORM = new HashSet<WL_APPLICATIONFORM>();
         }
 
-        [Key]
+        
         public int SERVICE_ID { get; set; }
 
         [StringLength(250)]

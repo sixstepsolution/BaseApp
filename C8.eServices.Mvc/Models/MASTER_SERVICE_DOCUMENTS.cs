@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 {
     public partial class MASTER_SERVICE_DOCUMENTS : BaseModel
     {
-        [Key]
+        
         public int SD_ID { get; set; }
 
         [StringLength(250)]

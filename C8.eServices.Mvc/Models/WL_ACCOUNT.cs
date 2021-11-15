@@ -14,7 +14,7 @@ namespace C8.eServices.Mvc.Models
             WL_ACCO_CONTACT = new HashSet<WL_ACCO_CONTACT>();
         }
 
-        [Key]
+        
         public int ACCOUNT_ID { get; set; }
 
         [Required]

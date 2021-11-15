@@ -16,7 +16,7 @@ namespace C8.eServices.Mvc.Models
             WL_ACCOUNT_AUDIT = new HashSet<WL_ACCOUNT_AUDIT>();
         }
 
-        [Key]
+        
         public int STATUS_ID { get; set; }
 
         [StringLength(150)]

@@ -8,7 +8,7 @@ namespace C8.eServices.Mvc.Models
 
     public partial class WL_CONTACT_PERSONS : BaseModel
     {
-        [Key]
+       
         public int CID { get; set; }
 
         [Required]

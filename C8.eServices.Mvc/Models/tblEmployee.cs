@@ -9,7 +9,7 @@ namespace C8.eServices.Mvc.Models
     [Table("tblEmployee")]
     public partial class tblEmployee : BaseModel
     {
-        [Key]
+        
         public int EmployeeID { get; set; }
 
         [Required]

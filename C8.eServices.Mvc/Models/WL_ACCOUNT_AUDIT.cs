@@ -8,14 +8,9 @@ using System.Web;
 
 namespace C8.eServices.Mvc.Models
 {   
-    public class WL_ACCOUNT_AUDIT : BaseTypeAudit
+    public class WL_ACCOUNT_AUDIT : BaseModelAudit
     {
-        //public WL_ACCOUNT()
-        //{
-        //    WL_ACCO_CONTACT = new HashSet<WL_ACCO_CONTACT>();
-        //}
-
-        [Key]
+       
         public int AUDIT_ID { get; set; }
         [StringLength(200)]
         public String ACTION { get; set; }
