@@ -134,6 +134,7 @@
             var appNo = '@ViewBag.applicationNo';
             var appStartDate = '@ViewBag.appStartDate';
             var appEndDate = '@ViewBag.appEndDate';
+            //var appOverDueStatus = '@ViewBag.appOverDueStatus';
         //alert(userRole);
         if (sessionInfo != undefined && sessionInfo != "" && sessionInfo != null) {
 
@@ -152,6 +153,9 @@
             if (appEndDate != "" && appEndDate != undefined) {
                 $("#date_requested_to").val(appEndDate);
             }
+            //if (appOverDueStatus != "" && appOverDueStatus != undefined) {
+            //    $("#OverdueStatus").val(appOverDueStatus);
+            //}
         }, 5000);
 
         //Init();
@@ -393,7 +397,14 @@
                                             </span>
                                         </div>
                                     </td>
-
+                                    @*<td style="width:  15.5%">
+            <label>Status</label>
+            <select style="border-radius: 4px"
+                    class="form-control" name="OverdueStatus" id="OverdueStatus">
+                <option value="" selected>Make a selection</option>
+                <option value="Overdue Applications">Overdue Applications</option>
+            </select>
+        </td>*@
                                     <td style="width:  15.5%;text-align: center;padding-top:2px!important">
                                         <div class="col-md-3" style="margin-top:13px">
                                             <button type="submit" class="btn btn-green-custom" style="height: 24px; padding: 2px; font-size: 12px; width: 100px;color:#fff!important;"
@@ -413,10 +424,11 @@
                                             </button>
                                         </div>
                                     </td>
-                                    <td style="width:  15.5%">
+                                    <td style="width:15.5%">
                                     </td>
-                                    <td style="width:  15.5%">
+                                    <td style="width:15.5%">
                                     </td>
+
                                 </tr>
                                 <tr>
                                     <td style="width:13% !important" onclick="sort('NAME')">
@@ -503,9 +515,17 @@
                                                                                     {
                                                                                         <tr style="border-collapse:collapse;">
                                                                                             <td style="width:13% !important">
+                                                                                                
+                                                                                                @if (rc.id == 9 || rc.id == 3 || rc.id == 4)
+                                                                                                {
+                                                                                                    <a style="cursor: pointer;" class="ggb-a"><u>  @app.id</u></a>
+                                                                                                }
+                                                                                                else
+                                                                                                {
                                                                                                 <a onclick="$.fn.OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                    style="cursor: pointer;"
                                                                                                    class="ggb-a"><u>  @app.id</u></a>
+                                                                                                }
                                                                                             </td>
                                                                                             <td style="width:15% !important">
                                                                                                 @app.applicationNumber
@@ -523,18 +543,18 @@
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                            style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
                                                                                                     </div> } @*@if (rc.id == 2)
-                                                                                                    {
-                                                                                                        <div style="color:blueviolet">
-                                                                                                            <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                                                                                               style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
-                                                                                                        </div>
-                                                                                                    }*@ @*@if (app.applicationStepStatus == "Approved")
-                                                                                                        {
-                                                                                                            <div style="color:green">
-                                                                                                                <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                                                                                                   style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
-                                                                                                            </div>
-                                                                                                        }*@
+        {
+            <div style="color:blueviolet">
+                <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                   style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
+            </div>
+        }*@ @*@if (app.applicationStepStatus == "Approved")
+            {
+                <div style="color:green">
+                    <a onclick="OpenWayleaveApplicationForm(@app.id)"
+                       style="cursor: pointer;color:green"><u>  @app.applicationStepStatus</u></a>
+                </div>
+            }*@
                                                                                                 @if (rc.id == 3)
                                                                                                 {
                                                                                                     <div style="color:green">
@@ -544,9 +564,26 @@
                                                                                                 @if (rc.id == 2)
                                                                                                 {
                                                                                                     <div style="color:peru">
+                                                                                                        @if (app.isOverDue == "Y")
+                                                                                                        {
+                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                            <u>
+                                                                                                               <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus
+                                                                                                            </u>
+                                                                                                        </a>
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                           style="cursor: pointer;color:red"><u>  @app.applicationStepStatus</u></a>
-                                                                                                    </div>}
+                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                            <u>
+                                                                                                                @app.applicationStepStatus
+                                                                                                            </u>
+                                                                                                        </a>
+                                                                                                        }
+                                                                                                    </div>
+                                                                                                }
                                                                                                 @if (rc.id == 8)
                                                                                                 {
                                                                                                     <div style="color:peru">
@@ -554,6 +591,11 @@
                                                                                                            style="cursor: pointer;color:red"><u>  Pending Payment</u></a>
                                                                                                     </div>
                                                                                                 }
+                                                                                                @if (rc.id == 9)
+                                                                                                {
+                                                                                                    <div style="color:peru">
+                                                                                                        <a style="cursor: pointer;color:red"><u> @app.applicationStepStatus</u></a>
+                                                                                                    </div>}
                                                                                             </td>
                                                                                             <td style="width:15% !important">
                                                                                                 @app.full_name

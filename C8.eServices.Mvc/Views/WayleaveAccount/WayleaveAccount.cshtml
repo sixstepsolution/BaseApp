@@ -320,7 +320,7 @@
                 <div class="panel-heading" style="background:#d2930b;padding-top:5px!important">
                     <a class="fa fa-chevron-left pull-left" style="font-size:16pt!important;text-decoration:none!important;color:#fff!important" title="Back to home" href="../WayleaveAccount/Index"></a>
                     <h4 class="panel-title text-center" style="font-size:16pt!important">
-                        Wayleave Account
+                        Wayleave Profile
                     </h4>
                 </div>
                 <div style="border:1px solid #b59b5a;">
@@ -330,7 +330,7 @@
                                    class="radio-custom" checked onclick="$.fn.showAccountScreen('New')" name="Qs_PersonMandatory" type="radio"
                                    style="margin-top: 10px !important;margin-left: 28px !important;background-color:#d2930b!important">
                             <label for="Qs_PersonMandatory" class="radio-custom-label"
-                                   style="margin-top: 10px;padding: 6px;">New Account</label>&nbsp;&nbsp;
+                                   style="margin-top: 10px;padding: 6px;">New Profile</label>&nbsp;&nbsp;
                             @*<input id="Qs_PersonMandatory1" class="radio-custom" onclick="$.fn.showAccountScreen('Renewal')"
                                    name="Qs_PersonMandatory" type="radio"
                                    style="margin-top: 10px !important">
@@ -352,6 +352,7 @@
                                                             <option value="" selected>Make a selection</option>
                                                             <option value="Consultant">Consultant</option>
                                                             <option value="Contractor">Contractor</option>
+                                                            @*<option value="Department">Department</option>*@
                                                         </select>
                                                     </div>
                                                 </div>
@@ -469,14 +470,14 @@
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Contact Person First Name</label>
-                                                        <input type="text" style="border-radius: 4px" id="contactPersonFirstName"
+                                                        <input type="text" maxlength="32" style="border-radius: 4px" id="contactPersonFirstName"
                                                                class="form-control" name="ContactPersonFirstName" required />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Contact Person Last Name</label>
-                                                        <input type="text" style="border-radius: 4px" id="contactPersonLastName"
+                                                        <input type="text" maxlength="32" style="border-radius: 4px" id="contactPersonLastName"
                                                                class="form-control" name="ContactPersonLastName" required />
                                                     </div>
                                                 </td>
@@ -505,7 +506,7 @@
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Telephone Number</label>
-                                                        <input type="text" style="border-radius: 4px" maxlength="10" min="10" max="10" numbers-only id="telephoneNumber"
+                                                        <input type="text" style="border-radius: 4px" maxlength="10" min="10" max="10" id="telephoneNumber"
                                                                class="form-control numbersOnly" name="TelephoneNumber" />
                                                     </div>
                                                 </td>
@@ -528,21 +529,21 @@
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Email</label>
-                                                        <input type="text" style="border-radius: 4px" onkeyup="$.fn.validateEmail('email')" @*ng-pattern="emailFormat"*@ id="email"
+                                                        <input type="email" maxlength="50" style="border-radius: 4px" onblur="$.fn.validateEmail('email')" @*ng-pattern="emailFormat"*@ id="email"
                                                                class="form-control" name="Email" required />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Password</label>
-                                                        <input type="password" autocomplete="off" style="border-radius: 4px" onblur="$.fn.ValidatePassword('PASSWORD')" id="PASSWORD" required
+                                                        <input type="password" min="8" autocomplete="off" style="border-radius: 4px" onblur="$.fn.ValidatePassword('PASSWORD')" id="PASSWORD" required
                                                                class="form-control" name="PASSWORD" />
                                                     </div>
                                                 </td>
                                                 <td style="width:  15.5%;display:none!important" id="ShowConfirmPassword">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Confirm Password</label>
-                                                        <input type="password" style="border-radius: 4px" onblur="$.fn.CheckConfirmPassword('PASSWORD','CONFIRMPASSWORD')" id="CONFIRMPASSWORD"
+                                                        <input type="password" min="8" style="border-radius: 4px" onblur="$.fn.CheckConfirmPassword('PASSWORD','CONFIRMPASSWORD')" id="CONFIRMPASSWORD"
                                                                class="form-control" name="CONFIRMPASSWORD" />
                                                     </div>
                                                 </td>
@@ -570,32 +571,44 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Street Name</label>
-                                                        <input rows="3" style="border-radius: 4px" id="streetName"
+                                                        <input rows="3" maxlength="50" style="border-radius: 4px" id="streetName"
                                                                class="form-control" name="StreetName" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">City</label>
-                                                        <input type="text" style="border-radius: 4px" id="city"
+                                                        <input type="text" maxlength="20" style="border-radius: 4px" id="city"
                                                                class="form-control" name="City" required />
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Suburb</label>
-                                                        <input type="text" style="border-radius: 4px" id="suburb"
+                                                        <input type="text" maxlength="32" style="border-radius: 4px" id="suburb"
                                                                class="form-control" name="suburb" required />
                                                     </div>
-                                                </td>
-                                                
+                                                </td>                                                
                                             </tr>
                                             <tr>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Province</label>
-                                                        <input type="text" style="border-radius: 4px" id="province"
-                                                               class="form-control" name="Province" required />
+                                                        @*<input type="text" style="border-radius: 4px" id="province"
+                                                               class="form-control" name="Province" required />*@
+                                                    <select style="border-radius: 4px" required
+                                                            class="form-control" name="province" id="province">
+                                                        <option value="" selected>Make a selection</option>
+                                                        <option value="Eastern Cape">Eastern Cape</option>
+                                                        <option value="Free State">Free State</option>
+                                                        <option value="Gauteng">Gauteng</option>
+                                                        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                                                        <option value="Limpopo">Limpopo</option>
+                                                        <option value="Mpumalanga">Mpumalanga</option>
+                                                        <option value="Northern Cape">Northern Cape</option>
+                                                        <option value="North West">North West</option>
+                                                        <option value="Western Cape">Western Cape</option>
+                                                    </select>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -657,10 +670,10 @@
                                                 <tr>
                                                     <td><input type="radio" name="radioContactPerson" /></td>
                                                     <td>
-                                                        <input type="text" class="form-control" id="ContactFirstName" name="ContactFirstName" />
+                                                        <input type="text" class="form-control" maxlength="32" id="ContactFirstName" name="ContactFirstName" />
                                                     </td>
                                                     <td>
-                                                        <input type="text" class="form-control" id="ContactLastName" name="ContactLastName" />
+                                                        <input type="text" class="form-control" maxlength="32" id="ContactLastName" name="ContactLastName" />
                                                     </td>
 
                                                     <td>

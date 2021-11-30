@@ -1,6 +1,6 @@
 ﻿
 @{
-    Layout = "~/Views/Shared/_LayoutWayleaveAccount.cshtml";
+    Layout = null;
 }
 
 
@@ -9,7 +9,11 @@
 <html>
 
 <head>
-
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="~/Scripts/wayleaveScripts/ApplicationFormNew.js?dt=@DateTime.Now.Millisecond"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
           integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
           crossorigin="" />
@@ -102,95 +106,38 @@
             color: #323232;
         }
     </style>
+   
     <script>
-        var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
-        if (RTCPeerConnection) (function () {
-            var rtc = new RTCPeerConnection({
-                iceServers: []
-            });
-            if (1 || window.mozRTCPeerConnection) {
-                rtc.createDataChannel('', {
-                    reliable: false
-                });
-            };
-            rtc.onicecandidate = function (evt) {
-                if (evt.candidate) grepSDP("a=" + evt.candidate.candidate);
-            };
-            rtc.createOffer(function (offerDesc) {
-                grepSDP(offerDesc.sdp);
-                rtc.setLocalDescription(offerDesc);
-            }, function (e) {
-                console.warn("offer failed", e);
-            });
-            var addrs = Object.create(null);
-            addrs["0.0.0.0"] = false;
-
-            function updateDisplay(newAddr) {
-                if (newAddr in addrs) return;
-                else addrs[newAddr] = true;
-                var displayAddrs = Object.keys(addrs).filter(function (k) {
-                    return addrs[k];
-                });
-                document.getElementById('list').textContent = displayAddrs.join(" or perhaps ") || "n/a";
-            }
-
-            function grepSDP(sdp) {
-                var hosts = [];
-                sdp.split('\r\n').forEach(function (line) {
-                    if (~line.indexOf("a=candidate")) {
-                        var parts = line.split(' '),
-                            addr = parts[4],
-                            type = parts[7];
-                        if (type === 'host') updateDisplay(addr);
-                    } else if (~line.indexOf("c=")) {
-                        var parts = line.split(' '),
-                            addr = parts[2];
-                        updateDisplay(addr);
-                    }
-                });
-            }
-        })();
-        else {
-            document.getElementById('list').innerHTML = "<code>ifconfig| grep inet | grep -v inet6 | cut -d\" \" -f2 | tail -n1</code>";
-            document.getElementById('list').nextSibling.textContent = "In Chrome and Firefox your IP should display automatically, by the power of WebRTCskull.";
-        }</script>
-    <script>
+        var GlobalSearchResult = "";
         $(document).ready(function () {
-            $.fn.ShowSearchMap = function () {
-
-                $("#locationPopup").modal('show');
-
-            };
+            setTimeout(function () {
+                getUrlVars();
+                var me = getUrlVars()["id"];
+                //alert(me);
+                GlobalSearchResult = me;
+            }, 3000);
+            
         });
+        function getUrlVars() {
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for (var i = 0; i < hashes.length; i++) {
+                hash = hashes[i].split('=');
+                vars.push(hash[0]);
+                vars[hash[0]] = hash[1];
+            }
+            return vars;
+            
+        }
+        //function BindAddress(val,id) {
+        //    //alert(val);
+        //    window.parent.document.getElementById(id).value = val;           
+        //}
 
     </script>
-    @*<link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet">
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>*@
 </head>
 <body>
-    <div id="list"></div>
-    <button type="button" onclick="$.fn.ShowSearchMap()">Test</button>
-    @*<div id="map" style="margin-top:100px!important"></div>*@
-    <div class="modal fade" id="locationPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog" style="border-radius:5px!important;width:80% !important;">
-            <div class="modal-content">
-                <div class="modal-header modal-danger">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        x
-                    </button>
-                    <h1 class="modal-title text-center" style="color:green;font-size:20px !important">Address Location</h1>
-                </div>
-                <div class="modal-body">
-                    <div id="map"></div>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
+    <div id="map"></div>   
     <script>
 
         const apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
@@ -205,8 +152,9 @@
         L.esri.Vector.vectorBasemapLayer(basemapEnum, {
             apiKey: apiKey
         }).addTo(map);
-
-
+        window.parent.document.getElementById("ShowMapLoader").style.display = "none";
+        window.parent.document.getElementById("DivButtonSubmit").style.display = "none";
+        
         var searchControl = L.esri.Geocoding.geosearch({
             position: "topright",
             placeholder: "Enter an address or place e.g. 37 Brakpan Rd",
@@ -223,7 +171,13 @@
         var results = L.layerGroup().addTo(map);
 
         searchControl.on("results", (data) => {
-            alert(data.results.length);
+            console.log("======Results========");
+            console.log(data.results[0].text);
+            window.parent.document.getElementById("ShowAddressCheckingLoader").style.display = "block";
+            //alert(data.results.length);
+            //alert(data.results[0].text);
+            //alert(GlobalSearchResult);
+            //$("#" + GlobalSearchResult).val(data.results[0].text);
             results.clearLayers();
             for (let i = data.results.length - 1; i >= 0; i--) {
                 const lngLatString = `${Math.round(data.results[i].latlng.lng * 100000) / 100000}, ${Math.round(data.results[i].latlng.lat * 100000) / 100000}`;
@@ -233,7 +187,7 @@
                 var lat = data.results[i].latlng.lat;
                 var lng = data.results[i].latlng.lng;
                 var latilngi = lat + "," + lng;
-                alert(latilngi);
+                //alert(latilngi);
                 //debugger;
                 var streetnumber = data.results[i].properties.AddNum;
                 var streetname = data.results[i].properties.StName;
@@ -250,19 +204,23 @@
                         console.log(response);
                         var obj1 = JSON.parse(response);
                         var obj = obj1;
+                        window.parent.document.getElementById("DivButtonSubmit").style.display = "block";
+                        window.parent.document.getElementById("ShowMapLoader").style.display = "none";
+                        window.parent.document.getElementById("ShowAddressCheckingLoader").style.display = "none";
                         if (obj.StreetName != "" || obj.StreetNumber != "" || obj.TownShip != "") {
-                            alert('success');
-                            //window.parent.document.getElementById("streetnumber").value = streetnumber;
-                            //window.parent.document.getElementById("streetnamefield").value = streetname;
-                            ////window.parent.document.getElementById("streetnumber").value = obj.StreetNumber;
-                            ////window.parent.document.getElementById("streetnamefield").value = obj.StreetName;
-                            //window.parent.document.getElementById("suburbdist").value = township;
-                            //window.parent.document.getElementById("cityfield").value = data.results[i].properties.Subregion;
-                            //window.parent.document.getElementById("postalcode").value = data.results[i].properties.Postal;
-                            //window.parent.document.getElementById("customerLatLong").value = latilngi;
-                            //alert(streetnumber);
-                            //alert(streetname);
-
+                            //alert('success');
+                            //BindAddress(data.results[0].text, GlobalSearchResult);
+                            window.parent.document.getElementById(GlobalSearchResult).value = data.results[0].text;
+                            if (GlobalSearchResult == "GPS_START_ADDRESS") {
+                                window.parent.document.getElementById("GPS_START_LATITUDE").value = lat;
+                                window.parent.document.getElementById("GPS_START_LONGITUDE").value = lng;
+                            }
+                            if (GlobalSearchResult == "GPS_END_ADDRESS") {
+                                window.parent.document.getElementById("GPS_END_LATITUDE").value = lat;
+                                window.parent.document.getElementById("GPS_END_LONGITUDE").value = lng;
+                            }
+                            
+                            
                         }
                         else {
                             alert("Please note that the address provided is outside Ekurhuleni.");
@@ -280,5 +238,8 @@
 
 
 </html>
+
+
+
 
 

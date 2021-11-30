@@ -29,7 +29,7 @@
                     <div class="form-group" style="margin-top:150px!important">
                         <div class="col-sm-12 text-center">
                             <a onclick="$.fn.ShowButtons('')" class="btn btn-md col-sm-5" style="background-color: #004785 !important;border-radius:10px;color:#fff!important">Ekurhuleni Login</a>
-                            <a href="../Home/WayleaveLogin" class="btn btn-md col-sm-6" style="background-color: #004785 !important;border-radius:10px;color:#fff!important;margin-left:5px!important">Wayleave Account Login</a>
+                            <a href="../Home/WayleaveLogin" class="btn btn-md col-sm-6" style="background-color: #004785 !important;border-radius:10px;color:#fff!important;margin-left:5px!important">Wayleave Profile Login</a>
                         </div>
                     </div>
                 </div>
@@ -58,8 +58,9 @@
                                     <div class="col-lg-12 col-lg-offset-0">
                                         <div class="form-group" style="margin:10px;">
                                             <div class="input-group">
-                                                <span class="input-group-addon bg-green-custom" onclick="showPassword()" @*ng-click="showPassword()"*@>
-                                                    <img src="~/Content/wayleaveStyles/assets/Images/Asset 37@4x.png" width="20" height="15" />
+                                                <span class="input-group-addon bg-green-custom" @*onclick="showPassword()"*@ @*ng-click="showPassword()"*@>
+                                                    <i class="fa fa-key"></i>
+    @*<img src="~/Content/wayleaveStyles/assets/Images/Asset 37@4x.png" width="20" height="15" />*@
                                                 </span>
                                                 @Html.PasswordFor(m => m.Password, new { @class = "form-control bradius", @required = true, @autocomplete = "new-password", autofocus = "on", id = "pass", name = "password", placeholder = "Enter password" })
                                             </div>

@@ -43,6 +43,7 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.applicationNo = "";
             ViewBag.appStartDate = "";
             ViewBag.appEndDate = "";
+            //ViewBag.appOverDueStatus = "";
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
@@ -100,7 +101,8 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.applicationNo = "";
             ViewBag.appStartDate = "";
             ViewBag.appEndDate = "";
-            if (String.IsNullOrEmpty(application_no))
+            //ViewBag.appOverDueStatus = "";
+            if (!String.IsNullOrEmpty(application_no))
             {
                 ViewBag.applicationNo = application_no;
             }
@@ -112,7 +114,10 @@ namespace C8.eServices.Mvc.Controllers
             {
                 ViewBag.appEndDate = date_requested_to.Value.Year + "-" + date_requested_to.Value.Month + "-" + date_requested_to.Value.Day;
             }
-            
+            //if (!String.IsNullOrEmpty(OverdueStatus))
+            //{
+            //    ViewBag.appOverDueStatus = OverdueStatus;
+            //}
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
@@ -120,6 +125,7 @@ namespace C8.eServices.Mvc.Controllers
                 inpuclaims.application_no = application_no;
                 inpuclaims.date_requested_from = date_requested_from;
                 inpuclaims.date_requested_to = date_requested_to;
+                //inpuclaims.overdueStatus = OverdueStatus;
                 inpuclaims.created_by = Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
                 //inpuclaims.isAdmin = "N";
                 var myContent = JsonConvert.SerializeObject(inpuclaims);

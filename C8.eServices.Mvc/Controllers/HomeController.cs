@@ -33,9 +33,24 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 Session["payments"] = null;
-                IPAddressModel ipad = new IPAddressModel();
-                string str=ipad.GetIP();
-                string tt = ipad.GetIP4Address();
+                //string ipAddresss = Request.UserHostAddress;
+                //string ipaddress;
+                //ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+                //if (ipaddress == "" || ipaddress == null)
+                //    ipaddress = Request.ServerVariables["REMOTE_ADDR"];
+                //Response.Write("IP Address : " + ipaddress);
+                //var result = (from u in dbWayleave.Users
+                //              join r in dbWayleave.Roles on u.userid equals r.userid
+                //              orderby u.userid
+                //              select new
+                //              {
+                //                  userInfo = u,
+                //                  RoleId = r.role_id,
+                //                  RoleName = r.role_name
+                //              }).ToList();
+                //IPAddressModel ipad = new IPAddressModel();
+                //string str=ipad.GetIP();
+                //string tt = ipad.GetIP4Address();
                 // Test code.
                 //This is not needed
                 //var ca = CustomerAccountApi.GetAccounts("6911305037089");
@@ -88,8 +103,15 @@ namespace C8.eServices.Mvc.Controllers
 
                 //}
 
+
+
+                //OverdueApplications();
+
+                //var ipAddress = System.Web.HttpContext.Current.Request.UserHostAddress;
                 ViewBag.ReturnUrl = returnUrl;
-                ViewBag.Error = "";
+                ViewBag.Error = "";                
+                //IPAddressModel Ip = new IPAddressModel();
+                //var ttgg=Ip.GetIP();
                 return View();
             }
             catch (Exception ex)
@@ -98,7 +120,31 @@ namespace C8.eServices.Mvc.Controllers
             }
         }
         #endregion
-               
+
+        public static void OverdueApplications()
+        {
+            using (var db = new WayleaveDbContext())
+            {
+                var statusDetail = db.MASTER_STATUS_TYPES.Where(d => d.STATUS_ID == 2).FirstOrDefault();
+                string distributionDescription = statusDetail != null ? statusDetail.DESCRIPTION : "";
+                var DistributionData = db.WL_APPLICATIONFORM.Where(x => x.APPLICATION_STEP_DESCRIPTION == distributionDescription).ToList();
+                if (DistributionData.Count() > 0)
+                {
+                    foreach (var item in DistributionData)
+                    {
+                        DateTime todayDate = DateTime.Now;
+                        var applicationDate = item.CREATED_DATE;
+                        TimeSpan ts = todayDate - applicationDate;
+                        if (ts.Days > 7)
+                        {
+                            item.IS_OVERDUE = "Y";
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+        }
+
         #region FAQ Index
         public ActionResult FAQ()
         {
@@ -495,16 +541,20 @@ namespace C8.eServices.Mvc.Controllers
             WayleaveDbContext context = new WayleaveDbContext();
             try
             {
+                var resultNew = context.Users.Where(s => s.username == model.UserName).FirstOrDefault();
                 // Please store the 2 line below in the db and call/ them from there
-                var activeDirectoryOn = "True";
+                var activeDirectoryOn = "";
                 var activeDirectoryDomain = "10.31.3.51";
                 //
-
+                if(resultNew!=null)
+                {
+                    activeDirectoryOn = resultNew!=null? resultNew.isActiveDirectory:"N";
+                }
                 var Ad = false;
                 bool ADSuccess = false;
                 string email = "";
                 AdLogin adLogin = new AdLogin();
-                if (activeDirectoryOn == "True")
+                if (activeDirectoryOn == "Y")
                 {
                     var Domain2 = new PrincipalContext(ContextType.Domain, activeDirectoryDomain);
 
@@ -521,6 +571,15 @@ namespace C8.eServices.Mvc.Controllers
                                 var result = context.Users.Where(s => s.username == model.UserName).FirstOrDefault();
                                 if (result != null)
                                 {
+                                    //Insert login history details
+                                    LOGIN_HISTORY lh = new LOGIN_HISTORY();
+                                    lh.USERID = result.userid;
+                                    lh.USER_NAME = result.username;
+                                    lh.LOGIN_DATE = DateTime.Now;
+                                    lh.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                                    context.LOGIN_HISTORY.Add(lh);
+                                    context.SaveChanges();
+
                                     Session["ekurhuleniData"] = result;
                                     Session["ekurhuleniUserID"] = result.userid;
                                     Session["ekurhuleniUserName"] = result.username;
@@ -530,6 +589,15 @@ namespace C8.eServices.Mvc.Controllers
                                 }
                                 else
                                 {
+                                    //Insert login history details
+                                    LOGIN_HISTORY lh = new LOGIN_HISTORY();
+                                    lh.USERID = 0;
+                                    lh.USER_NAME = model.UserName;
+                                    lh.LOGIN_DATE = DateTime.Now;
+                                    lh.OUTCOME = "Unsuccessful";
+                                    context.LOGIN_HISTORY.Add(lh);
+                                    context.SaveChanges();
+
                                     TempData["LoginError"] = "Invalid username or password!";
                                     return RedirectToAction("Index", "Home");
                                 }
@@ -538,6 +606,14 @@ namespace C8.eServices.Mvc.Controllers
                         }
                         else
                         {
+                            //Insert login history details
+                            LOGIN_HISTORY lh = new LOGIN_HISTORY();
+                            lh.USERID = 0;
+                            lh.USER_NAME = model.UserName;
+                            lh.LOGIN_DATE = DateTime.Now;
+                            lh.OUTCOME = "Unsuccessful";
+                            context.LOGIN_HISTORY.Add(lh);
+                            context.SaveChanges();
 
                             TempData["LoginError"] = "Invalid username or password For active directory login!";
                             return RedirectToAction("Index", "Home");
@@ -545,9 +621,52 @@ namespace C8.eServices.Mvc.Controllers
                         }
                     }
                 }
+                else
+                {
+                    var result = context.Users.Where(s => s.username == model.UserName&&s.password==model.Password).FirstOrDefault();
+                    if (result != null)
+                    {
+                        //Insert login history details
+                        LOGIN_HISTORY lh = new LOGIN_HISTORY();
+                        lh.USERID = result.userid;
+                        lh.USER_NAME = result.username;
+                        lh.LOGIN_DATE = DateTime.Now;
+                        lh.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                        context.LOGIN_HISTORY.Add(lh);
+                        context.SaveChanges();
+
+                        Session["ekurhuleniData"] = result;
+                        Session["ekurhuleniUserID"] = result.userid;
+                        Session["ekurhuleniUserName"] = result.username;
+                        Session["ekurhuleniUserDeptName"] = result.deptartmentname;
+                        Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
+                        return RedirectToAction("Index", "WL");
+                    }
+                    else
+                    {
+                        //Insert login history details
+                        LOGIN_HISTORY lh = new LOGIN_HISTORY();
+                        lh.USERID = 0;
+                        lh.USER_NAME = model.UserName;
+                        lh.LOGIN_DATE = DateTime.Now;
+                        lh.OUTCOME = "Unsuccessful";
+                        context.LOGIN_HISTORY.Add(lh);
+                        context.SaveChanges();
+
+                        TempData["LoginError"] = "Invalid username or password!";
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
             }
             catch (Exception)
             {
+                LOGIN_HISTORY lh = new LOGIN_HISTORY();
+                lh.USERID = 0;
+                lh.USER_NAME = model.UserName;
+                lh.LOGIN_DATE = DateTime.Now;
+                lh.OUTCOME = "Unsuccessful";
+                context.LOGIN_HISTORY.Add(lh);
+                context.SaveChanges();
                 TempData["LoginError"] = "Invalid username or password For active directory login!";
                 return RedirectToAction("Index", "Home");
             }            

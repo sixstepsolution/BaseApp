@@ -1,0 +1,284 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+    <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
+
+    @*<script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
+    <!-- Load Esri Leaflet Geocoder from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.css" ">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"></script>
+
+    <style>
+        /*#map {
+            height: 500px !important;*/
+        /*position: absolute !important;*/
+        /*width: 100%;
+            margin: 0;
+            padding: 0;
+        }*/
+
+        #search {
+            display: block;
+            position: absolute;
+            z-index: 3;
+            top: 20px;
+            left: 75px;
+        }
+
+        .simpleGeocoder .esriGeocoderIcon {
+            float: left;
+            outline: 0;
+            width: 16px;
+            height: 16px;
+            display: block;
+            overflow: hidden;
+            margin: 11px 0 6px 6px;
+        }
+
+        .esriPopup .esriPopupWrapper {
+            /* box-shadow: 0 0 0.75em #777777; */
+            /* -webkit-box-shadow: 0 0 0.75em #777777; */
+            border-radius: 5px;
+            -webkit-border-radius: 5px;
+            height: 100px !important
+        }
+
+        .simpleGeocoder .esriGeocoder .esriGeocoderReset {
+            margin: 11px 6px 6px 0;
+            float: right;
+            display: block;
+        }
+
+        .spotlight {
+            z-index: -1;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            border-radius: 50%;
+            opacity: 0;
+            box-shadow: inset rgba(0,0,0,0.25) 0px 0px 20px 20px, rgba(0,0,0,0.25) 0px 0px 0px 1000px;
+            transition: all 1000ms;
+            -moz-transition: all 1000ms;
+            -webkit-transition: all 1000ms;
+        }
+
+        .spotlight-active {
+            z-index: 2;
+            opacity: 1;
+        }
+    </style>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 500px !important;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            width: 100% !important;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #323232;
+        }
+    </style>
+    <script>
+        var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+        if (RTCPeerConnection) (function () {
+            var rtc = new RTCPeerConnection({
+                iceServers: []
+            });
+            if (1 || window.mozRTCPeerConnection) {
+                rtc.createDataChannel('', {
+                    reliable: false
+                });
+            };
+            rtc.onicecandidate = function (evt) {
+                if (evt.candidate) grepSDP("a=" + evt.candidate.candidate);
+            };
+            rtc.createOffer(function (offerDesc) {
+                grepSDP(offerDesc.sdp);
+                rtc.setLocalDescription(offerDesc);
+            }, function (e) {
+                console.warn("offer failed", e);
+            });
+            var addrs = Object.create(null);
+            addrs["0.0.0.0"] = false;
+
+            function updateDisplay(newAddr) {
+                if (newAddr in addrs) return;
+                else addrs[newAddr] = true;
+                var displayAddrs = Object.keys(addrs).filter(function (k) {
+                    return addrs[k];
+                });
+                document.getElementById('list').textContent = displayAddrs.join(" or perhaps ") || "n/a";
+            }
+
+            function grepSDP(sdp) {
+                var hosts = [];
+                sdp.split('\r\n').forEach(function (line) {
+                    if (~line.indexOf("a=candidate")) {
+                        var parts = line.split(' '),
+                            addr = parts[4],
+                            type = parts[7];
+                        if (type === 'host') updateDisplay(addr);
+                    } else if (~line.indexOf("c=")) {
+                        var parts = line.split(' '),
+                            addr = parts[2];
+                        updateDisplay(addr);
+                    }
+                });
+            }
+        })();
+        else {
+            document.getElementById('list').innerHTML = "<code>ifconfig| grep inet | grep -v inet6 | cut -d\" \" -f2 | tail -n1</code>";
+            document.getElementById('list').nextSibling.textContent = "In Chrome and Firefox your IP should display automatically, by the power of WebRTCskull.";
+        }</script>
+    <script>
+        $(document).ready(function () {
+            $.fn.ShowSearchMap = function () {
+
+                $("#locationPopup").modal('show');
+
+            };
+        });
+
+    </script>
+    @*<link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet">
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>*@
+</head>
+<body>
+    @*<div id="list"></div>
+        <button type="button" onclick="$.fn.ShowSearchMap()">Test</button>*@
+    <div id="map"></div>
+    <!--<div class="modal fade" id="locationPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog" style="border-radius:5px!important;width:80% !important;">
+            <div class="modal-content">
+                <div class="modal-header modal-danger">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        x
+                    </button>
+                    <h1 class="modal-title text-center" style="color:green;font-size:20px !important">Address Location</h1>
+                </div>
+                <div class="modal-body">
+                    <div id="map"></div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
+                </div>
+            </div>-->
+    <!-- /.modal-content -->
+    <!--</div>-->
+    <!-- /.modal-dialog -->
+    <!--</div>-->
+    <script>
+
+        const apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
+
+        const basemapEnum = "ArcGIS:Navigation";
+
+        const map = L.map("map", {
+            minZoom: 2
+
+        }).setView([-26.18848, 28.32078], 14); // Sydney
+
+        L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+            apiKey: apiKey
+        }).addTo(map);
+
+
+        var searchControl = L.esri.Geocoding.geosearch({
+            position: "topright",
+            placeholder: "Enter an address or place e.g. 37 Brakpan Rd",
+            useMapBounds: false,
+            providers: [L.esri.Geocoding.arcgisOnlineProvider({
+                apikey: apiKey,
+                nearby: {
+                    lat: -26.18848,
+                    lng: 28.32078
+                },
+            })]
+        }).addTo(map);
+
+        var results = L.layerGroup().addTo(map);
+
+        searchControl.on("results", (data) => {
+            //alert(data.results.length);
+            results.clearLayers();
+            for (let i = data.results.length - 1; i >= 0; i--) {
+                const lngLatString = `${Math.round(data.results[i].latlng.lng * 100000) / 100000}, ${Math.round(data.results[i].latlng.lat * 100000) / 100000}`;
+                const marker = L.marker(data.results[i].latlng);
+                marker.bindPopup(`<b>${lngLatString}</b><p>${data.results[i].properties.LongLabel}</p>`)
+                results.addLayer(marker);
+                var lat = data.results[i].latlng.lat;
+                var lng = data.results[i].latlng.lng;
+                var latilngi = lat + "," + lng;
+                //alert(latilngi);
+                //debugger;
+                var streetnumber = data.results[i].properties.AddNum;
+                var streetname = data.results[i].properties.StName;
+                var township = data.results[i].properties.District;
+                //marker.openPopup();
+                //console.log(data.results[i]);
+                //debugger;
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetAddress", "WayleaveAccount")',
+                    data: { latilngi: latilngi},
+                    success: function (response) {
+                        //debugger;
+                        console.log(response);
+                        var obj1 = JSON.parse(response);
+                        var obj = obj1;
+                        if (obj.StreetName != "" || obj.StreetNumber != "" || obj.TownShip != "") {
+                            alert('success');
+                            //window.parent.document.getElementById("streetnumber").value = streetnumber;
+                            //window.parent.document.getElementById("streetnamefield").value = streetname;
+                            ////window.parent.document.getElementById("streetnumber").value = obj.StreetNumber;
+                            ////window.parent.document.getElementById("streetnamefield").value = obj.StreetName;
+                            //window.parent.document.getElementById("suburbdist").value = township;
+                            //window.parent.document.getElementById("cityfield").value = data.results[i].properties.Subregion;
+                            //window.parent.document.getElementById("postalcode").value = data.results[i].properties.Postal;
+                            //window.parent.document.getElementById("customerLatLong").value = latilngi;
+                            //alert(streetnumber);
+                            //alert(streetname);
+
+                        }
+                        else {
+                            alert("Please note that the address provided is outside Ekurhuleni.");
+                            //parent.genericSystemMessage("Please note that the address provided is outside Ekurhuleni.");
+                    }
+                }
+                });
+
+            }
+        });
+    </script>
+
+
+</body>
+
+
+</html>
+
+

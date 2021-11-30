@@ -185,8 +185,8 @@
         Init();
     });
 </script>
-<link rel="stylesheet" href="https://js.arcgis.com/3.37/esri/css/esri.css">
-<script src="https://js.arcgis.com/3.37/"></script>
+@*<link rel="stylesheet" href="https://js.arcgis.com/3.37/esri/css/esri.css">
+<script src="https://js.arcgis.com/3.37/"></script>*@
 <style>
     #map {
         height: 500px !important;
@@ -257,7 +257,7 @@
 </style>
 
 
-<script>
+@*<script>
         require([
             "esri/config",
             "esri/map",
@@ -373,16 +373,16 @@
                 map.graphics.clear();
             }
         });
-    </script>
-<!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    </script>*@
+@*<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
       integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
       crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-        crossorigin=""></script>-->
-<!-- Load Esri Leaflet from CDN -->
-<!--<script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
-<script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>-->
+        crossorigin=""></script>*@
+ @*Load Esri Leaflet from CDN*@ 
+@*<script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>*@
 
 @*<script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
 <!-- Load Esri Leaflet Geocoder from CDN -->
@@ -391,7 +391,7 @@
 <script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
 @*<link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>*@
-<section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
+<section class="content ApplicationFormChild" id="ApplicationFormChild" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
     <form name="ApplicationForm">
         <div class="panel-group" style="margin-left: -25px;
         margin-bottom: 3px !important;">
@@ -650,7 +650,7 @@
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Address</label>
                                                         <div class="input-group" style="width: 100%;">
-                                                            <input type="text" class="form-control" autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="CONTRACTOR_ADDRESS"
+                                                            <input type="text" class="form-control CONTRACTOR_ADDRESS" autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="CONTRACTOR_ADDRESS"
                                                                    name="CONTRACTOR_ADDRESS" />
                                                             <span class="input-group-addon" onclick="$.fn.ShowSearchMap('CONTRACTOR_ADDRESS')"
                                                                   style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
@@ -695,9 +695,9 @@
                                                         <label>Estimated Completion Date</label>
                                                         <div class="input-group" style="width: 100%">
                                                             @*<span class="input-group-addon"
-                                                                      style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
-                                                                    <i class="fa fa-calendar"></i>
-                                                                </span>*@
+                                                  style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>*@
                                                             <input type="date" autocomplete="off" readonly
                                                                    style="border-radius:4px!important;"
                                                                    id="COMPLETION_DATE"
@@ -735,7 +735,7 @@
                                                     <div class="input-label-date">
                                                         <label>Project Number</label>
                                                         <div class="input-group" style="width: 100%">
-                                                            <input type="text" autocomplete="off" style="border-radius: 4px !important;" id="PROJECT_NUMBER"
+                                                            <input type="text" maxlength="20" autocomplete="off" style="border-radius: 4px !important;" id="PROJECT_NUMBER"
                                                                    class="form-control border-radius" name="PROJECT_NUMBER" />
 
                                                         </div>
@@ -903,14 +903,18 @@
                             <tbody id="ServiceDeclarationList">
                             </tbody>
                         </table>
+                        <input type="hidden" id="GPS_START_LATITUDE" />
+                        <input type="hidden" id="GPS_START_LONGITUDE" />
+                        <input type="hidden" id="GPS_END_LATITUDE" />
+                        <input type="hidden" id="GPS_END_LONGITUDE" />
                         <table width="100%" id="IsViewApplication">
                             <tr>
                                 <td colspan="4" class="text-center" id="IsAppEdit">
                                     @*<button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
-                                                onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
-                                            <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
-                                            Re-Submit
-                                        </button>*@
+                            onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
+                        <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                        Re-Submit
+                    </button>*@
                                     <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
                                             onclick="$.fn.SubmitApplication()">
                                         <i id="isAppLoadingUpdate" style="display:none!important" class="fa fa-spinner fa-spin"></i>
@@ -941,26 +945,44 @@
                         <h1 class="modal-title text-center" style="color:green;font-size:20px !important">Address Location</h1>
                     </div>
                     <div class="modal-body">
-                        @*<div id="map" style="display:none!important"></div>*@
-                        <div class="soria" id="ArcGisSearchMap">
-                                <div id="search"></div>
-                                <div id="map"></div>
-                            </div>
+                        @*<div id="map" style="display:none!important"></div>
+        <div class="soria" id="ArcGisSearchMap">
+            <div id="search"></div>
+            <div id="map"></div>
+        </div>*@
+                        <div class="text-center" style="display:none" id="ShowMapLoader">
+                            <h3 class="text-center"><i class="fa fa-spinner fa-spin text-success"></i></h3>
+                        </div>
+                        <div class="text-center" style="display:none" id="ShowAddressCheckingLoader">
+                            <b class="text-center text-danger">Please wait...</b>
+                        </div>
+                        <iframe width="100%" height="500" frameborder="0" id="Arciframe" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+
                         @*<div id="map"></div>*@
+                        @*@Html.RenderPartial("_ArcMap");*@
+                        @*@{
+            Html.RenderPartial("_ArcMap");
+        }*@
+                        @*<iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+        srcdoc="../Views/Shared/_ArcMap.cshtml"></iframe>*@
+                        <div class="text-center" style="display:none!important" id="DivButtonSubmit">
+                            <button type="button" data-dismiss="modal" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important">Submit</button>
+                            <button type="button" data-dismiss="modal" class="btn btn-success text-white" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
+                        @*<input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />*@
                     </div>
                 </div>
                 <!-- /.modal-content -->
             </div>
             <!-- /.modal-dialog -->
         </div>
-        
+
         <div class="modal fade" id="PageLoaderModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog" style="border-radius:5px!important;width:5%;height:50px!important;top:30%;border-radius:20px!important">
                 <div class="modal-content">
-                    <div class="modal-body">
+                    <div class="modal-body" style="border-radius:5px!important">
                         <h3 class="text-center"><i class="fa fa-spinner fa-spin text-success"></i></h3>
                     </div>
                 </div>
@@ -1026,11 +1048,113 @@
             <!-- /.modal-dialog -->
         </div>
 
+        <script>
+            $.fn.ShowSearchMap = function (id) {
+                //alert(id);
+                $("#DivButtonSubmit").hide();
+                $("#ShowAddressCheckingLoader").hide();
+                $("#ShowMapLoader").show();
+            GlobalSearchResult = "";
+                GlobalSearchResult = id;
+                var iframe = document.getElementById('Arciframe');
+                iframe.src = "";
+                var url = "../Home/testMap?id=" + id;
+                $("#locationPopup").modal('show');
+            //document.getElementById("Arciframe").setAttribute("src", url);
+                setTimeout(function () {
+                    iframe.src = url;
+                    //$("#ShowMapLoader").hide();
+            }, 3000);            
+            };
+        </script>
+        @*<script>
+
+        const apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
+
+        const basemapEnum = "ArcGIS:Navigation";
+
+        const map = L.map("map", {
+            minZoom: 2
+
+        }).setView([-26.18848, 28.32078], 14); // Sydney
+
+        L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+            apiKey: apiKey
+        }).addTo(map);
+
+
+        var searchControl = L.esri.Geocoding.geosearch({
+            position: "topright",
+            placeholder: "Enter an address or place e.g. 37 Brakpan Rd",
+            useMapBounds: false,
+            providers: [L.esri.Geocoding.arcgisOnlineProvider({
+                apikey: apiKey,
+                nearby: {
+                    lat: -26.18848,
+                    lng: 28.32078
+                },
+            })]
+        }).addTo(map);
+
+        var results = L.layerGroup().addTo(map);
+
+        searchControl.on("results", (data) => {
+            //alert(data.results.length);
+            results.clearLayers();
+            for (let i = data.results.length - 1; i >= 0; i--) {
+                const lngLatString = `${Math.round(data.results[i].latlng.lng * 100000) / 100000}, ${Math.round(data.results[i].latlng.lat * 100000) / 100000}`;
+                const marker = L.marker(data.results[i].latlng);
+                marker.bindPopup(`<b>${lngLatString}</b><p>${data.results[i].properties.LongLabel}</p>`)
+                results.addLayer(marker);
+                var lat = data.results[i].latlng.lat;
+                var lng = data.results[i].latlng.lng;
+                var latilngi = lat + "," + lng;
+                //alert(latilngi);
+                //debugger;
+                var streetnumber = data.results[i].properties.AddNum;
+                var streetname = data.results[i].properties.StName;
+                var township = data.results[i].properties.District;
+                //marker.openPopup();
+                //console.log(data.results[i]);
+                //debugger;
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetAddress", "WayleaveAccount")',
+                    data: { latilngi: latilngi},
+                    success: function (response) {
+                        //debugger;
+                        console.log(response);
+                        var obj1 = JSON.parse(response);
+                        var obj = obj1;
+                        if (obj.StreetName != "" || obj.StreetNumber != "" || obj.TownShip != "") {
+                            alert('success');
+                            //window.parent.document.getElementById("streetnumber").value = streetnumber;
+                            //window.parent.document.getElementById("streetnamefield").value = streetname;
+                            ////window.parent.document.getElementById("streetnumber").value = obj.StreetNumber;
+                            ////window.parent.document.getElementById("streetnamefield").value = obj.StreetName;
+                            //window.parent.document.getElementById("suburbdist").value = township;
+                            //window.parent.document.getElementById("cityfield").value = data.results[i].properties.Subregion;
+                            //window.parent.document.getElementById("postalcode").value = data.results[i].properties.Postal;
+                            //window.parent.document.getElementById("customerLatLong").value = latilngi;
+                            //alert(streetnumber);
+                            //alert(streetname);
+
+                        }
+                        else {
+                            alert("Please note that the address provided is outside Ekurhuleni.");
+                            //parent.genericSystemMessage("Please note that the address provided is outside Ekurhuleni.");
+                    }
+                }
+                });
+
+            }
+        });
+        </script>*@
     </form>
 
 </section>
 
-
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>*@
 
 
 

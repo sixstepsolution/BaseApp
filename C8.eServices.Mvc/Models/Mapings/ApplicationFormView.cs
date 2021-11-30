@@ -24,6 +24,7 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string applicationStepStatus { get; set; }
         public string inspectionStatus { get; set; }
         public string inspectionDate { get; set; }
+        public string isOverDue { get; set; }
     }
 
     public class ApplicationCounts

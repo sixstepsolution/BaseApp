@@ -69,6 +69,7 @@ namespace C8.eServices.Mvc
                 .ForMember(dest => dest.applicationStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.applicationStepStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.statusId, opt => opt.MapFrom(src => src.STATUS_ID))
+                .ForMember(dest => dest.isOverDue, opt => opt.MapFrom(src => src.IS_OVERDUE))
                 .ReverseMap();
 
 

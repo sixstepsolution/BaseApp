@@ -44,7 +44,7 @@
 
 
         setTimeout(function () {
-            var actionValue = '@ViewBag.applicationStatus';
+        var actionValue = '@ViewBag.applicationStatus';
         var appNo = '@ViewBag.applicationNo';
         var appStDate = '@ViewBag.appStartDate';
         var appEnDate = '@ViewBag.appEndDate';
@@ -158,6 +158,7 @@
                                             <option value="Application Rejected">Rejected Applications</option>
                                             <option value="Updated to Affected">Affected (All departments)</option>
                                             <option value="Updated to Not Affected">Not Affected (All departments)</option>
+                                            <option value="Application Closed">Application Closed</option>
                                         </select>
                                     </div>
                                 </td>
@@ -284,7 +285,7 @@
                 <td>@app.APPLICATION_STEP_DESCRIPTION</td>
                 <td>@app.CREATED_USER</td>
                 <td>@app.CREATED_DATE</td>
-                <td>@app.DEVICE_IP_ADDRESS</td>
+                <td>@app.BASEAPP_IP_ADDRESS</td>
             </tr>
                     jj++;
                 }

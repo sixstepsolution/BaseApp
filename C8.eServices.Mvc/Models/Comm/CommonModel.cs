@@ -51,6 +51,13 @@ namespace C8.eServices.Mvc.Models.Comm
         }
         public string GetIP()
         {
+            //string ip = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            //if (string.IsNullOrEmpty(ip))
+            //{
+            //    ip = System.Web.HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
+            //}
+            //return ip;
+
             string Str = "";
             Str = System.Net.Dns.GetHostName();
             IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(Str);

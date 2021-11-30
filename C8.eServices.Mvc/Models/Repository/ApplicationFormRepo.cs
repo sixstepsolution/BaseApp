@@ -52,7 +52,14 @@ namespace C8.eServices.Mvc.Models.Repository
             }
             
             if (!string.IsNullOrEmpty(inpuclaims.application_no))
+            {
                 result = result.Where(app => app.APPLICATION_NUMBER.Contains(inpuclaims.application_no));
+            }
+            //if (!string.IsNullOrEmpty(inpuclaims.overdueStatus))
+            //{
+            //    result = result.Where(app => app.IS_OVERDUE=="Y");
+            //}
+
             if (inpuclaims.date_requested_from != null && inpuclaims.date_requested_to != null)
             {
                 inpuclaims.date_requested_to = Convert.ToDateTime(inpuclaims.date_requested_to).AddDays(1);
@@ -412,6 +419,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 {
                     string createdUser = applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
                     WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    
                     CopyClass.CopyObject(applicationForm, ref audit_app);
                     audit_app.ACTION = "Application submitted";
                     audit_app.CREATED_DATE = DateTime.Now;
@@ -420,11 +428,12 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.MODIFIED_USER = createdUser;
                     audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
                     audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
+                    audit_app.BASEAPP_IP_ADDRESS = ipAddress;
+
                     audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                     //PROPERTYOWNER_NAME
                     _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                     _context.SaveChanges();
-
 
                     var departmentUsers = _context.Users.Where(s=>s.deptartmentname!= "Roads & Storm Water").ToList();
                     //Send email notifications to departments
@@ -440,8 +449,22 @@ namespace C8.eServices.Mvc.Models.Repository
                             //email.SendEmail();
                             Email em = new Email();
                             em.GenerateEmail(email.Recipient, email.Subject, email.Body, applicationNumber, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationNumber, null, null, null, null);
+
+
+                            
                         }                        
                     }
+                    //Sending email for paylater paymnet
+                    var applicationFeeDetails = _context.APPLICATION_PAYMENT_PRICE.ToList();
+                    decimal? Fee = applicationFeeDetails.Count > 0 ? applicationFeeDetails.FirstOrDefault().APPLICATION_PRICE : 0;
+                    string UserName = applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
+                    EmailHelper emailNew = new EmailHelper();
+                    emailNew.Body = EmailNotificationBody.SentPaylaterNotification(UserName, applicationNumber, "", applicationForm.APPLICATION_STEP_DESCRIPTION, Fee).ToString();
+                    emailNew.Recipient = applicationForm.PROPERTYOWNER_EMAIL;
+                    emailNew.Subject = "Paylater notification";
+                    //email.SendEmail();
+                    Email emm = new Email();
+                    emm.GenerateEmail(emailNew.Recipient, emailNew.Subject, emailNew.Body, applicationNumber, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationNumber, null, null, null, null);
                     dct.Add("success", true);
                     return applicationForm.APPLICATION_NUMBER;
                 }
@@ -624,6 +647,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.MODIFIED_USER = createdUser;
                     audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
                     audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
+                    audit_app.BASEAPP_IP_ADDRESS = ipAddress;
                     audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                     _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                     _context.SaveChanges();
@@ -640,6 +664,7 @@ namespace C8.eServices.Mvc.Models.Repository
                         audit_appp.CREATED_USER = createdUser;
                         audit_appp.MODIFIED_USER = createdUser;
                         audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP();
+                        audit_appp.BASEAPP_IP_ADDRESS = ipAddress;
                         _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
                         n = SaveChanges();
                     }
@@ -666,6 +691,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_app.MODIFIED_USER = createdUser;
                 audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
                 audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
+                audit_app.BASEAPP_IP_ADDRESS = ipAddress;
                 audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();
@@ -694,6 +720,7 @@ namespace C8.eServices.Mvc.Models.Repository
             audit_appp.ACTION = AuditTrailKeys.Applicationviewed;
             audit_appp.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
             audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP();
+            audit_appp.BASEAPP_IP_ADDRESS = ipAddress;
             audit_appp.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
             //audit_app.cre
             _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
@@ -715,6 +742,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_app.ACTION = "Updated to "+ appStatus;
                 audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
                 audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
+                audit_app.BASEAPP_IP_ADDRESS = ipAddress;
                 //audit_app.cre
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();
@@ -747,9 +775,100 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_app.ACTION = "Updated to " + appStatus;
                 audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
                 audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
+                audit_app.BASEAPP_IP_ADDRESS = ipAddress;
                 //audit_app.cre
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();
+            }
+            return isSuccess;
+        }
+
+        public bool CloseApplicationForm(ApplicationInputClaimModel inputClaims)
+        {
+            bool isSuccess = false;
+            WL_APPLICATIONFORM res = GetApplicationFormData(inputClaims.appId);
+            if (res != null)
+            {
+                
+                var closeWayleave = _context.MASTER_STATUS_TYPES.Where(s => s.DESCRIPTION == StatusKeys.CloseWayleaveApplication).FirstOrDefault();
+                if (closeWayleave != null)
+                {
+                    res.APPLICATION_STEP_DESCRIPTION = closeWayleave.DESCRIPTION;
+                    res.STATUS_ID = closeWayleave.STATUS_ID;
+                    res.INSPECTION_STATUS = inputClaims.inspectionStatus;
+                    res.INSPECTION_BY = inputClaims.inspectionBy;
+                    res.INSPECTION_COMMENTS = inputClaims.inspectionComments;
+                    res.INSPECTION_REFERENCE_NO = inputClaims.inspectionReferenceNo;
+                    res.INSPECTION_DATE = inputClaims.inspectionDate;
+                }
+
+
+
+
+
+                WL_APPLICATIONFORM_AUDIT audit_appp = new WL_APPLICATIONFORM_AUDIT();
+                CopyClass.CopyObject(res, ref audit_appp);
+                audit_appp.CREATED_DATE = DateTime.Now;
+                audit_appp.MODIFIED_DATE = DateTime.Now;
+                audit_appp.CREATED_USER = inputClaims.first_name;
+                audit_appp.MODIFIED_USER = inputClaims.first_name;
+                audit_appp.ACTION = AuditTrailKeys.Applicationviewed;
+                audit_appp.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP();
+                audit_appp.BASEAPP_IP_ADDRESS = inputClaims.ipAddress;
+                audit_appp.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
+                //audit_app.cre
+                _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
+                //if(!String.IsNullOrEmpty(deptStatus) && !String.IsNullOrEmpty(deptName))
+                //{
+                //    WL_DEPARTMENTS wd = GetDepartmentDataById(appId, deptName);
+                //    wd.APPROVE_OR_REJECT_COMMENTS = !String.IsNullOrEmpty(deptComments)? deptComments:"";
+                //    wd.APPLICATION_STATUS = deptStatus;
+                //}
+                isSuccess = SaveChanges();
+                if (isSuccess)
+                {
+                    WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    CopyClass.CopyObject(res, ref audit_app);
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    audit_app.CREATED_USER = inputClaims.first_name;
+                    audit_app.MODIFIED_USER = inputClaims.first_name;
+                    audit_app.ACTION = "Updated to " + closeWayleave.DESCRIPTION;
+                    audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
+                    audit_app.BASEAPP_IP_ADDRESS = inputClaims.ipAddress;
+                    //audit_app.cre
+                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
+
+                    EmailHelper email = new EmailHelper();
+                    string applicationGrantStatus = inputClaims.inspectionStatus;
+
+                    
+                    email.Body = EmailNotificationBody.SentCloseApplicationForm(res.PROPERTYOWNER_NAME, res.PROPERTYOWNER_SURNAME, res.APPLICATION_NUMBER, applicationGrantStatus, inputClaims.inspectionComments).ToString();
+                    email.Recipient = res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
+                    email.Subject = "Wayleave Application Closed";
+                    //email.SendEmail();
+                    Email em = new Email();
+                    em.GenerateEmail(email.Recipient, email.Subject, email.Body, res.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME, null, null, res.APPLICATION_NUMBER, null, null, null, null);
+                }
+                else
+                {
+                    WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
+                    CopyClass.CopyObject(res, ref audit_app);
+                    audit_app.CREATED_DATE = DateTime.Now;
+                    audit_app.MODIFIED_DATE = DateTime.Now;
+                    audit_app.CREATED_USER = inputClaims.first_name;
+                    audit_app.MODIFIED_USER = inputClaims.first_name;
+                    audit_app.ACTION = "Updated to " + closeWayleave.DESCRIPTION;
+                    audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
+                    audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
+                    audit_app.BASEAPP_IP_ADDRESS = inputClaims.ipAddress;
+                    //audit_app.cre
+                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    _context.SaveChanges();
+                }
             }
             return isSuccess;
         }
@@ -774,6 +893,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_appp.ACTION = AuditTrailKeys.Applicationviewed;
                 audit_appp.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
                 audit_appp.DEVICE_IP_ADDRESS = Ip.GetIP();
+                audit_appp.BASEAPP_IP_ADDRESS = ipAddress;
                 audit_appp.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
                 //audit_app.cre
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_appp);
@@ -787,7 +907,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.ACTION = "Updated to " + deptStatus;
                     audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
                     audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
-
+                    audit_app.BASEAPP_IP_ADDRESS = ipAddress;
                     //audit_app.ACTION = "Modified";
                     audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
                     audit_app.CREATED_DATE = DateTime.Now;
@@ -822,6 +942,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.ACTION = "Updated to " + deptStatus;
                     audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
                     audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
+                    audit_app.BASEAPP_IP_ADDRESS = ipAddress;
                     audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.Distributed_to_Departments;
                     audit_app.CREATED_DATE = DateTime.Now;
                     audit_app.MODIFIED_DATE = DateTime.Now;
@@ -842,7 +963,8 @@ namespace C8.eServices.Mvc.Models.Repository
         public int UpdateApplicationInspectiondata(int appId, string inspectionStatus, DateTime? inspectiondate, List<PreInspectionDataModel> pid)
         {
             WL_APPLICATIONFORM res = GetApplicationFormData(appId);
-            if(pid.Count>0)
+            var ipAddress = HttpContext.Current.Request.UserHostAddress;
+            if (pid.Count>0)
             {
                 if (pid.FirstOrDefault().InspectionType == "pre")
                 {
@@ -865,7 +987,8 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.CREATED_DATE = DateTime.Now;
                     audit_app.MODIFIED_DATE = DateTime.Now;
                     audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
-                    _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
+                    audit_app.BASEAPP_IP_ADDRESS = ipAddress;
+                _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                     _context.SaveChanges();
                 return 1;
             }

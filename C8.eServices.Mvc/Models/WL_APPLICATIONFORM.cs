@@ -180,6 +180,9 @@ namespace C8.eServices.Mvc.Models
         public string INSPECTION_STATUS { get; set; }
         public string PRE_INSPECTION_STATUS { get; set; }
         public DateTime? INSPECTION_DATE { get; set; }
+        public string INSPECTION_REFERENCE_NO { get; set; }
+        public string INSPECTION_COMMENTS { get; set; }
+        public string INSPECTION_BY { get; set; }
         public string PAYMENT_RECEIPT_NO { get; set; }
         public string PAYMENT_STATUS { get; set; }
         public string PAYMENT_MODE { get; set; }
@@ -189,6 +192,9 @@ namespace C8.eServices.Mvc.Models
         public string PAYMENT_DATE { get; set; }
         [StringLength(15)]
         public string IDENTIFICATION_NUMBER { get; set; }
+
+        [StringLength(10)]
+        public string IS_OVERDUE { get; set; }
 
         [StringLength(10)]
         public string GENDER { get; set; }

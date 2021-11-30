@@ -97,7 +97,7 @@ $.fn.GetFormdataValues = function () {
     DepartmentUsers.emailAddress = $('#emailAddress').val();
     DepartmentUsers.cellPhone = $('#cellPhone').val();
     DepartmentUsers.deptartmentname = $('#deptartmentname').val();
-    
+    DepartmentUsers.userid = 0;
     DepartmentUsers.userRole = $('#userRole').val();
 
     var isAD = document.getElementById("isActiveDirectory");
@@ -197,4 +197,80 @@ $.fn.UpdatePaymentPrice = function () {
             
     }
 
+}
+
+$.fn.EditUser = function (userId,username,deptName,roleName) {
+    console.log("========User Data=========");
+    console.log(username);
+    console.log(deptName);
+    console.log(roleName);
+    DepartmentUsers.userid = userId;
+    $("#SelectedUsername").text(username);
+    $("#EditDeptartmentName").val(deptName);
+    $("#userEditRole").val(roleName);
+    $("#EditUserModel").modal('show');
+}
+
+$.fn.AddNewUser = function () {
+    DepartmentUsers.userid = "";
+    $("#AddUser").show();
+    $("#UserList").hide();
+}
+
+$.fn.backToList = function () {
+    DepartmentUsers.userid = "";
+    $("#AddUser").hide();
+    $("#UserList").show();
+}
+
+$.fn.UpdateDepartmentUser = function () { 
+    DepartmentUsers.deptartmentname = $('#EditDeptartmentName').val();
+    DepartmentUsers.userRole = $('#userEditRole').val();
+    var formData = new FormData();
+    formData.append("UserData", JSON.stringify(DepartmentUsers));
+    if (DepartmentUsers.deptartmentname != null && DepartmentUsers.deptartmentname != undefined && DepartmentUsers.deptartmentname != "" && DepartmentUsers.userRole != null && DepartmentUsers.userRole != undefined && DepartmentUsers.userRole != "") {
+        $('#isAppLoadingUpdate').show();
+        $.ajax({
+            url: apiBaseUrl + 'update-department-user',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            cache: false,
+            enctype: 'multipart/form-data',
+            dataType: 'json',
+            data: formData,
+            success: function (data, textStatus, xhr) {
+                console.log("======Result=========");
+                console.log(data);
+                //console.log(data.accountUserName);
+                $('#isAppLoadingUpdate').hide();                
+                if (data.success) {
+                    toastr.success(`User updated successfully!`, "Success", {
+                        "timeOut": "10000",
+                        "extendedTImeout": "15000",
+                        "closeButton": true,
+                    });
+                    setTimeout(function () {
+                        window.location.href = "../WL/AddDepartmentUsers";
+                    }, 5000);
+                }
+                else if (data.exception) {
+                    //console.log(textStatus);
+                    //console.log(errorThrown);
+                    toastr.error(data.exception);
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log(xhr);
+                //alert(xhr);
+                //console.log(textStatus);
+                //console.log(errorThrown);
+                toastr.error(errorThrown);
+            }
+        });
+    }
+    else {
+        toastr.warning('* Fields are required!');
+    }
+    
 }

@@ -13,4 +13,10 @@ namespace C8.eServices.Mvc.Models.Mapings
         public int count { get; set; }
         public IEnumerable<ApplicationFormDashboardView> applicationList { get; set; }
     }
+    public class EkhruleniUserModel
+    {
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
+        public User userInfo { get; set; }
+    }
 }

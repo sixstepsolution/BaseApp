@@ -96,9 +96,10 @@
         z-index: 10000 !important;
         /*width:70% !important;*/
     }
+
     .checkbox-custom {
-         opacity: 1!important; 
-        position: absolute!important;
+        opacity: 1 !important;
+        position: absolute !important;
     }
 </style>
 <style type="text/css">
@@ -181,10 +182,10 @@
     <form name="DepartmentUserForm">
         <div class="panel-group" style="margin-left: -25px;
         margin-bottom: 3px !important;">
-            <div class="panel panel-default" style="border:none!important">
+            <div class="panel panel-default" style="border:none!important;display:none" id="AddUser">
                 <div class="panel-heading" style="background:#00A65A;padding-top:5px!important">
-                    <h4 class="panel-title text-center" style="font-size:16pt!important">
-                        Add User <b class="pull-right" style="font-size:10pt!important;background-color:#fff!important;padding:5px!important;margin-top:-2px!important;border-radius:3px!important;display:none" id="APPLICATION_STEP_DESCRIPTION_STATUS"></b>
+                    <h4 class="panel-title text-center" style="font-size:14pt!important">
+                        <button type="button" class="btn btn-green-custom pull-left" style="height:24px; width:75px; padding: 0; font-size:11px; margin-top:-2px;" onclick="$.fn.backToList()"><i class="fa fa-chevron-left text-white"> Back to List</i></button> Add User
                     </h4>
                 </div>
                 <div style="border:1px solid #00A65A;">
@@ -275,11 +276,12 @@
                                             <option value="" selected>Make a selection</option>
                                             <option value="Admin">Admin</option>
                                             <option value="application" selected>Department User</option>
+                                            <option value="System Admin">System Admin</option>
                                         </select>
                                     </div>
                                 </td>
                             </tr>
-                        </table>                     
+                        </table>
                         <table width="100%" style="margin-top:10px!important">
                             <tr>
                                 <td colspan="4" class="text-center" id="isNewApplication">
@@ -294,25 +296,134 @@
                     </div>
                 </div>
             </div>
+            <div class="panel panel-default" style="border:none!important" id="UserList">
+                <div class="panel-heading" style="background:#00A65A;padding-top:5px!important">
+                    <h4 class="panel-title text-center" style="font-size:14pt!important">
+                        User List
+                        <button type="button" class="btn btn-green-custom pull-right" style="height:24px; width:75px; padding: 0; font-size:11px; margin-top:-2px;" onclick="$.fn.AddNewUser()"><i class="fa fa-plus text-white"> New User</i></button>
+                    </h4>
+                </div>
+                <div style="border:1px solid #00A65A;">
+                    <div class="panel-body" style="padding: 5px!important;">
+                        @using (Html.BeginForm("AddDepartmentUsers", "WL", FormMethod.Post, new { @class = "form-horizontal", role = "form", name = "FilterForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="row">
+                                <div class="col-md-3" style="margin-top:13px">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Username</label>
+                                        <input type="text" style="border-radius: 4px" class="form-control" name="searchKeyword" id="searchKeyword" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3" style="margin-top:13px;padding-top:10px!important">
+                                    <button type="submit" class="btn btn-green-custom" style="height: 24px; padding: 2px; font-size: 12px; width: 100px;color:#fff!important;">
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        <table class="table table-striped table-bordered table-hover tabel-condensed"
+                               style="font-size: 11px;" id="mytable">
+                            <thead style="background-color:#00A65A !important; font-size:11px !important;color:#fff !important;margin-bottom: 0;">
+                                <tr>
+                                    <td>S.No</td>
+                                    <td>Username</td>
+                                    <td>Name</td>
+                                    <td>Department</td>
+                                    <td>Role</td>
+                                    <td>Email</td>
+                                    <td>Mobile</td>
+                                    <td>Is Active Directory</td>
+                                    <td class="text-center">Action</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ var dee = 0;}
+                                @foreach (var u in (List<C8.eServices.Mvc.Models.Mapings.EkhruleniUserModel>)ViewBag.UsersList)
+                                {
+                                    dee++;
+                                    <tr>
+                                        <td>@dee</td>
+                                        <td>@u.userInfo.username</td>
+                                        <td>@u.userInfo.firstName @u.userInfo.lastName</td>
+                                        <td>@u.userInfo.deptartmentname</td>
+                                        <td>@u.RoleName</td>
+                                        <td>@u.userInfo.emailAddress</td>
+                                        <td>@u.userInfo.cellPhone</td>
+                                        <td>@u.userInfo.isActiveDirectory</td>
+                                        <td class="text-center"><a style="cursor:pointer" onclick="$.fn.EditUser('@u.userInfo.userid', '@u.userInfo.username', '@u.userInfo.deptartmentname', '@u.RoleName')"><i class="fa fa-pencil text-primary"></i></a></td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="modal fade" id="locationPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog" style="border-radius:5px!important;width:80% !important;">
+        <div class="modal fade" id="EditUserModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="border-radius:5px!important;">
                 <div class="modal-content">
                     <div class="modal-header modal-danger">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             x
                         </button>
-                        <h1 class="modal-title text-center" style="color:green;font-size:20px !important">Address Location</h1>
+                        <h1 class="modal-title text-center" style="color:green;font-size:16px !important">Edit User Details</h1>
                     </div>
                     <div class="modal-body">
-                        @*<div id="map" style="display:none!important"></div>*@
-                        <div class="soria" id="ArcGisSearchMap">
-                            <div id="search"></div>
-                            <div id="map"></div>
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                Username : <b id="SelectedUsername"></b>
+                            </div>
+                            <div class="col-lg-3"></div>
+                        </div>
+                        <div class="row" style="margin-top:10px; margin-bottom:10px;">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                <div class="input-group input-label" style="width: 100%">
+                                    <label class="control-label">Department</label>
+                                    <select style="border-radius: 4px"
+                                            class="form-control" name="EditDeptartmentName" id="EditDeptartmentName" required>
+                                        <option value="" selected>Make a selection</option>
+                                        <option value="City Planning">City Planning</option>
+                                        <option value="Energy">Energy</option>
+                                        <option value="Roads & Storm Water">Roads & Storm Water</option>
+                                        <option value="Water">Water</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                <div class="input-group input-label" style="width: 100%">
+                                    <label class="control-label">Role</label>
+                                    <select style="border-radius: 4px"
+                                            class="form-control" name="userEditRole" id="userEditRole">
+                                        <option value="" selected>Make a selection</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="application" selected>Department User</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-3"></div>
+                        </div>
+                        <div class="row" style="margin-top:10px; margin-bottom:10px;">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6 text-center">
+                                <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.UpdateDepartmentUser()">
+                                    <i id="isAppLoadingUpdate" class="fa fa-spinner fa-spin" style="display:none!important"></i>
+                                    Update
+                                </button>
+                                <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px" data-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="col-lg-3"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
+                        @*<input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />*@
                     </div>
                 </div>
                 <!-- /.modal-content -->

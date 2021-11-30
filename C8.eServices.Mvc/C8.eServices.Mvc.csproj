@@ -4016,6 +4016,22 @@
     <Compile Include="Migrations\202110121635188_changedatalengthinApplicationformaudit.Designer.cs">
       <DependentUpon>202110121635188_changedatalengthinApplicationformaudit.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202110291405580_addingPropertyApplicationformmm.cs" />
+    <Compile Include="Migrations\202110291405580_addingPropertyApplicationformmm.Designer.cs">
+      <DependentUpon>202110291405580_addingPropertyApplicationformmm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202111130336570_addinginspectioninApplicationform.cs" />
+    <Compile Include="Migrations\202111130336570_addinginspectioninApplicationform.Designer.cs">
+      <DependentUpon>202111130336570_addinginspectioninApplicationform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202111171555094_addPropertiesinApplicationformAuditt.cs" />
+    <Compile Include="Migrations\202111171555094_addPropertiesinApplicationformAuditt.Designer.cs">
+      <DependentUpon>202111171555094_addPropertiesinApplicationformAuditt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202111240247471_addingLoginHistory.cs" />
+    <Compile Include="Migrations\202111240247471_addingLoginHistory.Designer.cs">
+      <DependentUpon>202111240247471_addingLoginHistory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountInformation.cs" />
@@ -4141,6 +4157,7 @@
     <Compile Include="Models\InstantEFT.cs" />
     <Compile Include="Models\InstantEFTTransaction.cs" />
     <Compile Include="Models\LinkedMobile.cs" />
+    <Compile Include="Models\LOGIN_HISTORY.cs" />
     <Compile Include="Models\Mapings\AccountContactModel.cs" />
     <Compile Include="Models\Mapings\AccountsView.cs" />
     <Compile Include="Models\Mapings\AddUserModal.cs" />
@@ -4729,6 +4746,10 @@
     <Content Include="TrainingManuals\WayleaveTrainingManual-Applicant01102021.pdf" />
     <Content Include="TrainingManuals\WayleaveTrainingManual-DepartmentUsers01102021.pdf" />
     <Content Include="TrainingManuals\RoadsStormwaterDepartment01102021.pdf" />
+    <Content Include="Views\Shared\_ArcMap.cshtml" />
+    <Content Include="Views\WL\LoginHistory.cshtml" />
+    <Content Include="Views\WL\ReInstatementCertificate.cshtml" />
+    <Content Include="Views\WL\ReInstatementCertificatePdf.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4838,6 +4859,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202110121635188_changedatalengthinApplicationformaudit.resx">
       <DependentUpon>202110121635188_changedatalengthinApplicationformaudit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202110291405580_addingPropertyApplicationformmm.resx">
+      <DependentUpon>202110291405580_addingPropertyApplicationformmm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202111130336570_addinginspectioninApplicationform.resx">
+      <DependentUpon>202111130336570_addinginspectioninApplicationform.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202111171555094_addPropertiesinApplicationformAuditt.resx">
+      <DependentUpon>202111171555094_addPropertiesinApplicationformAuditt.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202111240247471_addingLoginHistory.resx">
+      <DependentUpon>202111240247471_addingLoginHistory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

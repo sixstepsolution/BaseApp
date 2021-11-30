@@ -32,8 +32,15 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string deptName { get; set; }
         public string deptStatus { get; set; }
         public string isAdmin { get; set; }
+        public string inspectionStatus { get; set; }
+        public string inspectionBy { get; set; }
+        public string inspectionComments { get; set; }
+        public string ipAddress { get; set; }
+        public string overdueStatus { get; set; }
         public DateTime? date_requested_from { get; set; }
         public DateTime? date_requested_to { get; set; }
         public DateTime? created_date { get; set; }
+        public DateTime? inspectionDate { get; set; }
+        public string inspectionReferenceNo { get; set; }
     }
 }

@@ -22,13 +22,13 @@ $.fn.showcollapse = function () {
     });
 };
 
-function ValidateEmail(mail) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value)) {
-        return (true)
-    }
-    alert("You have entered an invalid email address!")
-    return (false)
-}
+//function ValidateEmail(mail) {
+//    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(myForm.emailAddr.value)) {
+//        return (true)
+//    }
+//    alert("You have entered an invalid email address!")
+//    return (false)
+//}
 //Email validation
 $.fn.validateEmail = function (id) {
 
@@ -274,6 +274,7 @@ $.fn.SaveWlAccountForm = function () {
     var validIdNumber = $.fn.ValidateRSAIDNo(document.getElementById('identificationNumber').value);
     //alert(validIdNumber);
     var formValid = $.fn.CheckFormValidations();
+    //$.fn.validateEmail('email');
     if (formValid && validIdNumber) {
         $('#isAppLoading').show();
         var emailFormat = $.fn.validateEmail('email'); // This return result in Boolean type

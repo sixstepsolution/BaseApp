@@ -37,3 +37,36 @@ $.fn.downloadCertificate = function (loadId, cloudId, appId) {
         }
     });     
 }
+
+$.fn.downloadReinstaementCertificate = function (loadId, cloudId, appId) {
+    $("#" + loadId).show();
+    $("#" + cloudId).hide();
+
+    $.ajax({
+        url: "../WL/GetReinstatementCerificate?appId=" + Number(appId),
+        type: 'GET',
+        processData: false,
+        contentType: false,
+        cache: false,
+        enctype: 'multipart/form-data',
+        dataType: 'json',
+        //data: formData,
+        success: function (data, textStatus, xhr) {
+            console.log("======Download Certificate Result=========");
+            console.log(data);
+            if (data) {
+                $("#" + loadId).hide();
+                $("#" + cloudId).show();
+                var anchor = document.createElement('a');
+                anchor.setAttribute('href', '../uploads/' + data);
+                anchor.setAttribute('download', '');
+                document.body.appendChild(anchor);
+                anchor.click();
+                anchor.parentNode.removeChild(anchor);
+            }
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            toastr.error('Error in Operation');
+        }
+    });
+}

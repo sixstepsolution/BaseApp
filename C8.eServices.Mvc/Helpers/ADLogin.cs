@@ -71,6 +71,7 @@ namespace C8.eServices.Mvc.Helpers
                 using (var context = new PrincipalContext(ContextType.Domain, activeDirectoryDomain))
                 {
                     return context.ValidateCredentials(UserName, Password);
+                    //return context.v
                 }
             }
             catch

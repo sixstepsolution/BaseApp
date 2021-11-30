@@ -177,6 +177,39 @@ namespace C8.eServices.Mvc.Controllers
 
             }
 
+            var result = (from u in db.Users
+                          join r in db.Roles on u.userid equals r.userid
+                          orderby u.userid
+                          select new EkhruleniUserModel
+                          {
+                              userInfo = u,
+                              RoleId = r.role_id,
+                              RoleName = r.role_name
+                          }).ToList();
+            ViewBag.UsersList = result;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddDepartmentUsers(string searchKeyword)
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+
+            var result = (from u in db.Users where u.username.Contains(searchKeyword)
+                          join r in db.Roles on u.userid equals r.userid
+                          orderby u.userid
+                          select new EkhruleniUserModel
+                          {
+                              userInfo = u,
+                              RoleId = r.role_id,
+                              RoleName = r.role_name
+                          }).ToList();
+            ViewBag.UsersList = result;
             return View();
         }
 
@@ -630,22 +663,32 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.signature = "";
             ViewBag.suburb = "";
             ViewBag.UserType = "";
+            ViewBag.ApplicationAmount = 0;
             var res = db.WL_APPLICATIONFORM.Find(pdf.AppId);
             if (res != null)
             {
+                var feeDetails = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
                 var signatureDetails = db.WL_UPLOAD_SIGNATURE.Where(s=>s.IS_ACTIVE=="Y").FirstOrDefault();
                 ViewBag.signature = signatureDetails!=null? signatureDetails.DOCUMENT_NAME:"";
                 //int acNo = Convert.ToInt32(res.PROPERTYOWNER_ACCOUNT_NO??"0");
                 var address = db.WL_ACCOUNTS.Where(s => s.ACCOUNT_NUMBER == res.PROPERTYOWNER_ACCOUNT_NO).FirstOrDefault();//!=null? db.WL_ACCOUNTS.Where(s => s.ACCOUNT_ID == acNo).FirstOrDefault().
                 //ViewBag.inspectionDate =res.INSPECTION_DATE != null ? Convert.ToDateTime(res.INSPECTION_DATE).ToString("yyyy-MM-dd") : "";
                 ViewBag.inspectionDate =DateTime.Now.ToString("yyyy-MM-dd");
-                ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
+                if (address != null)
+                {
+                    ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
+                }
+                else
+                {
+                    ViewBag.streetAddress = "";
+                }
+                
                 ViewBag.UserType = address.TYPE_USER;
                 ViewBag.suburb = address.CITY;
                 ViewBag.company = address.COMPANY_NAME;
                 ViewBag.telephone = address.TELEPHONE_NUMBER;
                 ViewBag.streetName = address.STREET_NAME;
-                ViewBag.ApplicationAmount = "500";
+                ViewBag.ApplicationAmount = feeDetails != null ? feeDetails.APPLICATION_PRICE : 0;
                 ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("yyyy-MM-dd") : "";
                 ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("yyyy-MM-dd") : "";
             }
@@ -693,6 +736,130 @@ namespace C8.eServices.Mvc.Controllers
                 ViewBag.inspectionDate = res.INSPECTION_DATE != null ? Convert.ToDateTime(res.INSPECTION_DATE).ToString("yyyy-MM-dd") : "";
                 ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
                 ViewBag.UserType = address.TYPE_USER;
+                ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("yyyy-MM-dd") : "";
+                ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("yyyy-MM-dd") : "";
+            }
+            return View(res);
+        }
+        public ActionResult ReInstatementCertificate()
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            IEnumerable<ApplicationInputModel> members = null;
+            ViewBag.ApplicationStatusList = null;
+            ViewBag.ApplicationStatusListCount = 0;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
+                ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
+                inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                var myContent = JsonConvert.SerializeObject(inpuclaims);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                //Called Member default GET All records  
+                //GetAsync to send a GET request   
+                // PutAsync to send a PUT request  
+                ///var result = client.PostAsync("", byteContent).Result
+                var responseTask = client.PostAsync("get-applications-status-list", byteContent);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ApplicationInputModel>>();
+                    readTask.Wait();
+
+                    members = readTask.Result;
+                    var tt = (List<ApplicationInputModel>)members;
+                    //var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.CloseWayleaveApplication);
+                    tt = tt.Where(s => s.name == StatusKeys.CloseWayleaveApplication).ToList();
+                    var statusResult = tt.FirstOrDefault().applicationList;
+                    ViewBag.ApplicationStatusList = statusResult;
+                    ViewBag.ApplicationStatusListCount = statusResult.Count();
+                }
+                else
+                {
+                    //Error response received  
+                    ViewBag.ApplicationStatusList = null;
+                    ViewBag.ApplicationStatusListCount = 0;
+                    members = Enumerable.Empty<ApplicationInputModel>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
+            return View();
+        }
+
+
+        [HttpGet]
+        public ActionResult GetReinstatementCerificate(int appId)
+        {
+            var root = Server.MapPath("~/uploads/");
+            string pdfname = "ReinstatementCerificate.pdf";
+            var path = Path.Combine(root, pdfname);
+            path = Path.GetFullPath(path);
+            InspectionPdfData pdf = new InspectionPdfData();
+            pdf.AppId = appId;
+            //pdf1.PROJECT_ID = ProjectID;
+            //pdf1.COMPANY_ID = Convert.ToInt32(Session["CompanyRefId"].ToString());
+            var actionPDF = new Rotativa.ActionAsPdf("ReInstatementCertificatePdf", pdf) //some route values)
+            {
+                FileName = pdfname,
+                SaveOnServerPath = path,
+                PageSize = Size.A4,
+                //PageOrientation = Rotativa.Options.Orientation.Landscape,
+                PageOrientation = Rotativa.Options.Orientation.Portrait,
+                PageMargins = { Bottom = 10, Left = 10, Top = 15, Right = 10 }
+            };
+            byte[] applicationPDFData = actionPDF.BuildPdf(ControllerContext);
+            //return new Rotativa.ActionAsPdf("testRotativa1", pdf);
+            //return new Rotativa.ActionAsPdf("testRotativa1", pdf) { FileName = pdf.RefNumber+"PrintReceipt.pdf" };
+            return Json(pdfname, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public ActionResult ReInstatementCertificatePdf(InspectionPdfData pdf = null)
+        {
+            ViewBag.streetAddress = "";
+            ViewBag.paymentdate = "";
+            ViewBag.inspectionDate = "";
+            ViewBag.applicationDate = "";
+            ViewBag.applicationEndDate = "";
+            ViewBag.signature = "";
+            ViewBag.suburb = "";
+            ViewBag.UserType = "";
+            ViewBag.ApplicationAmount = 0;
+            var res = db.WL_APPLICATIONFORM.Find(pdf.AppId);
+            if (res != null)
+            {
+                var feeDetails = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
+                var signatureDetails = db.WL_UPLOAD_SIGNATURE.Where(s => s.IS_ACTIVE == "Y").FirstOrDefault();
+                ViewBag.signature = signatureDetails != null ? signatureDetails.DOCUMENT_NAME : "";
+                //int acNo = Convert.ToInt32(res.PROPERTYOWNER_ACCOUNT_NO??"0");
+                var address = db.WL_ACCOUNTS.Where(s => s.ACCOUNT_NUMBER == res.PROPERTYOWNER_ACCOUNT_NO).FirstOrDefault();//!=null? db.WL_ACCOUNTS.Where(s => s.ACCOUNT_ID == acNo).FirstOrDefault().
+                //ViewBag.inspectionDate =res.INSPECTION_DATE != null ? Convert.ToDateTime(res.INSPECTION_DATE).ToString("yyyy-MM-dd") : "";
+                ViewBag.inspectionDate = DateTime.Now.ToString("yyyy-MM-dd");
+                if (address != null)
+                {
+                    ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
+                }
+                else
+                {
+                    ViewBag.streetAddress = "";
+                }
+                ViewBag.paymentdate=res.PAYMENT_DATE != null ? Convert.ToDateTime(res.PAYMENT_DATE).ToString("yyyy-MM-dd") : "";
+                ViewBag.UserType = address.TYPE_USER;
+                ViewBag.suburb = address.CITY;
+                ViewBag.company = address.COMPANY_NAME;
+                ViewBag.telephone = address.TELEPHONE_NUMBER;
+                ViewBag.streetName = address.STREET_NAME;
+                ViewBag.ApplicationAmount = feeDetails != null ? feeDetails.APPLICATION_PRICE : 0;
                 ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("yyyy-MM-dd") : "";
                 ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("yyyy-MM-dd") : "";
             }
@@ -1049,11 +1216,15 @@ namespace C8.eServices.Mvc.Controllers
                                     reportURL = reportURL + "&Status=" + applicationFormResponse.status[i];
                                 }
                                 //reportURL = reportURL + "&Status="+ applicationFormResponse.status[0]+ "&Status=" + applicationFormResponse.status[1] + "&Status=" + applicationFormResponse.status[2] + ";
-                            }
-
-                            
-
-
+                            } 
+                            break;
+                        case "ApplicationsOverdueForEvaluation":
+                            f3 = "Application+Overdue+for+Evaluations";
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate;
+                            break;
+                        case "CompletedApplication":
+                            f3 = "Completed+Application";
+                            reportURL = "http://10.1.2.230:85/ProBudget_ReportServer?%2fWayleave%2f" + f3 + "&rs:Command=Render&rs:Format=" + f2 + "&SD=" + stdate + "&ED=" + endate;
                             break;
                         default:
                             break;
@@ -1088,6 +1259,107 @@ namespace C8.eServices.Mvc.Controllers
 
             return View();
         }
+
+        
+        public ActionResult LoginHistory()
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }
+            string username= Session["ekurhuleniUserName"]!=null? Session["ekurhuleniUserName"].ToString():"";
+            string userRole = Session["ekurhuleniUserRole"] != null ? Session["ekurhuleniUserRole"].ToString() : "";
+            if(userRole== ApplicationKeys.SystemAdminRole)
+            {
+                ViewBag.loginHistoryList = db.LOGIN_HISTORY.ToList();
+            }
+            else
+            {
+                ViewBag.loginHistoryList = db.LOGIN_HISTORY.Where(s=>s.USER_NAME== username).ToList();
+            }
+            
+            ViewBag.appStartDate = "";
+            ViewBag.appEndDate = "";
+            ViewBag.errorStatus = null;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult LoginHistory(DateTime? startDate, DateTime? endDate)
+        {
+            if (Session["ekurhuleniData"] == null)
+            {
+                // if IsAuthenticated is false return to login code here....
+                return Redirect("../home/index");
+            }            
+            ViewBag.appStartDate = "";
+            ViewBag.appEndDate = "";
+            ViewBag.errorStatus = null;
+            string username = Session["ekurhuleniUserName"] != null ? Session["ekurhuleniUserName"].ToString() : "";
+            string userRole = Session["ekurhuleniUserRole"] != null ? Session["ekurhuleniUserRole"].ToString() : "";
+            var appDetails = new List<LOGIN_HISTORY>();
+            if (userRole == ApplicationKeys.SystemAdminRole)
+            {
+                appDetails = db.LOGIN_HISTORY.OrderBy(d => d.LHID).ToList();
+            }
+            else
+            {
+                appDetails = db.LOGIN_HISTORY.Where(s => s.USER_NAME == username).ToList();
+            }
+            
+            //if (!String.IsNullOrEmpty(searchKeyword))
+            //{
+            //    appDetails = appDetails.Where(s => s.APPLICATION_NUMBER == searchKeyword).ToList();
+            //}
+            //if (!String.IsNullOrEmpty(status))
+            //{
+            //    if (status == "All")
+            //    {
+            //        appDetails = appDetails.ToList();
+            //    }
+            //    else
+            //    {
+            //        appDetails = appDetails.Where(s => s.ACTION.Contains(status)).ToList();
+            //    }
+            //}
+            //if (!String.IsNullOrEmpty(username))
+            //{
+            //    if (username == "All")
+            //    {
+            //        appDetails = appDetails.ToList();
+            //    }
+            //    else
+            //    {
+            //        appDetails = appDetails.Where(s => s.CREATED_USER.Contains(username)).ToList();
+            //    }
+            //}
+
+            if (startDate != null)
+            {
+                ViewBag.appStartDate = startDate.Value.Year + "-" + startDate.Value.Month + "-" + startDate.Value.Day;
+
+                //appDetails = appDetails.Where(s => s.CREATED_DATE>=startDate).ToList();
+                appDetails = appDetails.Where(s => s.LOGIN_DATE.Value.Date >= startDate.Value.Date).ToList();
+            }
+            if (endDate != null)
+            {
+                ViewBag.appEndDate = endDate.Value.Year + "-" + endDate.Value.Month + "-" + endDate.Value.Day; ;
+                //appDetails = appDetails.Where(s =>s.CREATED_DATE<= endDate).ToList();
+                appDetails = appDetails.Where(s => s.LOGIN_DATE.Value.Date <= endDate.Value.Date).ToList();
+            }
+
+            if (appDetails.Count > 0)
+            {
+                ViewBag.loginHistoryList = appDetails;
+            }
+            else
+            {
+                ViewBag.errorStatus = "No result found!";
+                ViewBag.loginHistoryList = null;
+            }
+            return View();
+        }
+
 
         public string downloadReport(string fileName)
         {

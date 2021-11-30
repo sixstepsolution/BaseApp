@@ -1347,30 +1347,198 @@ $.fn.showGPS = function () {
     Startinitialize("");
     Endinitialize("");
 }
+$.fn.ShowSearchMap = function (id) {
+    //ajaxOnComplete();
+    GlobalSearchResult = "";
+    GlobalSearchResult = id;
+    //$("#search").html('');
+    //$("#map").html('');
+    //ajaxOnComplete();
+    //("#ArcGisSearchMap").load(window.location.href + " #ArcGisSearchMap");
+    //var url = "../Home/testMap?id="+id;
+    
 
-//$.fn.showGPS();
+    $("#search_input").val("225 Commissioner St, Boksburg, Ekurhuleni, Gauteng, 1459");
+    
+    //var e = jQuery.Event("keypress");
+    //e.which = 13; //enter keycode
+    //e.keyCode = 13;
+    //$("#search_input").trigger(e); search_menu_button
+    //document.getElementById('search_input').click();
+    //document.getElementById("Arciframe").setAttribute("src", url);
+    $("#locationPopup").modal('show');
+    setTimeout(function () {
+        if (id = "GPS_START_ADDRESS") {
+            var latt = $('#GPS_START_LATITUDE').val();
+            var longg = $('#GPS_START_LONGITUDE').val();
+            LoadMapPointer(latt, longg);
+        }
+        if (id = "GPS_END_ADDRESS") {
+            var latt = $('#GPS_END_LATITUDE').val();
+            var longg = $('#GPS_END_LONGITUDE').val();
+            LoadMapPointer(latt, longg);
+        }
+        //$('#search select').on('change', function () {
+        //    alert(this.value);
+        //});
+        //var input = document.getElementById("search_input");
+        //input.addEventListener("keyup", function (event) {
+        //    if (event.keyCode === 13) {
+        //        event.preventDefault();
+        //        document.getElementById("myBtn").click();
+        //    }
+        //});
+        //document.getElementById("search_input").focus();
+        //$(".esriGeocoderSearch").submit();
+        //document.getElementById("search_input").click();
+        //var elem = document.getElementById("search_input");
+        //elem.setAttribute("onclick", "javascript:this.form.submit();");
+        //$(document).on('keydown', function (e) {
+        //    if (e.which == 13) {
+        //        alert('User pressed Enter!');
+        //    }
+        //});
+        //document.getElementById("search_input").addEventListener("keydown", function (event) {
+        //        if (event.ctrlKey && event.key === "z") {
+        //            // Do Something, may be an 'Undo' operation
+        //        }
+        //    });
+        //clickevent();
+        //document.getElementById("search_menu_button").click();
+        
+        //document.getElementById("search_input")
+        //    .addEventListener("keyup", function (event) {
+        //        event.preventDefault();
+        //        if (event.keyCode === 13) {
+        //            document.getElementById("search_menu_button").click();
+        //        }
+        //    });
+    }, 5000);
+   
+    
+};
 
-//Get map routes
-$.fn.getMapRoute = function () {
-    initMap(37.7780509, -122.4478889, "37.7791968", "-122.4476479");
-    initMap("14.4426", "79.9865", "13.0827", "80.2707");
-}
+function LoadMapPointer(lattitude, longgitude) {
+    //alert(lattitude);
+    //alert(longgitude);
 
-// loading account numbers by change account number
-$.fn.inputChanged = function (val) {
-    //alert(val)
-    //if (val) {
-    //    mainService.getAccountsByKeyword(val).then(function (result) {
-    //        console.log(result.data);
-    //        AccountNumberList = result.data;
-
-    //    }, function (error) {
-    //        console.log(error.status)
-    //        console.log("Bad Request Process");
+    //require([
+    //    "esri/config",
+    //    "esri/map",
+    //    "esri/dijit/Geocoder",
+    //    //"esri/graphic",
+    //    "esri/Graphic",
+    //    "esri/symbols/SimpleMarkerSymbol",
+    //    "esri/geometry/screenUtils",
+    //    "dojo/dom",
+    //    "dojo/dom-construct",
+    //    "dojo/query",
+    //    "dojo/_base/Color",
+        
+    //    //"esri/layers/GraphicsLayer"
+    //], function (esriConfig, Map, Geocoder, Graphic, SimpleMarkerSymbol, screenUtils, dom, domConstruct, query, Color) {
+    //    // create a map and instance of the geocoder widget here
+    //    esriConfig.apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
+    //    var map = new Map("map", {
+    //        basemap: "topo",
+    //        center: [-38.8587, 31.0218],
+    //        zoom: 3,
+    //        scale: 500000
     //    });
-    //}
-}
+    //    var geocoder = new Geocoder({
+    //        arcgisGeocoder: {
+    //            placeholder: "Choose Address"
+    //        },
+    //        autoComplete: true,
+    //        map: map
+    //    }, dom.byId("search"));
 
+    //    //const graphicsLayer = new GraphicsLayer();
+
+    //    //const point = { //Create a point
+    //    //    type: "point",
+    //    //    longitude: 29.8587,
+    //    //    latitude: 31.0218
+    //    //};
+    //    //const simpleMarkerSymbol = {
+    //    //    type: "simple-marker",
+    //    //    color: [226, 119, 40],  // Orange
+    //    //    outline: {
+    //    //        color: [255, 255, 255], // White
+    //    //        width: 1
+    //    //    }
+    //    //};
+    //    //const pointGraphic = new Graphic({
+    //    //    geometry: point,
+    //    //    symbol: simpleMarkerSymbol
+    //    //});
+    //    //graphicsLayer.add(pointGraphic);
+    //    //map.add(graphicsLayer);
+    //    map.on("load", enableSpotlight);
+
+    //    geocoder.on("select", showLocation);
+    //    geocoder.on("clear", removeSpotlight);
+
+
+    //    function showLocation(evt) {
+    //        //alert(evt.result.name);
+    //        //alert(GlobalSearchResult);
+    //        var selectedAddress = evt.result.name;
+    //        $("#" + GlobalSearchResult).val(evt.result.name);
+    //        console.log(evt.result);
+    //        map.graphics.clear();
+    //        var point = evt.result.feature.geometry;
+    //        var symbol = new SimpleMarkerSymbol().setStyle(
+    //            SimpleMarkerSymbol.STYLE_SQUARE).setColor(
+    //                new Color([255, 0, 0, 0.5])
+    //            );
+    //        var graphic = new Graphic(point, symbol);
+    //        map.graphics.add(graphic);
+
+
+    //        map.infoWindow.setTitle("Search Result");
+    //        map.infoWindow.setContent(evt.result.name);
+    //        map.infoWindow.show(evt.result.feature.geometry);
+
+    //        var spotlight = map.on("extent-change", function (extentChange) {
+    //            var geom = screenUtils.toScreenGeometry(map.extent, map.width, map.height, extentChange.extent);
+    //            var width = geom.xmax - geom.xmin;
+    //            var height = geom.ymin - geom.ymax;
+
+    //            var max = height;
+    //            if (width > height) {
+    //                max = width;
+    //            }
+
+    //            var margin = '-' + Math.floor(max / 2) + 'px 0 0 -' + Math.floor(max / 2) + 'px';
+
+    //            query(".spotlight").addClass("spotlight-active").style({
+    //                width: max + "px",
+    //                height: max + "px",
+    //                margin: margin
+    //            });
+    //            spotlight.remove();
+
+    //        });
+    //        //geocoder.on("clear", removeSpotlight);
+    //        //removeSpotlight();
+    //        //map.graphics.clear();
+    //    }
+
+    //    function enableSpotlight() {
+    //        var html = "<div id='spotlight' class='spotlight'></div>"
+    //        domConstruct.place(html, dom.byId("map_container"), "first");
+    //    }
+
+    //    function removeSpotlight() {
+    //        //alert('remove');
+    //        //map.graphics.remove(graphic);
+    //        query(".spotlight").removeClass("spotlight-active");
+    //        map.infoWindow.hide();
+    //        map.graphics.clear();
+    //    }
+    //});
+}
 //Show and hide contractor/consultant details
 $.fn.showOwnerConsultantDetails = function (val) {
     $("#contractorInfo").hide();
@@ -1524,7 +1692,7 @@ function Init() {
     $("#isAppLoading").hide();
     $("#IsAppEdit").hide();
     //$.fn.GetServiceTypes();
-    $.fn.getMapRoute();
+    //$.fn.getMapRoute();
     //GetApplicationStausTypes();
     //$.fn.GetContractorOrConsultant();
     //$.fn.GetCustomercareCenters();
@@ -1532,10 +1700,11 @@ function Init() {
     //$.fn.LoadSupportingDocumentsOnPageLoad();
     //}
     //$.fn.LoadDeclarationsOnPageLoad();
-    Startinitialize('');
-    Endinitialize('');
+    //Startinitialize('');
+    //Endinitialize('');
 }
 
+//Load Application details by application id
 $.fn.LoadApplicationsDetailsByAppId = function (appId) {
     if (appId) {
         $("#PageLoaderModel").modal('show');
@@ -1580,6 +1749,11 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
 
                 $('#GPS_START_ADDRESS').val(data.gpS_START_ADDRESS);
                 $('#GPS_END_ADDRESS').val(data.gpS_END_ADDRESS);
+
+                $('#GPS_START_LATITUDE').val(data.gpS_START_LATITUDE);
+                $('#GPS_START_LONGITUDE').val(data.gpS_START_LONGITUDE);
+                $('#GPS_END_LATITUDE').val(data.gpS_END_LATITUDE);
+                $('#GPS_END_LONGITUDE').val(data.gpS_END_LONGITUDE);
                 //appFormData.TYPE_OF_ROADCROSSING = $('#ChkHD').val();//*
                 //appFormData.TYPE_OF_ROADCROSSING1 = $('#ChkOT').val();//*
                 //appFormData.TYPE_OF_ROADCROSSING2 = $('#ChkNone').val();//*
@@ -1609,10 +1783,10 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 $('#APPLICATION_STEP_DESCRIPTION_STATUS').text(data.applicatioN_STEP_DESCRIPTION);
                 $('#APPLICATION_STEP_DESCRIPTION1').text(data.applicatioN_STEP_DESCRIPTION);
 
-                if (data.applicatioN_STEP_DESCRIPTION == "Application Granted") {
-                    $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
-                    $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'green');
-                }
+                //if (data.applicatioN_STEP_DESCRIPTION == "Application Granted") {
+                //    $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
+                //    $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'green');
+                //}
                 if (data.applicatioN_STEP_DESCRIPTION == "Request for documents") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'red');
@@ -1633,6 +1807,13 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
 
                 if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Completed' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for documents') {
                     $('#ApplicationAdminSection').show();
+                }
+
+                if (data.applicatioN_STEP_DESCRIPTION == "Application Granted") {
+                    $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
+                    $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'green');
+                    $('#ApplicationAdminSection').hide();
+                    $('#ApplicationClosureStatus').show();
                 }
 
                 //alert($("#CurrentUserDepartmentName").val());
@@ -2183,6 +2364,75 @@ $.fn.UpdateApplicationFormStaus = function () {
     }
 }
 
+$.fn.CloseApplicationForm = function () {
+    //alert(appFormData.AppStatus);
+    var inspectionBy = $("#INSPECTION_BY").val();
+    if (appFormData.AppStatus != null && appFormData.AppStatus != undefined && appFormData.AppStatus != "") {
+        
+        if ($("#INSPECTION_STATUS").val() == "Application Closed") {
+            var insReference = $("#INSPECTION_REFERENCE_NO").val();
+            var insDate = $("#INSPECTION_DATE").val();
+            var insBy = $("#INSPECTION_BY").val();
+            var insComments = $("#INSPECTION_COMMENTS").val();
+            if (insReference != "" && insReference != undefined && insDate != "" && insDate != undefined && insBy != "" && insBy != undefined && insComments != "" && insComments != undefined) {
+
+            }
+            else {
+                toastr.warning('* Fields are required!');
+                return;
+            }
+        }
+
+        $('#isAppLoadingNew').show();
+        var departmentName = $("#CurrentUserDepartmentName").val();
+        if (departmentName == "Energy") {
+            departmentName = "Electricity";
+        }
+
+        var inpuclaims = {
+            appId: appFormData.APP_ID,
+            appStatus: appFormData.AppStatus,
+            
+            deptName: departmentName,
+            deptStatus: $("#DEPARTMENT_STATUS").val(),
+            first_name: $("#CurrentUserName").val(),
+            inspectionStatus: $("#INSPECTION_STATUS").val(),
+            inspectionComments: $("#INSPECTION_COMMENTS").val(),
+            inspectionBy: $("#INSPECTION_BY").val(),
+            inspectionReferenceNo :$("#INSPECTION_REFERENCE_NO").val(),
+            inspectionDate : $("#INSPECTION_DATE").val()
+        };
+        $.ajax({
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            'type': 'POST',
+            'url': apiBaseUrl + 'close-application-form',
+            'data': JSON.stringify(inpuclaims),
+            'dataType': 'json',
+            'success': function (data, textStatus, xhr) {
+                console.log("======Application closed Result=========");
+                console.log(data);
+                if (data) {
+                    toastr.success('Application closed successfully!');
+                    setTimeout(function () {
+                        window.location.href = "../WL/index";
+                    }, 1000)
+                }
+                $('#isAppLoading').hide();
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                //console.log('Error in Operation');
+                toastr.error('Error in Operation');
+            }
+        });
+    }
+    else {
+        toastr.warning('* Fields are required!');
+    }
+}
+
 //// Update Departments status only
 $.fn.UpdateDepartmentStaus = function () {
     var ds = $("#DEPARTMENT_STATUS").val();
@@ -2251,12 +2501,15 @@ function ViewDocument(DOCUMENT_NAME) {
     window.open(filename);
 }
 
+$.fn.CloseApplicationFormModal = function () {
+    $('#CloseApplicationModel').modal('show');
+}
 //Change application status
 $.fn.ChangeAppSatus = function (flag) {
     var val = "";
     $('#IsStatusReject').hide();
     $('#IsRequestDocuments').hide();
-
+    $('#IsInspectionOutcomeComments').hide();
     if (flag =="ApproveStatus") {
         val = $('#AppStatus').val();
         appFormData.AppStatus = val;
@@ -2270,6 +2523,14 @@ $.fn.ChangeAppSatus = function (flag) {
         appFormData.AppStatus = val;
         if (val == "Request for documents") {
             $('#IsRequestDocuments').show();
+        }
+    }
+
+    if (flag == "INSPECTION_STATUS") {
+        val = $('#INSPECTION_STATUS').val();
+        appFormData.AppStatus = val;
+        if (val == "Application Closed") {
+            $('#IsInspectionOutcomeComments').show();
         }
     }
 

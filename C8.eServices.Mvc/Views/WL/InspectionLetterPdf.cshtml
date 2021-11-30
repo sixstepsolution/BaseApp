@@ -10,24 +10,154 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <div class="main-container">
-    <br /><br />
+        <br /><br />
+        <table width="100%" style="font-size:13pt!important">
+            <tr>
+                <td colspan="3">
+                    @*<div class="text-center" style="font-size:16pt!important;"><b>SCHEDULE 4</b></div><br />*@
+                    <div class="text-center" style="font-size:16pt!important;margin-top:5px!important"><b>Permission to Perform Work</b></div>
+                </td>
+                <td colspan="3" style="text-align:right!important">
+                    <img src="~/Content/wayleaveStyles/assets/Images/COE_LOGO.png" width="200" height="100" />
+                </td>
+            </tr>
+        </table>
+        <table width="100%" style="font-size:13pt!important">
+            @*<tr>
+                <td colspan="3">
+                    <div>CERTIFICATE OF INSPECTION AND / OR COMPLETION</div>
+                </td>
+            </tr>*@
+            <tr>
+                <td colspan="3">
+                    <div style="margin-top:20pt!important">Wayleave No:<input type="text" style="width:250px!important;border:none!important;border-bottom:1px solid #878787!important" value="@Model.APPLICATION_NUMBER" /></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div style="margin-top:10pt!important;text-align:left!important">
+                        The road Authority Inspection must sign this form. The signature is just for administrative control and by no mans implies
+                        thet the work has been done according to the specifications and conditions of the way leave. The onus and responsibility of
+                        ensuring that the Service has been correctly installed, is that of the applicant
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div style="margin-top:10pt!important;">Description of wayleave:<textarea style="width:50%!important;border:none!important;border-bottom:1px dashed #878787!important">@Model.PROJECT_NUMBER</textarea></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div style="margin-top:10pt!important">Date:<input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.inspectionDate" /></div>
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    <div style="margin-top:20pt!important">Street on</div>
+                </td>
+                <td>
+                    <div style="margin-top:20pt!important">Street from</div>
+                </td>
+                <td>
+                    <div style="margin-top:20pt!important">Street to</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.streetName" />
+                </td>
+                <td>
+                    <input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.GPS_START_ADDRESS" />
+                </td>
+                <td>
+                    <input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.GPS_END_ADDRESS" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="margin-top:20pt!important">Suburb:<input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.suburb" /></div>
+                </td>
+                <td>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div style="margin-top:20pt!important">Responsible person (for the erection/installation of the Service)</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <div style="margin-top:10pt!important">Name:<input type="text" style="width:90%!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_NAME" /></div>
+                </td>
+                <td>
+                    <div style="margin-top:10pt!important">Company:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.company" /></div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="margin-top:10pt!important">Telephone No:(<input type="text" style="width:150px!important;border:none!important;border-bottom:1px dashed #878787!important" value="+21" />)&nbsp;&nbsp;<input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_CONTACTNO" /></div>
+                </td>
+                <td></td>
+            </tr>
+            @*<tr>
+                <td colspan="3">
+                    <div style="margin-top:20pt!important">COMPLETION NOTICE</div>
+                </td>
+            </tr>*@
+            <tr>
+                <td colspan="3">
+                    <div style="margin-top:20pt!important;margin-bottom:20px!important">
+                        Application fee paid: R <input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.ApplicationAmount" />
+                    </div>
+                </td>
+            </tr>
+            <tr style="height:50px!important">
+                <td colspan="2">
+                    <div style="margin-top:10pt!important">Name:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_NAME" /></div>
+                </td>
+                <td>
+                    @if (!String.IsNullOrEmpty(ViewBag.signature))
+                    {
+                        var baseUrl = ConfigurationManager.AppSettings["Base_Url"].ToString();
+                        baseUrl = baseUrl + "uploads/" + ViewBag.signature;
+
+                                    <div style = "margin-top:10pt!important" > Signed:<img class="img img-thumbnail" src="@baseUrl" width="150" height="50" /></div>
+                        }
+                        else
+                        {
+        <div style="margin-top:10pt!important">Signed:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" /></div>
+                        }
+
+                </td>
+            </tr>
+            <tr style="height:50px!important">
+                <td colspan="2">
+                    <div style="margin-top:10pt!important">Wayleave Applicant:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_NAME" /></div>
+                </td>
+                <td>
+                    <div style="margin-top:10pt!important">Date:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.inspectionDate" /></div>
+                </td>
+            </tr>
+            <tr style="height:50px!important">
+                <td colspan="3"></td>
+            </tr>
+        </table>
+    </div>
+
+
+<!--<div class="main-container">
+    <div class="text-center" style="font-size:16pt!important;"><b>SCHEDULE 4</b></div>
+    <div class="text-center" style="font-size:16pt!important;margin-top:5px!important"><b>COMPLETION NOTICE</b></div><br /><br />
     <table width="100%" style="font-size:13pt!important">
         <tr>
-            <td colspan="3">
-                <div class="text-center" style="font-size:16pt!important;"><b>SCHEDULE 4</b></div><br />
-                <div class="text-center" style="font-size:16pt!important;margin-top:5px!important"><b>Permission to Perform Work</b></div>
-            </td>
-            <td colspan="3" style="text-align:right!important">
-                <img src="~/Content/wayleaveStyles/assets/Images/COE_LOGO.png" width="200" height="100" />
-            </td>
-        </tr>
-    </table>
-    <table width="100%" style="font-size:13pt!important">
-        <tr>
-            <td colspan="3">
-                <div>CERTIFICATE OF INSPECTION AND / OR COMPLETION</div>
-            </td>
-        </tr>
+                <td colspan="3">
+                    <div>CERTIFICATE OF INSPECTION AND / OR COMPLETION</div>
+                </td>
+            </tr>
         <tr>
             <td colspan="3">
                 <div style="margin-top:20pt!important">Wayleave No:<input type="text" style="width:250px!important;border:none!important;border-bottom:1px solid #878787!important" value="@Model.APPLICATION_NUMBER" /></div>
@@ -40,18 +170,18 @@
         </tr>
         <tr>
             <td colspan="3">
-                <div style="margin-top:10pt!important;">Description of wayleave:<textarea style="width:50%!important;border:none!important;border-bottom:1px dashed #878787!important">@Model.PROJECT_NUMBER</textarea></div>
+                <div style="margin-top:10pt!important;">Description of wayleave:<textarea style="width:50%!important;border:none!important;border-bottom:1px dashed #878787!important">@Model.PROJECT_DESCRIPTION</textarea></div>
             </td>
         </tr>
         <tr>
             <td colspan="3">
                 <div style="margin-top:10pt!important">Date:<input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.inspectionDate" /></div>
-            </td>
+            </td>-->
             @*<td>
                     <div style="width:100%!important;height:40px!important;border-bottom:2px dashed #989898!important;text-align:left!important"></div>
                 </td>
                 <td></td>*@
-        </tr>
+        <!--</tr>
         <tr>
             <td>
                 <div style="margin-top:20pt!important">Street on</div>
@@ -65,7 +195,7 @@
         </tr>
         <tr>
             <td>
-                <input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.streetName" />
+                <input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" />
             </td>
             <td>
                 <input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.GPS_START_ADDRESS" />
@@ -93,62 +223,56 @@
                 <div style="margin-top:10pt!important">Name:<input type="text" style="width:90%!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_NAME" /></div>
             </td>
             <td>
-                <div style="margin-top:10pt!important">Company:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.company" /></div>
+                <div style="margin-top:10pt!important">Company:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_COMPANYNAME" /></div>
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <div style="margin-top:10pt!important">Telephone No:(<input type="text" style="width:150px!important;border:none!important;border-bottom:1px dashed #878787!important" value="+21" />)&nbsp;&nbsp;<input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_CONTACTNO" /></div>
+                <div style="margin-top:10pt!important">Telephone No:(<input type="text" style="width:150px!important;border:none!important;border-bottom:1px dashed #878787!important" />)&nbsp;&nbsp;<input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_CONTACTNO" /></div>
+
             </td>
             <td></td>
-        </tr>
-        <tr>
+        </tr>-->
+        @*<tr>
+                <td colspan="3">
+                    <div style="margin-top:20pt!important">COMPLETION NOTICE</div>
+                </td>
+            </tr>*@
+        <!--<tr>
             <td colspan="3">
-                <div style="margin-top:20pt!important">COMPLETION NOTICE</div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <div style="margin-top:20pt!important;margin-bottom:20px!important">
-                    The Central wayleave office is hereby informed that:<br />
-                    The work done in terms of the above Wayleave has been completed according to the conditions as prescribed in the Wayleave;<br /><br />AND<br /><br />
-                    The permanent reinstatement has been done in accordance with the specifications in the code of Practice for work in the Road Reserve;<br /><br />OR<br /><br />
-                    A temporary reinstatement has been done and a Reinstatement Order to the amount of R <input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.ApplicationAmount" />
-                    is attached for the Road Authority to do the permanent reinstatement.
-                </div>
-            </td>
-        </tr>
-        <tr style="height:50px!important">
-            <td colspan="2">
-                <div style="margin-top:10pt!important">Name:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_NAME" /></div>
-            </td>
-            <td>
-                @if (ViewBag.signature != null)
-                {
-                    var baseUrl = ConfigurationManager.AppSettings["Base_Url"].ToString();
-                    baseUrl = baseUrl + "uploads/" + ViewBag.signature;
+                <div style="margin-top:20pt!important;margin-bottom:20px!important">-->
+                    @*The Central wayleave office is hereby informed that:<br />
+                        The work done in terms of the above Wayleave has been completed according to the conditions as prescribed in the Wayleave;<br /><br />AND<br /><br />
+                        The permanent reinstatement has been done in accordance with the specifications in the code of Practice for work in the Road Reserve;*@<!--<br /><br />-->@*OR<br /><br />*@
+                        @*A temporary reinstatement has been done and a Reinstatement Order to the amount of*@<!--Application fee paid: R <input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" />-->
+                        @*is attached for the Road Authority to do the permanent reinstatement.*@
+                        <!--<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                    </div>
+                </td>
+            </tr>
+            <tr style="height:50px!important">
+                <td colspan="2">
+                    <div style="margin-top:10pt!important">Name:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" /></div>
+                </td>
+                <td>
+                    <div style="margin-top:10pt!important">Signed:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" /></div>
+                </td>
+            </tr>
+            <tr style="height:50px!important">
+                <td colspan="2">
+                    <div style="margin-top:10pt!important">Wayleave--> @*Holder*@<!--Applicant:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" /></div>
+                </td>
+                <td>
+                    <div style="margin-top:10pt!important">Date:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" /></div>
+                </td>
+            </tr>
+            <tr style="height:50px!important">
+                <td colspan="3"></td>
+            </tr>
+        </table>
+    </div>-->
 
-                                <div style = "margin-top:10pt!important" > Signed:<img class="img img-thumbnail" src="@baseUrl" width="150" height="50" /></div>
-                    }
-                    else
-                    {
-    <div style="margin-top:10pt!important">Signed:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" /></div>
-                    }
 
-            </td>
-        </tr>
-        <tr style="height:50px!important">
-            <td colspan="2">
-                <div style="margin-top:10pt!important">Wayleave Holder:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_NAME" /></div>
-            </td>
-            <td>
-                <div style="margin-top:10pt!important">Date:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.inspectionDate" /></div>
-            </td>
-        </tr>
-        <tr style="height:50px!important">
-            <td colspan="3"></td>
-        </tr>
-    </table>
-</div>
+
 
 

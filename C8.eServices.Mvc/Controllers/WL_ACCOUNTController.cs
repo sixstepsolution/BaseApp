@@ -151,6 +151,54 @@ namespace C8.eServices.Mvc.Controllers
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
         }
 
+        [Route("api/update-department-user")]
+        //[Authorize]
+        public async Task<IHttpActionResult> UpdateDepartmentUser()
+        {
+            try
+            {
+                Dictionary<string, object> dct = new Dictionary<string, object>();
+                var AccountData = HttpContext.Current.Request.Form["UserData"];
+                var accountResponse = JsonConvert.DeserializeObject<AddUserModal>(AccountData);
+                _context.Configuration.LazyLoadingEnabled = true;
+                var acc = _mapper.Map<AddUserModal, User>(accountResponse);
+
+                if (acc != null)
+                {
+                    var userInfo = _context.Users.Where(s => s.userid == acc.userid).FirstOrDefault();
+                    var RoleInfo = _context.Roles.Where(s => s.userid == acc.userid).FirstOrDefault();
+                    if (userInfo != null)
+                    {
+                        userInfo.deptartmentname = acc.deptartmentname;
+                        if (RoleInfo != null)
+                        {
+                            RoleInfo.role_name = accountResponse.userRole;
+                        }
+                        int n = _context.SaveChanges();
+
+                        if (n > 0)
+                        {                            
+                            dct.Add("success", "User updated successfully!");
+                        }
+                        else
+                        {
+                            dct.Add("exception", "User updation failed!");
+                        }
+                    }
+                    
+                    return Ok(dct);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+
+
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.OK, ""));
+        }
+
         //Prasad
         [Route("api/update-wl-accounts")]
         //[Authorize]

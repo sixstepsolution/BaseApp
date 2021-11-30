@@ -616,6 +616,28 @@ namespace C8.eServices.Mvc.Controllers
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No updates found!"));
         }
 
+        [Route("api/close-application-form")]
+        public async Task<IHttpActionResult> PostCloseApplicationForm(ApplicationInputClaimModel inputClaims)
+        {
+            try
+            {
+                inputClaims.ipAddress = HttpContext.Current.Request.UserHostAddress;
+                bool res = _appFrom.CloseApplicationForm(inputClaims);
+
+                if (res)
+                {
+                    return Ok(res);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+
+
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No updates found!"));
+        }
+
         [Route("api/update-inspection-details")]
         //[Authorize]
         public async Task<IHttpActionResult> PostInspectionDetails()

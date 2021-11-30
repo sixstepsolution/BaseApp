@@ -158,6 +158,29 @@ namespace C8.eServices.Mvc.Models.EmailBodys
             return strBulBodyContent;
         }
 
+        public static StringBuilder SentCloseApplicationForm(string firstName, string lastName, string accountNumber, string grantStatus, string applicationComment)
+        {
+            StringBuilder strBulBodyContent = new StringBuilder();
+            strBulBodyContent.Append("<html>");
+            strBulBodyContent.Append("<head>");
+            strBulBodyContent.Append("</head>");
+            strBulBodyContent.Append("<body>");
+            strBulBodyContent.Append("<div>");
+            strBulBodyContent.Append("<div>Dear " + firstName + " " + lastName + ",</div><br /><br/>");
+            strBulBodyContent.Append("<div>Your Wayleave application <b>" + accountNumber + "</b> has been closed.</div><br />");
+            if (!String.IsNullOrEmpty(applicationComment))
+            {
+                strBulBodyContent.Append("<div>Comments: <b>" + applicationComment + "</b></div><br />");
+            }
+            strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
+            strBulBodyContent.Append("Wayleave");
+            strBulBodyContent.Append("</div>");
+            strBulBodyContent.Append("</body>");
+            strBulBodyContent.Append("</html>");
+            return strBulBodyContent;
+        }
+
+
         public static StringBuilder SentWayleaveaccountStatus(string firstName, string lastName, string accountNumber, DateTime? updatedDate)
         {
             StringBuilder strBulBodyContent = new StringBuilder();
@@ -211,8 +234,32 @@ namespace C8.eServices.Mvc.Models.EmailBodys
             strBulBodyContent.Append("<div>Please find the below application details</div><br/>");
             strBulBodyContent.Append("<div>Application Number: <b>" + applicationNumber + "</b></div><br />");
             strBulBodyContent.Append("<div>Application Status: <b>" + stepDescription + "</b></div><br />");
-            strBulBodyContent.Append("<div>Application date: <b>" + createdDate + "</b></div><br />");
-            strBulBodyContent.Append("<div>Completion date: <b>" + completionDate + "</b></div><br />");
+            //strBulBodyContent.Append("<div>Application date: <b>" + createdDate + "</b></div><br />");
+            //strBulBodyContent.Append("<div>Completion date: <b>" + completionDate + "</b></div><br />");
+            //}
+            strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
+            strBulBodyContent.Append("Wayleave");
+            strBulBodyContent.Append("</div>");
+            strBulBodyContent.Append("</body>");
+            strBulBodyContent.Append("</html>");
+            return strBulBodyContent;
+        }
+
+        public static StringBuilder SentPaylaterNotification(string userName, string applicationNumber, string department, string stepDescription, decimal? fee)
+        {
+            StringBuilder strBulBodyContent = new StringBuilder();
+            strBulBodyContent.Append("<html>");
+            strBulBodyContent.Append("<head>");
+            strBulBodyContent.Append("</head>");
+            strBulBodyContent.Append("<body>");
+            strBulBodyContent.Append("<div>");
+            strBulBodyContent.Append("<div>Dear " + userName + ",</div><br /><br/>");
+            strBulBodyContent.Append("<div>Please make a payment towards your Wayleave application at your nearest Customer Care Center, or a Point of Sale. </div><br />");
+            
+            strBulBodyContent.Append("<div>Wayleave application fee: <b>R" + fee + "</b></div><br />");
+            strBulBodyContent.Append("<div>Reference Number: <b>" + applicationNumber + "</b></div><br />");
+            //strBulBodyContent.Append("<div>Application date: <b>" + createdDate + "</b></div><br />");
+            //strBulBodyContent.Append("<div>Completion date: <b>" + completionDate + "</b></div><br />");
             //}
             strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
             strBulBodyContent.Append("Wayleave");

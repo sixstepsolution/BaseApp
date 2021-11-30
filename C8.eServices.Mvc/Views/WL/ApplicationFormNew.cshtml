@@ -167,7 +167,8 @@
 <script src="~/Scripts/wayleaveScripts/WLApplicationForm.js?dt=@DateTime.Now.Millisecond"></script>
 @*<script src="~/Scripts/wayleaveScripts/ApplicationFormNew.js?dt=@DateTime.Now.Millisecond"></script>*@
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLOlMJLaIKTK3R1mRfv0gEI8bAmfqDxlk&sensor=false&libraries=places"></script>
+@*<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLOlMJLaIKTK3R1mRfv0gEI8bAmfqDxlk&sensor=false&libraries=places"></script>*@
+<link rel="stylesheet" href="https://js.arcgis.com/3.37/esri/css/esri.css">
 <script type="text/javascript" language="javascript">
     @*$(document).ready(function () {
         var sessionInfo = '@Session["wayleaveaccountId"]';
@@ -207,6 +208,194 @@
         }
 
         Init();
+    });
+</script>
+
+<script src="https://js.arcgis.com/3.37/"></script>
+<style>
+    #map {
+        height: 500px !important;
+        width: 100% !important;
+        margin: 0;
+        padding: 0;
+    }
+    /*#map {
+        position: center;
+        z-index: 1002;
+        height: 500px !important;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100% !important;
+    }*/
+
+    #search {
+        display: block;
+        position: absolute;
+        z-index: 3;
+        top: 20px;
+        left: 75px;
+    }
+
+    .simpleGeocoder .esriGeocoderIcon {
+        float: left;
+        outline: 0;
+        width: 16px;
+        height: 16px;
+        display: block;
+        overflow: hidden;
+        margin: 11px 0 6px 6px;
+    }
+
+    .esriPopup .esriPopupWrapper {
+        /* box-shadow: 0 0 0.75em #777777; */
+        /* -webkit-box-shadow: 0 0 0.75em #777777; */
+        border-radius: 5px;
+        -webkit-border-radius: 5px;
+        height: 100px !important
+    }
+
+    .simpleGeocoder .esriGeocoder .esriGeocoderReset {
+        margin: 11px 6px 6px 0;
+        float: right;
+        display: block;
+    }
+
+    .spotlight {
+        z-index: -1;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        opacity: 0;
+        box-shadow: inset rgba(0,0,0,0.25) 0px 0px 20px 20px, rgba(0,0,0,0.25) 0px 0px 0px 1000px;
+        transition: all 1000ms;
+        -moz-transition: all 1000ms;
+        -webkit-transition: all 1000ms;
+    }
+
+    .spotlight-active {
+        z-index: 2;
+        opacity: 1;
+    }
+</style>
+
+<script>
+    require([
+        "esri/config",
+        "esri/map",
+        "esri/dijit/Geocoder",
+        "esri/graphic",
+        "esri/symbols/SimpleMarkerSymbol",
+        "esri/geometry/screenUtils",
+        "dojo/dom",
+        "dojo/dom-construct",
+        "dojo/query",
+        "dojo/_base/Color",
+        //"esri/Graphic",
+        //"esri/layers/GraphicsLayer"
+    ], function (esriConfig, Map, Geocoder, Graphic, SimpleMarkerSymbol, screenUtils, dom, domConstruct, query, Color) {
+        // create a map and instance of the geocoder widget here
+        esriConfig.apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
+        var map = new Map("map", {
+            basemap: "topo",
+            center: [-38.8587, 31.0218],
+            zoom: 3,
+            scale: 500000
+        });
+        var geocoder = new Geocoder({
+            arcgisGeocoder: {
+                placeholder: "Choose Address"
+            },
+            autoComplete: true,
+            map: map
+        }, dom.byId("search"));
+
+        //const graphicsLayer = new GraphicsLayer();
+
+        //const point = { //Create a point
+        //    type: "point",
+        //    longitude: 29.8587,
+        //    latitude: 31.0218
+        //};
+        //const simpleMarkerSymbol = {
+        //    type: "simple-marker",
+        //    color: [226, 119, 40],  // Orange
+        //    outline: {
+        //        color: [255, 255, 255], // White
+        //        width: 1
+        //    }
+        //};
+        //const pointGraphic = new Graphic({
+        //    geometry: point,
+        //    symbol: simpleMarkerSymbol
+        //});
+        //graphicsLayer.add(pointGraphic);
+        //map.add(graphicsLayer);
+        map.on("load", enableSpotlight);
+
+        geocoder.on("select", showLocation);
+        geocoder.on("clear", removeSpotlight);
+
+
+        function showLocation(evt) {
+            //alert(evt.result.name);
+            //alert(GlobalSearchResult);
+            var selectedAddress = evt.result.name;
+            $("#" + GlobalSearchResult).val(evt.result.name);
+            console.log(evt.result);
+            map.graphics.clear();
+            var point = evt.result.feature.geometry;
+            var symbol = new SimpleMarkerSymbol().setStyle(
+                SimpleMarkerSymbol.STYLE_SQUARE).setColor(
+                    new Color([255, 0, 0, 0.5])
+                );
+            var graphic = new Graphic(point, symbol);
+            map.graphics.add(graphic);
+
+
+            map.infoWindow.setTitle("Search Result");
+            map.infoWindow.setContent(evt.result.name);
+            map.infoWindow.show(evt.result.feature.geometry);
+
+            var spotlight = map.on("extent-change", function (extentChange) {
+                var geom = screenUtils.toScreenGeometry(map.extent, map.width, map.height, extentChange.extent);
+                var width = geom.xmax - geom.xmin;
+                var height = geom.ymin - geom.ymax;
+
+                var max = height;
+                if (width > height) {
+                    max = width;
+                }
+
+                var margin = '-' + Math.floor(max / 2) + 'px 0 0 -' + Math.floor(max / 2) + 'px';
+
+                query(".spotlight").addClass("spotlight-active").style({
+                    width: max + "px",
+                    height: max + "px",
+                    margin: margin
+                });
+                spotlight.remove();
+
+            });
+            //geocoder.on("clear", removeSpotlight);
+            //removeSpotlight();
+            //map.graphics.clear();
+        }
+
+        function enableSpotlight() {
+            var html = "<div id='spotlight' class='spotlight'></div>"
+            domConstruct.place(html, dom.byId("map_container"), "first");
+        }
+
+        function removeSpotlight() {
+            //alert('remove');
+            //map.graphics.remove(graphic);
+            query(".spotlight").removeClass("spotlight-active");
+            map.infoWindow.hide();
+            map.graphics.clear();
+        }
     });
 </script>
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
@@ -486,9 +675,9 @@
                                                         <label>Starting Date</label>
                                                         <div class="input-group" style="width: 100%">
                                                             @*<span class="input-group-addon"
-                                                                  style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </span>*@
+                                                  style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>*@
                                                             <input type="date" readonly autocomplete="off" style="border-radius: 4px !important;" id="STARTING_DATE"
                                                                    class="form-control border-radius" name="STARTING_DATE" />
 
@@ -604,10 +793,21 @@
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label">
-                                                        <label>Starting Address</label>
-                                                        <input type="text" readonly autocomplete="off" style="border-radius: 4px" id="GPS_START_ADDRESS"
-                                                               class="form-control" name="GPS_START_ADDRESS" />
-                                                    </div>
+                                        <label>Starting Address</label>
+                                        <input type="text" readonly autocomplete="off" style="border-radius: 4px" id="GPS_START_ADDRESS"
+                                               class="form-control" name="GPS_START_ADDRESS" />
+                                    </div>
+                                                    @*<div class="input-group input-label">
+                                        <label>Starting Address</label>
+                                        <div class="input-group" style="width: 100%;">
+                                            <input type="text" class="form-control" readonly autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="GPS_START_ADDRESS"
+                                                   name="GPS_START_ADDRESS" required />
+                                            <span class="input-group-addon" onclick="$.fn.ShowSearchMap('GPS_START_ADDRESS')"
+                                                  style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
+                                                <i class="fa fa-map-marker"></i>
+                                            </span>
+                                        </div>
+                                    </div>*@
                                                 </td>
                                                 <td>
                                                     <div class="input-group input-label">
@@ -693,24 +893,24 @@
                             </tbody>
                         </table>
                         @*<table width="100%" id="IsViewApplication">
-                            <tr>
-                                <td colspan="4" class="text-center" id="IsAppEdit">
-                                    <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
-                                            onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
-                                        <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
-                                        Re-Submit
-                                    </button>
-                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
-                                </td>
-                                <td colspan="4" class="text-center">
-                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()">
-                                        <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
-                                        Submit
-                                    </button>
-                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
-                                </td>
-                            </tr>
-                        </table>*@
+            <tr>
+                <td colspan="4" class="text-center" id="IsAppEdit">
+                    <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
+                            onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
+                        <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                        Re-Submit
+                    </button>
+                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                </td>
+                <td colspan="4" class="text-center">
+                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()">
+                        <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                        Submit
+                    </button>
+                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
+                </td>
+            </tr>
+        </table>*@
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;display:none;margin-top:10px!important" id="DepartmentInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
@@ -854,6 +1054,85 @@
                         </div>
                         @if (Session["ekurhuleniUserRole"].ToString() == "Admin")
                         {
+                            <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;display:none;margin-top:10px!important" id="ApplicationClosureStatus">
+                                <div class="panel panel-default" style="border:none!important">
+                                    <div class="panel-heading" style="background:#00A65A">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ApplicationClosureStatus" href="#collapse_ApplicationClosureStatus">
+                                                <i class="fa fa-plus" style="display: none; font-size: 12px; top: 0;"></i>
+                                                <i class="fa fa-minus" style="font-size: 12px;top: 0;"></i>
+                                                Final Closure
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse_ApplicationClosureStatus" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
+                                        <div>
+                                            <div class="panel-body" style="padding: 10px;">
+                                                <div class="col-lg-3">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Status</label>
+                                                        <select style="border-radius: 4px" onchange="$.fn.ChangeAppSatus('INSPECTION_STATUS')" required
+                                                                class="form-control" name="INSPECTION_STATUS" id="INSPECTION_STATUS">
+                                                            <option selected value="">Make a selection</option>
+                                                            <option value="Application Closed">Application Closed</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel-body" style="padding: 10px;display:none" id="IsInspectionOutcomeComments">
+                                                <div class="col-lg-3">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Inspection Reference No</label>
+                                                        <input type="text" style="border-radius: 4px" class="form-control" name="INSPECTION_REFERENCE_NO" id="INSPECTION_REFERENCE_NO" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Inspection Date</label>
+                                                        <input type="date" style="border-radius: 4px" class="form-control" name="INSPECTION_DATE" id="INSPECTION_DATE" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Inspected By</label>
+                                                        <input type="text" style="border-radius: 4px" class="form-control" name="INSPECTION_BY" id="INSPECTION_BY" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12" style="margin-top:10px!important">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Comments</label>
+                                                        <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="INSPECTION_COMMENTS" id="INSPECTION_COMMENTS"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @*<div class="panel-body" style="padding: 10px;display:none" id="IsInspectionOutcomeComments">
+                                <div class="col-lg-12">
+                                    <div class="input-group input-label">
+                                        <label class="control-label">Comments</label>
+                                        <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="INSPECTION_COMMENTS" id="INSPECTION_COMMENTS"></textarea>
+                                    </div>
+                                </div>
+                            </div>*@
+                                            <table width="100%">
+                                                <tr>
+                                                    <td colspan="4" class="text-center">
+                                                        <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; padding: 0; font-size: 10px;width:150px!important" onclick="$.fn.CloseApplicationFormModal()">
+
+                                                            Close Application
+                                                        </button>
+                                                        <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
                             <div id="ApplicationAdminSection" style="display:none!important">
                                 <table width="100%">
                                     <tr>
@@ -885,6 +1164,11 @@
                                 </table>
                             </div>
                         }
+
+                        <input type="hidden" id="GPS_START_LATITUDE" />
+                        <input type="hidden" id="GPS_START_LONGITUDE" />
+                        <input type="hidden" id="GPS_END_LATITUDE" />
+                        <input type="hidden" id="GPS_END_LONGITUDE" />
                     </div>
                 </div>
             </div>
@@ -899,7 +1183,12 @@
                         <h1 class="modal-title text-center" style="color:green;font-size:20px !important">Work Location</h1>
                     </div>
                     <div class="modal-body">
-                        <div id="map"></div>
+                        <div class="soria" id="ArcGisSearchMap">
+                            <div id="search">
+                            </div>
+                            
+                            <div id="map"></div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-warning" value="Close" data-dismiss="modal" />
@@ -961,7 +1250,33 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
-
+        <div class="modal fade" id="CloseApplicationModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" style="top:10%!important;border-radius:5px!important">
+                <div class="modal-content">
+                    <div class="modal-header modal-danger">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            x
+                        </button>
+                        <h4 class="modal-title text-center" style="color:green">Close Application</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div style="font-size:9pt !important;height:120px;padding:50px!important">
+                            <b>Are you sure you want to close the application?</b>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px" onclick="$.fn.CloseApplicationForm()">
+                            <i id="isAppLoadingNew" class="fa fa-spinner fa-spin" style="font-size:10pt;margin-right:2px!important;display:none!important"></i>
+                            Confirm
+                        </button>
+                        <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px" data-dismiss="modal">Cancel</button>
+                        @*<input type="button" class="btn btn-danger" value="Close" data-dismiss="modal" />*@
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
         <input type="hidden" id="CurrentUserName" />
     </form>
 </section>

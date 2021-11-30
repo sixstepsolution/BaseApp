@@ -22,6 +22,7 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public virtual DbSet<Student> Students { get; set; }
         public virtual DbSet<tblEmployee> tblEmployees { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<LOGIN_HISTORY> LOGIN_HISTORY { get; set; }
         public virtual DbSet<WL_APPLICATIONFORM> WL_APPLICATIONFORM { get; set; }
         public virtual DbSet<WL_REGIONS> WL_REGIONS { get; set; }
         public virtual DbSet<MASTER_REGIONS> MASTER_REGIONS { get; set; }
