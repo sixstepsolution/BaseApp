@@ -99,6 +99,7 @@ $.fn.GetFormdataValues = function () {
     DepartmentUsers.deptartmentname = $('#deptartmentname').val();
     DepartmentUsers.userid = 0;
     DepartmentUsers.userRole = $('#userRole').val();
+    DepartmentUsers.region = $('#region').val();
 
     var isAD = document.getElementById("isActiveDirectory");
     if (isAD.checked) {
@@ -119,9 +120,10 @@ $.fn.CheckFormValidations = function () {
     var des = $('#cellPhone').val();
     var mb = $('#deptartmentname').val();
     var ur = $('#userRole').val();
+    var reg = $('#region').val();
 
     if (ut != undefined && ut != "" && cn != undefined && cn != "" && cf != undefined && cf != "" && cpf != undefined && cpf != ""
-        && cpl != undefined && cpl != "" && des != undefined && des != "" && mb != undefined && mb != "" && ur != undefined && ur != "") {
+        && cpl != undefined && cpl != "" && des != undefined && des != "" && mb != undefined && mb != "" && ur != undefined && ur != "" && reg != undefined && reg != "") {
         isFormValid = true;
         return isFormValid;
     }

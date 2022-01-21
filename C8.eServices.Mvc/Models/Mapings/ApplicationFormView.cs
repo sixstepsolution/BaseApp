@@ -25,6 +25,9 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string inspectionStatus { get; set; }
         public string inspectionDate { get; set; }
         public string isOverDue { get; set; }
+        public string departmentResponse { get; set; }
+        public string isRequestforDocument { get; set; }
+        public string roleName { get; set; }
     }
 
     public class ApplicationCounts

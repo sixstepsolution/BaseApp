@@ -4032,6 +4032,18 @@
     <Compile Include="Migrations\202111240247471_addingLoginHistory.Designer.cs">
       <DependentUpon>202111240247471_addingLoginHistory.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202112061957309_updatePropertiesinApplicationform.cs" />
+    <Compile Include="Migrations\202112061957309_updatePropertiesinApplicationform.Designer.cs">
+      <DependentUpon>202112061957309_updatePropertiesinApplicationform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112062137102_updatePropertiesinUsers.cs" />
+    <Compile Include="Migrations\202112062137102_updatePropertiesinUsers.Designer.cs">
+      <DependentUpon>202112062137102_updatePropertiesinUsers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202112100720095_addingPropertiesinApplicationformmm.cs" />
+    <Compile Include="Migrations\202112100720095_addingPropertiesinApplicationformmm.Designer.cs">
+      <DependentUpon>202112100720095_addingPropertiesinApplicationformmm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountInformation.cs" />
@@ -4345,6 +4357,7 @@
     <Compile Include="Models\WL_CONTACT_PERSONS.cs" />
     <Compile Include="Models\WL_DECLARATIONS.cs" />
     <Compile Include="Models\WL_DEPARTMENTS.cs" />
+    <Compile Include="Models\WL_EXCAVATION_DETAILS.cs" />
     <Compile Include="Models\WL_INSPECTION_LIST.cs" />
     <Compile Include="Models\WL_REGIONS.cs" />
     <Compile Include="Models\WL_SUPPORTING_DOCUMENTS.cs" />
@@ -4750,6 +4763,8 @@
     <Content Include="Views\WL\LoginHistory.cshtml" />
     <Content Include="Views\WL\ReInstatementCertificate.cshtml" />
     <Content Include="Views\WL\ReInstatementCertificatePdf.cshtml" />
+    <Content Include="Views\Home\MapMarkerTest.cshtml" />
+    <Content Include="Views\Home\MapMarker.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4871,6 +4886,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202111240247471_addingLoginHistory.resx">
       <DependentUpon>202111240247471_addingLoginHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112061957309_updatePropertiesinApplicationform.resx">
+      <DependentUpon>202112061957309_updatePropertiesinApplicationform.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112062137102_updatePropertiesinUsers.resx">
+      <DependentUpon>202112062137102_updatePropertiesinUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202112100720095_addingPropertiesinApplicationformmm.resx">
+      <DependentUpon>202112100720095_addingPropertiesinApplicationformmm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

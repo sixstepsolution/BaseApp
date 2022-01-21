@@ -33,6 +33,7 @@ namespace C8.eServices.Mvc.Controllers
             try
             {
                 Session["payments"] = null;
+                //var tt = dbWayleave.WL_DEPARTMENTS.Where(s => s.APP_ID == 1125 && s.APPLICATION_STATUS != "Pending Department Review" && s.APPLICATION_STATUS != null).ToList().Count();
                 //string ipAddresss = Request.UserHostAddress;
                 //string ipaddress;
                 //ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
@@ -690,6 +691,16 @@ namespace C8.eServices.Mvc.Controllers
         {
             var result = new AesCrypto().Decrypt(id);
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult MapMarkerTest(string address)
+        {
+            return View();
+        }
+
+        public ActionResult MapMarker(string address)
+        {
+            return View();
         }
 
         public ActionResult getpdfReportORG(string cusAcc, string StateYear, string stateMonth)

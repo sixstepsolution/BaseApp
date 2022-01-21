@@ -18,5 +18,6 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string userRole { get; set; }
         public string isActiveDirectory { get; set; }
         public string paymentPrice { get; set; }
+        public string region { get; set; }
     }
 }

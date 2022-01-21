@@ -31,6 +31,8 @@ namespace C8.eServices.Mvc.Models
         [StringLength(5)]
         public string isActiveDirectory { get; set; }
         public string signature { get; set; }
+        [StringLength(50)]
+        public string region { get; set; }
         public DateTime? createdDate { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

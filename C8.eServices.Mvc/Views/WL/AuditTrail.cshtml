@@ -14,10 +14,10 @@
         var userRole = '@Session["ekurhuleniUserRole"]';
         //alert(userRole);
         if (userRole ==="Admin") {
-            $.fn.LoadApplicationsAlertsWithCounts("Y");
+            $.fn.LoadApplicationsAlertsWithCounts("Y", userRole);
         }
         else {
-            $.fn.LoadApplicationsAlertsWithCounts("N")
+            $.fn.LoadApplicationsAlertsWithCounts("N", userRole)
         }
         //Init();
 
@@ -154,8 +154,8 @@
                                                 class="form-control" name="status" id="status">
                                             <option value="" selected>Make a selection</option>
                                             <option value="All">Select All</option>
-                                            <option value="Application Granted">Granted Applications</option>
-                                            <option value="Application Rejected">Rejected Applications</option>
+                                            <option value="Application Supported">Granted Applications</option>
+                                            <option value="Application Not Supported">Rejected Applications</option>
                                             <option value="Updated to Affected">Affected (All departments)</option>
                                             <option value="Updated to Not Affected">Not Affected (All departments)</option>
                                             <option value="Application Closed">Application Closed</option>
@@ -177,7 +177,7 @@
                                             @*<option value="" selected>Make a selection</option>
                                             <option value="All">Select All</option>*@
                                             @*<option value="Prasad">Prasad</option>
-                                            <option value="Application Rejected">Rejected Applications</option>
+                                            <option value="Application Not Supported">Rejected Applications</option>
                                             <option value="Updated to Affected">Affected (All departments)</option>
                                             <option value="Updated to Not Affected">Not Affected (All departments)</option>*@
                                         </select>

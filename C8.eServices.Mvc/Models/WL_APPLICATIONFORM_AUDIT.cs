@@ -193,6 +193,8 @@ namespace C8.eServices.Mvc.Models
         [StringLength(10)]
         public string GENDER { get; set; }
 
+        public string OPEN_TRENCH_COMMENT { get; set; }
+
         public int CREATED_BY { get; set; }
 
         public DateTime CREATED_DATE { get; set; }

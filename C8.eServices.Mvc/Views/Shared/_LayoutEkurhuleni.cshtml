@@ -276,6 +276,10 @@
             border-top-right-radius: 0px !important;
             border-bottom-right-radius: 0px !important;
         }
+        .input-label {
+            width: 100%;
+            margin-top: -4px !important;
+        }
     </style>
     @*<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">*@
 
@@ -300,21 +304,17 @@
                         <i class="fa fa-align-justify"></i>
                     </a>*@
                 <div class="navbar-custom-menu">
-                    <ul class="nav navbar-nav">
+                    @*<ul class="nav navbar-nav">
                         <li class="dropdown user user-menu right-pane">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="border:0px solid red;height:50px">
-                                @*<img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" class="user-image" alt="User Image" />*@
                                 <i class="fa fa-user" style="font-size:15pt!important"></i>
                                 <span class="hidden-xs"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <!-- User image -->
                                 <li class="user-header" style="background-color:#ccc !important">
                                     <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" class="img-circle" alt="User Image" />
 
                                     <div>
-                                        <!-- <b style="font-weight:100;text-transform:capitalize"> Test</b> -->
-
                                         <div style="color:#000;font-weight:100">
                                             @if (Session["ekurhuleniData"] != null)
                                             {
@@ -336,7 +336,7 @@
                                 </li>
                             </ul>
                         </li>
-                    </ul>
+                    </ul>*@
                 </div>
             </nav>
         </header>
@@ -438,27 +438,10 @@
                                         <a class="right-pane-inv" href="../WL/ReInstatementCertificate">
                                             <i class="menu-icon fa fa-list bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
                                             <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
-                                                <h3 class="control-sidebar-subheading">Reinstatements Certificate</h3>
+                                                <h3 class="control-sidebar-subheading">Reinstatement Certificate</h3>
                                             </div>
                                         </a>
                                     </li>
-                                    @*<li class="right-pane-inv text-black">
-            <a class="right-pane-inv" href="../WL/PreInspectionList">
-                <i class="menu-icon fa fa-list bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
-                <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
-                    <h3 class="control-sidebar-subheading">Pre-Inspection List</h3>
-                </div>
-            </a>
-        </li>
-        <li class="right-pane-inv text-black">
-            <a class="right-pane-inv" href="../WL/InspectionList">
-                <i class="menu-icon fa fa-list bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
-
-                <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
-                    <h3 class="control-sidebar-subheading">Inspection List</h3>
-                </div>
-            </a>
-        </li>*@
                                     <li class="right-pane-inv text-black">
                                         <a class="right-pane-inv" href="../WL/Reports">
                                             <i class="menu-icon fa fa-bar-chart bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
@@ -492,6 +475,15 @@
 
                                             <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
                                                 <h3 class="control-sidebar-subheading">Login History</h3>
+                                            </div>
+                                        </a>
+                                    </li>                                   
+                                    <li class="right-pane-inv">
+                                        <a class="right-pane-inv bg-yellow" href="../Home/EkurhuleniLogout" onclick="$.fn.Logout()" style="background-color: #dd4b39 !important;">
+                                            <i class="menu-icon fa fa-power-off ggb-menu-icon" style="margin-top:3px!important;"></i>
+
+                                            <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
+                                                <h3 class="control-sidebar-subheading">Logout</h3>
                                             </div>
                                         </a>
                                     </li>
@@ -556,6 +548,15 @@
                                             </div>
                                         </a>
                                     </li>
+                                    <li class="right-pane-inv">
+                                        <a class="right-pane-inv bg-yellow" href="../Home/EkurhuleniLogout" onclick="$.fn.Logout()" style="background-color: #dd4b39 !important;">
+                                            <i class="menu-icon fa fa-power-off ggb-menu-icon" style="margin-top:3px!important;"></i>
+
+                                            <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
+                                                <h3 class="control-sidebar-subheading">Logout</h3>
+                                            </div>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         }
@@ -579,14 +580,14 @@
                         {
                             <li class="treeview">
                                 <ul class="control-sidebar-menu" style="margin: 0;margin-top: 5px; background-color: #ccc;padding: 0;">
-                                    <li class="right-pane-inv">
-                                        <a class="right-pane-inv" href="../WL/Index">
-                                            <i class="menu-icon fa fa-user bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
-                                            <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
-                                                <h3 class="control-sidebar-subheading">Application Form</h3>
-                                            </div>
-                                        </a>
-                                    </li>
+                                    @*<li class="right-pane-inv">
+            <a class="right-pane-inv" href="../WL/Index">
+                <i class="menu-icon fa fa-user bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
+                <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
+                    <h3 class="control-sidebar-subheading">Application Form</h3>
+                </div>
+            </a>
+        </li>*@
                                     <li class="right-pane-inv text-black">
                                         <a class="right-pane-inv" href="../WL/Reports">
                                             <i class="menu-icon fa fa-bar-chart bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>
@@ -611,6 +612,15 @@
 
                                             <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
                                                 <h3 class="control-sidebar-subheading">Login History</h3>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="right-pane-inv">
+                                        <a class="right-pane-inv bg-yellow" href="../Home/EkurhuleniLogout" onclick="$.fn.Logout()" style="background-color: #dd4b39 !important;">
+                                            <i class="menu-icon fa fa-power-off ggb-menu-icon" style="margin-top:3px!important;"></i>
+
+                                            <div class="menu-info" style="padding:15px 15px 15px 0px!important;">
+                                                <h3 class="control-sidebar-subheading">Logout</h3>
                                             </div>
                                         </a>
                                     </li>

@@ -45,6 +45,7 @@ namespace C8.eServices.Mvc.DataAccessLayer
         public virtual DbSet<UserAudit> UserAudit { get; set; }
         public virtual DbSet<APPLICATION_PAYMENT_PRICE_AUDIT> APPLICATION_PAYMENT_PRICE_AUDIT { get; set; }
         public virtual DbSet<MASTER_CUSTOMERCARE_CENTERS_REGIONS> MASTER_CUSTOMERCARE_CENTERS_REGIONS { get; set; }
+        public virtual DbSet<WL_EXCAVATION_DETAILS> WL_EXCAVATION_DETAILS { get; set; }
         //public DbSet<SystemUser> SystemUsers { get; set; }
         //public DbSet<SystemUserException> SystemUserException { get; set; }
         //public DbSet<SystemUserLogTime> SystemUserLogTimes { get; set; }

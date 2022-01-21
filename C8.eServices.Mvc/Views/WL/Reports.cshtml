@@ -10,10 +10,10 @@
         //var isSuccess = 'TempData["ReportResult"]';
         //alert(isSuccess);
         if (userRole ==="Admin") {
-            $.fn.LoadApplicationsAlertsWithCounts("Y");
+            $.fn.LoadApplicationsAlertsWithCounts("Y", userRole);
         }
         else {
-            $.fn.LoadApplicationsAlertsWithCounts("N")
+            $.fn.LoadApplicationsAlertsWithCounts("N", userRole)
         }
 
         //if (isSuccess === "success") {
@@ -236,8 +236,8 @@
                                                 class="form-control" name="status" id="status" required>
                                             <option value="" selected>Make a selection</option>
                                             <option value="All">All</option>
-                                            <option value="3">Application Granted</option>
-                                            <option value="4">Application Rejected</option>
+                                            <option value="3">Application Supported</option>
+                                            <option value="4">Application Not Supported</option>
                                             <option value="2">Distributed to Departments</option>
                                             <option value="8">Pending Payment</option>
                                         </select>

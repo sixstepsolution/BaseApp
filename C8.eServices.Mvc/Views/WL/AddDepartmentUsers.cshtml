@@ -152,6 +152,20 @@
 
 <script>
     $(document).ready(function () {
+
+        $.ajax({
+            url: "/WayleaveAccount/LoadRegions",
+            type: "Get",
+            success: function (data) {
+                console.log("##########Region data#########");
+                console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    var opt = new Option(data[i].REGION_NAME, data[i].REGION_NAME);
+                    $('#region').append(opt);
+                }
+            }
+        });
+
         var departmentName = '@Session["ekurhuleniUserDeptName"]';
         var applicationId = '@ViewBag.ApplicationId';
         //var wayleaveAppId = localStorage.getItem('WLAppId');
@@ -170,10 +184,10 @@
         var userRole = '@Session["ekurhuleniUserRole"]';
         //alert(userRole);
         if (userRole ==="Admin") {
-            $.fn.LoadApplicationsAlertsWithCounts("Y");
+            $.fn.LoadApplicationsAlertsWithCounts("Y", userRole);
         }
         else {
-            $.fn.LoadApplicationsAlertsWithCounts("N")
+            $.fn.LoadApplicationsAlertsWithCounts("N", userRole)
         }
 
     });
@@ -252,6 +266,9 @@
                                             <option value="Energy">Energy</option>
                                             <option value="Roads & Storm Water">Roads & Storm Water</option>
                                             <option value="Water">Water</option>
+                                            <option value="ICT">ICT</option>
+                                            <option value="Real Estate">Real Estate</option>
+
                                         </select>
                                     </div>
                                 </td>
@@ -277,6 +294,16 @@
                                             <option value="Admin">Admin</option>
                                             <option value="application" selected>Department User</option>
                                             <option value="System Admin">System Admin</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td style="width:  15.5%">
+                                    <div class="input-group input-label" style="width: 100%">
+                                        <label class="control-label">Region</label>
+                                        <select style="border-radius: 4px"
+                                                class="form-control" name="region" id="region">
+                                            <option value="" selected>Make a selection</option>
+                                            
                                         </select>
                                     </div>
                                 </td>
@@ -330,6 +357,7 @@
                                     <td>Username</td>
                                     <td>Name</td>
                                     <td>Department</td>
+                                    <td>Region</td>
                                     <td>Role</td>
                                     <td>Email</td>
                                     <td>Mobile</td>
@@ -347,6 +375,7 @@
                                         <td>@u.userInfo.username</td>
                                         <td>@u.userInfo.firstName @u.userInfo.lastName</td>
                                         <td>@u.userInfo.deptartmentname</td>
+                                        <td>@u.userInfo.region</td>
                                         <td>@u.RoleName</td>
                                         <td>@u.userInfo.emailAddress</td>
                                         <td>@u.userInfo.cellPhone</td>
@@ -405,6 +434,7 @@
                                         <option value="" selected>Make a selection</option>
                                         <option value="Admin">Admin</option>
                                         <option value="application" selected>Department User</option>
+                                        <option value="System Admin">System Admin</option>
                                     </select>
                                 </div>
                             </div>

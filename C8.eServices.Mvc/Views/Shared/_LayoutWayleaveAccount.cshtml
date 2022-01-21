@@ -295,29 +295,26 @@
                     <ul class="nav navbar-nav">
                         @if (Session["wayleaveaccountId"] != null)
                         {
-                            <li class="dropdown user user-menu right-pane">
-                                <a href="#" class="dropdown-toggle" title="User profile" data-toggle="dropdown" style="border:0px solid red;height:50px">
-                                    @*<img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" class="user-image" style="color:#fff!important" alt="User Image" />*@
+                            <!--<li class="dropdown user user-menu right-pane">
+                                <a href="#" class="dropdown-toggle" title="User profile" data-toggle="dropdown" style="border:0px solid red;height:50px">                                   
                                     <i class="fa fa-user" style="font-size:15pt!important"></i>
                                     <span class="hidden-xs"></span>
                                 </a>
-                                <ul class="dropdown-menu">
+                                <ul class="dropdown-menu">-->
                                     <!-- User image -->
-                                    <li class="user-header" style="background-color:#fff !important">
+                                    <!--<li class="user-header" style="background-color:#fff !important">
                                         <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" class="img-circle" alt="User Image" />
 
                                         <div>
-                                            <!-- <b style="font-weight:100;text-transform:capitalize"> Test</b> -->
                                             <div style="color:#000;font-weight:100">
-                                                @if (Session["wayleaveaccountId"] != null)
+                                                if (Session["wayleaveaccountId"] != null)
                                                 {
-                                                    <p>@Session["wayleaveUserName"]</p>
+                                                    <p>Session["wayleaveUserName"]</p>
                                                 }
 
                                             </div>
                                         </div>
                                         <div>
-                                            <!-- <b style="font-weight:100;text-transform:capitalize"> Test</b> -->
                                             <div style="color:#000;font-weight:100">
                                                 <a href="../WayleaveAccount/WayleaveAccount" style="color:#00a65a"> View Profile</a>
                                             </div>
@@ -334,7 +331,7 @@
                                         </div>
                                     </li>
                                 </ul>
-                            </li>
+                            </li>-->
                         }
                     </ul>
                 </div>
@@ -466,6 +463,7 @@
                                             </div>
                                         </a>
                                     </li>
+                                    
                                     <li class="right-pane-inv">
                                         <a class="right-pane-inv" title="Download User Manual" style="cursor:pointer!important" onclick="DownloadUserManual('../TrainingManuals/WayleaveTrainingManual-Applicant01102021.pdf','Wayleave Training Manual - Applicant 01102021.pdf')">
 
@@ -473,7 +471,15 @@
                                                 <h3 class="control-sidebar-subheading"><i class="fa fa-cloud-download"></i> &nbsp;User Manual</h3>
                                             </div>
                                         </a>
-                                    </li>                                    
+                                    </li>
+                                    <li class="right-pane-inv">
+                                        <a class="right-pane-inv" href="../Home/LogOut" title="Logout" style="cursor: pointer !important; background-color: #dd4b39 !important;" onclick="$.fn.Logout()">
+
+                                            <div class="menu-info" style="padding:15px!important;">
+                                                <h3 class="control-sidebar-subheading"><i class="fa fa-power-off"></i> &nbsp;Logout</h3>
+                                            </div>
+                                        </a>
+                                    </li>
                                     @*<li class="right-pane-inv">
             <a class="right-pane-inv" href="../WL/WayleaveAccount">
                 <i class="menu-icon fa fa-bank bg-green ggb-menu-icon"></i>

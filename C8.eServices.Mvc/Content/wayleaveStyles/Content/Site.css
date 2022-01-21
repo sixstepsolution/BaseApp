@@ -901,7 +901,7 @@ table.table-bordered > tbody > tr > td {
     content: '';
     background: #fff;
     border: 2px solid #7f1933;
-    ;
+    
     display: inline-block;
     vertical-align: middle;
     width: 15px;

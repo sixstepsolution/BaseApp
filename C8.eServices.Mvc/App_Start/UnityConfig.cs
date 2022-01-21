@@ -70,6 +70,7 @@ namespace C8.eServices.Mvc
                 .ForMember(dest => dest.applicationStepStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.statusId, opt => opt.MapFrom(src => src.STATUS_ID))
                 .ForMember(dest => dest.isOverDue, opt => opt.MapFrom(src => src.IS_OVERDUE))
+                .ForMember(dest => dest.departmentResponse, opt => opt.MapFrom(src => src.COVER_LETTER))
                 .ReverseMap();
 
 
@@ -307,6 +308,7 @@ namespace C8.eServices.Mvc
                .ForMember(dest => dest.emailAddress, opt => opt.MapFrom(src => src.emailAddress))
                .ForMember(dest => dest.cellPhone, opt => opt.MapFrom(src => src.cellPhone))
                .ForMember(dest => dest.isActiveDirectory, opt => opt.MapFrom(src => src.isActiveDirectory))
+               .ForMember(dest => dest.region, opt => opt.MapFrom(src => src.region))
                //.ForMember(dest => dest.createdDate, opt => opt.MapFrom(src => src.createdDate))
 
                .ReverseMap();
@@ -321,11 +323,10 @@ namespace C8.eServices.Mvc
                .ForMember(dest => dest.emailAddress, opt => opt.MapFrom(src => src.emailAddress))
                .ForMember(dest => dest.cellPhone, opt => opt.MapFrom(src => src.cellPhone))
                .ForMember(dest => dest.isActiveDirectory, opt => opt.MapFrom(src => src.isActiveDirectory))
+               .ForMember(dest => dest.region, opt => opt.MapFrom(src => src.region))
                //.ForMember(dest => dest.createdDate, opt => opt.MapFrom(src => src.createdDate))
 
                .ReverseMap();
-
-
 
 
                 cfg.CreateMap<WL_APPLICATIONFORM, ApplicationModel>()
@@ -367,7 +368,7 @@ namespace C8.eServices.Mvc
              //.ForMember(dest => dest.APPLYING_ON_BEHALF, opt => opt.MapFrom(src => src.APPLYING_ON_BEHALF))
              //.ForMember(dest => dest.PROJECT_DESCRIPTION, opt => opt.MapFrom(src => src.PROJECT_DESCRIPTION))
              //.ForMember(dest => dest.ROAD_NUMBER, opt => opt.MapFrom(src => src.ROAD_NUMBER))
-             //.ForMember(dest => dest.REGION_OR_AREA, opt => opt.MapFrom(src => src.REGION_OR_AREA))
+             .ForMember(dest => dest.REGION_OR_AREA, opt => opt.MapFrom(src => src.REGION_OR_AREA))
              //.ForMember(dest => dest.AREA_DESCRIPTION, opt => opt.MapFrom(src => src.AREA_DESCRIPTION))
              //  .ForMember(dest => dest.CONTACT_PERSON_FIRSTNAME, opt => opt.MapFrom(src => src.CONTACT_PERSON_FIRSTNAME))
              //  .ForMember(dest => dest.CONTACT_PERSON_LASTNAME, opt => opt.MapFrom(src => src.CONTACT_PERSON_LASTNAME))
@@ -402,7 +403,7 @@ namespace C8.eServices.Mvc
              .ForMember(dest => dest.GPS_END_ADDRESS, opt => opt.MapFrom(src => src.GPS_END_ADDRESS))
              .ForMember(dest => dest.SERVICE_TYPE_NEW, opt => opt.MapFrom(src => src.SERVICE_TYPE_NEW))
 
-             //.ForMember(dest => dest.ASPH_FOOTWAY, opt => opt.MapFrom(src => src.ASPH_FOOTWAY))
+             .ForMember(dest => dest.OPEN_TRENCH_COMMENT, opt => opt.MapFrom(src => src.OPEN_TRENCH_COMMENT))
              //.ForMember(dest => dest.INTERL_BLOCK, opt => opt.MapFrom(src => src.INTERL_BLOCK))
              //.ForMember(dest => dest.UNPAVED_FOOTWAYS, opt => opt.MapFrom(src => src.UNPAVED_FOOTWAYS))
              //.ForMember(dest => dest.WL_CONTACT_PERSONS, opt => opt.MapFrom(src => src.WL_CONTACT_PERSONS))

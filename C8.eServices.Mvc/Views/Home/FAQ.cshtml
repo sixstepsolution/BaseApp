@@ -5,132 +5,109 @@
 }
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title></title>
-    <link rel="stylesheet" href="https://js.arcgis.com/3.37/esri/css/esri.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>Esri Leaflet</title>
+
+    <!-- Load Leaflet from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
+    <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>
+
+
+    <!-- Load Esri Leaflet Geocoder from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.css" ">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
-        #map {
-            height: 500px!important;
-            width: 100%;
+        body {
             margin: 0;
             padding: 0;
         }
 
-        #search {
-            display: block;
+        #map {
             position: absolute;
-            z-index: 3;
-            top: 20px;
-            left: 75px;
-        }
-
-        .spotlight {
-            z-index: -1;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            border-radius: 50%;
-            opacity: 0;
-            box-shadow: inset rgba(0,0,0,0.25) 0px 0px 20px 20px, rgba(0,0,0,0.25) 0px 0px 0px 1000px;
-            transition: all 1000ms;
-            -moz-transition: all 1000ms;
-            -webkit-transition: all 1000ms;
-        }
-
-        .spotlight-active {
-            z-index: 2;
-            opacity: 1;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #323232;
         }
     </style>
+</head>
+<body>
 
-    <script src="https://js.arcgis.com/3.37/"></script>
+    <div id="map"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        require([
-            "esri/map",
-            "esri/dijit/Geocoder",
-            "esri/graphic",
-            "esri/symbols/SimpleMarkerSymbol",
-            "esri/geometry/screenUtils",
-            "dojo/dom",
-            "dojo/dom-construct",
-            "dojo/query",
-            "dojo/_base/Color"
-        ], function (Map, Geocoder, Graphic, SimpleMarkerSymbol, screenUtils, dom, domConstruct, query, Color) {
-            // create a map and instance of the geocoder widget here
-            var map = new Map("map", {
-                basemap: "topo",
-                center: [26.2041, 28.0473],
-                zoom: 6,
-                scale: 19000
+        $(document).ready(function () {
+            const apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
+
+            const basemapEnum = "ArcGIS:Navigation";
+
+            var address1 = "Private Bag X1069, Germiston, 1400";//getUrlParameter('address');
+
+            var replacedAddress = address1.replaceAll(' ', '+');
+            var fullURL = "https://gis.ekurhuleni.gov.za/arcgis/rest/services/Locators/Custom_Address_Singlehouse_dd_Aug/GeocodeServer/findAddressCandidates?Address=" + replacedAddress + "&Address2=&Address3=&Neighborhood=&City=&Subregion=&Region=&Postal=&PostalExt=&CountryCode=&SingleLine=&outFields=&maxLocations=&matchOutOfRange=true&langCode=&locationType=&sourceCountry=&category=&location=&distance=&searchExtent=&outSR=&magicKey=&f=pjson";
+
+            var url2 = "http://129.232.208.13:8082/api/ArcGISAutocomplete/findAddressCandidates?queryText=" + replacedAddress;
+            let marker;
+
+            $.getJSON(url2, function (data) {
+                console.log(data.candidates[0].location.y + ',' + data.candidates[0].location.x);
+
+                const map = L.map("map", {
+                    minZoom: 2
+
+                }).setView([data.candidates[0].location.y, data.candidates[0].location.x], 13); // Sydney
+
+                L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+                    apiKey: apiKey
+                }).addTo(map);
+
+                const lngLatString = `${Math.round(data.candidates[0].location.x * 100000) / 100000}, ${Math.round(data.candidates[0].location.y * 100000) / 100000}`;
+
+                marker = L.marker(new L.LatLng(data.candidates[0].location.y, data.candidates[0].location.x))
+                    .addTo(map)
+                    .bindPopup(`<b>${lngLatString}</b><p>${address1}`)
+                    .openPopup()
+                    ;
+                map.panTo(new L.LatLng(data.candidates[0].location.y, data.candidates[0].location.x));
+
+
+
+
+
             });
-            var geocoder = new Geocoder({
-                arcgisGeocoder: {
-                    placeholder: "Find a place"
-                },
-                autoComplete: true,
-                map: map
-            }, dom.byId("search"));
 
-            map.on("load", enableSpotlight);
 
-            geocoder.on("select", showLocation);
-            geocoder.on("clear", removeSpotlight);
 
-                function showLocation(evt) {
-                    alert(evt.result.name);
-                    console.log(evt.result);
-                map.graphics.clear();
-                var point = evt.result.feature.geometry;
-                var symbol = new SimpleMarkerSymbol().setStyle(
-                    SimpleMarkerSymbol.STYLE_SQUARE).setColor(
-                        new Color([255, 0, 0, 0.5])
-                    );
-                var graphic = new Graphic(point, symbol);
-                map.graphics.add(graphic);
 
-                map.infoWindow.setTitle("Search Result");
-                map.infoWindow.setContent(evt.result.name);
-                map.infoWindow.show(evt.result.feature.geometry);
-
-                var spotlight = map.on("extent-change", function (extentChange) {
-                    var geom = screenUtils.toScreenGeometry(map.extent, map.width, map.height, extentChange.extent);
-                    var width = geom.xmax - geom.xmin;
-                    var height = geom.ymin - geom.ymax;
-
-                    var max = height;
-                    if (width > height) {
-                        max = width;
-                    }
-
-                    var margin = '-' + Math.floor(max / 2) + 'px 0 0 -' + Math.floor(max / 2) + 'px';
-
-                    query(".spotlight").addClass("spotlight-active").style({
-                        width: max + "px",
-                        height: max + "px",
-                        margin: margin
-                    });
-                    spotlight.remove();
-                });
-            }
-
-            //function enableSpotlight() {
-            //    var html = "<div id='spotlight' class='spotlight'></div>"
-            //    domConstruct.place(html, dom.byId("map_container"), "first");
-            //}
-
-            //function removeSpotlight() {
-            //    query(".spotlight").removeClass("spotlight-active");
-            //    map.infoWindow.hide();
-            //    map.graphics.clear();
-            //}
         });
     </script>
-</head>
-<body class="soria">
-    <div id="search"></div>
-    <div id="map"></div>
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+    </script>
 </body>
+
 </html>

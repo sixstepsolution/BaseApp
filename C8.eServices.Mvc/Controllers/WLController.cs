@@ -35,6 +35,7 @@ namespace C8.eServices.Mvc.Controllers
                 return Redirect("../home/index");
 
             }
+            var ggg = db.WL_DEPARTMENTS.Where(s => s.APP_ID == 1125 && s.APPLICATION_STATUS != "Pending Department Review" && s.APPLICATION_STATUS != null).ToList().Count();
 
             IEnumerable<ApplicationInputModel> members = null;
             ViewBag.applicationNo = "";
@@ -42,11 +43,18 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.appEndDate = "";
             ViewBag.ApplicationData = members;
             ViewBag.ApplicationDataCount = 0;
+            ViewBag.applicantName = "";
+            ViewBag.applicantSurname = "";
+            ViewBag.serviceType = "";
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
                 ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
                 inpuclaims.created_by = 0;//Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
+                
+                inpuclaims.deptName = Session["ekurhuleniUserDeptName"]!=null? Session["ekurhuleniUserDeptName"].ToString():"";
+                inpuclaims.roleName = Session["ekurhuleniUserRole"]!=null? Session["ekurhuleniUserRole"].ToString():"";
+                
                 var myContent = JsonConvert.SerializeObject(inpuclaims);
                 var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
                 var byteContent = new ByteArrayContent(buffer);
@@ -83,7 +91,8 @@ namespace C8.eServices.Mvc.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to)
+        public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to, 
+            string applicantName,string applicantSurname, string serviceType)
         {
             //if (Session["wayleaveaccountId"] == null)
             //{
@@ -97,6 +106,24 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.applicationNo = "";
             ViewBag.appStartDate = "";
             ViewBag.appEndDate = "";
+            ViewBag.applicantName = "";
+            ViewBag.applicantSurname = "";
+            ViewBag.serviceType = "";
+
+            if (String.IsNullOrEmpty(serviceType))
+            {
+                ViewBag.serviceType = serviceType;
+            }
+
+            if (String.IsNullOrEmpty(applicantName))
+            {
+                ViewBag.applicantName = applicantName;
+            }
+            if (String.IsNullOrEmpty(applicantSurname))
+            {
+                ViewBag.applicantSurname = applicantSurname;
+            }
+
             if (String.IsNullOrEmpty(application_no))
             {
                 ViewBag.applicationNo = application_no;
@@ -118,6 +145,11 @@ namespace C8.eServices.Mvc.Controllers
                 inpuclaims.date_requested_from = date_requested_from;
                 inpuclaims.date_requested_to = date_requested_to;
                 inpuclaims.created_by = 0;
+                inpuclaims.first_name = applicantName;
+                inpuclaims.last_name = applicantSurname;
+                inpuclaims.serviceType = serviceType;
+                inpuclaims.deptName = Session["ekurhuleniUserDeptName"] != null ? Session["ekurhuleniUserDeptName"].ToString() : "";
+                inpuclaims.roleName = Session["ekurhuleniUserRole"] != null ? Session["ekurhuleniUserRole"].ToString() : "";
                 //inpuclaims.isAdmin = "N";
                 var myContent = JsonConvert.SerializeObject(inpuclaims);
                 var buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
@@ -450,8 +482,9 @@ namespace C8.eServices.Mvc.Controllers
 
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
-                    var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
-                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.Description : "")).ToList();
+                    //var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+                    var grantWayleave = db.MASTER_STATUS_TYPES.FirstOrDefault(s => s.DESCRIPTION == AuditTrailKeys.ApplicationGranted);
+                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.DESCRIPTION : "")).ToList();
                     var statusResult = tt.FirstOrDefault().applicationList;
                     ViewBag.ApplicationStatusList = statusResult;
                     ViewBag.ApplicationStatusListCount = statusResult.Count();
@@ -506,8 +539,9 @@ namespace C8.eServices.Mvc.Controllers
 
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
-                    var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
-                    tt = tt.Where(s => s.name == (grantWayleave!=null? grantWayleave.Description:"")).ToList();
+                    //var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+                    var grantWayleave = db.MASTER_STATUS_TYPES.FirstOrDefault(s => s.DESCRIPTION == AuditTrailKeys.ApplicationGranted);
+                    tt = tt.Where(s => s.name == (grantWayleave!=null? grantWayleave.DESCRIPTION :"")).ToList();
                     var statusResult = tt.FirstOrDefault().applicationList;
                     var finalResult = statusResult.Where(s => s.applicationNumber == searchKeyword).ToList();
                     ViewBag.ApplicationStatusList = finalResult;
@@ -562,8 +596,9 @@ namespace C8.eServices.Mvc.Controllers
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
 
-                    var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
-                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.Description : "")).ToList();
+                   // var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+                    var grantWayleave = db.MASTER_STATUS_TYPES.FirstOrDefault(s => s.DESCRIPTION == AuditTrailKeys.ApplicationGranted);
+                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.DESCRIPTION : "")).ToList();
                     ViewBag.ApplicationStatusList = tt.FirstOrDefault().applicationList;
                 }
                 else
@@ -613,8 +648,9 @@ namespace C8.eServices.Mvc.Controllers
                     members = readTask.Result;
                     var tt = (List<ApplicationInputModel>)members;
 
-                    var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
-                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.Description : "")).ToList();
+                    //var grantWayleave = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.GrantWayleaveApplication);
+                    var grantWayleave = db.MASTER_STATUS_TYPES.FirstOrDefault(s => s.DESCRIPTION == AuditTrailKeys.ApplicationGranted);
+                    tt = tt.Where(s => s.name == (grantWayleave != null ? grantWayleave.DESCRIPTION : "")).ToList();
                     ViewBag.ApplicationStatusList = tt.FirstOrDefault().applicationList;
                 }
                 else

@@ -161,7 +161,7 @@
         $("#HidePriceUpdate").show();
         //alert(userRole);
         if (userRole ==="Admin") {
-            $.fn.LoadApplicationsAlertsWithCounts("Y");
+            $.fn.LoadApplicationsAlertsWithCounts("Y", userRole);
             if (userName == "SolarTest04") {
                 //APPLICATION_PRICE
                 //btnSubmit
@@ -180,7 +180,7 @@
             }
         }
         else {
-            $.fn.LoadApplicationsAlertsWithCounts("N")
+            $.fn.LoadApplicationsAlertsWithCounts("N", userRole)
         }
     });
 </script>

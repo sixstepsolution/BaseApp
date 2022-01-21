@@ -30,6 +30,7 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string comments { get; set; }
         public string deptComments { get; set; }
         public string deptName { get; set; }
+        public string roleName { get; set; }
         public string deptStatus { get; set; }
         public string isAdmin { get; set; }
         public string inspectionStatus { get; set; }
@@ -42,5 +43,6 @@ namespace C8.eServices.Mvc.Models.Mapings
         public DateTime? created_date { get; set; }
         public DateTime? inspectionDate { get; set; }
         public string inspectionReferenceNo { get; set; }
+        public string serviceType { get; set; }
     }
 }

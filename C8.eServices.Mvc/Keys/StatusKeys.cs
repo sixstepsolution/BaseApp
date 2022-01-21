@@ -129,5 +129,6 @@ namespace C8.eServices.Mvc.Keys
         public const string GrantWayleaveApplication = "s_wayleave_application_grant";
         public const string RejectWayleaveApplication = "s_wayleave_application_reject";
         public const string CloseWayleaveApplication = "Application Closed";
+        public const string AwaitingWayleaveOfficerReview = "Awaiting Wayleave Officer Review";
     }
 }

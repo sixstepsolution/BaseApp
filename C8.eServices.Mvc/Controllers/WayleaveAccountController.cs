@@ -43,6 +43,7 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.applicationNo = "";
             ViewBag.appStartDate = "";
             ViewBag.appEndDate = "";
+            ViewBag.serviceType = "";
             //ViewBag.appOverDueStatus = "";
             using (var client = new HttpClient())
             {
@@ -87,7 +88,7 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to)
+        public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to,string serviceType)
         {
             //if (Session["wayleaveaccountId"] == null)
             //{
@@ -101,10 +102,15 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.applicationNo = "";
             ViewBag.appStartDate = "";
             ViewBag.appEndDate = "";
+            ViewBag.serviceType = "";
             //ViewBag.appOverDueStatus = "";
             if (!String.IsNullOrEmpty(application_no))
             {
                 ViewBag.applicationNo = application_no;
+            }
+            if (!String.IsNullOrEmpty(serviceType))
+            {
+                ViewBag.serviceType = serviceType;
             }
             if (date_requested_from!=null)
             {
@@ -125,6 +131,7 @@ namespace C8.eServices.Mvc.Controllers
                 inpuclaims.application_no = application_no;
                 inpuclaims.date_requested_from = date_requested_from;
                 inpuclaims.date_requested_to = date_requested_to;
+                inpuclaims.serviceType = serviceType;
                 //inpuclaims.overdueStatus = OverdueStatus;
                 inpuclaims.created_by = Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");
                 //inpuclaims.isAdmin = "N";
@@ -190,6 +197,15 @@ namespace C8.eServices.Mvc.Controllers
             }            
             return View();
         }
+
+        public ActionResult LoadRegions()
+        {
+            //DataContext dc = new DataContext("Data Source=isha;Initial Catalog=scaffolding;User ID=isha123;Password=techaltum");
+            var regions = dbWayleave.MASTER_REGIONS.ToList();
+            return Json(regions, JsonRequestBehavior.AllowGet);
+
+        }
+
         public ActionResult WayleaveApplicationNew(string id = null)
         {
             if (Session["wayleaveaccountId"] == null)

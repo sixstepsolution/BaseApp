@@ -23,6 +23,6 @@ namespace C8.eServices.Mvc.Models.Services
         int DeleteApplicationForm(int id);
 
         //string AddApplicationForm(WL_APPLICATIONFORM applicationForm, List<WL_REGIONS> RegionResponse, List<WL_CONTACT_PERSONS> ContactResponse, List<WL_WORK_LOCATIONS> locationResponse,List<WL_DEPARTMENTS> departmentsDataResponse, HttpFileCollection files, string browser, int appCount,string paymentStatus);
-        string AddApplicationForm(WL_APPLICATIONFORM applicationForm, List<WL_DEPARTMENTS> departments, List<WL_DECLARATIONS> declarations, HttpFileCollection files, string browser, int appCount, string paymentStatus, string ipAddress);
+        string AddApplicationForm(WL_APPLICATIONFORM applicationForm, List<WL_DEPARTMENTS> departments, List<WL_DECLARATIONS> declarations, HttpFileCollection files, string browser, int appCount, string paymentStatus, string ipAddress, List<WL_EXCAVATION_DETAILS> excavationData);
     }
 }

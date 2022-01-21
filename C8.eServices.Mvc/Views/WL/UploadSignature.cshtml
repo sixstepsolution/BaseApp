@@ -162,10 +162,10 @@
         //var userRole = '@Session["ekurhuleniUserRole"]';
         //alert(userRole);
         if (userRole ==="Admin") {
-            $.fn.LoadApplicationsAlertsWithCounts("Y");
+            $.fn.LoadApplicationsAlertsWithCounts("Y", userRole);
         }
         else {
-            $.fn.LoadApplicationsAlertsWithCounts("N")
+            $.fn.LoadApplicationsAlertsWithCounts("N", userRole)
         }
     });
 </script>

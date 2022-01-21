@@ -1213,6 +1213,9 @@ var BaseUrl = localStorage.getItem('BaseUrl');
 //alert(apiBaseUrl);
 var accountID = localStorage.getItem('wayleaveAccountNumber');
 var isDepartmentResponseReceived = false;
+var circulateAllDepartmentResponses = 0
+var circulatedDepartmentScenario1 = false;
+var circulatedDepartmentScenario2 = false;
 //var appId = localStorage.getItem('appId');
 $("#IsViewApplication").show();
 //Show and hide collapse panel
@@ -1347,75 +1350,86 @@ $.fn.showGPS = function () {
     Startinitialize("");
     Endinitialize("");
 }
-$.fn.ShowSearchMap = function (id) {
-    //ajaxOnComplete();
-    GlobalSearchResult = "";
-    GlobalSearchResult = id;
-    //$("#search").html('');
-    //$("#map").html('');
-    //ajaxOnComplete();
-    //("#ArcGisSearchMap").load(window.location.href + " #ArcGisSearchMap");
-    //var url = "../Home/testMap?id="+id;
+//$.fn.ShowSearchMap = function (id) {
+//    //ajaxOnComplete();
+
+//    GlobalSearchResult = "";
+//    GlobalSearchResult = id;
+//    var mapAddress = $("#" + id).val();
+//    //$("#search").html('');
+//    //$("#map").html('');
+//    //ajaxOnComplete();
+//    //("#ArcGisSearchMap").load(window.location.href + " #ArcGisSearchMap");
+//    var url = "../Home/testMap?address=" + mapAddress;
     
 
-    $("#search_input").val("225 Commissioner St, Boksburg, Ekurhuleni, Gauteng, 1459");
+//    //$("#search_input").val("225 Commissioner St, Boksburg, Ekurhuleni, Gauteng, 1459");
     
-    //var e = jQuery.Event("keypress");
-    //e.which = 13; //enter keycode
-    //e.keyCode = 13;
-    //$("#search_input").trigger(e); search_menu_button
-    //document.getElementById('search_input').click();
-    //document.getElementById("Arciframe").setAttribute("src", url);
-    $("#locationPopup").modal('show');
-    setTimeout(function () {
-        if (id = "GPS_START_ADDRESS") {
-            var latt = $('#GPS_START_LATITUDE').val();
-            var longg = $('#GPS_START_LONGITUDE').val();
-            LoadMapPointer(latt, longg);
-        }
-        if (id = "GPS_END_ADDRESS") {
-            var latt = $('#GPS_END_LATITUDE').val();
-            var longg = $('#GPS_END_LONGITUDE').val();
-            LoadMapPointer(latt, longg);
-        }
-        //$('#search select').on('change', function () {
-        //    alert(this.value);
-        //});
-        //var input = document.getElementById("search_input");
-        //input.addEventListener("keyup", function (event) {
-        //    if (event.keyCode === 13) {
-        //        event.preventDefault();
-        //        document.getElementById("myBtn").click();
-        //    }
-        //});
-        //document.getElementById("search_input").focus();
-        //$(".esriGeocoderSearch").submit();
-        //document.getElementById("search_input").click();
-        //var elem = document.getElementById("search_input");
-        //elem.setAttribute("onclick", "javascript:this.form.submit();");
-        //$(document).on('keydown', function (e) {
-        //    if (e.which == 13) {
-        //        alert('User pressed Enter!');
-        //    }
-        //});
-        //document.getElementById("search_input").addEventListener("keydown", function (event) {
-        //        if (event.ctrlKey && event.key === "z") {
-        //            // Do Something, may be an 'Undo' operation
-        //        }
-        //    });
-        //clickevent();
-        //document.getElementById("search_menu_button").click();
+//    //var e = jQuery.Event("keypress");
+//    //e.which = 13; //enter keycode
+//    //e.keyCode = 13;
+//    //$("#search_input").trigger(e); search_menu_button
+//    //document.getElementById('search_input').click();
+//    document.getElementById("Arciframe").setAttribute("src", url);
+    
+//    setTimeout(function () {
+//        $("#locationPopup").modal('show');
+//        //$('#search select').on('change', function () {
+//        //    alert(this.value);
+//        //});
+//        //var input = document.getElementById("search_input");
+//        //input.addEventListener("keyup", function (event) {
+//        //    if (event.keyCode === 13) {
+//        //        event.preventDefault();
+//        //        document.getElementById("myBtn").click();
+//        //    }
+//        //});
+//        //document.getElementById("search_input").focus();
+//        //$(".esriGeocoderSearch").submit();
+//        //document.getElementById("search_input").click();
+//        //var elem = document.getElementById("search_input");
+//        //elem.setAttribute("onclick", "javascript:this.form.submit();");
+//        //$(document).on('keydown', function (e) {
+//        //    if (e.which == 13) {
+//        //        alert('User pressed Enter!');
+//        //    }
+//        //});
+//        //document.getElementById("search_input").addEventListener("keydown", function (event) {
+//        //        if (event.ctrlKey && event.key === "z") {
+//        //            // Do Something, may be an 'Undo' operation
+//        //        }
+//        //    });
+//        //clickevent();
+//        //document.getElementById("search_menu_button").click();
         
-        //document.getElementById("search_input")
-        //    .addEventListener("keyup", function (event) {
-        //        event.preventDefault();
-        //        if (event.keyCode === 13) {
-        //            document.getElementById("search_menu_button").click();
-        //        }
-        //    });
-    }, 5000);
+//        //document.getElementById("search_input")
+//        //    .addEventListener("keyup", function (event) {
+//        //        event.preventDefault();
+//        //        if (event.keyCode === 13) {
+//        //            document.getElementById("search_menu_button").click();
+//        //        }
+//        //    });
+//    }, 5000);
    
     
+//};
+
+$.fn.ShowSearchMap = function (id) {
+    //alert(id);
+    
+    $("#ShowMapLoader").show();
+    GlobalSearchResult = "";
+    GlobalSearchResult = id;
+    var mapAddress = $("#" + id).val();
+    var iframe = document.getElementById('Arciframe');
+    iframe.src = "";
+    var url = "../Home/MapMarker?address=" + mapAddress;
+    $("#locationPopup").modal('show');
+    //document.getElementById("Arciframe").setAttribute("src", url);
+    setTimeout(function () {
+        iframe.src = url;
+        //$("#ShowMapLoader").hide();
+    }, 3000);
 };
 
 function LoadMapPointer(lattitude, longgitude) {
@@ -1754,6 +1768,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 $('#GPS_START_LONGITUDE').val(data.gpS_START_LONGITUDE);
                 $('#GPS_END_LATITUDE').val(data.gpS_END_LATITUDE);
                 $('#GPS_END_LONGITUDE').val(data.gpS_END_LONGITUDE);
+                $('#REGION_OR_AREA').val(data.regioN_OR_AREA);
                 //appFormData.TYPE_OF_ROADCROSSING = $('#ChkHD').val();//*
                 //appFormData.TYPE_OF_ROADCROSSING1 = $('#ChkOT').val();//*
                 //appFormData.TYPE_OF_ROADCROSSING2 = $('#ChkNone').val();//*
@@ -1763,7 +1778,17 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     $("#ChkHD").prop('checked', true);
                 }
                 if (data.typE_OF_ROADCROSSING1) {
-                    $("#ChkOT").prop('checked', true);
+                    if (data.typE_OF_ROADCROSSING1 == "Horizontal drilling") {
+                        $("#ChkHD").prop('checked', true);
+                    }
+                    if (data.typE_OF_ROADCROSSING1 == "Open trench") {
+                        $('#OpenTrenchComment').show();
+                        $("#ChkOT").prop('checked', true);
+                        $("#OPEN_TRENCH_COMMENT").val(data.opeN_TRENCH_COMMENT);
+                    }
+                    if (data.typE_OF_ROADCROSSING1 == "None") {
+                        $("#ChkNone").prop('checked', true);
+                    }
                 }
                 if (data.typE_OF_ROADCROSSING2) {
                     $("#ChkNone").prop('checked', true);
@@ -1783,7 +1808,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 $('#APPLICATION_STEP_DESCRIPTION_STATUS').text(data.applicatioN_STEP_DESCRIPTION);
                 $('#APPLICATION_STEP_DESCRIPTION1').text(data.applicatioN_STEP_DESCRIPTION);
 
-                //if (data.applicatioN_STEP_DESCRIPTION == "Application Granted") {
+                //if (data.applicatioN_STEP_DESCRIPTION == "Application Supported") {
                 //    $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
                 //    $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'green');
                 //}
@@ -1797,19 +1822,27 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 if (data.applicatioN_STEP_DESCRIPTION == "Request for approvals" || data.applicatioN_STEP_DESCRIPTION == "Distributed to Departments") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'red');
-                    $('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
+                    //$('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
+                    $('#ApplicationAdminSection').hide();                    
                 }
 
                 if (data.applicatioN_STEP_DESCRIPTION == "Pending") {
                     //$('#ApplicationPendingStatus').show();
-                    $('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
+                    //$('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
                 }
 
-                if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Completed' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for documents') {
+                //if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Completed' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for documents') {
+                //    $('#ApplicationAdminSection').show();
+                //}
+
+                if (data.applicatioN_STEP_DESCRIPTION == "Awaiting Wayleave Officer Review") {
+                    $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
+                    $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'red');
+                    $('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
                     $('#ApplicationAdminSection').show();
                 }
 
-                if (data.applicatioN_STEP_DESCRIPTION == "Application Granted") {
+                if (data.applicatioN_STEP_DESCRIPTION == "Application Supported") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
                     $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'green');
                     $('#ApplicationAdminSection').hide();
@@ -1825,41 +1858,39 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                         console.log(dataDeclaration);
                         $.fn.LoadDeclarationsByAppid(dataDeclaration);
                     });
+                    if (data.applicatioN_STEP_DESCRIPTION == "Distributed to Departments" || data.applicatioN_STEP_DESCRIPTION == "Awaiting Wayleave Officer Review") {
+                        $.getJSON(apiBaseUrl + 'get-application-departments/' + appId, function (dataDept, status, xhr) {
+                            circulatedDepartmentList = dataDept;
+                            console.log("===================dataDepartments by appid==================");
+                            console.log(dataDept);
+                            if (dataDept) {
+                                var departmentName = $("#CurrentUserDepartmentName").val();
+                                if (departmentName == "Energy") {
+                                    departmentName = "Electricity";
+                                }
+                                var newArray = dataDept.filter(function (el) {
+                                    return el.departmenT_NAME == departmentName;
+                                });
+                                console.log("newArray");
+                                console.log(newArray);
+                                if (newArray.length > 0) {
+                                    var CirculatedDeptStatus = newArray[0].applicatioN_STATUS;
+                                    var CirculatedDeptCmnt = newArray[0].approvE_OR_REJECT_COMMENTS;
+                                    if (CirculatedDeptStatus == "Affected - Not supported" || CirculatedDeptStatus == "Affected - Conditional" || CirculatedDeptStatus == "Request for documents") {
+                                        $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
+                                        $('#departmentRejectComment').show();
+                                        $("#DEPARTMENT_COMMENTS").val(CirculatedDeptCmnt);
+                                    }
+                                    else if (CirculatedDeptStatus == "Not Affected") {
+                                        $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
+                                    }
 
-                    $.getJSON(apiBaseUrl + 'get-application-departments/' + appId, function (dataDept, status, xhr) {
-                        circulatedDepartmentList = dataDept;
-                        console.log("===================dataDepartments by appid==================");
-                        console.log(dataDept);
-                        if (dataDept) {
-                            var departmentName = $("#CurrentUserDepartmentName").val();
-                            if (departmentName == "Energy") {
-                                departmentName = "Electricity";
-                            }  
-                            var newArray = dataDept.filter(function (el) {
-                                return el.departmenT_NAME == departmentName;
-                            });
-                            console.log("newArray");
-                            console.log(newArray);
-                            if (newArray.length > 0) {
-                                var CirculatedDeptStatus = newArray[0].applicatioN_STATUS;
-                                var CirculatedDeptCmnt = newArray[0].approvE_OR_REJECT_COMMENTS;
-                                if (CirculatedDeptStatus == "Affected") {
-                                    $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
-                                    $('#departmentRejectComment').show();
-                                    $("#DEPARTMENT_COMMENTS").val(CirculatedDeptCmnt);     
                                 }
-                                else if (CirculatedDeptStatus == "Not Affected") {
-                                    $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
-                                }
-                                
+
                             }
-                            
-                        }
-                        $.fn.LoadDepartmentsByAppid(dataDept);
-                    });
-
-                    
-
+                            $.fn.LoadDepartmentsByAppid(dataDept);
+                        });
+                    }
 
                     $.fn.GetFormdataValues();
                     ServiceDocumentListFromServer = data.wL_SUPPORTING_DOCUMENTS;
@@ -2238,6 +2269,9 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
     ServiceDepartmentList = [];
     circulatedDepartmentList = [];
     circulatedDepartmentList = deptdata;
+    circulateAllDepartmentResponses = 0;
+    circulatedDepartmentScenario1 = false;
+    circulatedDepartmentScenario2 = false;
     if (circulatedDepartmentList.length > 0) {
         $('#DepartmentInfo').show();
         $('#showUpdateDepartmentStaus').show();
@@ -2251,10 +2285,12 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
             var dptComment = "";
             //alert(circulatedDepartmentList[i].createD_ON);
             //alert(Date.parse(circulatedDepartmentList[i].createD_ON));
-            var dt = formatDate(circulatedDepartmentList[i].createD_ON);
+            //var dt = formatDate(circulatedDepartmentList[i].createD_ON);
             var responseDate = "";
+            var responseTime = "";
             if (circulatedDepartmentList[i].responsE_DATE != null) {
                 responseDate = formatDate(circulatedDepartmentList[i].responsE_DATE);
+                responseTime = formatTime(circulatedDepartmentList[i].responsE_DATE);
             }
             
             //;
@@ -2267,9 +2303,13 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
                 dptComment = dptInfo.approvE_OR_REJECT_COMMENTS;
             }
             var tt = "";
-            if (status == "Not Affected" || status == "Affected") {
+            if (status == "Not Affected" || status == "Affected - Not supported" || status =="Affected - Conditional") {
                 isDepartmentResponseReceived = true;
                 tt = "text-success";
+                circulateAllDepartmentResponses++;
+            }
+            if (status == "Affected - Not supported") {
+                circulatedDepartmentScenario2 = true;
             }
             if (status == "Not Affected") {
                 tt = "text-success";
@@ -2277,8 +2317,16 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
             else {
                 tt = "text-red";
             }
-            $('#circulatedDepartmentList').append('<tr><td>' + circulatedDepartmentList[i].dpT_ID + '</td> <td>' + circulatedDepartmentList[i].departmenT_NAME + '</td> <td class="' + tt + '">' + status + '</td> <td>' + dptComment + '</td> <td>' + responseDate + '</td><td>' + dt + '</td> </tr>');
+            $('#circulatedDepartmentList').append('<tr><td>' + circulatedDepartmentList[i].dpT_ID + '</td> <td>' + circulatedDepartmentList[i].departmenT_NAME + '</td> <td class="' + tt + '">' + status + '</td> <td>' + dptComment + '</td> <td>' + responseDate + '</td><td>' + responseTime + '</td> </tr>');
+
         };
+
+        if (circulatedDepartmentScenario2) {
+            $("#circulateScenarioOne").hide();
+        }
+        else {
+            $("#circulateScenarioOne").show();
+        }
     }
     //$("#PageLoaderModel").modal('hide');
 }
@@ -2297,11 +2345,16 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
+function formatTime(date) {
+    var time = new Date(date);
+    return time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+}
+
 // Update application status only
 $.fn.UpdateApplicationFormStaus = function () {
     if (appFormData.AppStatus != null && appFormData.AppStatus != undefined && appFormData.AppStatus != "") {
 
-        if ($("#AppStatus").val() == "Application Rejected") {
+        if ($("#AppStatus").val() == "Application Not Supported") {
             var arc = $("#APPLICATIONReject_COMMENTS").val();
             if (arc != "" && arc != undefined) {
 
@@ -2312,8 +2365,7 @@ $.fn.UpdateApplicationFormStaus = function () {
             }
         }
 
-
-        if (isDepartmentResponseReceived) {
+        if (circulateAllDepartmentResponses == circulatedDepartmentList.length) {
             $('#isAppLoading').show();
             var departmentName = $("#CurrentUserDepartmentName").val();
             if (departmentName == "Energy") {
@@ -2355,9 +2407,8 @@ $.fn.UpdateApplicationFormStaus = function () {
             });
         }
         else {
-            toastr.warning('At least one department response is required');
-        }
-        
+            toastr.warning('All department response is required!');
+        }        
     }
     else {
         toastr.warning('Please select status!');
@@ -2439,7 +2490,7 @@ $.fn.UpdateDepartmentStaus = function () {
     var dc = $("#DEPARTMENT_COMMENTS").val()
     //alert(ds);
     if (ds != undefined && ds != null && ds != "") {
-        if (ds == "Rejected") {
+        if (ds == "Affected - Not supported" || ds == "Affected - Conditional" || ds == "Request for documents") {
             if (dc != undefined && dc != null && dc != "") {
 
             }
@@ -2513,7 +2564,7 @@ $.fn.ChangeAppSatus = function (flag) {
     if (flag =="ApproveStatus") {
         val = $('#AppStatus').val();
         appFormData.AppStatus = val;
-        if (val == "Application Rejected") {
+        if (val == "Application Not Supported") {
             $('#IsStatusReject').show();
         }
     }
@@ -2535,14 +2586,14 @@ $.fn.ChangeAppSatus = function (flag) {
     }
 
     IsRequestDocuments = val === 'Request for documents' ? true : false;
-    IsStatusReject = val === 'Application Rejected' ? true : false;
+    IsStatusReject = val === 'Application Not Supported' ? true : false;
 }
 
  $.fn.changeDepartmentStatus = function () {
     var status = $('#DEPARTMENT_STATUS').val();
     $('#departmentRejectComment').hide();
 
-     if (status == "Affected") {
+     if (status == "Affected - Not supported" || status == "Affected - Conditional" || status == "Request for documents") {
         $('#departmentRejectComment').show();
     }
 }

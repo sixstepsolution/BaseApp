@@ -1,6 +1,8 @@
 ﻿//Intialize variables
 var appFormData = new Object();
+var excavationFormData = new Object();
 var Map_Locations = [];
+var ExcavationData = [];
 var GPS_START_Lat = "";
 var GPS_START_Lng = "";
 var GPS_END_Lat = ""; 
@@ -25,6 +27,7 @@ var BaseUrl = localStorage.getItem('BaseUrl');
 var accountID = localStorage.getItem('wayleaveAccountNumber');
 //var appId = localStorage.getItem('appId');
 $("#IsViewApplication").show();
+circulatedDepartmentList = [];
 //Show and hide collapse panel
 $.fn.showcollapse = function () {
     $('.panel-collapse').on('show.bs.collapse', function () {
@@ -624,7 +627,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 $('#GPS_START_ADDRESS').val(data.gpS_START_ADDRESS);
                 $('#GPS_END_ADDRESS').val(data.gpS_END_ADDRESS);
 
-                
+                $('#REGION_OR_AREA').val(data.regioN_OR_AREA);
                 //appFormData.TYPE_OF_ROADCROSSING = $('#ChkHD').val();//*
                 //appFormData.TYPE_OF_ROADCROSSING1 = $('#ChkOT').val();//*
                 //appFormData.TYPE_OF_ROADCROSSING2 = $('#ChkNone').val();//*
@@ -634,11 +637,22 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     $("#ChkHD").prop('checked', true);
                 }
                 if (data.typE_OF_ROADCROSSING1) {
-                    $("#ChkOT").prop('checked', true);
+                    if (data.typE_OF_ROADCROSSING1 =="Horizontal drilling") {
+                        $("#ChkHD").prop('checked', true);
+                    }
+                    if (data.typE_OF_ROADCROSSING1 == "Open trench") {
+                        $('#OpenTrenchComment').show();
+                        $("#ChkOT").prop('checked', true);
+                        $("#OPEN_TRENCH_COMMENT").val(data.opeN_TRENCH_COMMENT);
+                    }
+                    if (data.typE_OF_ROADCROSSING1 == "None") {
+                        $("#ChkNone").prop('checked', true);
+                    }                    
                 }
                 if (data.typE_OF_ROADCROSSING2) {
                     $("#ChkNone").prop('checked', true);
                 }
+                
                 //$("#ChkHD").prop('checked', true);
                 //$('#ChkOT').val(data.typE_OF_ROADCROSSING1);
                 //$('#ChkNone').val(data.typE_OF_ROADCROSSING2);
@@ -698,6 +712,37 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                         }                        
                         
                     });
+                    $.getJSON(apiBaseUrl + 'get-application-departments/' + appId, function (dataDept, status, xhr) {
+                        circulatedDepartmentList = dataDept;
+                        console.log("===================dataDepartments by appid==================");
+                        console.log(dataDept);
+                        if (dataDept) {
+                            var departmentName = $("#CurrentUserDepartmentName").val();
+                            if (departmentName == "Energy") {
+                                departmentName = "Electricity";
+                            }
+                            var newArray = dataDept.filter(function (el) {
+                                return el.departmenT_NAME == departmentName;
+                            });
+                            console.log("newArray");
+                            console.log(newArray);
+                            if (newArray.length > 0) {
+                                var CirculatedDeptStatus = newArray[0].applicatioN_STATUS;
+                                var CirculatedDeptCmnt = newArray[0].approvE_OR_REJECT_COMMENTS;
+                                if (CirculatedDeptStatus == "Affected - Not supported" || CirculatedDeptStatus == "Affected - Conditional") {
+                                    $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
+                                    $('#departmentRejectComment').show();
+                                    $("#DEPARTMENT_COMMENTS").val(CirculatedDeptCmnt);
+                                }
+                                else if (CirculatedDeptStatus == "Not Affected") {
+                                    $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
+                                }
+
+                            }
+
+                        }
+                        $.fn.LoadDepartmentsByAppid(dataDept);
+                    });
                     $.fn.GetFormdataValues();                    
                     ServiceDocumentListFromServer = data.wL_SUPPORTING_DOCUMENTS;                    
                     $.fn.LoadSupportingDocumentsByAppid(data.applicatioN_STEP_DESCRIPTION);
@@ -716,7 +761,74 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
         $("#IsViewApplication").show();
     }
 }
+$.fn.LoadDepartmentsByAppid = function (deptdata) {
+    //alert('dept');
+    isDepartmentResponseReceived = false;
+    ServiceDepartmentList = [];
+    circulatedDepartmentList = [];
+    circulatedDepartmentList = deptdata;
+    circulateAllDepartmentResponses = 0;
+    circulatedDepartmentScenario1 = false;
+    circulatedDepartmentScenario2 = false;
+    if (circulatedDepartmentList.length > 0) {
+        $('#DepartmentInfo').show();
+        $('#showUpdateDepartmentStaus').show();
+        $('#circulatedDepartmentList').empty();
+        console.log("circulated Department List");
+        console.log(circulatedDepartmentList);
+        //alert(circulatedDepartmentList.length);
+        for (let i = 0; i < circulatedDepartmentList.length; i++) {
+            var dptInfo = circulatedDepartmentList[i];
+            var status = "";
+            var dptComment = "";
+            //alert(circulatedDepartmentList[i].createD_ON);
+            //alert(Date.parse(circulatedDepartmentList[i].createD_ON));
+            //var dt = formatDate(circulatedDepartmentList[i].createD_ON);
+            var responseDate = "";
+            var responseTime = "";
+            if (circulatedDepartmentList[i].responsE_DATE != null) {
+                responseDate = formatDate(circulatedDepartmentList[i].responsE_DATE);
+                responseTime = formatTime(circulatedDepartmentList[i].responsE_DATE);
+                
+            }
 
+            //;
+            if (dptInfo.applicatioN_STATUS != null && dptInfo.applicatioN_STATUS != '') {
+
+                status = dptInfo.applicatioN_STATUS;
+            }
+
+            if (dptInfo.approvE_OR_REJECT_COMMENTS != null && dptInfo.approvE_OR_REJECT_COMMENTS != '') {
+                dptComment = dptInfo.approvE_OR_REJECT_COMMENTS;
+            }
+            var tt = "";
+            if (status == "Not Affected" || status == "Affected - Not supported" || status == "Affected - Conditional") {
+                isDepartmentResponseReceived = true;
+                tt = "text-success";
+                circulateAllDepartmentResponses++;
+            }
+            if (status == "Affected - Not supported") {
+                circulatedDepartmentScenario2 = true;
+            }
+            if (status == "Not Affected") {
+                tt = "text-success";
+            }
+            else {
+                tt = "text-red";
+            }
+            $('#circulatedDepartmentList').append('<tr><td>' + circulatedDepartmentList[i].dpT_ID + '</td> <td>' + circulatedDepartmentList[i].departmenT_NAME + '</td> <td class="' + tt + '">' + status + '</td> <td>' + dptComment + '</td> <td>' + responseDate + '</td><td>' + responseTime + '</td> </tr>');
+
+        };
+
+        if (circulatedDepartmentScenario2) {
+            $("#circulateScenarioOne").hide();
+        }
+        else {
+            $("#circulateScenarioOne").show();
+        }
+    }
+    //$("#PageLoaderModel").modal('hide');
+}
 //Add work locations
 $.fn.AddLocations = function () {
     let WorkLocationModel = {};
@@ -756,11 +868,14 @@ $.fn.AddLocations = function () {
 $.fn.SubmitApplication = function () {
     //var startAdrs = $("#GPS_START_ADDRESS").val('Nellore');
     //var endAdrs = $("#GPS_END_ADDRESS").val('Chennai');
-    var startAdrs = $("#GPS_START_ADDRESS").val();
-    var endAdrs = $("#GPS_END_ADDRESS").val();
+    //var startAdrs = $("#GPS_START_ADDRESS").val();
+    //var endAdrs = $("#GPS_END_ADDRESS").val();
     var startDt = $("#STARTING_DATE").val();
+    var completionDt = $("#COMPLETION_DATE").val();
     var serviceType = $("#SERVICE_TYPE_NEW").val();
-    if (startAdrs != "" && startAdrs != undefined && endAdrs != "" && endAdrs != undefined && startDt != "" && startDt != undefined && serviceType != "" && serviceType != undefined) {
+    var regionData = $("#REGION_OR_AREA").val();
+    if (startDt != "" && startDt != undefined
+        && completionDt != "" && completionDt != undefined && serviceType != "" && serviceType != undefined && regionData != "" && regionData != undefined) {
 
     }
     else {
@@ -867,6 +982,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
     var DeclarationList = [];
     $.fn.GetFormdataValues();
 
+    
 
     
 
@@ -896,6 +1012,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
     formData.append("Departments", JSON.stringify(DepartmentList));
     formData.append("Declarations", JSON.stringify(DeclarationList));
     formData.append("PaymentStatus", JSON.stringify(paymentStatus));
+    formData.append("ExcavationData", JSON.stringify(ExcavationData));
 
     var isUploadDocumentSizeNotValid = false;
     if (ServiceDocumentList.length > 0) {
@@ -1061,6 +1178,8 @@ $.fn.GetFormdataValues = function () {
     appFormData.PROPERTYOWNER_MOBILENO = $('#PROPERTYOWNER_MOBILENO').val();//*
     appFormData.PROPERTYOWNER_EMAIL = $('#PROPERTYOWNER_EMAIL').val();
 
+    
+
     appFormData.IDENTIFICATION_NUMBER = $("#IDENTIFICATION_NUMBER").val();
     appFormData.GENDER = $("#GENDER").val();
     appFormData.PROJECT_NUMBER = $('#PROJECT_NUMBER').val();
@@ -1082,13 +1201,17 @@ $.fn.GetFormdataValues = function () {
     appFormData.STARTING_DATE = $('#STARTING_DATE').val();
     appFormData.COMPLETION_DATE = $('#COMPLETION_DATE').val();
 
-    appFormData.TYPE_OF_ROADCROSSING = $('#ChkHD').val();//*
-    appFormData.TYPE_OF_ROADCROSSING1 = $('#ChkOT').val();//*
-    appFormData.TYPE_OF_ROADCROSSING2 = $('#ChkNone').val();//*
+    //var radioValue = $("input[name=ChkHD]:checked").val();
+    //if (radioValue != undefined && radioValue != "" && radioValue != null) {
+    //    appFormData.TYPE_OF_ROADCROSSING1 = radioValue;
+    //}
+    //appFormData.TYPE_OF_ROADCROSSING = $('#ChkHD').val();//*
+    appFormData.TYPE_OF_ROADCROSSING1 = $("input[name=ChkHD]:checked").val();//*
+    //appFormData.TYPE_OF_ROADCROSSING2 = $('#ChkNone').val();//*
     appFormData.EXCAVATION_LENGTH = $('#EXCAVATION_LENGTH').val();
     appFormData.RIDING_SURFACE = $('#RIDING_SURFACE').val();
     appFormData.KERBS = $('#KERBS').val();
-
+    appFormData.OPEN_TRENCH_COMMENT = $('#OPEN_TRENCH_COMMENT').val();//*
     appFormData.GPS_START_ADDRESS = $('#GPS_START_ADDRESS').val();
     appFormData.GPS_END_ADDRESS = $('#GPS_END_ADDRESS').val();
     appFormData.APPLICATION_COMMENTS = $('#APPLICATION_COMMENTS').val();
@@ -1097,18 +1220,34 @@ $.fn.GetFormdataValues = function () {
     appFormData.GPS_START_LONGITUDE = $('#GPS_START_LONGITUDE').val();
     appFormData.GPS_END_LATITUDE = $('#GPS_END_LATITUDE').val();
     appFormData.GPS_END_LONGITUDE = $('#GPS_END_LONGITUDE').val();
+    appFormData.REGION_OR_AREA = $('#REGION_OR_AREA').val();
     //appFormData.postCode = $('#postCode').val();
     //appFormData.postCode = $('#postCode').val();
     //appFormData.postCode = $('#postCode').val();
 };
+
+// Set form data values
+$.fn.GetExcavationFormdataValues = function () {    
+    excavationFormData.TYPE_OF_ROADCROSSING = $("input[name=ChkHD]:checked").val();//*
+    excavationFormData.EXCAVATION_LENGTH = $('#EXCAVATION_LENGTH').val();
+    excavationFormData.RIDING_SURFACE = $('#RIDING_SURFACE').val();
+    excavationFormData.KERBS = $('#KERBS').val();
+    excavationFormData.OPEN_TRENCH_COMMENT = $('#OPEN_TRENCH_COMMENT').val();//*
+    excavationFormData.GPS_START_ADDRESS = $('#GPS_START_ADDRESS').val();
+    excavationFormData.GPS_END_ADDRESS = $('#GPS_END_ADDRESS').val();
+    excavationFormData.APPLICATION_COMMENTS = $('#APPLICATION_COMMENTS').val();
+};
+
+
 function GetFormattedDate(dateValue) {
     var todayTime = new Date(dateValue);
     var month = todayTime.getMonth() + 1;
     var day = todayTime.getDate();
     var year = todayTime.getFullYear();
-    alert(year);
+    //alert(year);
     return year + "-" + month + "-" + day;
 }
+
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -1122,6 +1261,12 @@ function formatDate(date) {
 
     return [year, month, day].join('-');
 }
+
+function formatTime(date) {
+    var time = new Date(date);
+    return time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+}
+
 function testdate() {
     var input = $("#STARTING_DATE").val();
     var d = new Date(input);     
@@ -1138,18 +1283,49 @@ function testdate() {
     //console.log(dateEntered); //e.g. Fri Nov 13 2015 00:00:00 GMT+0000 (GMT Standard Time)
 };
 
+function checkEstimatedDate(id) {
+    var input = $("#STARTING_DATE").val();
+    var d = new Date(input);
+    var inputt = $("#"+id).val();
+    var dd = new Date(inputt);
 
-//document.getElementById("STARTING_DATE").addEventListener("change", function () {
-//    var input = this.value;
-//    var dateEntered = new Date(input);
-//    //var dt = new Date("August 20, 2017 11:30:25");
-//    var cDate = dateEntered.setMonth(dateEntered.getMonth() + 6);
-//    $("#COMPLETION_DATE").val(cDate);
-//    console.log(input); //e.g. 2015-11-13
-//    alert(input);
-//    alert(dateEntered);
-//    console.log(dateEntered); //e.g. Fri Nov 13 2015 00:00:00 GMT+0000 (GMT Standard Time)
-//});
+    // To calculate the time difference of two dates
+    var Difference_In_Time = dd.getTime() - d.getTime();
+
+    // To calculate the no. of days between two dates
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    //alert(Difference_In_Days);
+    if (Difference_In_Days <= 181) {
+        if (Difference_In_Days > 0) {
+            var yy = dd.getFullYear() + "-" + ("0" + (dd.getMonth() + 1)).slice(-2) + "-" + ("0" + dd.getDate()).slice(-2);
+            $("#" + id).val(yy);
+        }
+        else {
+            toastr.warning('Estimated Completion Date cannot be less than Starting Date', "warning", {
+                "timeOut": "30000",
+                "extendedTImeout": "50000",
+                "closeButton": true,
+            });
+            $("#" + id).val('');
+        }        
+    }
+    else {
+        toastr.warning('Estimated Completion Date cannot be more than six months after Starting Date', "warning", {
+            "timeOut": "30000",
+            "extendedTImeout": "50000",
+            "closeButton": true,
+        });
+        $("#" + id).val('');
+    }    
+};
+
+$.fn.CheckOpenTrench = function () {
+    $('#OpenTrenchComment').hide();
+    var radioValue = $("input[name=ChkHD]:checked").val();
+    if (radioValue === "Open trench") {
+        $('#OpenTrenchComment').show();
+    } 
+}
 
 $.fn.LoadDeclarationsByAppid = function (serverData) {
     ServiceDeclarationList = [];
@@ -1368,6 +1544,90 @@ function ViewDocument(filename) {
 $.fn.ShowEftMasterpassDetails = function () {
     $("#ShowPaynowButtons").hide();
     $("#ShowEftMasterpass").show();
+}
+
+//Show excavation popup
+$.fn.ShowExcavationPopupModal = function () {
+    $("#ExcavationDetailsPopup").modal();
+}
+
+//Save Excavation details
+$.fn.SaveExcavationDetails = function () {
+    //ExcavationData = [];
+    var startAdrs = "Nellore";// $("#GPS_START_ADDRESS").val();
+    var endAdrs = "Chennai";// $("#GPS_END_ADDRESS").val();
+    if (startAdrs != "" && startAdrs != undefined && endAdrs != "" && endAdrs != undefined) {
+        $('#ExcavationListData').empty();
+        var radioValue = $("input[name=ChkHD]:checked").val();
+        if (radioValue === "Open trench") {
+            $('#OpenTrenchComment').show();
+            var cmmnt = $('#OPEN_TRENCH_COMMENT').val();
+            if (cmmnt != undefined && cmmnt != "" && cmmnt != null) {
+
+            }
+            else {
+                toastr.warning('Please state the reason for open trench!');
+                return false;
+            }
+        }
+
+        var excavationFormData = {};
+        excavationFormData.TYPE_OF_ROADCROSSING = $("input[name=ChkHD]:checked").val();//*
+        excavationFormData.EXCAVATION_LENGTH = $('#EXCAVATION_LENGTH').val();
+        excavationFormData.RIDING_SURFACE = $('#RIDING_SURFACE').val();
+        excavationFormData.KERBS = $('#KERBS').val();
+        excavationFormData.OPEN_TRENCH_COMMENT = $('#OPEN_TRENCH_COMMENT').val();//*
+        excavationFormData.GPS_START_ADDRESS = $('#GPS_START_ADDRESS').val();
+        excavationFormData.GPS_END_ADDRESS = $('#GPS_END_ADDRESS').val();
+        excavationFormData.APPLICATION_COMMENTS = $('#APPLICATION_COMMENTS').val();
+        ExcavationData.push(excavationFormData);
+        console.log("===========ExcavationData============");
+        console.log(ExcavationData);
+        //alert(ExcavationData.length);
+        if (ExcavationData.length > 0) {
+            $('#ExcavationListData').show();
+            $('#ExcavationListDataFromServer').hide();
+            for (let j = 0; j < ExcavationData.length; j++) {
+                var id = j + 1;
+                $('#ExcavationListData').append('<tr><td>' + id + '</td><td>' + ExcavationData[j].TYPE_OF_ROADCROSSING + '</td><td>' + ExcavationData[j].EXCAVATION_LENGTH + '</td><td>' + ExcavationData[j].RIDING_SURFACE + '</td><td>' + ExcavationData[j].KERBS + '</td><td>' + ExcavationData[j].GPS_START_ADDRESS + '</td><td>' + ExcavationData[j].GPS_END_ADDRESS + '</td><td>' + ExcavationData[j].APPLICATION_COMMENTS + '</td><td><a onclick="removeExcavation(' + id + ')"><i class="fa fa-trash text-danger"></i> </a></td></tr>');
+            };
+
+            document.getElementById("ChkHD").checked = false;
+            document.getElementById("ChkOT").checked = false;
+            document.getElementById("ChkNone").checked = false;
+            $('#EXCAVATION_LENGTH').val('');
+            $('#RIDING_SURFACE').val('');
+            $('#KERBS').val('');
+            $('#OPEN_TRENCH_COMMENT').val('');
+            $('#GPS_START_ADDRESS').val('');
+            $('#GPS_END_ADDRESS').val('');
+            $('#APPLICATION_COMMENTS').val('');
+            $('#OpenTrenchComment').hide();
+            $("#ExcavationDetailsPopup").modal('hide');
+        }
+    }
+    else {
+        toastr.warning('* Fields are required!');
+        return;
+    }
+
+    
+}
+
+function removeExcavation(id) {
+    id = id - 1;
+    ExcavationData.splice(id, 1);
+    console.log("====remove ExcavationData===");
+    console.log(ExcavationData);
+    $('#ExcavationListData').empty();
+    if (ExcavationData.length > 0) {
+        $('#ExcavationListData').show();
+        $('#ExcavationListDataFromServer').hide();
+        for (let j = 0; j < ExcavationData.length; j++) {
+            var id = j + 1;
+            $('#ExcavationListData').append('<tr><td>' + id + '</td><td>' + ExcavationData[j].TYPE_OF_ROADCROSSING + '</td><td>' + ExcavationData[j].EXCAVATION_LENGTH + '</td><td>' + ExcavationData[j].RIDING_SURFACE + '</td><td>' + ExcavationData[j].KERBS + '</td><td>' + ExcavationData[j].GPS_START_ADDRESS + '</td><td>' + ExcavationData[j].GPS_END_ADDRESS + '</td><td>' + ExcavationData[j].APPLICATION_COMMENTS + '</td><td><a onclick="removeExcavation(' + id + ')"><i class="fa fa-trash text-danger"></i> </a></td></tr>');
+        };
+    }
 }
 
 

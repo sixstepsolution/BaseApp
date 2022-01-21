@@ -30,6 +30,7 @@
         -webkit-box-sizing: border-box;
         border-radius: 4px !important
     }
+    
 
     .badge {
         display: inline-block;
@@ -366,11 +367,16 @@
                                                     Created On
                                                 </a>&nbsp;
                                             </td>
+                                            <td style="width:10% !important">
+                                                <a class="anchor_sorting" href="">
+                                                    Action
+                                                </a>&nbsp;
+                                            </td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td colspan="10" style="padding:0">
+                                            <td colspan="11" style="padding:0">
                                                 <div class="panel-group">
                                                     <div class="bs-example">
                                                         <div class="panel-group" id="accordionpatient"
@@ -414,54 +420,59 @@
                                                                                     <tbody>
                                                                                         @foreach (var app in rc.accountList)
                                                                                         {
-                                                                                            <tr style="border-collapse:collapse;">
-                                                                                                <td style="width:5% !important">
-                                                                                                    <a onclick="goToWayleaveAccount('@tt.Encrypt(app.account_number.ToString())')"
-                                                                                                       style="cursor: pointer;"
-                                                                                                       class="ggb-a"><u> @app.account_id</u></a>
-                                                                                                </td>
-                                                                                                <td style="width:11% !important">
-                                                                                                    @app.account_number
-                                                                                                </td>
-                                                                                                <td style="width:7% !important">
-                                                                                                    @app.userType
-                                                                                                </td>
-                                                                                                <td style="width:10% !important">
-                                                                                                    @app.companyFullName
-                                                                                                </td>
-                                                                                                <td style="width:10% !important">
-                                                                                                    @app.contactPersonName
-                                                                                                </td>
-                                                                                                <td style="width:18% !important">
-                                                                                                    @app.email
-                                                                                                </td>
-                                                                                                <td style="width:23% !important">
-                                                                                                    @app.address
-                                                                                                </td>
-                                                                                                <td style="width:10% !important">
-                                                                                                    @if (app.status == "Pending")
-                                                                                                    {
-                                                                                                        <div style="color:red">
-                                                                                                            @app.status
-                                                                                                        </div>
-                                                                                                    }
-                                                                                                    @if (app.status == "Approved")
-                                                                                                    {
-                                                                                                        <div style="color:green">
-                                                                                                            @app.status
-                                                                                                        </div>
-                                                                                                    }
-                                                                                                    @if (app.status == "Rejected")
-                                                                                                    {
-                                                                                                        <div style="color:red">
-                                                                                                            @app.status
-                                                                                                        </div>
-                                                                                                    }
-                                                                                                </td>
-                                                                                                <td style="width:10% !important">
-                                                                                                    @app.createdDate
-                                                                                                </td>
-                                                                                            </tr>
+                                                                                        <tr style="border-collapse:collapse;">
+                                                                                            <td style="width:5% !important">
+                                                                                                <a onclick="goToWayleaveAccount('@tt.Encrypt(app.account_number.ToString())')"
+                                                                                                   style="cursor: pointer;"
+                                                                                                   class="ggb-a"> @app.account_id</a>
+                                                                                            </td>
+                                                                                            <td style="width:11% !important">
+                                                                                                @app.account_number
+                                                                                            </td>
+                                                                                            <td style="width:7% !important">
+                                                                                                @app.userType
+                                                                                            </td>
+                                                                                            <td style="width:10% !important">
+                                                                                                @app.companyFullName
+                                                                                            </td>
+                                                                                            <td style="width:10% !important">
+                                                                                                @app.contactPersonName
+                                                                                            </td>
+                                                                                            <td style="width:18% !important">
+                                                                                                @app.email
+                                                                                            </td>
+                                                                                            <td style="width:23% !important">
+                                                                                                @app.address
+                                                                                            </td>
+                                                                                            <td style="width:10% !important">
+                                                                                                @if (app.status == "Pending")
+                                                                                                {
+                                                                                                    <div style="color:red">
+                                                                                                        @app.status
+                                                                                                    </div>
+                                                                                                }
+                                                                                                @if (app.status == "Approved")
+                                                                                                {
+                                                                                                    <div style="color:green">
+                                                                                                        @app.status
+                                                                                                    </div>
+                                                                                                }
+                                                                                                @if (app.status == "Rejected")
+                                                                                                {
+                                                                                                    <div style="color:red">
+                                                                                                        @app.status
+                                                                                                    </div>
+                                                                                                }
+                                                                                            </td>
+                                                                                            <td style="width:10% !important">
+                                                                                                @app.createdDate
+                                                                                            </td>
+                                                                                            <td style="width:5%!important">                                                                                                
+                                                                                                <a onclick="goToWayleaveAccount('@tt.Encrypt(app.account_number.ToString())')"
+                                                                                                   style="cursor: pointer;color:#fff!important"
+                                                                                                   class="btn btn-green-custom btn-sm">Open</a>
+                                                                                            </td>
+                                                                                        </tr>
                                                                                         }
                                                                                 </table>
                                                                             </div>

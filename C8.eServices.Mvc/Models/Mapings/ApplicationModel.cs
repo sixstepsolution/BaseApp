@@ -67,6 +67,7 @@ namespace C8.eServices.Mvc.Models.Mapings
         public string APPLICATION_DATE { get; set; }
         public string STARTING_DATE { get; set; }
         public string COMPLETION_DATE { get; set; }
+        public string OPEN_TRENCH_COMMENT { get; set; }
         public int? DRAWING_NUMBER { get; set; }
 
         public string TYPE_OF_ROADCROSSING { get; set; }
