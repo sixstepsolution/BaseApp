@@ -11,13 +11,13 @@ namespace C8.eServices.Mvc.Keys
         public const string Applicationcaptured = "Application submitted";
         public const string Applicationviewed = "Application viewed";
         public const string Distributed_to_Departments = "Distributed to Departments";
-        public const string ApplicationRejected = "Application Not Supported";
-        public const string ApplicationGranted = "Application Supported";
+        public const string ApplicationRejected = "Application Rejected";
+        public const string ApplicationGranted = "Application Granted";
         public const string UploadedPaymentReciept = "Uploaded Payment reciept";
         public const string Updated_to_Affected = "Updated to Affected";
         public const string Updated_to_NotAffected = "Updated to Not Affected";
-        public const string Updated_to_ApplicationGranted = "Updated to Application Supported";
-        public const string Updated_to_ApplicationRejected = "Updated to Application Not Supported";
+        public const string Updated_to_ApplicationGranted = "Updated to Application Granted";
+        public const string Updated_to_ApplicationRejected = "Updated to Application Rejected";
         public const string SuccessfulOutcome = "Successful";
         public const string UnSuccessfulOutcome = "Un Successful";
     }

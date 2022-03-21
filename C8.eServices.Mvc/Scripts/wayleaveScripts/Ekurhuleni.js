@@ -96,9 +96,9 @@ $.fn.LoadApplicationsAlertsWithCounts = function (isAdmin,role) {
                         }
                         bgColor = 'small-box ' + bgColor;
                         if (name != "Pending Payment" && name != "Pending Review") {
-                            if (name == "Awaiting Wayleave Officer Review") {
+                            if (name == "Pending Approval") {
                                 if (role == "Admin") {
-                                    $('#LeftMenuAlerts').append('<div class="col-md-6" style="padding: 8px;padding-left: 3px;padding-right: 0px;padding-bottom: 4px;padding-top: 0px;"><a href="#"><div class="' + bgColor + '" style="margin: 0;padding: 8px;"><div class="inner" style="text-align: center;"><p style="font-size: 20px;margin: 0;">' + count + '</p><p style="margin: 0;font-size: 11px;">Awaiting Wayleave <br />Officer Review</p></div><div class="icon"></div></div></a></div>');
+                                    $('#LeftMenuAlerts').append('<div class="col-md-6" style="padding: 8px;padding-left: 3px;padding-right: 0px;padding-bottom: 4px;padding-top: 0px;"><a href="#"><div class="' + bgColor + '" style="margin: 0;padding: 8px;"><div class="inner" style="text-align: center;"><p style="font-size: 20px;margin: 0;">' + count + '</p><p style="margin: 0;font-size: 11px;">Pending Approval</p></div><div class="icon"></div></div></a></div>');
                                 }                                
                             }
                             else {

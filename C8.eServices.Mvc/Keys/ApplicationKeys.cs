@@ -18,6 +18,6 @@ namespace C8.eServices.Mvc.Keys
         public const string UserAccountRole = "wayleave account";
 
         public const string PendingDepartmentReview = "Pending Department Review";
-        public const string Requestfordocuments = "Request for documents";
+        public const string Requestfordocuments = "Request for additional information";
     }
 }

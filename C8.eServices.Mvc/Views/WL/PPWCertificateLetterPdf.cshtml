@@ -1,0 +1,306 @@
+﻿
+@model C8.eServices.Mvc.Models.WL_APPLICATIONFORM
+@using System.Configuration;
+@using C8.eServices.Mvc.Models;
+@{
+    Layout = null;
+}
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<div class="main-container">
+    <table width="100%" style="font-size:13pt!important">
+        <tr>
+            <td colspan="3" style="text-align:left!important">
+                <img src="~/Content/wayleaveStyles/assets/Images/COE_LOGO.png" width="200" height="100" />
+            </td>
+            <td colspan="3">
+                <div class="text-center" style="font-size:16pt!important;margin-top:5px!important"><b>Wayleave - Permission to Perform Work</b></div>
+            </td>
+        </tr>
+        <tr><td colspan="6"><div style="border:1px solid #000!important;width:100%!important"></div></td></tr>
+    </table>
+    @if (ViewBag.isAffectedConditionally)
+    {
+        <div style="width:100%!important;margin:10px 10px 10px 0px!important;font-size:14pt!important;text-align:left!important">
+            Status: <b>Granted with conditions</b>
+        </div>
+    }
+    <table width="100%" style="font-size:13pt!important">
+        <tr>
+            <td colspan="2">
+                <div style="margin-top:5px!important">Profile number: @Model.APPLICATION_NUMBER</div>
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div>Applicant name: @Model.PROPERTYOWNER_NAME</div>
+            </td>
+            <td colspan="2">
+                <div>Applicant surname: @Model.PROPERTYOWNER_SURNAME</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div>Tel number: @Model.PROPERTYOWNER_CONTACTNO</div>
+            </td>
+            <td colspan="2">
+                <div>Mobile number: @Model.PROPERTYOWNER_MOBILENO</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="margin-bottom:5px!important">Email: @Model.PROPERTYOWNER_EMAIL</div>
+            </td>
+            <td colspan="2">
+                <div style="margin-bottom:5px!important">Identification number: @Model.IDENTIFICATION_NUMBER</div>
+            </td>
+        </tr>
+    </table>
+    <table width="100%" style="font-size:13pt!important">
+        <tr>
+            <td colspan="4"><div style="height:30px!important;background-color:#ccc!important;color:#000!important;padding-top:5px!important;padding-left:5px!important">Consulting Engineer Details</div></td>
+        </tr>
+        <tr>
+            <td colspan="2" style="width:50%!important">
+                <div style="margin-top:5px!important">Name: @Model.CONSULTANT_NAME</div>
+            </td>
+            <td colspan="2">
+                <div style="margin-top:5px!important">Surname: @Model.CONSULTANT_SURNAME</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div>Tel number: @Model.CONSULTANT_CONTACTNO</div>
+            </td>
+            <td colspan="2">
+                <div>Mobile number: @Model.CONSULTANT_MOBILENO</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="margin-bottom:5px!important">Email: @Model.CONSULTANT_EMAIL</div>
+            </td>
+            <td colspan="2">
+                <div style="margin-bottom:5px!important">Address: @Model.CONSULTANT_ADDRESS</div>
+            </td>
+        </tr>
+    </table>
+    <table width="100%" style="font-size:13pt!important">
+        <tr>
+            <td colspan="4"><div style="height:30px!important;background-color:#ccc!important;color:#000!important;padding-top:5px!important;padding-left:5px!important">Contractor details</div></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="margin-top:5px!important">Name: @Model.CONTRACTOR_NAME</div>
+            </td>
+            <td colspan="2">
+                <div style="margin-top:5px!important">Surname: @Model.CONTRACTOR_SURNAME</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div>Tel number: @Model.CONTRACTOR_CONTACTNO</div>
+            </td>
+            <td colspan="2">
+                <div>Mobile number: @Model.CONTRACTOR_MOBILENO</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="margin-bottom:5px!important">Email: @Model.CONTRACTOR_EMAIL</div>
+            </td>
+            <td colspan="2">
+                <div style="margin-bottom:5px!important">Address: @Model.CONTRACTOR_ADDRESS</div>
+            </td>
+        </tr>
+    </table>
+    <table width="100%" style="font-size:13pt!important">
+        <tr>
+            <td colspan="4"><div style="height:30px!important;background-color:#ccc!important;color:#000!important;padding-top:5px!important;padding-left:5px!important">Provisional Dates</div></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="margin-top:5px!important">Starting date: @Model.STARTING_DATE</div>
+            </td>
+            <td colspan="2">
+                <div style="margin-top:5px!important">Estimated completion date: @Model.COMPLETION_DATE</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="margin-bottom:5px!important">Project number: @Model.PROJECT_NUMBER</div>
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+    </table>
+    <table width="100%" style="font-size:12pt!important">
+        <tr>
+            <td colspan="4"><div style="height:30px!important;background-color:#ccc!important;color:#000!important;padding-top:5px!important;padding-left:5px!important">Excavation details</div></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="margin-top:5px!important">Region: @Model.REGION_OR_AREA</div>
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+        @if (ViewBag.ExcavationData != null)
+        {
+            foreach (var ex in (List<C8.eServices.Mvc.Models.WL_EXCAVATION_DETAILS>)ViewBag.ExcavationData)
+            {
+                <tr>
+                    <td colspan="2">
+                        <div style="margin-top:10px!important">Type of road crossing: @ex.TYPE_OF_ROADCROSSING</div>
+                    </td>
+                    <td colspan="2">
+                        <div style="margin-top:10px!important">Excavation length: @ex.EXCAVATION_LENGTH</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div>Depth: @ex.KERBS</div>
+                    </td>
+                    <td colspan="2">
+                        <div>Width: @ex.RIDING_SURFACE</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div>Starting address: @ex.GPS_START_ADDRESS</div>
+                    </td>
+                    <td colspan="2">
+                        <div>Ending address: @ex.GPS_END_ADDRESS</div>
+                    </td>
+                </tr>
+                <tr style="border-bottom:1px solid #ccc!important">
+                    <td colspan="4">
+                        Comments:<br />
+                        <textarea rows="3" style="width:100%!important">@ex.APPLICATION_COMMENTS</textarea>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">
+                    <div style="margin-top:10px!important">Type of road crossing: @Model.TYPE_OF_ROADCROSSING</div>
+                </td>
+                <td colspan="2">
+                    <div style="margin-top:10px!important">Excavation length: @Model.EXCAVATION_LENGTH</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>Depth: @Model.KERBS</div>
+                </td>
+                <td colspan="2">
+                    <div>Width: @Model.RIDING_SURFACE</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>Starting address: @Model.GPS_START_ADDRESS</div>
+                </td>
+                <td colspan="2">
+                    <div>Ending address: @Model.GPS_END_ADDRESS</div>
+                </td>
+            </tr>
+            <tr style="border-bottom:1px solid #ccc!important">
+                <td colspan="4">
+                    Comments:<br />
+                    <textarea rows="3" style="width:100%!important">@Model.APPLICATION_COMMENTS</textarea>
+                </td>
+            </tr>
+        }
+    </table>
+    <table width="100%" style="font-size:12pt!important">
+        <tr>
+            <td colspan="4"><div style="height:30px!important;background-color:#ccc!important;color:#000!important;padding-top:5px!important;padding-left:5px!important">Department Responses</div></td>
+        </tr>
+        @if (ViewBag.DepartmentResonseData != null)
+        {
+            foreach (var ex in (List<C8.eServices.Mvc.Models.WL_DEPARTMENTS>)ViewBag.DepartmentResonseData)
+            {
+                <tr>
+                    <td colspan="2">
+                        <div style="margin-top:10px!important">Department Name: @ex.DEPARTMENT_NAME</div>
+                    </td>
+                    <td colspan="2">
+                        <div style="margin-top:10px!important">Status: @ex.APPLICATION_STATUS</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div>Response Date: @if (ex.RESPONSE_DATE != null) { <p>@Convert.ToDateTime(ex.RESPONSE_DATE).ToString("dd-MM-yyyy") </p>}</div>
+                    </td>
+                    <td colspan="2">
+                        <div>Response Time: @if (ex.RESPONSE_DATE != null) {<p>@Convert.ToDateTime(ex.RESPONSE_DATE).ToString("hh:mm tt")</p> }</div>
+                    </td>
+                </tr>
+                <tr style="border-bottom:1px solid #ccc!important">
+                    <td colspan="4">
+                        Comments:<br />
+                        @if (!String.IsNullOrEmpty(ex.APPROVE_OR_REJECT_COMMENTS))
+                        { 
+                    <textarea rows="3" style="width:100%!important">@ex.APPROVE_OR_REJECT_COMMENTS</textarea>
+                        }                        
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4"><hr /></td>
+                </tr>
+            }
+        }
+    </table>
+
+    <table>
+        <tr>
+            <td colspan="4">
+                <div style="margin-top:10px!important;text-align:left!important;font-size:11pt!important;margin-bottom:10px!important">
+                    1. NO OPEN TRENCHES ACROSS THE ROAD, NO CUTTING IN ANY WAY OF NEWLY RESURFACED ROADS WILL BE PERMITTED, IF THIS IS DONE THE A REGISTERED ENGINEERING
+                    PROFESSIONAL SHALL CERTIFY THAT THE REINSTATEMENT OF THE CROSSING COMPLIES WITH THE SPECIFICATIONS; APPROVAL TO TRENCH THROUGH ROADS SHOULD BE OBTAINED
+                    PRIOR TO COMMENCEMENT OF THE WORK UNLESS IN CASES OF EMERGENCY.<br />
+                    2. THIS WAYLEAVE AND PLANS NEED TO BE ON SITE FULL TIME; THIS WAYLEAVE IS NOT PERMISSION TO CLOSE ANY PUBLIC PLACE, i.e. A ROAD, STREET, PARK etc. NEITHER IS IT
+                    PERMISSION TO REMOVE TREES, AS TEMPORARY ROAD CLOSURES AND REQUEST TO REMOVE TREES ARE DEALT WITH SEPERATELY.<br />
+                    3. ON COMPLETION OF THE WORK, THE RELEVANT CHIEF ENGINEER MUST BE REQUESTED TO SIGN THE REINSTATEMENT CERTIFICATE.<br />
+                    4. NB: THE SITE SHOULD BE SAFE GUARDED AT ALL TIMES IN TERMS OF VOLUME 2, CHAPTER 13 OF SARTSM AND THE OCCUPATIONAL HEALTH AND SAFETY ACT, ACT 85 OF 1993.
+                    WAYLEAVE HOLDER TO COMPLY WITH THE CITY OF EKURHULENI WAYLEAVE POLICY.<br />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4"><div style="height:30px!important;background-color:#ccc!important;color:#000!important;padding-top:5px!important;padding-left:5px!important">Approval of Wayleave</div></td>
+        </tr>
+        <tr style="height:50px!important">
+            <td colspan="2">
+                <div style="margin-top:10pt!important">Name:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px solid #878787!important" value="@ViewBag.departmentUsername" /></div>
+            </td>
+            <td colspan="2">
+                <div style="margin-top:10pt!important">Date:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px solid #878787!important" value="@ViewBag.inspectionDate" /></div>
+            </td>
+        </tr>
+        <tr style="height:50px!important">
+            <td colspan="4">
+                @if (!String.IsNullOrEmpty(ViewBag.signature))
+                {
+                    var baseUrl = ConfigurationManager.AppSettings["Base_Url"].ToString();
+                    baseUrl = baseUrl + "uploads/" + ViewBag.signature;
+
+                    <div style="margin-top:10pt!important"> Signature:<img class="img img-thumbnail" src="@baseUrl" width="150" height="50" /></div>
+                }
+                else
+                {
+                    <div style="margin-top:10pt!important">Signature:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px solid #878787!important" /></div>
+                }
+            </td>
+        </tr>
+    </table>
+</div>

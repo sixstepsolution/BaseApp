@@ -11,6 +11,7 @@ namespace C8.eServices.Mvc.Models
         public string ApplicationNo { get; set; }
         public string StreetAddress { get; set; }
         public string DescriptionOfWork { get; set; }
+        public string DepartmentUserName { get; set; }
 
     }
 }

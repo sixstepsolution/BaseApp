@@ -363,7 +363,7 @@
                                    style="font-size: 11px;">
                                 <thead style="background-color:#00A65A !important; font-size:11px !important;color:#fff !important;margin-bottom: 0;">
                                     <tr>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  10%">
                                             <label>Application Number</label>
                                             <div class="input-group" style="width: 100%;">
                                                 <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="application_no" placeholder="Application Number" id="application_no">
@@ -374,7 +374,7 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  10%">
                                             <label>Date From</label>
                                             <div class="input-group" style="width: 100%;">
                                                 <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" type="date" id="date_requested_from" name="date_requested_from" placeholder="Date From">
@@ -385,7 +385,7 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  10%">
                                             <label>Date To</label>
                                             <div class="input-group" style="width: 100%;">
                                                 <input class="form-control" autocomplete="off" type="date" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" id="date_requested_to" name="date_requested_to" placeholder="Date To">
@@ -396,7 +396,7 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width: 10%">
                                             <label>Applicant Name</label>
                                             <div class="input-group" style="width: 100%;">
                                                 <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="applicantName" placeholder="Applicant Name" id="applicantName">
@@ -407,7 +407,7 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  10%">
                                             <label>Surname</label>
                                             <div class="input-group" style="width: 100%;">
                                                 <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" name="applicantSurname" placeholder="Surname" id="applicantSurname">
@@ -418,13 +418,7 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td style="width:  15.5%">
-                                        </td>
-                                        <td style="width:  15.5%">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  10%">
                                             <label>Service Type</label>
                                             <div class="input-group" style="width: 100%;">
                                                 <select style="border-radius: 4px"
@@ -436,6 +430,10 @@
                                                 </select>
                                             </div>
                                         </td>
+                                        <td style="width:  14%" colspan="2">
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <td style="width:  15.5%;text-align: center;padding-top:2px!important">
                                             <div class="col-md-3" style="margin-top:15px">
                                                 <button type="submit" class="btn btn-green-custom" style="height: 24px; padding: 2px; font-size: 12px; width: 100px;color:#fff!important;"
@@ -452,15 +450,19 @@
                                                 </button>
                                             </div>
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  9.5%">
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  9.5%">
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  11.5%">
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  11.5%">
                                         </td>
-                                        <td style="width:  15.5%">
+                                        <td style="width:  12.5%">
+                                        </td>
+                                        <td style="width:  11.5%">
+                                        </td>
+                                        <td style="width:  11.5%">
                                         </td>
                                     </tr>
                                     <tr>
@@ -484,17 +486,22 @@
                                                 Name
                                             </a>&nbsp;
                                         </td>
-                                        <td style="width:13% !important" onclick="sort('CREATED_DATE')">
+                                        <td style="width:15% !important" onclick="sort('CREATED_DATE')">
                                             <a class="anchor_sorting" href="">
                                                 Created On
                                             </a>&nbsp;
                                         </td>
-                                        <td style="width:10% !important" onclick="sort('CREATED_DATE')">
+                                        <td style="width:15% !important" onclick="sort('CREATED_DATE')">
                                             <a class="anchor_sorting" href="">
                                                 Created Time
                                             </a>&nbsp;
                                         </td>
                                         <td style="width:10% !important">
+                                            <a class="anchor_sorting" href="">
+                                                Closed on
+                                            </a>&nbsp;
+                                        </td>
+                                        <td style="width:5% !important">
                                             <a class="anchor_sorting" href="">
                                                 Action
                                             </a>&nbsp;
@@ -552,7 +559,7 @@
                                                                                             @foreach (var app in rc.applicationList)
                                                                                             {
                                                                                             <tr style="border-collapse:collapse;">
-                                                                                                <td style="width:15% !important">
+                                                                                                <td style="width:17% !important">
 
                                                                                                     @if (rc.id == 9)
                                                                                                     {
@@ -589,92 +596,92 @@
                                                                                                         </div>}
                                                                                                     @if (rc.id == 2)
                                                                                                     {
-                                                                                                <div style="color:peru">
-                                                                                                    @if (app.isOverDue == "Y")
-                                                                                                    {
-                                                                                                        if (app.departmentResponse == "Y")
-                                                                                                        {
-                                                                                                            if (app.isRequestforDocument == "Y")
+                                                                                                        <div style="color:peru">
+                                                                                                            @if (app.isOverDue == "Y")
                                                                                                             {
-                                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
-                                                                                                                   style="cursor: pointer;color:orange">
-                                                                                                                    <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
-                                                                                                                    <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span><br />
-                                                                                                                    <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00!important; color: #fff!important; border-radius: 10px!important;">Request for documents</span>
-                                                                                                                </a>
+                                                                                                                if (app.departmentResponse == "Y")
+                                                                                                                {
+                                                                                                                    if (app.isRequestforDocument == "Y")
+                                                                                                                    {
+                                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                                            <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
+                                                                                                                            <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span><br />
+                                                                                                                            <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00!important; color: #fff!important; border-radius: 10px!important;">Request for additional information</span>
+                                                                                                                        </a>
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                                            <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
+                                                                                                                            <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span>
+                                                                                                                        </a>
+                                                                                                                    }
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    if (app.isRequestforDocument == "Y")
+                                                                                                                    {
+                                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                                            <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
+                                                                                                                            <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff!important; border-radius: 10px!important; ">Request for additional information</span>
+                                                                                                                        </a>
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                                            <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus
+                                                                                                                        </a>
+                                                                                                                    }
+                                                                                                                }
                                                                                                             }
                                                                                                             else
                                                                                                             {
-                                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
-                                                                                                                   style="cursor: pointer;color:orange">
-                                                                                                                    <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
-                                                                                                                    <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span>
-                                                                                                                </a>
-                                                                                                            }
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (app.isRequestforDocument == "Y")
-                                                                                                            {
-                                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
-                                                                                                                   style="cursor: pointer;color:orange">
-                                                                                                                    <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
-                                                                                                                    <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff!important; border-radius: 10px!important; ">Request for documents</span>
-                                                                                                                </a>
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
-                                                                                                                   style="cursor: pointer;color:orange">
-                                                                                                                    <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus
-                                                                                                                </a>
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        if (app.departmentResponse == "Y")
-                                                                                                        {
-                                                                                                            if (app.isRequestforDocument == "Y")
-                                                                                                            {
-                                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                                   style="cursor: pointer;color:orange">
-                                                                                                                    @app.applicationStepStatus<br />
-                                                                                                                    <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span><br />
-                                                                                                                    <span  style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important; ">Request for documents</span>
-                                                                                                                </a>
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                                   style="cursor: pointer;color:orange">
-                                                                                                                    @app.applicationStepStatus<br />
-                                                                                                                    <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span>
-                                                                                                                </a>
-                                                                                                            }
+                                                                                                                if (app.departmentResponse == "Y")
+                                                                                                                {
+                                                                                                                    if (app.isRequestforDocument == "Y")
+                                                                                                                    {
+                                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                                            @app.applicationStepStatus<br />
+                                                                                                                            <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span><br />
+                                                                                                                            <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important; ">Request for additional information</span>
+                                                                                                                        </a>
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                                            @app.applicationStepStatus<br />
+                                                                                                                            <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span>
+                                                                                                                        </a>
+                                                                                                                    }
 
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (app.isRequestforDocument == "Y")
-                                                                                                            {
-                                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                                   style="cursor: pointer;color:orange">
-                                                                                                                    @app.applicationStepStatus<br />
-                                                                                                                    <span  style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important; ">Request for documents</span>
-                                                                                                                </a>
-                                                                                                            }
-                                                                                                            else
-                                                                                                            { 
-                                                                                                                <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                                   style="cursor: pointer;color:orange">
-                                                                                                                    @app.applicationStepStatus
-                                                                                                                </a>
-                                                                                                            }                                                                                                            
-                                                                                                        }
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    if (app.isRequestforDocument == "Y")
+                                                                                                                    {
+                                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                                            @app.applicationStepStatus<br />
+                                                                                                                            <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important; ">Request for additional information</span>
+                                                                                                                        </a>
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                                           style="cursor: pointer;color:orange">
+                                                                                                                            @app.applicationStepStatus
+                                                                                                                        </a>
+                                                                                                                    }
+                                                                                                                }
 
-                                                                                                    }
-                                                                                                </div>
+                                                                                                            }
+                                                                                                        </div>
                                                                                                     }
                                                                                                     @if (rc.id == 8)
                                                                                                     {
@@ -691,14 +698,14 @@
                                                                                                     {
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                            style="cursor: pointer;color:orange">
-                                                                                                            
-                                                                                                                @app.applicationStepStatus
-                                                                                                            
+
+                                                                                                            @app.applicationStepStatus
+
                                                                                                         </a>
 
                                                                                                     }
                                                                                                 </td>
-                                                                                                <td style="width:15% !important">
+                                                                                                <td style="width:14% !important">
                                                                                                     @app.full_name
                                                                                                 </td>
 
@@ -708,6 +715,17 @@
                                                                                                 </td>
                                                                                                 <td style="width:13% !important">
                                                                                                     @app.createdTime
+                                                                                                </td>
+                                                                                                <td style="width:10% !important;text-align:center!important">
+                                                                                                    @if (app.inspectionDate == "Not yet closed")
+                                                                                                    {
+                                                                                                        <b class="text-danger">@app.inspectionDate</b>
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        @app.inspectionDate
+                                                                                                    }
+
                                                                                                 </td>
                                                                                                 <td style="width:5%!important">
                                                                                                     <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
@@ -758,7 +776,7 @@
                                                                                                 @foreach (var app in rc.applicationList)
                                                                                                 {
                                                                                                 <tr style="border-collapse:collapse;">
-                                                                                                    <td style="width:15% !important">
+                                                                                                    <td style="width:17% !important">
 
                                                                                                         @if (rc.id == 9)
                                                                                                         {
@@ -795,92 +813,92 @@
                                                                                                             </div>}
                                                                                                         @if (rc.id == 2)
                                                                                                         {
-                                                                                                    <div style="color:peru">
-                                                                                                        @if (app.isOverDue == "Y")
-                                                                                                        {
-                                                                                                            if (app.departmentResponse == "Y")
-                                                                                                            {
-                                                                                                                if (app.isRequestforDocument == "Y")
+                                                                                                            <div style="color:peru">
+                                                                                                                @if (app.isOverDue == "Y")
                                                                                                                 {
-                                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
-                                                                                                                       style="cursor: pointer;color:orange">
-                                                                                                                        <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
-                                                                                                                        <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span><br />
-                                                                                                                        <span  style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important; ">Request for documents</span>
-                                                                                                                    </a>
+                                                                                                                    if (app.departmentResponse == "Y")
+                                                                                                                    {
+                                                                                                                        if (app.isRequestforDocument == "Y")
+                                                                                                                        {
+                                                                                                                            <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                                               style="cursor: pointer;color:orange">
+                                                                                                                                <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
+                                                                                                                                <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span><br />
+                                                                                                                                <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important; ">Request for additional information</span>
+                                                                                                                            </a>
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                                               style="cursor: pointer;color:orange">
+                                                                                                                                <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
+                                                                                                                                <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span>
+                                                                                                                            </a>
+                                                                                                                        }
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        if (app.isRequestforDocument == "Y")
+                                                                                                                        {
+                                                                                                                            <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                                               style="cursor: pointer;color:orange">
+                                                                                                                                <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
+                                                                                                                                <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important; ">Request for additional information</span>
+                                                                                                                            </a>
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
+                                                                                                                               style="cursor: pointer;color:orange">
+                                                                                                                                <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus
+                                                                                                                            </a>
+                                                                                                                        }
+                                                                                                                    }
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {
-                                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
-                                                                                                                       style="cursor: pointer;color:orange">
-                                                                                                                        <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
-                                                                                                                        <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span>
-                                                                                                                    </a>
-                                                                                                                }
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                if (app.isRequestforDocument == "Y")
-                                                                                                                {
-                                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
-                                                                                                                       style="cursor: pointer;color:orange">
-                                                                                                                        <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus<br />
-                                                                                                                        <span  style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important; ">Request for documents</span>
-                                                                                                                    </a>
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')" title="Overdue"
-                                                                                                                       style="cursor: pointer;color:orange">
-                                                                                                                        <i class="fa fa-flag text-danger"></i> @app.applicationStepStatus
-                                                                                                                    </a>
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (app.departmentResponse == "Y")
-                                                                                                            {
-                                                                                                                if (app.isRequestforDocument == "Y")
-                                                                                                                {
-                                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                                       style="cursor: pointer;color:orange">
-                                                                                                                        @app.applicationStepStatus<br />
-                                                                                                                        <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span><br />
-                                                                                                                        <span  style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important;">Request for documents</span>
-                                                                                                                    </a>
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                                       style="cursor: pointer;color:orange">
-                                                                                                                        @app.applicationStepStatus<br />
-                                                                                                                        <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span>
-                                                                                                                    </a>
-                                                                                                                }
+                                                                                                                    if (app.departmentResponse == "Y")
+                                                                                                                    {
+                                                                                                                        if (app.isRequestforDocument == "Y")
+                                                                                                                        {
+                                                                                                                            <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                                               style="cursor: pointer;color:orange">
+                                                                                                                                @app.applicationStepStatus<br />
+                                                                                                                                <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span><br />
+                                                                                                                                <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff !important; border-radius: 10px !important;">Request for additional information</span>
+                                                                                                                            </a>
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                                               style="cursor: pointer;color:orange">
+                                                                                                                                @app.applicationStepStatus<br />
+                                                                                                                                <span class="badge badge-success" style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #00a65a;">Responded</span>
+                                                                                                                            </a>
+                                                                                                                        }
 
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                if (app.isRequestforDocument == "Y")
-                                                                                                                {
-                                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                                       style="cursor: pointer;color:orange">
-                                                                                                                        @app.applicationStepStatus<br />
-                                                                                                                        <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff!important; border-radius: 10px!important; ">Request for documents</span>
-                                                                                                                    </a>
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
-                                                                                                                       style="cursor: pointer;color:orange">
-                                                                                                                        @app.applicationStepStatus
-                                                                                                                    </a>
-                                                                                                                }
-                                                                                                            }
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        if (app.isRequestforDocument == "Y")
+                                                                                                                        {
+                                                                                                                            <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                                               style="cursor: pointer;color:orange">
+                                                                                                                                @app.applicationStepStatus<br />
+                                                                                                                                <span style="padding: 4px !important; font-size: 8pt !important; height: 20px !important; background-color: #cc0c00 !important; color: #fff!important; border-radius: 10px!important; ">Request for additional information</span>
+                                                                                                                            </a>
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
+                                                                                                                               style="cursor: pointer;color:orange">
+                                                                                                                                @app.applicationStepStatus
+                                                                                                                            </a>
+                                                                                                                        }
+                                                                                                                    }
 
-                                                                                                        }
-                                                                                                    </div>
+                                                                                                                }
+                                                                                                            </div>
                                                                                                         }
                                                                                                         @if (rc.id == 8)
                                                                                                         {
@@ -897,21 +915,30 @@
                                                                                                         {
                                                                                                             <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"
                                                                                                                style="cursor: pointer;color:orange">
-                                                                                                                    @app.applicationStepStatus
+                                                                                                                @app.applicationStepStatus
                                                                                                             </a>
 
                                                                                                         }
                                                                                                     </td>
-                                                                                                    <td style="width:15% !important">
+                                                                                                    <td style="width:14% !important">
                                                                                                         @app.full_name
                                                                                                     </td>
-
-
                                                                                                     <td style="width:15% !important">
                                                                                                         @app.createdDate
                                                                                                     </td>
                                                                                                     <td style="width:13% !important">
                                                                                                         @app.createdTime
+                                                                                                    </td>
+                                                                                                    <td style="width:10% !important;text-align:center!important">
+                                                                                                        @if (app.inspectionDate == "Not yet closed")
+                                                                                                        {
+                                                                                                            <b class="text-danger">@app.inspectionDate</b>
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            @app.inspectionDate
+                                                                                                        }
+
                                                                                                     </td>
                                                                                                     <td style="width:5%!important">
                                                                                                         <a onclick="OpenWayleaveApplicationForm('@tt.Encrypt(app.id.ToString())')"

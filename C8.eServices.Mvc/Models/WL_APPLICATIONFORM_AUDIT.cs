@@ -180,6 +180,7 @@ namespace C8.eServices.Mvc.Models
         public string INSPECTION_REFERENCE_NO { get; set; }
         public string INSPECTION_COMMENTS { get; set; }
         public string INSPECTION_BY { get; set; }
+        public string INSPECTION_FORM { get; set; }
         public string PAYMENT_RECEIPT_NO { get; set; }
         public string PAYMENT_STATUS { get; set; }
         public string PAYMENT_MODE { get; set; }

@@ -4044,6 +4044,18 @@
     <Compile Include="Migrations\202112100720095_addingPropertiesinApplicationformmm.Designer.cs">
       <DependentUpon>202112100720095_addingPropertiesinApplicationformmm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201250256536_addingExcavationtable.cs" />
+    <Compile Include="Migrations\202201250256536_addingExcavationtable.Designer.cs">
+      <DependentUpon>202201250256536_addingExcavationtable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202020450462_addingPropertiesinApplicationform1.cs" />
+    <Compile Include="Migrations\202202020450462_addingPropertiesinApplicationform1.Designer.cs">
+      <DependentUpon>202202020450462_addingPropertiesinApplicationform1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202202030218251_addingPropertiesinApplicationformss.cs" />
+    <Compile Include="Migrations\202202030218251_addingPropertiesinApplicationformss.Designer.cs">
+      <DependentUpon>202202030218251_addingPropertiesinApplicationformss.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountInformation.cs" />
@@ -4283,6 +4295,7 @@
     <Compile Include="Models\Repository\WlAccountRepo.cs" />
     <Compile Include="Models\Repository\WlAccount_ContactRepo.cs" />
     <Compile Include="Models\Repository\WLDeclarationsRepo.cs" />
+    <Compile Include="Models\Repository\WLExcavationRepo.cs" />
     <Compile Include="Models\Repository\WLInspectionListRepo.cs" />
     <Compile Include="Models\Repository\WorkLocationRepo.cs" />
     <Compile Include="Models\Request.cs" />
@@ -4310,6 +4323,7 @@
     <Compile Include="Models\Services\IWlAccount.cs" />
     <Compile Include="Models\Services\IWlAccountContact.cs" />
     <Compile Include="Models\Services\IWLDeclarations.cs" />
+    <Compile Include="Models\Services\IWLExcavation.cs" />
     <Compile Include="Models\Services\IWLInspectionList.cs" />
     <Compile Include="Models\Services\IWorkLocations.cs" />
     <Compile Include="Models\SessionModel.cs" />
@@ -4765,6 +4779,7 @@
     <Content Include="Views\WL\ReInstatementCertificatePdf.cshtml" />
     <Content Include="Views\Home\MapMarkerTest.cshtml" />
     <Content Include="Views\Home\MapMarker.cshtml" />
+    <Content Include="Views\WL\PPWCertificateLetterPdf.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -4895,6 +4910,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202112100720095_addingPropertiesinApplicationformmm.resx">
       <DependentUpon>202112100720095_addingPropertiesinApplicationformmm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201250256536_addingExcavationtable.resx">
+      <DependentUpon>202201250256536_addingExcavationtable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202020450462_addingPropertiesinApplicationform1.resx">
+      <DependentUpon>202202020450462_addingPropertiesinApplicationform1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202030218251_addingPropertiesinApplicationformss.resx">
+      <DependentUpon>202202030218251_addingPropertiesinApplicationformss.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

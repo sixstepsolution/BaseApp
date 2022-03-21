@@ -16,6 +16,7 @@ namespace C8.eServices.Mvc.Models
             WL_SUPPORTING_DOCUMENTS = new HashSet<WL_SUPPORTING_DOCUMENTS>();
             WL_DECLARATIONS = new HashSet<WL_DECLARATIONS>();
             WL_DEPARTMENTS = new HashSet<WL_DEPARTMENTS>();
+            WL_EXCAVATION_DETAILS = new HashSet<WL_EXCAVATION_DETAILS>();
         }
 
         [Key]
@@ -183,6 +184,7 @@ namespace C8.eServices.Mvc.Models
         public string INSPECTION_REFERENCE_NO { get; set; }
         public string INSPECTION_COMMENTS { get; set; }
         public string INSPECTION_BY { get; set; }
+        public string INSPECTION_FORM { get; set; }
         public string PAYMENT_RECEIPT_NO { get; set; }
         public string PAYMENT_STATUS { get; set; }
         public string PAYMENT_MODE { get; set; }
@@ -226,6 +228,7 @@ namespace C8.eServices.Mvc.Models
         public virtual ICollection<WL_SUPPORTING_DOCUMENTS> WL_SUPPORTING_DOCUMENTS { get; set; }
         public virtual ICollection<WL_DECLARATIONS> WL_DECLARATIONS { get; set; }
         public virtual ICollection<WL_DEPARTMENTS> WL_DEPARTMENTS { get; set; }
+        public virtual ICollection<WL_EXCAVATION_DETAILS> WL_EXCAVATION_DETAILS { get; set; }
         public virtual ICollection<WL_INSPECTION_LIST> WL_INSPECTION_LIST { get; set; }
 
 

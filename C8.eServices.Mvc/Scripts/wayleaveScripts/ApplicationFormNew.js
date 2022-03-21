@@ -3,6 +3,7 @@ var appFormData = new Object();
 var excavationFormData = new Object();
 var Map_Locations = [];
 var ExcavationData = [];
+var ExcavationDataFromServer = [];
 var GPS_START_Lat = "";
 var GPS_START_Lng = "";
 var GPS_END_Lat = ""; 
@@ -23,6 +24,9 @@ var ServiceDeclarationListFromServer = [];
 var GlobalSearchResult = "";
 var apiBaseUrl = localStorage.getItem('apiBaseUrl');
 var BaseUrl = localStorage.getItem('BaseUrl');
+var requiredDocumnetCount = 0;
+var requiredUploadDocumentCount = 0;
+var totalUploadDocumentCount = 0;
 //alert(apiBaseUrl);
 var accountID = localStorage.getItem('wayleaveAccountNumber');
 //var appId = localStorage.getItem('appId');
@@ -446,9 +450,15 @@ $.fn.LoadSupportingDocumentsOnPageLoad = function () {
                     var id = ServiceDocumentList[i].id + "SupportDocument";
                     var index = i + 1;
                     if (ServiceDocumentList[i].description != "EFT Payment Receipt") {
-                        $('#ServiceDocumentList').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' />&nbsp;<b style="color:blue;font-weight:400!important">(Max. 5mb)</b></td></tr>');
-                    }
-                    
+                        //alert(ServiceDocumentList[i].isRequired);
+                        if (ServiceDocumentList[i].isRequired == "Y") {
+                            //alert('success');
+                            $('#ServiceDocumentList').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '&nbsp;<b style="color:red !important">*</b></td><td><input type="file" name="Add" id=' + id + ' />&nbsp;<b style="color:blue;font-weight:400!important">(Max. 5mb)</b></td></tr>');
+                        }
+                        else {
+                            $('#ServiceDocumentList').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><input type="file" name="Add" id=' + id + ' />&nbsp;<b style="color:blue;font-weight:400!important">(Max. 5mb)</b></td></tr>');
+                        }                        
+                    }                    
                 };
             }
         },
@@ -678,7 +688,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
 
                 
 
-                if (data.applicatioN_STEP_DESCRIPTION == "Request for documents") {
+                if (data.applicatioN_STEP_DESCRIPTION == "Request for additional information") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTIONComments').show();
                     $('#APPLICATION_DESCRIPTIONComments').text(data.applicatioN_COMMENTS);
@@ -693,10 +703,21 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 //    $('#ApplicationPendingStatus').show();
                 //}
 
-                //if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for documents') {
+                //if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for additional information') {
                 //    $('#ApplicationAdminSection').show();
                 //}
-
+                if (data.applicatioN_STEP_DESCRIPTION == "Application Closed" || data.applicatioN_STEP_DESCRIPTION == "Pending Approval" || data.applicatioN_STEP_DESCRIPTION == "Application Granted" || data.applicatioN_STEP_DESCRIPTION == "Application Rejected") {
+                    $('#IsViewApplication').hide();
+                }
+                if (data.applicatioN_STEP_DESCRIPTION == "Application Closed") {
+                    $('#ApplicationClosureStatus').show();
+                    //$('#INSPECTION_STATUS').val(data.inspectioN_STATUS);
+                    //$('#INSPECTION_REFERENCE_NO').val(data.inspectioN_REFERENCE_NO);
+                    //$('#INSPECTION_DATE').val(data.inspectioN_DATE);
+                    //$('#INSPECTION_BY').val(data.inspectioN_BY);
+                    $('#INSPECTION_FORM').val(data.inspectioN_FORM);
+                    //$('#INSPECTION_COMMENTS').val(data.inspectioN_COMMENTS);
+                }
 
                 setTimeout(function () {
                     //$.fn.LoadDeclarationsByAppid();
@@ -729,12 +750,12 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                             if (newArray.length > 0) {
                                 var CirculatedDeptStatus = newArray[0].applicatioN_STATUS;
                                 var CirculatedDeptCmnt = newArray[0].approvE_OR_REJECT_COMMENTS;
-                                if (CirculatedDeptStatus == "Affected - Not supported" || CirculatedDeptStatus == "Affected - Conditional") {
+                                if (CirculatedDeptStatus == "Affected - Not supported" || CirculatedDeptStatus == "Affected - Supported conditionally") {
                                     $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
                                     $('#departmentRejectComment').show();
                                     $("#DEPARTMENT_COMMENTS").val(CirculatedDeptCmnt);
                                 }
-                                else if (CirculatedDeptStatus == "Not Affected") {
+                                else if (CirculatedDeptStatus == "Not Affected" || CirculatedDeptStatus =="Affected - Supported") {
                                     $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
                                 }
 
@@ -742,6 +763,15 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
 
                         }
                         $.fn.LoadDepartmentsByAppid(dataDept);
+                    });
+                    $.getJSON(apiBaseUrl + 'get-application-excavationDetails/' + appId, function (dataExcavation, status, xhr) {
+                        //circulatedDepartmentList = dataDept;
+                        console.log("===================excavation data by appid==================");
+                        console.log(dataExcavation);
+                        if (dataExcavation) {                            
+                            $.fn.LoadExcavationDetailsByAppid(dataExcavation);
+                        }
+                        
                     });
                     $.fn.GetFormdataValues();                    
                     ServiceDocumentListFromServer = data.wL_SUPPORTING_DOCUMENTS;                    
@@ -802,7 +832,7 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
                 dptComment = dptInfo.approvE_OR_REJECT_COMMENTS;
             }
             var tt = "";
-            if (status == "Not Affected" || status == "Affected - Not supported" || status == "Affected - Conditional") {
+            if (status == "Not Affected" || status == "Affected - Not supported" || status == "Affected - Supported conditionally" || status =="Affected - Supported") {
                 isDepartmentResponseReceived = true;
                 tt = "text-success";
                 circulateAllDepartmentResponses++;
@@ -810,7 +840,7 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
             if (status == "Affected - Not supported") {
                 circulatedDepartmentScenario2 = true;
             }
-            if (status == "Not Affected") {
+            if (status == "Not Affected" || status =="Affected - Supported") {
                 tt = "text-success";
             }
             else {
@@ -862,6 +892,50 @@ $.fn.AddLocations = function () {
     }
 };
 
+
+$.fn.LoadExcavationDetailsByAppid = function (excavationdata) {
+    //alert('dept');
+    ExcavationData = [];
+    ExcavationDataFromServer = [];
+    ExcavationDataFromServer = excavationdata;
+    //alert(ExcavationDataFromServer.length);
+    if (ExcavationDataFromServer.length > 0) {
+        //alert(ExcavationDataFromServer.length);
+        $('#ExcavationListData').show();
+        $('#ExcavationListDataFromServer').hide();
+        for (let i = 0; i < ExcavationDataFromServer.length; i++) {
+            var excavationFormData = {};
+            excavationFormData.TYPE_OF_ROADCROSSING = ExcavationDataFromServer[i].typE_OF_ROADCROSSING;
+            excavationFormData.EXCAVATION_LENGTH = ExcavationDataFromServer[i].excavatioN_LENGTH;
+            excavationFormData.RIDING_SURFACE = ExcavationDataFromServer[i].ridinG_SURFACE;
+            excavationFormData.KERBS = ExcavationDataFromServer[i].kerbs;
+            excavationFormData.OPEN_TRENCH_COMMENT = ExcavationDataFromServer[i].opeN_TRENCH_COMMENT;
+            excavationFormData.GPS_START_ADDRESS = ExcavationDataFromServer[i].gpS_START_ADDRESS;
+            excavationFormData.GPS_END_ADDRESS = ExcavationDataFromServer[i].gpS_END_ADDRESS;
+            excavationFormData.APPLICATION_COMMENTS = ExcavationDataFromServer[i].applicatioN_COMMENTS;
+            ExcavationData.push(excavationFormData);
+        };
+        for (let j = 0; j < ExcavationData.length; j++) {
+            var id = j + 1;
+            //$('#ExcavationListData').append('<tr><td>' + id + '</td><td>' + ExcavationData[j].typE_OF_ROADCROSSING + '</td><td class="text-right">' + ExcavationData[j].excavatioN_LENGTH + '</td><td class="text-right">' + ExcavationData[j].ridinG_SURFACE + '</td><td class="text-right">' + ExcavationData[j].kerbs + '</td><td>' + ExcavationData[j].gpS_START_ADDRESS + '</td><td>' + ExcavationData[j].gpS_END_ADDRESS + '</td><td>' + ExcavationData[j].applicatioN_COMMENTS + '</td><td><a onclick="removeExcavation(' + id + ')"><i class="fa fa-trash text-danger"></i> </a></td></tr>');
+            $('#ExcavationListData').append('<tr><td>' + id + '</td><td>' + ExcavationData[j].TYPE_OF_ROADCROSSING + '</td><td class="text-right">' + ExcavationData[j].EXCAVATION_LENGTH + '</td><td class="text-right">' + ExcavationData[j].RIDING_SURFACE + '</td><td class="text-right">' + ExcavationData[j].KERBS + '</td><td>' + ExcavationData[j].GPS_START_ADDRESS + '</td><td>' + ExcavationData[j].GPS_END_ADDRESS + '</td><td>' + ExcavationData[j].APPLICATION_COMMENTS + '</td><td><a onclick="removeExcavation(' + id + ')"><i class="fa fa-trash text-danger"></i> </a></td></tr>');
+        };
+
+        document.getElementById("ChkHD").checked = false;
+        document.getElementById("ChkOT").checked = false;
+        document.getElementById("ChkNone").checked = false;
+        $('#EXCAVATION_LENGTH').val('');
+        $('#RIDING_SURFACE').val('');
+        $('#KERBS').val('');
+        $('#OPEN_TRENCH_COMMENT').val('');
+        $('#GPS_START_ADDRESS').val('');
+        $('#GPS_END_ADDRESS').val('');
+        $('#APPLICATION_COMMENTS').val('');
+        $('#OpenTrenchComment').hide();
+        $("#ExcavationDetailsPopup").modal('hide');
+    }
+}
+
 //Bind Worklocations from array
 
 //Open Payment gateway modal
@@ -874,9 +948,15 @@ $.fn.SubmitApplication = function () {
     var completionDt = $("#COMPLETION_DATE").val();
     var serviceType = $("#SERVICE_TYPE_NEW").val();
     var regionData = $("#REGION_OR_AREA").val();
+    requiredDocumnetCount = 0;
+    requiredUploadDocumentCount = 0;
+    totalUploadDocumentCount = 0;
     if (startDt != "" && startDt != undefined
         && completionDt != "" && completionDt != undefined && serviceType != "" && serviceType != undefined && regionData != "" && regionData != undefined) {
-
+        if (ExcavationData.length == 0) {
+            toastr.warning('Please add excavation details!');
+            return;
+        }
     }
     else {
         toastr.warning('* Fields are required!');
@@ -888,17 +968,26 @@ $.fn.SubmitApplication = function () {
             var isFileUploaded = false;
             console.log(ServiceDocumentList);
             var isUploadDocumentSizeNotValid = false;
+            
             $.each(ServiceDocumentList, function (data, value) {
                 var decsionID = value.id + "SupportDocument";
                 //alert(decsionID);
+                if (value.isRequired == "Y") {
+                    requiredDocumnetCount = requiredDocumnetCount + 1;
+                }
                 var input = document.getElementById(decsionID);
                 if (input) {
                     if (document.getElementById(decsionID).files.length > 0) {
+                        if (value.isRequired == "Y") {
+                            requiredUploadDocumentCount = requiredUploadDocumentCount + 1;
+                        }
+                        totalUploadDocumentCount = totalUploadDocumentCount + 1;
                         var fileslist = $('#' + decsionID).get(0).files;
                         for (var i = 0; i < fileslist.length; i++) {
 
                             var isFileSizeValid = $.fn.CheckFileSize(decsionID, fileslist);
                             if (isFileSizeValid) {
+                                
                                 isFileUploaded = true;
                             }
                             else {
@@ -914,18 +1003,50 @@ $.fn.SubmitApplication = function () {
             if (isUploadDocumentSizeNotValid) {
                 return;
             }
-            if (!isFileUploaded) {
-                toastr.warning('Please upload minimum one supporting document!');
-                return;
+            //alert("normal"+requiredDocumnetCount);
+            //alert("upload"+requiredUploadDocumentCount);
+            if (isFileUploaded) {
+                if (requiredDocumnetCount > 0 && requiredUploadDocumentCount > 0) {
+
+                    if (requiredDocumnetCount <= totalUploadDocumentCount) {                         
+                        if (requiredDocumnetCount == requiredUploadDocumentCount) {
+                            $("#ShowPaynowButtons").hide();
+                            $("#ShowEftMasterpass").hide();
+                            //$("#PaymentModel").modal();
+                            $.fn.SaveApplicationForm('', '')
+                        }
+                        else {
+                            toastr.warning('Please upload required supporting documents!');
+                        }
+                     }
+                     else {
+                         toastr.warning('Please upload required supporting documents!');
+                     }
+                }
+                else {
+                    toastr.warning('Please upload required supporting documents!');
+                    return;
+                }
+                //if (requiredDocumnetCount == 0 && requiredUploadDocumentCount == 0) {
+                //    toastr.warning('Please upload required supporting documents!');
+                //    return;
+                //}
+                //else if (requiredDocumnetCount == requiredUploadDocumentCount) {
+                //    $("#ShowPaynowButtons").show();
+                //    $("#ShowEftMasterpass").hide();
+                //    $("#PaymentModel").modal();
+                //}
+                
             }
-            else {
-                $("#ShowPaynowButtons").show();
-                $("#ShowEftMasterpass").hide();
-                $("#PaymentModel").modal();
+            else if (!isFileUploaded) {
+                toastr.warning('Please upload required supporting documents!');
+                //toastr.warning('Please upload minimum one supporting document!');
+                return;
             }
         }
         else {
-            toastr.warning('Please upload minimum one supporting document!');
+            toastr.warning('Please upload required supporting documents!');
+            //toastr.warning('Please upload minimum one supporting document!');
             return;
         }
     }
@@ -982,9 +1103,9 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
     var DeclarationList = [];
     $.fn.GetFormdataValues();
 
-    
 
-    
+
+
 
     $.each(ServiceDeclarationList, function (data, value) {
         if ($("#CheckBox_" + value.id).is(":checked")) {
@@ -1021,6 +1142,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
         console.log(ServiceDocumentList);
         $.each(ServiceDocumentList, function (data, value) {
             var decsionID = value.id + "SupportDocument";
+            var documentID = value.id;
             var input = document.getElementById(decsionID);
             if (input) {
                 if (document.getElementById(decsionID).files.length > 0) {
@@ -1029,7 +1151,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
                         isFileUploaded = true;
                         var isFileSizeValid = $.fn.CheckFileSize(decsionID, fileslist);
                         if (isFileSizeValid) {
-                            formData.append(decsionID, fileslist[i]);
+                            formData.append(documentID, fileslist[i]);
                         }
                         else {
                             isUploadDocumentSizeNotValid = true;
@@ -1037,7 +1159,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
                     }
                 }
             }
-            
+
         });
         //if (!isFileUploaded) {
         //    toastr.warning('Please upload supporting documents!');
@@ -1050,18 +1172,18 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
     }
 
     $("#isAppLoading").show();
-    if (paymentStatus == "EFT") {
-        $("#EftLoader").show();
-    }
-    else if (paymentStatus == "MasterPass") {
-        $("#MasterpassLoader").show();
-    }
-    else if (paymentStatus == "PayNow") {
-        $("#PayNowLoader").show();
-    }
-    else {
-        $("#PayLaterLoader").show();
-    }
+    //if (paymentStatus == "EFT") {
+    //    $("#EftLoader").show();
+    //}
+    //else if (paymentStatus == "MasterPass") {
+    //    $("#MasterpassLoader").show();
+    //}
+    //else if (paymentStatus == "PayNow") {
+    //    $("#PayNowLoader").show();
+    //}
+    //else {
+    //    $("#PayLaterLoader").show();
+    //}
 
     $.ajax({
         url: apiBaseUrl + 'add-application-form',
@@ -1090,7 +1212,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
                     window.location.href = "../WayleaveAccount/Payment_Test?q=" + appNo;
                 }
                 else if (paymentStatus == "PayLater") {
-                    
+
                     //alert(appNo);
                     toastr.success(`<div>Your Wayleave Application Is In Status <b>Pending Payment</b>. <br />Your Reference Number is: <b>` + appNo + `</b>
 Please upload a receipt. <br />This can be done by navigating to the pending payment queue on your dashboard. <br />Click on your application with reference number <b>`+ appNo + `</b> and <br />upload your payment confirmation document, <br />under the supporting documents section.</div>`, "Success", {
@@ -1104,10 +1226,27 @@ Please upload a receipt. <br />This can be done by navigating to the pending pay
                     }, 15000);
                 }
                 else {
-                    toastr.success('Application form updated successfully');
-                    setTimeout(function () {
+                    if (appNo == "Application Form resubmitted successfully.") {
+                        toastr.success(appNo);
+                        setTimeout(function () {
                         window.location.href = "../WayleaveAccount/Index";
-                    }, 1000);
+                    }, 5000);
+                    }
+                    else {
+                        toastr.success(`<div>Your Wayleave Application Form Submitted Successfully, The Application Is In Status <b>Distributed to Departments</b>. <br />Your Reference Number is: <b>` + appNo + `</b></div>`, "Success", {
+                            "timeOut": "30000",
+                            "extendedTImeout": "50000",
+                            "closeButton": true,
+                        });
+                        setTimeout(function () {
+                            window.location.href = "../WayleaveAccount/Index";
+                        }, 15000);
+                    }
+                    
+                    //toastr.success('Application form submitted successfully');
+                    //setTimeout(function () {
+                    //    window.location.href = "../WayleaveAccount/Index";
+                    //}, 1000);
                 }
             }
         },
@@ -1120,19 +1259,14 @@ Please upload a receipt. <br />This can be done by navigating to the pending pay
         }
     });
     //if (wa != undefined && wa != "" && st != undefined && st != "") {
-        
+
     //}
     //else {
     //    //$("#PaymentModel").modal('hide');
     //    toastr.warning('* Fields are required!');
     //}
 }
-//$("input[type='file']").on("change", function () {
-//    if (this.files[0].size > 1000000) {
-//        alert("Please upload file less than 2MB. Thanks!!");
-//        $(this).val('');
-//    }
-//});
+
 $.fn.CheckFileSize = function (id, fileContent) {
     console.log(fileContent);
     //$('#' + decsionID).get(0).files;
@@ -1453,7 +1587,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
 
                             //menulink.href = "javascript: void (0)";
                             //menulink.onclick = ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME);
-                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '&nbsp;<b style="color:red !important">' + isRequiredEFT + '</b></td><td><a id=' + linkId + ' target="_blank" href="' + docUrl +'" style="text-decoration:none!important;color:#000!important" rel="noopener noreferrer" name="LinkA">View</a></td></tr>');
+                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '&nbsp;<b style="color:red !important">' + isRequiredEFT + '</b></td><td><input type="file" name="Add" id=' + sid + ' />&nbsp;<b style="color:blue;font-weight:400!important">(Max. 5mb)</b><a class="btn btn-green-custom btn-sm" id=' + linkId + ' target="_blank" href="' + docUrl +'" style="text-decoration:none!important;color:#fff!important;float:right!important;margin-right:20px!important;margin-top:-20px!important" rel="noopener noreferrer" name="LinkA">View Document</a></td></tr>');
                             var menulink = document.getElementById(linkId);
                             //menulink.setAttribute("onclick", "ViewDocument('" + ServiceDocumentListFromServer[j].documenT_NAME + "')");
                             //$('#ServiceDocumentListFromServer').append(menulink);693
@@ -1541,6 +1675,11 @@ function ViewDocument(filename) {
     window.location.href = "~/uploads/" + filename;
 }
 
+function ViewInspectionDocument(id) {
+    var filename = $("#" + id).val();
+    window.location.href = "../uploads/" + filename;
+}
+
 $.fn.ShowEftMasterpassDetails = function () {
     $("#ShowPaynowButtons").hide();
     $("#ShowEftMasterpass").show();
@@ -1554,8 +1693,10 @@ $.fn.ShowExcavationPopupModal = function () {
 //Save Excavation details
 $.fn.SaveExcavationDetails = function () {
     //ExcavationData = [];
-    var startAdrs = "Nellore";// $("#GPS_START_ADDRESS").val();
-    var endAdrs = "Chennai";// $("#GPS_END_ADDRESS").val();
+    //var startAdrs = $("#GPS_START_ADDRESS").val('Nellore');
+    //var endAdrs = $("#GPS_END_ADDRESS").val('Chennai');
+    var startAdrs = $("#GPS_START_ADDRESS").val();
+    var endAdrs = $("#GPS_END_ADDRESS").val();
     if (startAdrs != "" && startAdrs != undefined && endAdrs != "" && endAdrs != undefined) {
         $('#ExcavationListData').empty();
         var radioValue = $("input[name=ChkHD]:checked").val();
@@ -1589,7 +1730,7 @@ $.fn.SaveExcavationDetails = function () {
             $('#ExcavationListDataFromServer').hide();
             for (let j = 0; j < ExcavationData.length; j++) {
                 var id = j + 1;
-                $('#ExcavationListData').append('<tr><td>' + id + '</td><td>' + ExcavationData[j].TYPE_OF_ROADCROSSING + '</td><td>' + ExcavationData[j].EXCAVATION_LENGTH + '</td><td>' + ExcavationData[j].RIDING_SURFACE + '</td><td>' + ExcavationData[j].KERBS + '</td><td>' + ExcavationData[j].GPS_START_ADDRESS + '</td><td>' + ExcavationData[j].GPS_END_ADDRESS + '</td><td>' + ExcavationData[j].APPLICATION_COMMENTS + '</td><td><a onclick="removeExcavation(' + id + ')"><i class="fa fa-trash text-danger"></i> </a></td></tr>');
+                $('#ExcavationListData').append('<tr><td>' + id + '</td><td>' + ExcavationData[j].TYPE_OF_ROADCROSSING + '</td><td class="text-right">' + ExcavationData[j].EXCAVATION_LENGTH + '</td><td class="text-right">' + ExcavationData[j].RIDING_SURFACE + '</td><td class="text-right">' + ExcavationData[j].KERBS + '</td><td>' + ExcavationData[j].GPS_START_ADDRESS + '</td><td>' + ExcavationData[j].GPS_END_ADDRESS + '</td><td>' + ExcavationData[j].APPLICATION_COMMENTS + '</td><td><a onclick="removeExcavation(' + id + ')"><i class="fa fa-trash text-danger"></i> </a></td></tr>');
             };
 
             document.getElementById("ChkHD").checked = false;

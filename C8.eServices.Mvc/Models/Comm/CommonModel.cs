@@ -26,6 +26,15 @@ namespace C8.eServices.Mvc.Models.Comm
         }
         public string deptartmentname { get; set; }
 
+        public static bool isNumber(string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+                if (char.IsDigit(s[i]) == false)
+                    return false;
+
+            return true;
+        }
+
     }
 
     public class IPAddressModel {

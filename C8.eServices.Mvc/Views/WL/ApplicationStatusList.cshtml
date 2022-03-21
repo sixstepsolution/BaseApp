@@ -239,7 +239,7 @@
 <div>
     <section class="content" style="padding-right: 0;padding-top:0;" @*ng-init="LoadApplicationsWithCounts()"*@>
         <div style="background-color:#e0e0e0!important;margin-top:4px">
-            <h4 class="text-center">Application Status List</h4>
+            <h4 class="text-center">PPW Certificate List</h4>
             <div class="row">
                 @using (Html.BeginForm("ApplicationStatusList", "WL", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
@@ -321,7 +321,7 @@
                             <td style="width:13% !important">
                                 <div style="color:green">
                                     <a onclick="OpenWayleaveApplicationForm(@app.id)"
-                                       style="cursor: pointer;color:green"><u>  Application Supported</u></a>
+                                       style="cursor: pointer;color:green"><u>  Application Granted</u></a>
                                 </div>
                             </td>
                             <td style="width:13% !important">

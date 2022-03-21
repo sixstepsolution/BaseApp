@@ -191,7 +191,8 @@ namespace C8.eServices.Mvc.Controllers
                                            isOverDue = t.isOverDue,
                                            departmentResponse = db.WL_DEPARTMENTS.Where(s => s.APP_ID == t.id && s.APPLICATION_STATUS != ApplicationKeys.PendingDepartmentReview && s.APPLICATION_STATUS != null && s.DEPARTMENT_NAME== inpuclaims.deptName).ToList().Count() > 0 ? "Y" : "N",
                                            isRequestforDocument = db.WL_DEPARTMENTS.Where(s => s.APP_ID == t.id && s.APPLICATION_STATUS == ApplicationKeys.Requestfordocuments && s.APPLICATION_STATUS != null && s.DEPARTMENT_NAME == inpuclaims.deptName).ToList().Count() > 0 ? "Y" : "N",
-                                           roleName = inpuclaims.roleName
+                                           roleName = inpuclaims.roleName,
+                                           inspectionDate = t.inspectionDate
                                        }).AsEnumerable().ToList();
 
 
@@ -264,7 +265,8 @@ namespace C8.eServices.Mvc.Controllers
                                             isOverDue = t.isOverDue,
                                             departmentResponse = db.WL_DEPARTMENTS.Where(s => s.APP_ID == t.id && s.APPLICATION_STATUS != ApplicationKeys.PendingDepartmentReview && s.APPLICATION_STATUS != null && s.DEPARTMENT_NAME==inpuclaims.deptName).ToList().Count() > 0 ? "Y" : "N",
                                             isRequestforDocument= db.WL_DEPARTMENTS.Where(s => s.APP_ID == t.id && s.APPLICATION_STATUS == ApplicationKeys.Requestfordocuments && s.APPLICATION_STATUS != null && s.DEPARTMENT_NAME == inpuclaims.deptName).ToList().Count() > 0 ? "Y" : "N",
-                                            roleName= inpuclaims.roleName
+                                            roleName= inpuclaims.roleName,
+                                            inspectionDate=t.inspectionDate
                                        }).AsEnumerable().ToList();
 
                     var appFinalResult = new List<ApplicationInputModel>();
@@ -470,17 +472,17 @@ namespace C8.eServices.Mvc.Controllers
 
                 int appCount = _appFrom.GetAllApplicationForm().Count();
                 string res = string.Empty;
-                var payLater = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
-                var payNow = dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayNow);
+                var payLater = StatusKeys.PayLater;// "Pending Payment";// dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
+                var payNow = StatusKeys.PayNow;// "PayNow";// dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayNow);
                 var ipAddress=HttpContext.Current.Request.UserHostAddress;
-                if (applicationFormResponse.APPLICATION_STEP_DESCRIPTION == (payLater != null? payLater.Description:"")|| applicationFormResponse.APPLICATION_STEP_DESCRIPTION == "Distributed to Departments")
+                if (applicationFormResponse.APPLICATION_STEP_DESCRIPTION == (payLater != null? payLater:"")|| applicationFormResponse.APPLICATION_STEP_DESCRIPTION == "Distributed to Departments")
                 {
-                    res = _appFrom.UpdateApplicationForm(applicationFormResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), ipAddress);
+                    res = _appFrom.UpdateApplicationForm(applicationFormResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), ipAddress, ExcavationDataResponse);
                 }
                 else
                 {
                     res = _appFrom.AddApplicationForm(applicationFormResponse, DepartmentsDataResponse, DeclarationsDataResponse, HttpContext.Current.Request.Files, HttpContext.Current.Request.Browser.Browser.ToUpper(), appCount, PaymentsDataResponse, ipAddress, ExcavationDataResponse);
-                    if (PaymentsDataResponse == (payNow != null ? payNow.Description : ""))
+                    if (PaymentsDataResponse == (payNow != null ? payNow : ""))
                     {
                         var applicationNo = new AesCrypto(encp).Encrypt(res);
                         res = applicationNo;
@@ -648,18 +650,21 @@ namespace C8.eServices.Mvc.Controllers
             {
                 return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
             }
-
-
             return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No updates found!"));
         }
 
         [Route("api/close-application-form")]
-        public async Task<IHttpActionResult> PostCloseApplicationForm(ApplicationInputClaimModel inputClaims)
+        public async Task<IHttpActionResult> PostCloseApplicationForm()
         {
             try
             {
-                inputClaims.ipAddress = HttpContext.Current.Request.UserHostAddress;
-                bool res = _appFrom.CloseApplicationForm(inputClaims);
+                var InspectionData = HttpContext.Current.Request.Form["InspectionData"];
+                var file = HttpContext.Current.Request.Files;
+                var inspectionDataResponse = JsonConvert.DeserializeObject<ApplicationInputClaimModel>(InspectionData);
+
+                HttpPostedFile f1 = file["INSPECTION_FORM"];
+                //inputClaims.ipAddress = HttpContext.Current.Request.UserHostAddress;
+                bool res = _appFrom.CloseApplicationForm(inspectionDataResponse, f1, HttpContext.Current.Request.Browser.Browser.ToUpper());
 
                 if (res)
                 {

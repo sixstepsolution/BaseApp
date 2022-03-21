@@ -988,7 +988,7 @@
 
 //                $('#ApplicationStatus').show();
 //                $('#APPLICATION_STEP_DESCRIPTION').text(data.applicatioN_STEP_DESCRIPTION);
-//                if (data.applicatioN_STEP_DESCRIPTION == "Request for documents") {
+//                if (data.applicatioN_STEP_DESCRIPTION == "Request for additional information") {
 //                    $('#APPLICATION_STEP_DESCRIPTIONComments').show();
 //                    $('#APPLICATION_DESCRIPTIONComments').text(data.applicatioN_COMMENTS);                    
 //                }
@@ -1002,7 +1002,7 @@
 //                    $('#ApplicationPendingStatus').show();
 //                }
 
-//                if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for documents') {
+//                if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for additional information') {
 //                    $('#ApplicationAdminSection').show();
 //                }
 
@@ -1177,18 +1177,21 @@
 //    if (flag == "PendingStatus") {
 //        val = $('#AppPendingStatus').val();
 //        appFormData.AppStatus = val;
-//        if (val == "Request for documents") {
+//        if (val == "Request for additional information") {
 //            $('#IsRequestDocuments').show();
 //        }
 //    }
     
-//    IsRequestDocuments = val === 'Request for documents' ? true : false;
+//    IsRequestDocuments = val === 'Request for additional information' ? true : false;
 //    IsStatusReject = val === 'Rejected' ? true : false;
 //}
 
 
 //Intialize variables
 var appFormData = new Object();
+var excavationFormData = new Object();
+var ExcavationData = [];
+var ExcavationDataFromServer = [];
 var Map_Locations = [];
 var GPS_START_Lat = "";
 var GPS_START_Lng = "";
@@ -1414,13 +1417,39 @@ $.fn.showGPS = function () {
     
 //};
 
-$.fn.ShowSearchMap = function (id) {
+function ShowSearchMap(id,flag) {
     //alert(id);
+    //alert(flag);
+    var selectedAddress = "";
+    if (flag == 0) {
+        selectedAddress = $("#GPS_START_ADDRESS" + id).text();
+    }
+    else {
+        selectedAddress = $("#GPS_END_ADDRESS" + id).text();
+    }
+    $("#ShowMapLoader").show();
+    GlobalSearchResult = "";
+    GlobalSearchResult = selectedAddress;
+    var mapAddress = selectedAddress;//$("#" + id).val();
+    //alert(mapAddress);
+    var iframe = document.getElementById('Arciframe');
+    iframe.src = "";
+    var url = "../Home/MapMarker?address=" + mapAddress;
+    $("#locationPopup").modal('show');
+    //document.getElementById("Arciframe").setAttribute("src", url);
+    setTimeout(function () {
+        iframe.src = url;
+        //$("#ShowMapLoader").hide();
+    }, 3000);
+};
+
+$.fn.ShowSearchMap=function(id) {
     
     $("#ShowMapLoader").show();
     GlobalSearchResult = "";
     GlobalSearchResult = id;
     var mapAddress = $("#" + id).val();
+    //alert(mapAddress);
     var iframe = document.getElementById('Arciframe');
     iframe.src = "";
     var url = "../Home/MapMarker?address=" + mapAddress;
@@ -1808,11 +1837,11 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 $('#APPLICATION_STEP_DESCRIPTION_STATUS').text(data.applicatioN_STEP_DESCRIPTION);
                 $('#APPLICATION_STEP_DESCRIPTION1').text(data.applicatioN_STEP_DESCRIPTION);
 
-                //if (data.applicatioN_STEP_DESCRIPTION == "Application Supported") {
+                //if (data.applicatioN_STEP_DESCRIPTION == "Application Granted") {
                 //    $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
                 //    $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'green');
                 //}
-                if (data.applicatioN_STEP_DESCRIPTION == "Request for documents") {
+                if (data.applicatioN_STEP_DESCRIPTION == "Request for additional information") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTIONComments').show();
@@ -1831,22 +1860,46 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     //$('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
                 }
 
-                //if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Completed' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for documents') {
+                //if (data.applicatioN_STEP_DESCRIPTION !== 'Approved' && data.applicatioN_STEP_DESCRIPTION !== 'Completed' && data.applicatioN_STEP_DESCRIPTION !== 'Rejected' && data.applicatioN_STEP_DESCRIPTION !== 'Request for additional information') {
                 //    $('#ApplicationAdminSection').show();
                 //}
 
-                if (data.applicatioN_STEP_DESCRIPTION == "Awaiting Wayleave Officer Review") {
+                if (data.applicatioN_STEP_DESCRIPTION == "Pending Approval") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'red');
                     $('#APPLICATION_STEP_DESCRIPTION_RequestStatus').show();
                     $('#ApplicationAdminSection').show();
                 }
 
-                if (data.applicatioN_STEP_DESCRIPTION == "Application Supported") {
+                if (data.applicatioN_STEP_DESCRIPTION == "Application Granted") {
                     $('#APPLICATION_STEP_DESCRIPTION_STATUS').css('color', 'green');
                     $('#APPLICATION_STEP_DESCRIPTION1').css('color', 'green');
                     $('#ApplicationAdminSection').hide();
                     $('#ApplicationClosureStatus').show();
+                    $('#InspectionClosedButtons').show();
+                }
+                if (data.applicatioN_STEP_DESCRIPTION == "Application Closed") {
+                    $('#ApplicationAdminSection').hide();
+                    $('#showUpdateDepartmentStaus').hide();
+                    $('#InspectionClosedButtons').hide();
+                    //$('#ApplicationClosureStatus').show();
+
+                    $('#ApplicationClosureStatus').show();
+                    $('#IsInspectionOutcomeComments').show();
+                    $('#viewInspectionForm').show();
+                    $('#viewInspectionForm').text(data.inspectioN_FORM);                    
+                    $('#INSPECTION_STATUS').val(data.inspectioN_STATUS);
+                    $('#INSPECTION_REFERENCE_NO').val(data.inspectioN_REFERENCE_NO);
+                    $('#INSPECTION_DATE').val(data.inspectioN_DATE);
+                    $('#INSPECTION_BY').val(data.inspectioN_BY);
+                    //$('#INSPECTION_FORM').val(data.inspectioN_FORM);
+                    $('#INSPECTION_COMMENTS').val(data.inspectioN_COMMENTS);
+
+                    $('#INSPECTION_STATUS').prop('disabled', true);
+                    $('#INSPECTION_REFERENCE_NO').prop('disabled', true);
+                    $('#INSPECTION_DATE').prop('disabled', true);
+                    $('#INSPECTION_BY').prop('disabled', true);
+                    $('#INSPECTION_COMMENTS').prop('disabled', true);
                 }
 
                 //alert($("#CurrentUserDepartmentName").val());
@@ -1858,7 +1911,7 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                         console.log(dataDeclaration);
                         $.fn.LoadDeclarationsByAppid(dataDeclaration);
                     });
-                    if (data.applicatioN_STEP_DESCRIPTION == "Distributed to Departments" || data.applicatioN_STEP_DESCRIPTION == "Awaiting Wayleave Officer Review") {
+                    if (data.applicatioN_STEP_DESCRIPTION == "Distributed to Departments" || data.applicatioN_STEP_DESCRIPTION == "Pending Approval") {
                         $.getJSON(apiBaseUrl + 'get-application-departments/' + appId, function (dataDept, status, xhr) {
                             circulatedDepartmentList = dataDept;
                             console.log("===================dataDepartments by appid==================");
@@ -1876,12 +1929,12 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                                 if (newArray.length > 0) {
                                     var CirculatedDeptStatus = newArray[0].applicatioN_STATUS;
                                     var CirculatedDeptCmnt = newArray[0].approvE_OR_REJECT_COMMENTS;
-                                    if (CirculatedDeptStatus == "Affected - Not supported" || CirculatedDeptStatus == "Affected - Conditional" || CirculatedDeptStatus == "Request for documents") {
+                                    if (CirculatedDeptStatus == "Affected - Not supported" || CirculatedDeptStatus == "Affected - Supported conditionally" || CirculatedDeptStatus == "Request for additional information") {
                                         $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
                                         $('#departmentRejectComment').show();
                                         $("#DEPARTMENT_COMMENTS").val(CirculatedDeptCmnt);
                                     }
-                                    else if (CirculatedDeptStatus == "Not Affected") {
+                                    else if (CirculatedDeptStatus == "Not Affected" || CirculatedDeptStatus =="Affected - Supported") {
                                         $("#DEPARTMENT_STATUS").val(CirculatedDeptStatus);
                                     }
 
@@ -1891,6 +1944,16 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                             $.fn.LoadDepartmentsByAppid(dataDept);
                         });
                     }
+
+                    $.getJSON(apiBaseUrl + 'get-application-excavationDetails/' + appId, function (dataExcavation, status, xhr) {
+                        //circulatedDepartmentList = dataDept;
+                        console.log("===================excavation data by appid==================");
+                        console.log(dataExcavation);
+                        if (dataExcavation) {
+                            $.fn.LoadExcavationDetailsByAppid(dataExcavation);
+                        }
+
+                    });
 
                     $.fn.GetFormdataValues();
                     ServiceDocumentListFromServer = data.wL_SUPPORTING_DOCUMENTS;
@@ -2112,6 +2175,7 @@ $.fn.GetFormdataValues = function () {
     //appFormData.postCode = $('#postCode').val();
 };
 
+//Load declarations by application id
 $.fn.LoadDeclarationsByAppid = function (serverData) {
     ServiceDeclarationList = [];
     ServiceDeclarationListFromServer = [];
@@ -2175,7 +2239,7 @@ $.fn.LoadDeclarationsByAppid = function (serverData) {
 
 }
 
-// loading supporting documents and departments by application id
+// load supporting documents and departments by application id
 $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
 
     ServiceDocumentList = [];
@@ -2235,7 +2299,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
                             var docUrl = "../uploads/" + ttttgt;
                             //menulink.href = "javascript: void (0)";
                             //menulink.onclick = ViewDocument(ServiceDocumentListFromServer[j].documenT_NAME);
-                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><a id=' + linkId + ' target="_blank" href="' + docUrl + '" style="text-decoration:none!important;color:#000!important" rel="noopener noreferrer" name="LinkA">View</a></td></tr>');
+                            $('#ServiceDocumentListFromServer').append('<tr><td>' + index + '</td><td>' + ServiceDocumentList[i].description + '</td><td><a class="btn btn-green-custom btn-sm" id=' + linkId + ' target="_blank" href="' + docUrl + '" style="text-decoration:none!important;color:#fff!important" rel="noopener noreferrer" name="LinkA">View Document</a></td></tr>');
                             //var menulink = document.getElementById(linkId);
                             //menulink.setAttribute("onclick", "ViewDocument('" + ServiceDocumentListFromServer[j].documenT_NAME + "')");
                             //$('#ServiceDocumentListFromServer').append(menulink);
@@ -2263,6 +2327,7 @@ $.fn.LoadSupportingDocumentsByAppid = function (stepDescription) {
 
 }
 
+//Load departments by application id
 $.fn.LoadDepartmentsByAppid = function (deptdata) {
     //alert('dept');
     isDepartmentResponseReceived = false;
@@ -2303,7 +2368,7 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
                 dptComment = dptInfo.approvE_OR_REJECT_COMMENTS;
             }
             var tt = "";
-            if (status == "Not Affected" || status == "Affected - Not supported" || status =="Affected - Conditional") {
+            if (status == "Not Affected" || status == "Affected - Not supported" || status == "Affected - Supported conditionally" || status =="Affected - Supported") {
                 isDepartmentResponseReceived = true;
                 tt = "text-success";
                 circulateAllDepartmentResponses++;
@@ -2311,7 +2376,7 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
             if (status == "Affected - Not supported") {
                 circulatedDepartmentScenario2 = true;
             }
-            if (status == "Not Affected") {
+            if (status == "Not Affected" || status =="Affected - Supported") {
                 tt = "text-success";
             }
             else {
@@ -2329,6 +2394,52 @@ $.fn.LoadDepartmentsByAppid = function (deptdata) {
         }
     }
     //$("#PageLoaderModel").modal('hide');
+}
+
+//Load excavation details by application id
+$.fn.LoadExcavationDetailsByAppid = function (excavationdata) {
+    $('#ExcavationListDataFromServer').show();
+    ExcavationData = [];
+    ExcavationDataFromServer = [];
+    ExcavationDataFromServer = excavationdata;
+    //alert(ExcavationDataFromServer.length);
+    if (ExcavationDataFromServer.length > 0) {
+        //alert(ExcavationDataFromServer.length);
+        $('#ExcavationListData').show();
+        
+        for (let i = 0; i < ExcavationDataFromServer.length; i++) {
+            var excavationFormData = {};
+            excavationFormData.TYPE_OF_ROADCROSSING = ExcavationDataFromServer[i].typE_OF_ROADCROSSING;
+            excavationFormData.EXCAVATION_LENGTH = ExcavationDataFromServer[i].excavatioN_LENGTH;
+            excavationFormData.RIDING_SURFACE = ExcavationDataFromServer[i].ridinG_SURFACE;
+            excavationFormData.KERBS = ExcavationDataFromServer[i].kerbs;
+            excavationFormData.OPEN_TRENCH_COMMENT = ExcavationDataFromServer[i].opeN_TRENCH_COMMENT;
+            excavationFormData.GPS_START_ADDRESS = ExcavationDataFromServer[i].gpS_START_ADDRESS;
+            excavationFormData.GPS_END_ADDRESS = ExcavationDataFromServer[i].gpS_END_ADDRESS;
+            excavationFormData.APPLICATION_COMMENTS = ExcavationDataFromServer[i].applicatioN_COMMENTS;
+            ExcavationData.push(excavationFormData);
+        };
+        for (let j = 0; j < ExcavationData.length; j++) {
+            var id = j + 1;
+            var startAddress = "GPS_START_ADDRESS"+id;
+            var endAddress = "GPS_END_ADDRESS"+id;
+            //$('#ExcavationListData').append('<tr><td>' + id + '</td><td>' + ExcavationData[j].typE_OF_ROADCROSSING + '</td><td class="text-right">' + ExcavationData[j].excavatioN_LENGTH + '</td><td class="text-right">' + ExcavationData[j].ridinG_SURFACE + '</td><td class="text-right">' + ExcavationData[j].kerbs + '</td><td>' + ExcavationData[j].gpS_START_ADDRESS + '</td><td>' + ExcavationData[j].gpS_END_ADDRESS + '</td><td>' + ExcavationData[j].applicatioN_COMMENTS + '</td><td><a onclick="removeExcavation(' + id + ')"><i class="fa fa-trash text-danger"></i> </a></td></tr>');
+            $('#ExcavationListData').append('<tr><td>' + id + '</td><td>' + ExcavationData[j].TYPE_OF_ROADCROSSING + '</td><td class="text-right">' + ExcavationData[j].EXCAVATION_LENGTH + '</td><td class="text-right">' + ExcavationData[j].RIDING_SURFACE + '</td><td class="text-right">' + ExcavationData[j].KERBS + '</td><td><p style="text-decoration:none!important;cursor:pointer!important;float:left!important" id=' + startAddress + '>' + ExcavationData[j].GPS_START_ADDRESS + '</p><b style="cursor:pointer!important;float:left!important" onclick="ShowSearchMap(' + id + ',0)">&nbsp;<button class="btn btn-green-custom btn-sm"><i class="fa fa-map-marker" style="color:#fff!important"></i></button> </b></td><td><p style="text-decoration:none!important;cursor:pointer!important;float:left!important" id=' + endAddress + '>' + ExcavationData[j].GPS_END_ADDRESS + '</p> <b style="cursor:pointer!important;float:left!important" onclick="ShowSearchMap(' + id + ',1)">&nbsp;<button class="btn btn-green-custom btn-sm"><i class="fa fa-map-marker" style="color:#fff!important"></i></button> </b></td><td>' + ExcavationData[j].APPLICATION_COMMENTS + '</td><td class="text-center"><a onclick="ViewExcavation(' + j + ')"><i class="fa fa-eye text-primary"></i> </a></td></tr>');
+        };
+        $('#ExcavationListDataFromServer').hide();
+        //document.getElementById("ChkHD").checked = false;
+        //document.getElementById("ChkOT").checked = false;
+        //document.getElementById("ChkNone").checked = false;
+        //$('#EXCAVATION_LENGTH').val('');
+        //$('#RIDING_SURFACE').val('');
+        //$('#KERBS').val('');
+        //$('#OPEN_TRENCH_COMMENT').val('');
+        //$('#GPS_START_ADDRESS').val('');
+        //$('#GPS_END_ADDRESS').val('');
+        //$('#APPLICATION_COMMENTS').val('');
+        //$('#OpenTrenchComment').hide();
+        //$("#ExcavationDetailsPopup").modal('hide');
+    }
 }
 
 function formatDate(date) {
@@ -2354,7 +2465,7 @@ function formatTime(date) {
 $.fn.UpdateApplicationFormStaus = function () {
     if (appFormData.AppStatus != null && appFormData.AppStatus != undefined && appFormData.AppStatus != "") {
 
-        if ($("#AppStatus").val() == "Application Not Supported") {
+        if ($("#AppStatus").val() == "Application Rejected") {
             var arc = $("#APPLICATIONReject_COMMENTS").val();
             if (arc != "" && arc != undefined) {
 
@@ -2416,10 +2527,11 @@ $.fn.UpdateApplicationFormStaus = function () {
 }
 
 $.fn.CloseApplicationForm = function () {
+    var isUploadDocumentSizeNotValid = false;
     //alert(appFormData.AppStatus);
     var inspectionBy = $("#INSPECTION_BY").val();
     if (appFormData.AppStatus != null && appFormData.AppStatus != undefined && appFormData.AppStatus != "") {
-        
+        var formData = new FormData();
         if ($("#INSPECTION_STATUS").val() == "Application Closed") {
             var insReference = $("#INSPECTION_REFERENCE_NO").val();
             var insDate = $("#INSPECTION_DATE").val();
@@ -2442,8 +2554,7 @@ $.fn.CloseApplicationForm = function () {
 
         var inpuclaims = {
             appId: appFormData.APP_ID,
-            appStatus: appFormData.AppStatus,
-            
+            appStatus: appFormData.AppStatus,            
             deptName: departmentName,
             deptStatus: $("#DEPARTMENT_STATUS").val(),
             first_name: $("#CurrentUserName").val(),
@@ -2453,31 +2564,46 @@ $.fn.CloseApplicationForm = function () {
             inspectionReferenceNo :$("#INSPECTION_REFERENCE_NO").val(),
             inspectionDate : $("#INSPECTION_DATE").val()
         };
+        console.log(inpuclaims);
+        formData.append("InspectionData", JSON.stringify(inpuclaims));
+        var files = $('#INSPECTION_FORM').get(0).files;
+        for (var i = 0; i < files.length; i++) {
+            var isFileSizeValid = $.fn.CheckFileSize("INSPECTION_FORM", files);
+            if (isFileSizeValid) {
+                formData.append("INSPECTION_FORM", files[i]);
+            }
+            else {
+                isUploadDocumentSizeNotValid = true;
+            }
+        }
         $.ajax({
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            'type': 'POST',
-            'url': apiBaseUrl + 'close-application-form',
-            'data': JSON.stringify(inpuclaims),
-            'dataType': 'json',
-            'success': function (data, textStatus, xhr) {
-                console.log("======Application closed Result=========");
+            url: apiBaseUrl + 'close-application-form',
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            cache: false,
+            enctype: 'multipart/form-data',
+            dataType: 'json',
+            data: formData,
+            success: function (data, textStatus, xhr) {
                 console.log(data);
+                $('#isAppLoading').hide();
                 if (data) {
                     toastr.success('Application closed successfully!');
                     setTimeout(function () {
                         window.location.href = "../WL/index";
                     }, 1000)
                 }
-                $('#isAppLoading').hide();
+                else if (data.exception) {
+                    toastr.error(data.exception);
+                }
             },
             error: function (xhr, textStatus, errorThrown) {
-                //console.log('Error in Operation');
-                toastr.error('Error in Operation');
+                console.log(xhr);
+                toastr.error(errorThrown);
             }
         });
+       
     }
     else {
         toastr.warning('* Fields are required!');
@@ -2490,7 +2616,7 @@ $.fn.UpdateDepartmentStaus = function () {
     var dc = $("#DEPARTMENT_COMMENTS").val()
     //alert(ds);
     if (ds != undefined && ds != null && ds != "") {
-        if (ds == "Affected - Not supported" || ds == "Affected - Conditional" || ds == "Request for documents") {
+        if (ds == "Affected - Not supported" || ds == "Affected - Supported conditionally" || ds == "Request for additional information") {
             if (dc != undefined && dc != null && dc != "") {
 
             }
@@ -2564,7 +2690,7 @@ $.fn.ChangeAppSatus = function (flag) {
     if (flag =="ApproveStatus") {
         val = $('#AppStatus').val();
         appFormData.AppStatus = val;
-        if (val == "Application Not Supported") {
+        if (val == "Application Rejected") {
             $('#IsStatusReject').show();
         }
     }
@@ -2572,7 +2698,7 @@ $.fn.ChangeAppSatus = function (flag) {
     if (flag == "PendingStatus") {
         val = $('#AppPendingStatus').val();
         appFormData.AppStatus = val;
-        if (val == "Request for documents") {
+        if (val == "Request for additional information") {
             $('#IsRequestDocuments').show();
         }
     }
@@ -2585,16 +2711,92 @@ $.fn.ChangeAppSatus = function (flag) {
         }
     }
 
-    IsRequestDocuments = val === 'Request for documents' ? true : false;
-    IsStatusReject = val === 'Application Not Supported' ? true : false;
+    IsRequestDocuments = val === 'Request for additional information' ? true : false;
+    IsStatusReject = val === 'Application Rejected' ? true : false;
 }
 
  $.fn.changeDepartmentStatus = function () {
     var status = $('#DEPARTMENT_STATUS').val();
     $('#departmentRejectComment').hide();
 
-     if (status == "Affected - Not supported" || status == "Affected - Conditional" || status == "Request for documents") {
+     if (status == "Affected - Not supported" || status == "Affected - Supported conditionally" || status == "Request for additional information") {
         $('#departmentRejectComment').show();
+    }
+}
+
+//View Excavation details
+function ViewExcavation(id) {
+    //alert(id);
+    var selectedExcavation = [];
+    //var selectedIndex = Number(id) - 1;
+    console.log("==========View excavation data======");
+    console.log(ExcavationData);
+    selectedExcavation = ExcavationData[id];
+    console.log(selectedExcavation);
+    $('#OpenTrenchComment').hide();
+    //alert(selectedExcavation.length);
+    //alert(selectedExcavation.EXCAVATION_LENGTH);
+    if (selectedExcavation) {
+        //alert('success');
+        //selectedExcavation.TYPE_OF_ROADCROSSING = $("input[name=ChkHD]:checked").val();//*
+        $('#EXCAVATION_LENGTH').val(selectedExcavation.EXCAVATION_LENGTH);
+        $('#RIDING_SURFACE').val(selectedExcavation.RIDING_SURFACE);
+        $('#KERBS').val(selectedExcavation.KERBS);
+        $('#GPS_START_ADDRESS').val(selectedExcavation.GPS_START_ADDRESS);
+        $('#GPS_END_ADDRESS').val(selectedExcavation.GPS_END_ADDRESS);
+        $('#APPLICATION_COMMENTSNew').val(selectedExcavation.APPLICATION_COMMENTS);
+
+        if (selectedExcavation.TYPE_OF_ROADCROSSING) {
+            if (selectedExcavation.TYPE_OF_ROADCROSSING == "Horizontal drilling") {
+                $("#ChkHD").prop('checked', true);
+            }
+            if (selectedExcavation.TYPE_OF_ROADCROSSING == "Open trench") {
+                $('#OpenTrenchComment').show();
+                $("#ChkOT").prop('checked', true);
+                $("#OPEN_TRENCH_COMMENT").val(selectedExcavation.OPEN_TRENCH_COMMENT);
+            }
+            if (selectedExcavation.TYPE_OF_ROADCROSSING == "None") {
+                $("#ChkNone").prop('checked', true);
+            }
+        }
+        $("#ExcavationDetailsPopup").modal('show');
+    }
+    else {
+        document.getElementById("ChkHD").checked = false;
+        document.getElementById("ChkOT").checked = false;
+        document.getElementById("ChkNone").checked = false;
+        $('#EXCAVATION_LENGTH').val('');
+        $('#RIDING_SURFACE').val('');
+        $('#KERBS').val('');
+        $('#OPEN_TRENCH_COMMENT').val('');
+        $('#GPS_START_ADDRESS').val('');
+        $('#GPS_END_ADDRESS').val('');
+        $('#APPLICATION_COMMENTS').val('');
+        $('#OpenTrenchComment').hide();
+        $("#ExcavationDetailsPopup").modal('hide');
+    }   
+
+}
+
+$.fn.ViewInspectionForm = function (id) {
+    var filename = $("#" + id).text();
+    window.location.href = "../uploads/" + filename;
+}
+
+$.fn.CheckFileSize = function (id, fileContent) {
+    console.log(fileContent);
+    //$('#' + decsionID).get(0).files;
+    if (fileContent[0].size > 5000000) {
+        toastr.warning('Please upload file size less than 5MB <br/><b style="font-size:9pt!important">' + fileContent[0].name + '</b>', "Warning", {
+            "timeOut": "30000",
+            "extendedTImeout": "50000",
+            "closeButton": true
+        });
+        $('#' + id).val(null);
+        return false;
+    }
+    else {
+        return true;
     }
 }
 

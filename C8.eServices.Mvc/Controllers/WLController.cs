@@ -665,18 +665,26 @@ namespace C8.eServices.Mvc.Controllers
 
         public ActionResult GetInspectionPdf(int appId)
         {
+            InspectionPdfData pdf = new InspectionPdfData();
+            if (Session["ekurhuleniData"] != null)
+            {
+                int userid = Session["ekurhuleniUserID"] != null ? Convert.ToInt32(Session["ekurhuleniUserID"].ToString()) : 0;
+                var departmentUser = db.Users.Where(s => s.userid == userid).FirstOrDefault();
+                pdf.DepartmentUserName = departmentUser != null? departmentUser.firstName+" "+ departmentUser.lastName: "";
+            }
             var root = Server.MapPath("~/uploads/");
-            string pdfname = "ApplicationStatus.pdf";
+            string pdfname = "PPWCertificate.pdf";
             var path = Path.Combine(root, pdfname);
             path = Path.GetFullPath(path);
-            InspectionPdfData pdf = new InspectionPdfData();
+            
             pdf.AppId = appId;
+            
             //ProjectPdfData pdf1 = new ProjectPdfData();
             //pdf1.PROJECT_ID = ProjectID;
             //pdf1.COMPANY_ID = Convert.ToInt32(Session["CompanyRefId"].ToString());
-            var actionPDF = new Rotativa.ActionAsPdf("InspectionLetterPdf", pdf) //some route values)
+            //var actionPDF = new Rotativa.ActionAsPdf("InspectionLetterPdf", pdf) //some route values)
+            var actionPDF = new Rotativa.ActionAsPdf("PPWCertificateLetterPdf", pdf) //some route values)
             {
-
                 FileName = pdfname,
                 SaveOnServerPath = path,
                 PageSize = Size.A4,
@@ -719,6 +727,58 @@ namespace C8.eServices.Mvc.Controllers
                     ViewBag.streetAddress = "";
                 }
                 
+                ViewBag.UserType = address.TYPE_USER;
+                ViewBag.suburb = address.CITY;
+                ViewBag.company = address.COMPANY_NAME;
+                ViewBag.telephone = address.TELEPHONE_NUMBER;
+                ViewBag.streetName = address.STREET_NAME;
+                ViewBag.ApplicationAmount = feeDetails != null ? feeDetails.APPLICATION_PRICE : 0;
+                ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("yyyy-MM-dd") : "";
+                ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("yyyy-MM-dd") : "";
+            }
+            return View(res);
+        }
+        public ActionResult PPWCertificateLetterPdf(InspectionPdfData pdf = null)
+        {
+            ViewBag.streetAddress = "";
+            ViewBag.inspectionDate = "";
+            ViewBag.applicationDate = "";
+            ViewBag.applicationEndDate = "";
+            ViewBag.signature = "";
+            ViewBag.suburb = "";
+            ViewBag.UserType = "";
+            ViewBag.ApplicationAmount = 0;
+            ViewBag.ExcavationData = null;
+            ViewBag.DepartmentResonseData = null;
+            ViewBag.isAffectedConditionally = false;
+            ViewBag.departmentUsername ="";
+            var res = db.WL_APPLICATIONFORM.Find(pdf.AppId);
+            if (res != null)
+            {
+                ViewBag.departmentUsername = pdf.DepartmentUserName;
+                var isAffectedConditionally = db.WL_DEPARTMENTS.Where(s => s.APP_ID == pdf.AppId && s.APPLICATION_STATUS == StatusKeys.AffectedSupportedConditionally).ToList();
+                if(isAffectedConditionally.Count>0)
+                {
+                    ViewBag.isAffectedConditionally = true;
+                }
+                var feeDetails = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
+                var signatureDetails = db.WL_UPLOAD_SIGNATURE.Where(s => s.IS_ACTIVE == "Y").FirstOrDefault();
+                ViewBag.signature = signatureDetails != null ? signatureDetails.DOCUMENT_NAME : "";
+                ViewBag.ExcavationData = db.WL_EXCAVATION_DETAILS.Where(s => s.APP_ID == pdf.AppId).ToList();
+                ViewBag.DepartmentResonseData = db.WL_DEPARTMENTS.Where(s => s.APP_ID == pdf.AppId).ToList();
+                //int acNo = Convert.ToInt32(res.PROPERTYOWNER_ACCOUNT_NO??"0");
+                var address = db.WL_ACCOUNTS.Where(s => s.ACCOUNT_NUMBER == res.PROPERTYOWNER_ACCOUNT_NO).FirstOrDefault();//!=null? db.WL_ACCOUNTS.Where(s => s.ACCOUNT_ID == acNo).FirstOrDefault().
+                //ViewBag.inspectionDate =res.INSPECTION_DATE != null ? Convert.ToDateTime(res.INSPECTION_DATE).ToString("yyyy-MM-dd") : "";
+                ViewBag.inspectionDate = DateTime.Now.ToString("yyyy-MM-dd");
+                if (address != null)
+                {
+                    ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
+                }
+                else
+                {
+                    ViewBag.streetAddress = "";
+                }
+
                 ViewBag.UserType = address.TYPE_USER;
                 ViewBag.suburb = address.CITY;
                 ViewBag.company = address.COMPANY_NAME;
@@ -836,11 +896,17 @@ namespace C8.eServices.Mvc.Controllers
         [HttpGet]
         public ActionResult GetReinstatementCerificate(int appId)
         {
+            InspectionPdfData pdf = new InspectionPdfData();
+            if (Session["ekurhuleniData"] != null)
+            {
+                int userid = Session["ekurhuleniUserID"] != null ? Convert.ToInt32(Session["ekurhuleniUserID"].ToString()) : 0;
+                var departmentUser = db.Users.Where(s => s.userid == userid).FirstOrDefault();
+                pdf.DepartmentUserName = departmentUser != null ? departmentUser.firstName + " " + departmentUser.lastName : "";
+            }
             var root = Server.MapPath("~/uploads/");
             string pdfname = "ReinstatementCerificate.pdf";
             var path = Path.Combine(root, pdfname);
             path = Path.GetFullPath(path);
-            InspectionPdfData pdf = new InspectionPdfData();
             pdf.AppId = appId;
             //pdf1.PROJECT_ID = ProjectID;
             //pdf1.COMPANY_ID = Convert.ToInt32(Session["CompanyRefId"].ToString());
@@ -871,9 +937,12 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.suburb = "";
             ViewBag.UserType = "";
             ViewBag.ApplicationAmount = 0;
+            ViewBag.ExcavationData = null;
+            ViewBag.departmentUsername = "";
             var res = db.WL_APPLICATIONFORM.Find(pdf.AppId);
             if (res != null)
             {
+                ViewBag.departmentUsername = pdf.DepartmentUserName;
                 var feeDetails = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
                 var signatureDetails = db.WL_UPLOAD_SIGNATURE.Where(s => s.IS_ACTIVE == "Y").FirstOrDefault();
                 ViewBag.signature = signatureDetails != null ? signatureDetails.DOCUMENT_NAME : "";
@@ -898,6 +967,7 @@ namespace C8.eServices.Mvc.Controllers
                 ViewBag.ApplicationAmount = feeDetails != null ? feeDetails.APPLICATION_PRICE : 0;
                 ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("yyyy-MM-dd") : "";
                 ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("yyyy-MM-dd") : "";
+                ViewBag.ExcavationData = db.WL_EXCAVATION_DETAILS.Where(s => s.APP_ID == pdf.AppId).ToList();
             }
             return View(res);
         }

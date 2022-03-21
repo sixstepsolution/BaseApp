@@ -170,6 +170,7 @@ namespace C8.eServices.Mvc.Controllers
                     if (userInfo != null)
                     {
                         userInfo.deptartmentname = acc.deptartmentname;
+                        userInfo.isActiveDirectory = acc.isActiveDirectory;
                         if (RoleInfo != null)
                         {
                             RoleInfo.role_name = accountResponse.userRole;

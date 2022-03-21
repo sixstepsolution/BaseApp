@@ -15,7 +15,9 @@ namespace C8.eServices.Mvc.Models
         public string DESCRIPTION { get; set; }
         public int? SERVICE_ID { get; set; }
         public DateTime? CREATED_ON { get; set; }
-        
+        [StringLength(5)]
+        public string IS_REQUIRED { get; set; }
+
         public virtual MASTER_SERVICE_TYPES MASTER_SERVICE_TYPES { get; set; }
 
     }

@@ -257,9 +257,11 @@ namespace C8.eServices.Mvc.Models.EmailBodys
             strBulBodyContent.Append("<div>Please make a payment towards your Wayleave application at your nearest Customer Care Center, or a Point of Sale. </div><br />");
             
             strBulBodyContent.Append("<div>Wayleave application fee: <b>R" + fee + "</b></div><br />");
-            strBulBodyContent.Append("<div>Reference Number: <b>" + applicationNumber + "</b></div><br />");
-            //strBulBodyContent.Append("<div>Application date: <b>" + createdDate + "</b></div><br />");
-            //strBulBodyContent.Append("<div>Completion date: <b>" + completionDate + "</b></div><br />");
+            strBulBodyContent.Append("<div>Reference Number: <b>" + applicationNumber + "</b></div><br /><br />");
+            strBulBodyContent.Append("<div><b>After you have made a cash payment, login to the Wayleave system and perform the following:</b></div><br />");
+            strBulBodyContent.Append("<div><b>- Access your application from the Pending Payment queue</b></div><br />");
+            strBulBodyContent.Append("<div><b>- Upload your EFT Payment Receipt under the Supporting Documents section</b></div><br />");
+            strBulBodyContent.Append("<div><b>- Click on Submit</b></div><br />");
             //}
             strBulBodyContent.Append("<br/><br/><br/>Regards<br />");
             strBulBodyContent.Append("Wayleave");

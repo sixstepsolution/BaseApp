@@ -32,6 +32,7 @@ namespace C8.eServices.Mvc.Controllers
         private readonly IMasterDeclarations _masterdeclarations = null;
         private readonly IWLDeclarations _wldeclarations = null;
         private readonly IDepartments _departments = null;
+        private readonly IWLExcavation _excavations = null;
         private IMapper _mapper = null;
 
         public WayLeaveController(IWayleave wayleave,
@@ -49,7 +50,8 @@ namespace C8.eServices.Mvc.Controllers
             IMasterCustomerCareCenters mastercccenters,
             IMasterDeclarations masterdeclarations,
             IWLDeclarations wldeclarations,
-            IDepartments departments
+            IDepartments departments,
+            IWLExcavation excavations
             )
         {
             _wayleave = wayleave;
@@ -69,6 +71,7 @@ namespace C8.eServices.Mvc.Controllers
             _masterdeclarations = masterdeclarations;
             _wldeclarations = wldeclarations;
             _departments = departments;
+            _excavations = excavations;
         }
 
 
@@ -545,6 +548,26 @@ namespace C8.eServices.Mvc.Controllers
                 if (res.Count() > 0)
                 {
                     //var mpres = _mapper.Map<List<MasterInputCalimsModel>>(res);
+                    return Ok(res);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message));
+            }
+            return ResponseMessage(Request.CreateErrorResponse(HttpStatusCode.InternalServerError, "No documents"));
+        }
+
+        [Route("api/get-application-excavationDetails/{id}")]
+        //[Authorize]        
+        public async Task<IHttpActionResult> GetExcavationDetailsByApplicationId(int id)
+        {
+            try
+            {
+                var res = _excavations.GetExcavationData(id);
+
+                if (res.Count() > 0)
+                {
                     return Ok(res);
                 }
             }

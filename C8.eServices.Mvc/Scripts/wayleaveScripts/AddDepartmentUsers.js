@@ -201,7 +201,7 @@ $.fn.UpdatePaymentPrice = function () {
 
 }
 
-$.fn.EditUser = function (userId,username,deptName,roleName) {
+$.fn.EditUser = function (userId,username,deptName,roleName,activeDirectory) {
     console.log("========User Data=========");
     console.log(username);
     console.log(deptName);
@@ -210,6 +210,7 @@ $.fn.EditUser = function (userId,username,deptName,roleName) {
     $("#SelectedUsername").text(username);
     $("#EditDeptartmentName").val(deptName);
     $("#userEditRole").val(roleName);
+    $('#userEditActiveDirectory').val(activeDirectory);
     $("#EditUserModel").modal('show');
 }
 
@@ -228,6 +229,7 @@ $.fn.backToList = function () {
 $.fn.UpdateDepartmentUser = function () { 
     DepartmentUsers.deptartmentname = $('#EditDeptartmentName').val();
     DepartmentUsers.userRole = $('#userEditRole').val();
+    DepartmentUsers.isActiveDirectory = $('#userEditActiveDirectory').val();
     var formData = new FormData();
     formData.append("UserData", JSON.stringify(DepartmentUsers));
     if (DepartmentUsers.deptartmentname != null && DepartmentUsers.deptartmentname != undefined && DepartmentUsers.deptartmentname != "" && DepartmentUsers.userRole != null && DepartmentUsers.userRole != undefined && DepartmentUsers.userRole != "") {

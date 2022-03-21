@@ -14,10 +14,10 @@ namespace C8.eServices.Mvc.Models.Services
         IQueryable<WL_APPLICATIONFORM> GetAllApplicationForm();
         IQueryable<WL_APPLICATIONFORM> GetAllApplicationForm(ApplicationInputClaimModel inpuclaims);
         int AddApplicationForm(WL_APPLICATIONFORM applicationForm);
-        string UpdateApplicationForm(WL_APPLICATIONFORM applicationForm, HttpFileCollection files, string browser,string ipAddress);
+        string UpdateApplicationForm(WL_APPLICATIONFORM applicationForm, HttpFileCollection files, string browser,string ipAddress, List<WL_EXCAVATION_DETAILS> excavationData);
         int UpdateApplicationInspectiondata(int appId,string inspectionStatus,DateTime? inspectiondate, List<PreInspectionDataModel> pid);
         bool UpdateApplicationFormStaus(int appId, string appStatus,string comments,string deptComments, string deptName, string deptStatus, string deptUsername,string ipAddress);
-        bool CloseApplicationForm(ApplicationInputClaimModel inputClaims);
+        bool CloseApplicationForm(ApplicationInputClaimModel inputClaims, HttpPostedFile files, string browser);
         bool UpdateCirculatedDepartmentStaus(int appId, string appStatus, string comments, string deptComments, string deptName, string deptStatus, string deptUsername,string ipAddress);
         WL_APPLICATIONFORM GetApplicationFormData(int id);
         int DeleteApplicationForm(int id);

@@ -41,11 +41,11 @@
                 <div style="margin-top:10pt!important;text-align:left!important">The Road and Storm Water Department representative must sign this form. The signature is just for administrative control and by no means implies that the work has been done according to the specifications and conditions of the Wayleave. The onus and responsibility of ensuring that the service has been correctly installed, is that of the applicant</div>
             </td>
         </tr>
-        <tr>
+        @*<tr>
             <td colspan="3">
                 <div style="margin-top:10pt!important;">Description of wayleave:<textarea style="width:50%!important;border:none!important;border-bottom:1px dashed #878787!important">@Model.PROJECT_DESCRIPTION</textarea></div>
             </td>
-        </tr>
+        </tr>*@
         <tr>
             <td colspan="3">
                 <div style="margin-top:10pt!important">Date:<input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.inspectionDate" /></div>
@@ -55,7 +55,7 @@
                 </td>
                 <td></td>*@
         </tr>
-        <tr>
+        @*<tr>
             <td>
                 <div style="margin-top:20pt!important">Street on</div>
             </td>
@@ -76,15 +76,15 @@
             <td>
                 <input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.GPS_END_ADDRESS" />
             </td>
-        </tr>
-        <tr>
+        </tr>*@
+        @*<tr>
             <td>
                 <div style="margin-top:20pt!important">Suburb:<input type="text" style="width:250px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.suburb" /></div>
             </td>
             <td>
             </td>
             <td></td>
-        </tr>
+        </tr>*@
         <tr>
             <td colspan="3">
                 <div style="margin-top:20pt!important">Responsible person (for the erection/installation of the Service)</div>
@@ -106,26 +106,109 @@
             </td>
             <td></td>
         </tr>
+    </table>
+    <table width="100%" style="font-size:12pt!important">
+        <tr>
+            <td colspan="4"><div style="height:30px!important;background-color:#ccc!important;color:#000!important;padding-top:5px!important;padding-left:5px!important">Excavation details</div></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div style="margin-top:5px!important">Region: @Model.REGION_OR_AREA</div>
+            </td>
+            <td colspan="2">
+            </td>
+        </tr>
+        @if (ViewBag.ExcavationData != null)
+        {
+            foreach (var ex in (List<C8.eServices.Mvc.Models.WL_EXCAVATION_DETAILS>)ViewBag.ExcavationData)
+            {
+                <tr>
+                    <td colspan="2">
+                        <div style="margin-top:10px!important">Type of road crossing: @ex.TYPE_OF_ROADCROSSING</div>
+                    </td>
+                    <td colspan="2">
+                        <div style="margin-top:10px!important">Excavation length: @ex.EXCAVATION_LENGTH</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div>Depth: @ex.KERBS</div>
+                    </td>
+                    <td colspan="2">
+                        <div>Width: @ex.RIDING_SURFACE</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div>Starting address: @ex.GPS_START_ADDRESS</div>
+                    </td>
+                    <td colspan="2">
+                        <div>Ending address: @ex.GPS_END_ADDRESS</div>
+                    </td>
+                </tr>
+                <tr style="border-bottom:1px solid #ccc!important">
+                    <td colspan="4">
+                        Comments:<br />
+                        <textarea rows="3" style="width:100%!important">@ex.APPLICATION_COMMENTS</textarea>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="2">
+                    <div style="margin-top:10px!important">Type of road crossing: @Model.TYPE_OF_ROADCROSSING</div>
+                </td>
+                <td colspan="2">
+                    <div style="margin-top:10px!important">Excavation length: @Model.EXCAVATION_LENGTH</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>Depth: @Model.KERBS</div>
+                </td>
+                <td colspan="2">
+                    <div>Width: @Model.RIDING_SURFACE</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div>Starting address: @Model.GPS_START_ADDRESS</div>
+                </td>
+                <td colspan="2">
+                    <div>Ending address: @Model.GPS_END_ADDRESS</div>
+                </td>
+            </tr>
+            <tr style="border-bottom:1px solid #ccc!important">
+                <td colspan="4">
+                    Comments:<br />
+                    <textarea rows="3" style="width:100%!important">@Model.APPLICATION_COMMENTS</textarea>
+                </td>
+            </tr>
+        }
+    </table>
+    <table>
         <tr>
             <td colspan="3">
-                <div style="margin-top:20pt!important">COMPLETION NOTICE</div>
+                <div style="margin-top:5px!important">COMPLETION NOTICE</div>
             </td>
         </tr>
         <tr>
             <td colspan="3">
-                <div style="margin-top:20pt!important;margin-bottom:20px!important">
+                <div style="margin-top:5px!important;margin-bottom:5px!important">
                     The Central wayleave office is hereby informed that:<br />
                     The work done in terms of the above Wayleave has been completed according to the conditions as prescribed in the Wayleave;<br /><br />AND<br /><br />
-                    The permanent reinstatement has been done in accordance with the specifications in the code of Practice for work in the Road Reserve;<br /><br />OR<br /><br />
-                    A temporary reinstatement has been done and a Reinstatement Order to the amount of Application fee paid: R <input type="text" value="@ViewBag.ApplicationAmount" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" />
-                    is attached for the Road Authority to do the permanent reinstatement.
-                    <br /><br />
+                    The permanent reinstatement has been done in accordance with the specifications in the code of Practice for work in the Road Reserve;@*OR<br /><br />*@
+                    @*A temporary reinstatement has been done and a Reinstatement Order to the amount of Application fee paid: R <input type="text" value="@ViewBag.ApplicationAmount" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" />
+                    is attached for the Road Authority to do the permanent reinstatement.*@
+                    <br />
                 </div>
             </td>
         </tr>
         <tr style="height:50px!important">
             <td colspan="2">
-                <div style="margin-top:10pt!important">Name:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@Model.CONSULTANT_NAME" /></div>
+                <div style="margin-top:0px!important">Name:<input type="text" style="width:200px!important;border:none!important;border-bottom:1px dashed #878787!important" value="@ViewBag.departmentUsername" /></div>
             </td>
             <td>
                 @if (!String.IsNullOrEmpty(ViewBag.signature))

@@ -44,6 +44,7 @@ namespace C8.eServices.Mvc
             container.RegisterType<IMasterCustomerCareCenters, MasterCustomerCareCentersRepo>();
             container.RegisterType<IMasterDeclarations, MasterDeclarationsRepo>();
             container.RegisterType<IWLDeclarations, WLDeclarationsRepo>();
+            container.RegisterType<IWLExcavation, WLExcavationRepo>();
 
             container.RegisterInstance<IMapper>(new MapperConfiguration(cfg =>
             {
@@ -64,8 +65,9 @@ namespace C8.eServices.Mvc
                 .ForMember(dest => dest.serviceSubType, opt => opt.MapFrom(src => src.SERVICE_SUB_TYPE == null ? 0 : 1))
                 //.ForMember(dest => dest.serviceSubTypeName, opt => opt.MapFrom(src => src.MASTER_SERVICE_SUB_TYPES.DESCRIPTION))
                 ///.ForMember(dest => dest.wayleaveAttention, opt => opt.MapFrom(src => src.WAYLEAVE_ATTENTION))
-                .ForMember(dest => dest.createdDate, opt => opt.MapFrom(src => src.CREATED_DATE != null ? Convert.ToDateTime(src.CREATED_DATE).ToString("yyyy-MM-dd") : ""))
+                .ForMember(dest => dest.createdDate, opt => opt.MapFrom(src => src.CREATED_DATE != null ? Convert.ToDateTime(src.CREATED_DATE).ToString("dd-MM-yyyy") : ""))
                 .ForMember(dest => dest.createdTime, opt => opt.MapFrom(src => src.CREATED_DATE != null ? Convert.ToDateTime(src.CREATED_DATE).ToString("hh:mm tt") : ""))
+                .ForMember(dest => dest.inspectionDate, opt => opt.MapFrom(src => src.INSPECTION_DATE != null ? Convert.ToDateTime(src.INSPECTION_DATE).ToString("dd-MM-yyyy") : "Not yet closed"))
                 .ForMember(dest => dest.applicationStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.applicationStepStatus, opt => opt.MapFrom(src => src.APPLICATION_STEP_DESCRIPTION))
                 .ForMember(dest => dest.statusId, opt => opt.MapFrom(src => src.STATUS_ID))
@@ -107,6 +109,7 @@ namespace C8.eServices.Mvc
 
                 cfg.CreateMap<MASTER_SERVICE_DOCUMENTS, MasterInputCalimsModel>()
               .ForMember(dest => dest.id, opt => opt.MapFrom(src => src.SD_ID))
+              .ForMember(dest => dest.isRequired, opt => opt.MapFrom(src => src.IS_REQUIRED))
               .ForMember(dest => dest.description, opt => opt.MapFrom(src => src.DESCRIPTION)).ReverseMap();
 
                 cfg.CreateMap<MASTER_DEPARTMENTS, MasterInputCalimsModel>()
@@ -402,6 +405,15 @@ namespace C8.eServices.Mvc
              .ForMember(dest => dest.GPS_START_ADDRESS, opt => opt.MapFrom(src => src.GPS_START_ADDRESS))
              .ForMember(dest => dest.GPS_END_ADDRESS, opt => opt.MapFrom(src => src.GPS_END_ADDRESS))
              .ForMember(dest => dest.SERVICE_TYPE_NEW, opt => opt.MapFrom(src => src.SERVICE_TYPE_NEW))
+             .ForMember(dest => dest.INSPECTION_DATE, opt => opt.MapFrom(src => src.INSPECTION_DATE != null ? Convert.ToDateTime(src.INSPECTION_DATE).ToString("yyyy-MM-dd") : ""))
+             .ForMember(dest => dest.INSPECTION_STATUS, opt => opt.MapFrom(src => src.INSPECTION_STATUS))
+             .ForMember(dest => dest.INSPECTION_REFERENCE_NO, opt => opt.MapFrom(src => src.INSPECTION_REFERENCE_NO))
+             .ForMember(dest => dest.INSPECTION_BY, opt => opt.MapFrom(src => src.INSPECTION_BY))
+             .ForMember(dest => dest.INSPECTION_FORM, opt => opt.MapFrom(src => src.INSPECTION_FORM))
+             .ForMember(dest => dest.INSPECTION_COMMENTS, opt => opt.MapFrom(src => src.INSPECTION_COMMENTS))
+
+
+
 
              .ForMember(dest => dest.OPEN_TRENCH_COMMENT, opt => opt.MapFrom(src => src.OPEN_TRENCH_COMMENT))
              //.ForMember(dest => dest.INTERL_BLOCK, opt => opt.MapFrom(src => src.INTERL_BLOCK))

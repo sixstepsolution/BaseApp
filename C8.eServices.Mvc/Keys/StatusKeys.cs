@@ -116,19 +116,20 @@ namespace C8.eServices.Mvc.Keys
         public const string SMSFailed = "s_sms_failed";
 
         //Payment
-        public const string PayLater = "s_paylater";
-        public const string PaynowPaymentCompletion = "s_payment_completion";
-        public const string PayNow = "s_paynow";
+        public const string PayLater = "Pending Payment";//"s_paylater"; //
+        public const string PaynowPaymentCompletion = "Distributed to Departments";// "s_payment_completion";//
+        public const string PayNow = "PayNow";//"s_paynow";//
 
         //Departments
-        public const string DepartmentPaymentSuccess = "s_department_payment_success";
-        public const string DepartmentReviewCompletion = "s_department_review_completion";
+        public const string DepartmentPaymentSuccess = "Pending Department Review";//"s_department_payment_success";//
+        public const string DepartmentReviewCompletion = "s_department_review_completion";//Response submitted
 
         //Wayleave application
-        public const string WayleaveApplicationPaymentSuccess = "s_wayleave_application_payment_success";
-        public const string GrantWayleaveApplication = "s_wayleave_application_grant";
-        public const string RejectWayleaveApplication = "s_wayleave_application_reject";
+        public const string WayleaveApplicationPaymentSuccess = "s_wayleave_application_payment_success";//Pending Review
+        public const string GrantWayleaveApplication = "s_wayleave_application_grant";//Application Granted
+        public const string RejectWayleaveApplication = "s_wayleave_application_reject";//Application Rejected
         public const string CloseWayleaveApplication = "Application Closed";
-        public const string AwaitingWayleaveOfficerReview = "Awaiting Wayleave Officer Review";
+        public const string AwaitingWayleaveOfficerReview = "Pending Approval";
+        public const string AffectedSupportedConditionally = "Affected - Supported conditionally";
     }
 }

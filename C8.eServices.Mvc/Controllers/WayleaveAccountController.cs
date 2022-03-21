@@ -19,6 +19,7 @@ using RestSharp;
 using System.Web.Script.Serialization;
 using C8.eServices.Mvc.ViewModels;
 using GoogleMaps.LocationServices;
+using C8.eServices.Mvc.Models.EmailBodys;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -297,9 +298,9 @@ namespace C8.eServices.Mvc.Controllers
             ViewBag.ResponseData = null;// new string[20];
             if (q!=null)
             {
-                var payLater = db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
-                var PaynowPaymentCompletion = db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
-                var departmentPaymentSuccess = db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.DepartmentPaymentSuccess);
+                var payLater = StatusKeys.PayLater;// db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
+                var PaynowPaymentCompletion = StatusKeys.PaynowPaymentCompletion;// db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
+                var departmentPaymentSuccess = StatusKeys.DepartmentPaymentSuccess;// db.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.DepartmentPaymentSuccess);
                 AesCrypto aes = new AesCrypto(encp);// normal Decryption follows
                 var decrypted = aes.Decrypt(q);
                 var values = decrypted.Split('|');
@@ -323,18 +324,34 @@ namespace C8.eServices.Mvc.Controllers
                     if (paymentStatus == "Success")
                     {
                         appData.STATUS_ID = 2;
-                        appData.APPLICATION_STEP_DESCRIPTION = PaynowPaymentCompletion != null ? PaynowPaymentCompletion.Description : "";
+                        appData.APPLICATION_STEP_DESCRIPTION = PaynowPaymentCompletion != null ? PaynowPaymentCompletion : "";
                         foreach (WL_DEPARTMENTS department in departmentsDataResponse)
                         {
-                            department.APPLICATION_STATUS=(departmentPaymentSuccess!=null?departmentPaymentSuccess.Description:"");                            
+                            department.APPLICATION_STATUS=(departmentPaymentSuccess!=null?departmentPaymentSuccess:"");                            
                             department.APP_ID = appData.APP_ID;
                             dbWayleave.SaveChanges();
+                        }
+
+                        var departmentUsers = dbWayleave.Users.Where(s => s.region == appData.REGION_OR_AREA).ToList();
+                        //Send email notifications to departments based on region
+                        foreach (User u in departmentUsers)
+                        {
+                            if (!String.IsNullOrEmpty(u.emailAddress))
+                            {
+                                string departmentUserName = u != null ? u.firstName + " " + u.lastName : u.username;
+                                EmailHelper email = new EmailHelper();
+                                email.Body = EmailNotificationBody.SentApplicationtoDepartments(departmentUserName, appData.APPLICATION_NUMBER, u.deptartmentname, appData.APPLICATION_STEP_DESCRIPTION, appData.APPLICATION_DATE, appData.COMPLETION_DATE).ToString();
+                                email.Recipient = u.emailAddress;
+                                email.Subject = "New Wayleave Application";
+                                Email em = new Email();
+                                em.GenerateEmail(email.Recipient, email.Subject, email.Body, appData.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, appData.PROPERTYOWNER_NAME + " " + appData.PROPERTYOWNER_SURNAME, null, null, appData.APPLICATION_NUMBER, null, null, null, null);
+                            }
                         }
                     }
                     else
                     {
                         appData.STATUS_ID = 8;
-                        appData.APPLICATION_STEP_DESCRIPTION = (payLater != null ? payLater.Description : "");
+                        appData.APPLICATION_STEP_DESCRIPTION = (payLater != null ? payLater : "");
                     }                    
                     dbWayleave.SaveChanges();                    
                 }

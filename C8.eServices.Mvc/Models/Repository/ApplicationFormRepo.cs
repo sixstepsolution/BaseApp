@@ -21,11 +21,13 @@ namespace C8.eServices.Mvc.Models.Repository
         IPAddressModel Ip = new IPAddressModel();
         private readonly IServiceDocument _serviceDocument = null;
         private eServicesDbContext _dbeService;// = new eServicesDbContext();
-        public ApplicationFormRepo(WayleaveDbContext context, IServiceDocument serviceDocument, eServicesDbContext dbeService)
+        private readonly IWayleave _wayleave = null;
+        public ApplicationFormRepo(WayleaveDbContext context, IServiceDocument serviceDocument, eServicesDbContext dbeService, IWayleave wayleave)
         {
             _serviceDocument = serviceDocument;
             _context = context;
             _dbeService = dbeService;
+            _wayleave = wayleave;
         }
         public int AddApplicationForm(WL_APPLICATIONFORM applicationForm)
         {
@@ -342,10 +344,11 @@ namespace C8.eServices.Mvc.Models.Repository
                 var serviceResult = _serviceDocument.GetServiceDocumentsById(st);
                 var tt = serviceResult.ToList();
                 int loggedinID = 1;
-                
-                var payLater = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
-                var payNow = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayNow);
-                var PaynowPaymentCompletion = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
+                var statusList = _context.MASTER_STATUS_TYPES.Where(s => s.DESCRIPTION == StatusKeys.PaynowPaymentCompletion).FirstOrDefault();
+                var departmentPaymentSuccess = StatusKeys.DepartmentPaymentSuccess;// _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.DepartmentPaymentSuccess);
+                //var payLater = StatusKeys.PayLater;// _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
+                //var payNow = StatusKeys.PayNow;// _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayNow);
+                //var PaynowPaymentCompletion = StatusKeys.PaynowPaymentCompletion;// _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
 
                 if (HttpContext.Current.Session["wayleaveaccountId"] != null)
                 {
@@ -365,8 +368,8 @@ namespace C8.eServices.Mvc.Models.Repository
 
                 //if (paymentStatus == (payLater!=null? payLater.Name:""))
                 //{
-                    applicationForm.STATUS_ID = 8;
-                    applicationForm.APPLICATION_STEP_DESCRIPTION = (payLater != null ? payLater.Description : "");//"Payment Pending";
+                    applicationForm.STATUS_ID = statusList != null ? statusList.STATUS_ID : 0;
+                    applicationForm.APPLICATION_STEP_DESCRIPTION = (statusList != null ? statusList.DESCRIPTION : "");//"Distributed to Departments";
                 //}
                 //else
                 //{
@@ -395,7 +398,13 @@ namespace C8.eServices.Mvc.Models.Repository
                         WL_SUPPORTING_DOCUMENTS ws = new WL_SUPPORTING_DOCUMENTS();
 
                         string serviceDocId = files.AllKeys[i];
-                        string documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId.Substring(0, 1) : "0";
+                        string documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId : "0";
+                        //bool IsDocId=CommonModel.isNumber(documentId);
+                        //if (!IsDocId)
+                        //{
+                        //    documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId.Substring(0, 1) : "0";
+                        //}
+                        
 
                         //string documentType = tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault() != null ? tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault().DESCRIPTION : "";
                         string documentTypee = _context.MASTER_SERVICE_DOCUMENTS.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault() != null ? _context.MASTER_SERVICE_DOCUMENTS.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault().DESCRIPTION : "";
@@ -429,6 +438,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 foreach (WL_DEPARTMENTS department in departmentsDataResponse)
                 {
                     department.SERVICE_ID = applicationForm.SERVICE_TYPE;
+                    department.APPLICATION_STATUS = (departmentPaymentSuccess != null ? departmentPaymentSuccess : "");
                     department.APP_ID = applicationForm.APP_ID;
                     department.CREATED_ON = DateTime.Now;
                     _context.WL_DEPARTMENTS.Add(department);
@@ -454,12 +464,27 @@ namespace C8.eServices.Mvc.Models.Repository
                     _context.WL_EXCAVATION_DETAILS.Add(wex);
                 }
 
-
-
                 bool n = SaveChanges();
 
                 if (n)
                 {
+                    var departmentUsers = _context.Users.Where(s => s.region == applicationForm.REGION_OR_AREA).ToList();
+                    //Send email notifications to departments based on region
+                    foreach (User u in departmentUsers)
+                    {
+                        if (!String.IsNullOrEmpty(u.emailAddress))
+                        {
+                            string departmentUserName = u != null ? u.firstName + " " + u.lastName : u.username;
+                            EmailHelper email = new EmailHelper();
+                            email.Body = EmailNotificationBody.SentApplicationtoDepartments(departmentUserName, applicationForm.APPLICATION_NUMBER, u.deptartmentname, applicationForm.APPLICATION_STEP_DESCRIPTION, applicationForm.APPLICATION_DATE, applicationForm.COMPLETION_DATE).ToString();
+                            email.Recipient = u.emailAddress;
+                            email.Subject = "New Wayleave Application";
+                            //email.SendEmail();
+                            Email em = new Email();
+                            em.GenerateEmail(email.Recipient, email.Subject, email.Body, applicationForm.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationForm.APPLICATION_NUMBER, null, null, null, null);
+                        }
+                    }
+
                     string createdUser = applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
                     WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
                     
@@ -473,45 +498,47 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                     audit_app.BASEAPP_IP_ADDRESS = ipAddress;
 
-                    audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
+                    //audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                     //PROPERTYOWNER_NAME
                     _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                     _context.SaveChanges();
-
-                    var departmentUsers = _context.Users.Where(s=>s.region== applicationForm.REGION_OR_AREA).ToList();
-                    //Send email notifications to departments
-                    foreach (User u in departmentUsers)
-                    {
-                        if (!String.IsNullOrEmpty(u.emailAddress))
-                        {
-                            string departmentUserName = u != null ? u.firstName + " " + u.lastName : u.username;
-                             EmailHelper email = new EmailHelper();
-                            email.Body = EmailNotificationBody.SentApplicationtoDepartments(departmentUserName, applicationNumber,u.deptartmentname, applicationForm.APPLICATION_STEP_DESCRIPTION, applicationForm.APPLICATION_DATE, applicationForm.COMPLETION_DATE).ToString();
-                            email.Recipient = u.emailAddress;
-                            email.Subject = "New Wayleave Application";
-                            //email.SendEmail();
-                            Email em = new Email();
-                            em.GenerateEmail(email.Recipient, email.Subject, email.Body, applicationNumber, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationNumber, null, null, null, null);
+                     
+                    //Commented on 28 january 2022 by Prasad
+                    //var departmentUsers = _context.Users.Where(s=>s.region== applicationForm.REGION_OR_AREA).ToList();
+                    ////Send email notifications to departments
+                    //foreach (User u in departmentUsers)
+                    //{
+                    //    if (!String.IsNullOrEmpty(u.emailAddress))
+                    //    {
+                    //        string departmentUserName = u != null ? u.firstName + " " + u.lastName : u.username;
+                    //         EmailHelper email = new EmailHelper();
+                    //        email.Body = EmailNotificationBody.SentApplicationtoDepartments(departmentUserName, applicationNumber,u.deptartmentname, applicationForm.APPLICATION_STEP_DESCRIPTION, applicationForm.APPLICATION_DATE, applicationForm.COMPLETION_DATE).ToString();
+                    //        email.Recipient = u.emailAddress;
+                    //        email.Subject = "New Wayleave Application";
+                    //        //email.SendEmail();
+                    //        Email em = new Email();
+                    //        em.GenerateEmail(email.Recipient, email.Subject, email.Body, applicationNumber, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationNumber, null, null, null, null);
 
 
                             
-                        }                        
-                    }
+                    //    }                        
+                    //}
 
                     //Sending email for paylater payment
-                    if (paymentStatus == "PayLater")
-                    {
-                        var applicationFeeDetails = _context.APPLICATION_PAYMENT_PRICE.ToList();
-                        decimal? Fee = applicationFeeDetails.Count > 0 ? applicationFeeDetails.FirstOrDefault().APPLICATION_PRICE : 0;
-                        string UserName = applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
-                        EmailHelper emailNew = new EmailHelper();
-                        emailNew.Body = EmailNotificationBody.SentPaylaterNotification(UserName, applicationNumber, "", applicationForm.APPLICATION_STEP_DESCRIPTION, Fee).ToString();
-                        emailNew.Recipient = applicationForm.PROPERTYOWNER_EMAIL;
-                        emailNew.Subject = "Paylater notification";
-                        //email.SendEmail();
-                        Email emm = new Email();
-                        emm.GenerateEmail(emailNew.Recipient, emailNew.Subject, emailNew.Body, applicationNumber, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationNumber, null, null, null, null);
-                    }
+                    //Commented by Prasad on 16-Feb-2022
+                    //if (paymentStatus == "PayLater")
+                    //{
+                    //    var applicationFeeDetails = _context.APPLICATION_PAYMENT_PRICE.ToList();
+                    //    decimal? Fee = applicationFeeDetails.Count > 0 ? applicationFeeDetails.FirstOrDefault().APPLICATION_PRICE : 0;
+                    //    string UserName = applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
+                    //    EmailHelper emailNew = new EmailHelper();
+                    //    emailNew.Body = EmailNotificationBody.SentPaylaterNotification(UserName, applicationNumber, "", applicationForm.APPLICATION_STEP_DESCRIPTION, Fee).ToString();
+                    //    emailNew.Recipient = applicationForm.PROPERTYOWNER_EMAIL;
+                    //    emailNew.Subject = "Paylater notification";
+                    //    //email.SendEmail();
+                    //    Email emm = new Email();
+                    //    emm.GenerateEmail(emailNew.Recipient, emailNew.Subject, emailNew.Body, applicationNumber, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationNumber, null, null, null, null);
+                    //}
                     
                     
                     dct.Add("success", true);
@@ -533,14 +560,14 @@ namespace C8.eServices.Mvc.Models.Repository
             return "";
         }
 
-        public string UpdateApplicationForm(WL_APPLICATIONFORM applicationForm,HttpFileCollection files, string browser,string ipAddress)
+        public string UpdateApplicationForm(WL_APPLICATIONFORM applicationForm,HttpFileCollection files, string browser,string ipAddress, List<WL_EXCAVATION_DETAILS> excavationData)
         {
             string file_Name = string.Empty;
             string fileName = string.Empty;
             var serviceResult = _serviceDocument.GetServiceDocumentsById(2);
-            var payLater = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
-            var PaynowPaymentCompletion = _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
-            var departmentPaymentSuccess= _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.DepartmentPaymentSuccess);
+            var payLater = StatusKeys.PayLater;// _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PayLater);
+            var PaynowPaymentCompletion = StatusKeys.PaynowPaymentCompletion;// _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.PaynowPaymentCompletion);
+            var departmentPaymentSuccess = StatusKeys.DepartmentPaymentSuccess;// _dbeService.StatusTypes.FirstOrDefault(s => s.Key == StatusKeys.DepartmentPaymentSuccess);
             var departmentsDataResponse = _context.WL_DEPARTMENTS.Where(s => s.APP_ID == applicationForm.APP_ID).ToList();
             bool isEft = false;
             bool n = false;
@@ -552,7 +579,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 loggedinID = Convert.ToInt32(HttpContext.Current.Session["wayleaveaccountId"]);
             }
             WL_APPLICATIONFORM res = GetApplicationFormData(applicationForm.APP_ID);
-            if (applicationForm.APPLICATION_STEP_DESCRIPTION != (payLater != null ? payLater.Description : "") && applicationForm.APPLICATION_STEP_DESCRIPTION != "Distributed to Departments")
+            if (applicationForm.APPLICATION_STEP_DESCRIPTION != (payLater != null ? payLater : "") && applicationForm.APPLICATION_STEP_DESCRIPTION != "Distributed to Departments")
             {
                 res.APPLICATION_STEP_DESCRIPTION = "Pending";
             }
@@ -603,8 +630,20 @@ namespace C8.eServices.Mvc.Models.Repository
                 res.APPLICATION_COMMENTS = applicationForm.APPLICATION_COMMENTS;
                 res.STATUS_ID = 2;
             }
-           
-            
+
+            var excavationlist = _context.WL_EXCAVATION_DETAILS.Where(s => s.APP_ID == applicationForm.APP_ID).ToList();
+            _context.WL_EXCAVATION_DETAILS.RemoveRange(excavationlist);
+            foreach (WL_EXCAVATION_DETAILS wex in excavationData)
+            {
+                wex.APP_ID = applicationForm.APP_ID;
+                wex.CREATED_DATE = DateTime.Now;
+                wex.MODIFIED_DATE = DateTime.Now;
+                wex.CREATED_BY = loggedinID;
+                wex.MODIFIED_BY = loggedinID;
+                _context.WL_EXCAVATION_DETAILS.Add(wex);
+                n = SaveChanges();
+            }
+
             if (files.Count > 0)
             {  //  Get all files from Request object 
                //return null;
@@ -620,9 +659,22 @@ namespace C8.eServices.Mvc.Models.Repository
                     WL_SUPPORTING_DOCUMENTS ws = new WL_SUPPORTING_DOCUMENTS();
 
                     string serviceDocId = files.AllKeys[i];
-                    string documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId.Substring(0, 1) : "0";
+                    string documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId : "0";
+                    //string documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId.Substring(0, 2) : "0";
+                    //bool IsDocId = CommonModel.isNumber(documentId);
+                    //if (!IsDocId)
+                    //{
+                    //    documentId = !string.IsNullOrEmpty(serviceDocId) ? serviceDocId.Substring(0, 1) : "0";
+                    //}
 
                     string documentType = tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault() != null ? tt.Where(s => s.SD_ID.ToString() == documentId).FirstOrDefault().DESCRIPTION : "";
+                    int docId= Convert.ToInt32(documentId ?? "0");
+                    var isDocumentExist = list.Where(s => s.SD_ID == docId).FirstOrDefault();
+                    if (isDocumentExist != null)
+                    {
+                        _context.WL_SUPPORTING_DOCUMENTS.Remove(isDocumentExist);
+                        _context.SaveChanges();
+                    }
 
                     HttpPostedFile file = files[i];
                     //string fd = serviceDocId.Substring(1, 1);
@@ -642,13 +694,13 @@ namespace C8.eServices.Mvc.Models.Repository
                     file.SaveAs(fileName);
 
                     ws.SD_ID = Convert.ToInt32(documentId ?? "0");
-                    if (applicationForm.APPLICATION_STEP_DESCRIPTION == (payLater != null ? payLater.Description : ""))
+                    if (applicationForm.APPLICATION_STEP_DESCRIPTION == (payLater != null ? payLater : ""))
                     {
                         if (documentType.Contains("EFT"))
                         {
                             isEft = true;
                             res.STATUS_ID = 2;
-                            res.APPLICATION_STEP_DESCRIPTION = PaynowPaymentCompletion != null ? PaynowPaymentCompletion.Description : "";
+                            res.APPLICATION_STEP_DESCRIPTION = PaynowPaymentCompletion != null ? PaynowPaymentCompletion : "";
                         }
                     }                    
                     ws.DOCUMENT_TYPE = documentType;
@@ -661,50 +713,48 @@ namespace C8.eServices.Mvc.Models.Repository
                 }
             }
 
-            //Comment by prasad on 18 Jan 2022
-            //if (isEft)
-            //{
-            //    foreach (WL_DEPARTMENTS department in departmentsDataResponse)
-            //    {
-            //        department.APPLICATION_STATUS = (departmentPaymentSuccess != null ? departmentPaymentSuccess.Description : "");
-            //        department.APP_ID = applicationForm.APP_ID;
-            //        department.APPROVE_OR_REJECT_COMMENTS = "";
-            //        department.RESPONSE_DATE = null;
-
-            //        //string createdUser = res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME;
-            //        //WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
-            //        //CopyClass.CopyObject(res, ref audit_app);
-            //        //audit_app.ACTION = "Modified";
-            //        //audit_app.APPLICATION_STEP_DESCRIPTION = "Distributed to " + department.DEPARTMENT_NAME + " department";
-            //        //audit_app.CREATED_DATE = DateTime.Now;
-            //        //audit_app.MODIFIED_DATE = DateTime.Now;
-            //        //audit_app.CREATED_USER = createdUser;
-            //        //audit_app.MODIFIED_USER = createdUser;
-            //        //_context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
-            //        //_context.SaveChanges();
-            //        n =SaveChanges();
-            //    }
-            //}
+            
+            
             //_context.Entry(res).State = System.Data.Entity.EntityState.Modified;
-            foreach (WL_DEPARTMENTS department in departmentsDataResponse)
-            {
-                department.APPLICATION_STATUS = (departmentPaymentSuccess != null ? departmentPaymentSuccess.Description : "");
-                department.APP_ID = applicationForm.APP_ID;
-                department.APPROVE_OR_REJECT_COMMENTS = "";
-                department.RESPONSE_DATE = null;
-                n = SaveChanges();
-            }
+            //foreach (WL_DEPARTMENTS department in departmentsDataResponse)
+            //{
+            //    department.APPLICATION_STATUS = (departmentPaymentSuccess != null ? departmentPaymentSuccess : "");
+            //    department.APP_ID = applicationForm.APP_ID;
+            //    department.APPROVE_OR_REJECT_COMMENTS = "";
+            //    department.RESPONSE_DATE = null;
+            //    n = SaveChanges();
+            //}
 
             n = SaveChanges();
             if (n)
             {
+                //Commented by prasad on 16-Feb-2022
+                //if (isEft)
+                //{
+                //    var departmentUsers = _context.Users.Where(s => s.region == applicationForm.REGION_OR_AREA).ToList();
+                //    //Send email notifications to departments based on region
+                //    foreach (User u in departmentUsers)
+                //    {
+                //        if (!String.IsNullOrEmpty(u.emailAddress))
+                //        {
+                //            string departmentUserName = u != null ? u.firstName + " " + u.lastName : u.username;
+                //            EmailHelper email = new EmailHelper();
+                //            email.Body = EmailNotificationBody.SentApplicationtoDepartments(departmentUserName, applicationForm.APPLICATION_NUMBER, u.deptartmentname, applicationForm.APPLICATION_STEP_DESCRIPTION, applicationForm.APPLICATION_DATE, applicationForm.COMPLETION_DATE).ToString();
+                //            email.Recipient = u.emailAddress;
+                //            email.Subject = "New Wayleave Application";
+                //            //email.SendEmail();
+                //            Email em = new Email();
+                //            em.GenerateEmail(email.Recipient, email.Subject, email.Body, applicationForm.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationForm.APPLICATION_NUMBER, null, null, null, null);
+                //        }
+                //    }
+                //}
                 var isNotDistributed = _context.WL_APPLICATIONFORM_AUDIT.Where(s => s.APPLICATION_NUMBER == res.APPLICATION_NUMBER && s.APPLICATION_STEP_DESCRIPTION == AuditTrailKeys.Distributed_to_Departments).ToList();
                 if (isNotDistributed.Count() == 0)
                 {
                     string createdUser = res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME;
                     WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
                     CopyClass.CopyObject(res, ref audit_app);
-                    audit_app.ACTION = AuditTrailKeys.UploadedPaymentReciept;
+                    audit_app.ACTION = AuditTrailKeys.Distributed_to_Departments;//AuditTrailKeys.UploadedPaymentReciept;
                     audit_app.CREATED_DATE = DateTime.Now;
                     audit_app.MODIFIED_DATE = DateTime.Now;
                     audit_app.CREATED_USER = createdUser;
@@ -712,7 +762,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     audit_app.OUTCOME = AuditTrailKeys.SuccessfulOutcome;
                     audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                     audit_app.BASEAPP_IP_ADDRESS = ipAddress;
-                    audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
+                    //audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                     _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                     _context.SaveChanges();
 
@@ -748,7 +798,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 string createdUser = res.PROPERTYOWNER_NAME + " " + res.PROPERTYOWNER_SURNAME;
                 WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
                 CopyClass.CopyObject(res, ref audit_app);
-                audit_app.ACTION = AuditTrailKeys.UploadedPaymentReciept;
+                audit_app.ACTION = AuditTrailKeys.Distributed_to_Departments;//AuditTrailKeys.UploadedPaymentReciept;
                 audit_app.CREATED_DATE = DateTime.Now;
                 audit_app.MODIFIED_DATE = DateTime.Now;
                 audit_app.CREATED_USER = createdUser;
@@ -756,7 +806,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
                 audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
                 audit_app.BASEAPP_IP_ADDRESS = ipAddress;
-                audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
+                //audit_app.APPLICATION_STEP_DESCRIPTION = AuditTrailKeys.PendingPayment;
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();
                 return "Application Form resubmission failed!";
@@ -816,11 +866,11 @@ namespace C8.eServices.Mvc.Models.Repository
                 EmailHelper email = new EmailHelper();
                 string applicationGrantStatus = string.Empty;
 
-                if (appStatus == "Application Supported")
+                if (appStatus == "Application Granted")
                 {
                     applicationGrantStatus = "Supported";
                 }
-                else if (appStatus == "Application Not Supported")
+                else if (appStatus == "Application Rejected")
                 {
                     applicationGrantStatus = "Not Supported";
                 }
@@ -849,7 +899,7 @@ namespace C8.eServices.Mvc.Models.Repository
             return isSuccess;
         }
 
-        public bool CloseApplicationForm(ApplicationInputClaimModel inputClaims)
+        public bool CloseApplicationForm(ApplicationInputClaimModel inputClaims, HttpPostedFile files, string browser)
         {
             bool isSuccess = false;
             WL_APPLICATIONFORM res = GetApplicationFormData(inputClaims.appId);
@@ -866,11 +916,11 @@ namespace C8.eServices.Mvc.Models.Repository
                     res.INSPECTION_COMMENTS = inputClaims.inspectionComments;
                     res.INSPECTION_REFERENCE_NO = inputClaims.inspectionReferenceNo;
                     res.INSPECTION_DATE = inputClaims.inspectionDate;
+                    if (files != null)
+                    {
+                        res.INSPECTION_FORM = _wayleave.SaveUploadedFile(files, browser);
+                    }                   
                 }
-
-
-
-
 
                 WL_APPLICATIONFORM_AUDIT audit_appp = new WL_APPLICATIONFORM_AUDIT();
                 CopyClass.CopyObject(res, ref audit_appp);
@@ -909,9 +959,7 @@ namespace C8.eServices.Mvc.Models.Repository
                     _context.SaveChanges();
 
                     EmailHelper email = new EmailHelper();
-                    string applicationGrantStatus = inputClaims.inspectionStatus;
-
-                    
+                    string applicationGrantStatus = inputClaims.inspectionStatus;                    
                     email.Body = EmailNotificationBody.SentCloseApplicationForm(res.PROPERTYOWNER_NAME, res.PROPERTYOWNER_SURNAME, res.APPLICATION_NUMBER, applicationGrantStatus, inputClaims.inspectionComments).ToString();
                     email.Recipient = res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
                     email.Subject = "Wayleave Application Closed";
@@ -968,16 +1016,20 @@ namespace C8.eServices.Mvc.Models.Repository
                 isSuccess = SaveChanges();
                 if (isSuccess)
                 {
-                    //Update to distributed departments to Awaiting Wayleave Officer Review
+                    //Update to distributed departments to Pending Approval
                     var departmentDetails = _context.WL_DEPARTMENTS.Where(s => s.APP_ID == appId).ToList();
                     var statusTypes = _context.MASTER_STATUS_TYPES.Where(s => s.DESCRIPTION == StatusKeys.AwaitingWayleaveOfficerReview).FirstOrDefault();
                     var isAllDepartmentResponse = departmentDetails.Where(s => s.APPLICATION_STATUS != "Pending Department Review").ToList();
 
                     if (departmentDetails.Count() == isAllDepartmentResponse.Count())
                     {
-                        res.APPLICATION_STEP_DESCRIPTION = statusTypes!=null? statusTypes.DESCRIPTION:"";
-                        res.STATUS_ID= statusTypes != null ? statusTypes.STATUS_ID : 0;
-                        bool result= SaveChanges();
+                        var isRequestforDocument = isAllDepartmentResponse.Where(s => s.APPLICATION_STATUS.Contains("Request for additional information")).ToList();
+                        if (isRequestforDocument.Count() == 0)
+                        {
+                            res.APPLICATION_STEP_DESCRIPTION = statusTypes != null ? statusTypes.DESCRIPTION : "";
+                            res.STATUS_ID = statusTypes != null ? statusTypes.STATUS_ID : 0;
+                            bool result = SaveChanges();
+                        }                        
                     }
 
                     WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
