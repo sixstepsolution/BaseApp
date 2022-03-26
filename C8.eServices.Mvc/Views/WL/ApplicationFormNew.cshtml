@@ -410,6 +410,34 @@
     //    }
     //});
 </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+@*<script src="//code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#INSPECTION_DATE").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $("#hdnInspectionDate").val(test);
+                }
+                else {
+                    toastr.warning('Please select inspection date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+            }
+        });        
+    });
+</script>
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
     <form name="ApplicationForm">
         <div class="panel-group" style="margin-left: -25px;
@@ -687,10 +715,10 @@
                                                         <label>Starting Date</label>
                                                         <div class="input-group" style="width: 100%">
                                                             @*<span class="input-group-addon"
-                                                                  style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </span>*@
-                                                            <input type="date" readonly autocomplete="off" style="border-radius: 4px !important;" id="STARTING_DATE"
+                                                                      style="border-top-left-radius: 4px;border-bottom-left-radius: 4px;padding-bottom: 0;padding-top: 0px;">
+                                                                    <i class="fa fa-calendar"></i>
+                                                                </span>*@
+                                                            <input type="text" readonly autocomplete="off" style="border-radius: 4px !important;" id="STARTING_DATE"
                                                                    class="form-control border-radius" name="STARTING_DATE" />
 
                                                         </div>
@@ -700,7 +728,7 @@
                                                     <div class="input-label-date">
                                                         <label>Estimated Completion Date</label>
                                                         <div class="input-group" style="width: 100%">
-                                                            <input type="date" readonly autocomplete="off"
+                                                            <input type="text" readonly autocomplete="off"
                                                                    style="border-radius:4px!important;"
                                                                    id="COMPLETION_DATE"
                                                                    class="form-control" name="COMPLETION_DATE" />
@@ -834,112 +862,112 @@
                             </div>
                         </div>
                         @*<div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="ExcavationDetails">
-                            <div class="panel panel-default" style="border:none!important">
-                                <div class="panel-heading" style="background:#00A65A">
-                                    <h4 class="panel-title">
-                                        <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ExcavationDetails" href="#collapse_ExcavationDetails">
-                                            <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
-                                            <i class="fa fa-minus" style="font-size: 12px;top: 0;display: none"></i>
-                                            Excavation Details
-                                        </a>
-                                    </h4>
-                                </div>
-                                <div id="collapse_ExcavationDetails" class="panel-collapse collapse" style="border: 1px solid #00A65A;">
-                                    <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
-                                        <table>
-                                            <tr>
-                                                <td style="width:  15.5%"><label>Type of road crossing</label></td>
-                                                <td style="width:  15.5%">
-                                                    <div><input type="radio" name="ChkHD" class="radio-custom" id="ChkHD" value="Horizontal drilling"><label class="radio-custom-label" for="ChkHD">Horizontal drilling</label></div>
-                                                </td>
-                                                <td style="width:  15.5%">
-                                                    <div><input type="radio" name="ChkHD" class="radio-custom" id="ChkOT" value="Open trench"><label class="radio-custom-label" for="ChkOT">Open trench</label></div>
-                                                </td>
-                                                <td style="width:  15.5%">
-                                                    <div><input type="radio" name="ChkHD" class="radio-custom" id="ChkNone" value="None"><label class="radio-custom-label" for="ChkNone">None</label></div>
-                                                </td>
-                                                <td style="width:  15.5%"></td>
-                                                <td style="width:  15.5%"></td>
-                                            </tr>
-                                            <tr style="display:none" id="OpenTrenchComment">
-                                                <td style="width:  15.5%" colspan="6">
-                                                    <div class="input-group input-label" style="width: 100%;padding-top:5px!important">
-                                                        <label>Please state the reason for open trench</label>
-                                                        <textarea class="form-control" name="OPEN_TRENCH_COMMENT" id="OPEN_TRENCH_COMMENT" rows="5" style="border-radius: 4px"></textarea>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td style="width:  15.5%">
-                                                    <div class="input-group input-label">
-                                                        <label class="control-label">Region</label>
-                                                        <select style="border-radius: 4px" id="REGION_OR_AREA"
-                                                                class="form-control" name="REGION_OR_AREA">
-                                                            <option value="" selected>Make a selection</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td style="width:  15.5%">
-                                                    <div class="input-group input-label">
-                                                        <label>Excavation Length</label>
-                                                        <input type="text" style="border-radius: 4px" id="EXCAVATION_LENGTH"
-                                                               class="form-control allowDecimalNumbers" name="EXCAVATION_LENGTH" />
-                                                    </div>
-                                                </td>
-                                                <td style="width:  15.5%">
-                                                    <div class="input-group input-label">
-                                                        <label>Width</label>
-                                                        <input type="text" style="border-radius: 4px" id="RIDING_SURFACE"
-                                                               class="form-control allowDecimalNumbers" name="RIDING_SURFACE" />
-                                                    </div>
-                                                </td>
-                                                <td style="width:  15.5%">
-                                                    <div class="input-group input-label">
-                                                        <label>Depth</label>
-                                                        <input type="text" style="border-radius: 4px" id="KERBS"
-                                                               class="form-control allowDecimalNumbers" name="KERBS" />
-                                                    </div>
-                                                </td>
-                                                <td style="width:  15.5%">
-                                                    <div class="input-group input-label">
-                                                        <label class="control-label">Starting Address</label>
-                                                        <div class="input-group" style="width: 100%;">
-                                                            <input type="text" class="form-control" readonly autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="GPS_START_ADDRESS"
-                                                                   name="GPS_START_ADDRESS" required />
-                                                            <span class="input-group-addon" onclick="$.fn.ShowSearchMap('GPS_START_ADDRESS')"
-                                                                  style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
-                                                                <i class="fa fa-map-marker"></i>
-                                                            </span>
+                                <div class="panel panel-default" style="border:none!important">
+                                    <div class="panel-heading" style="background:#00A65A">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" onclick="$.fn.showcollapse()" data-parent="#ExcavationDetails" href="#collapse_ExcavationDetails">
+                                                <i class="fa fa-plus" style="font-size: 12px;top: 0;"></i>
+                                                <i class="fa fa-minus" style="font-size: 12px;top: 0;display: none"></i>
+                                                Excavation Details
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse_ExcavationDetails" class="panel-collapse collapse" style="border: 1px solid #00A65A;">
+                                        <div class="panel-body" style="padding: 5px 0 5px 0 !important;">
+                                            <table>
+                                                <tr>
+                                                    <td style="width:  15.5%"><label>Type of road crossing</label></td>
+                                                    <td style="width:  15.5%">
+                                                        <div><input type="radio" name="ChkHD" class="radio-custom" id="ChkHD" value="Horizontal drilling"><label class="radio-custom-label" for="ChkHD">Horizontal drilling</label></div>
+                                                    </td>
+                                                    <td style="width:  15.5%">
+                                                        <div><input type="radio" name="ChkHD" class="radio-custom" id="ChkOT" value="Open trench"><label class="radio-custom-label" for="ChkOT">Open trench</label></div>
+                                                    </td>
+                                                    <td style="width:  15.5%">
+                                                        <div><input type="radio" name="ChkHD" class="radio-custom" id="ChkNone" value="None"><label class="radio-custom-label" for="ChkNone">None</label></div>
+                                                    </td>
+                                                    <td style="width:  15.5%"></td>
+                                                    <td style="width:  15.5%"></td>
+                                                </tr>
+                                                <tr style="display:none" id="OpenTrenchComment">
+                                                    <td style="width:  15.5%" colspan="6">
+                                                        <div class="input-group input-label" style="width: 100%;padding-top:5px!important">
+                                                            <label>Please state the reason for open trench</label>
+                                                            <textarea class="form-control" name="OPEN_TRENCH_COMMENT" id="OPEN_TRENCH_COMMENT" rows="5" style="border-radius: 4px"></textarea>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td style="width:  15.5%">
-                                                    <div class="input-group input-label">
-                                                        <label class="control-label">Ending Address</label>
-                                                        <div class="input-group" style="width: 100%;">
-                                                            <input type="text" class="form-control" readonly autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="GPS_END_ADDRESS"
-                                                                   name="GPS_END_ADDRESS" required />
-                                                            <span class="input-group-addon" onclick="$.fn.ShowSearchMap('GPS_END_ADDRESS')"
-                                                                  style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
-                                                                <i class="fa fa-map-marker"></i>
-                                                            </span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:  15.5%">
+                                                        <div class="input-group input-label">
+                                                            <label class="control-label">Region</label>
+                                                            <select style="border-radius: 4px" id="REGION_OR_AREA"
+                                                                    class="form-control" name="REGION_OR_AREA">
+                                                                <option value="" selected>Make a selection</option>
+                                                            </select>
                                                         </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5">
-                                                    <div class="input-group input-label" style="width: 100%;padding-top:5px!important">
-                                                        <label>Description of work:<br /><b style="color:#d14343">NOTE: PLEASE PROVIDE A DETAIL DESCRIPTION OF THE WORK TO BE PERFORMED, HOW EXCAVATION WILL BE DONE AND HOW TRAFFIC WILL BE CONTROLLED (TO BE COMPLETED IN FULL).</b></label>
-                                                        <textarea class="form-control" readonly name="APPLICATION_COMMENTS" id="APPLICATION_COMMENTS" rows="5" style="border-radius: 4px"></textarea>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                                    </td>
+                                                    <td style="width:  15.5%">
+                                                        <div class="input-group input-label">
+                                                            <label>Excavation Length</label>
+                                                            <input type="text" style="border-radius: 4px" id="EXCAVATION_LENGTH"
+                                                                   class="form-control allowDecimalNumbers" name="EXCAVATION_LENGTH" />
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:  15.5%">
+                                                        <div class="input-group input-label">
+                                                            <label>Width</label>
+                                                            <input type="text" style="border-radius: 4px" id="RIDING_SURFACE"
+                                                                   class="form-control allowDecimalNumbers" name="RIDING_SURFACE" />
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:  15.5%">
+                                                        <div class="input-group input-label">
+                                                            <label>Depth</label>
+                                                            <input type="text" style="border-radius: 4px" id="KERBS"
+                                                                   class="form-control allowDecimalNumbers" name="KERBS" />
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:  15.5%">
+                                                        <div class="input-group input-label">
+                                                            <label class="control-label">Starting Address</label>
+                                                            <div class="input-group" style="width: 100%;">
+                                                                <input type="text" class="form-control" readonly autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="GPS_START_ADDRESS"
+                                                                       name="GPS_START_ADDRESS" required />
+                                                                <span class="input-group-addon" onclick="$.fn.ShowSearchMap('GPS_START_ADDRESS')"
+                                                                      style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
+                                                                    <i class="fa fa-map-marker"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td style="width:  15.5%">
+                                                        <div class="input-group input-label">
+                                                            <label class="control-label">Ending Address</label>
+                                                            <div class="input-group" style="width: 100%;">
+                                                                <input type="text" class="form-control" readonly autocomplete="off" style="border-top-left-radius: 4px !important; border-bottom-left-radius: 4px !important" id="GPS_END_ADDRESS"
+                                                                       name="GPS_END_ADDRESS" required />
+                                                                <span class="input-group-addon" onclick="$.fn.ShowSearchMap('GPS_END_ADDRESS')"
+                                                                      style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;cursor:pointer!important;font-size:11pt!important;">
+                                                                    <i class="fa fa-map-marker"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <div class="input-group input-label" style="width: 100%;padding-top:5px!important">
+                                                            <label>Description of work:<br /><b style="color:#d14343">NOTE: PLEASE PROVIDE A DETAIL DESCRIPTION OF THE WORK TO BE PERFORMED, HOW EXCAVATION WILL BE DONE AND HOW TRAFFIC WILL BE CONTROLLED (TO BE COMPLETED IN FULL).</b></label>
+                                                            <textarea class="form-control" readonly name="APPLICATION_COMMENTS" id="APPLICATION_COMMENTS" rows="5" style="border-radius: 4px"></textarea>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>*@
+                            </div>*@
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;" id="WayleaveInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div id="WayleaveInfo" class="panel-collapse collapse in" style="border: 0px solid #00A65A;">
@@ -1005,24 +1033,24 @@
                             </tbody>
                         </table>
                         @*<table width="100%" id="IsViewApplication">
-                            <tr>
-                                <td colspan="4" class="text-center" id="IsAppEdit">
-                                    <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
-                                            onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
-                                        <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
-                                        Re-Submit
-                                    </button>
-                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
-                                </td>
-                                <td colspan="4" class="text-center">
-                                    <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()">
-                                        <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
-                                        Submit
-                                    </button>
-                                    <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
-                                </td>
-                            </tr>
-                        </table>*@
+                                <tr>
+                                    <td colspan="4" class="text-center" id="IsAppEdit">
+                                        <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; width: 60px; padding: 0; font-size: 10px"
+                                                onclick="$.fn.UpdateApplicationFormStaus(appFormData)">
+                                            <i ng-if="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                                            Re-Submit
+                                        </button>
+                                        <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button>
+                                    </td>
+                                    <td colspan="4" class="text-center">
+                                        <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()">
+                                            <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
+                                            Submit
+                                        </button>
+                                        <button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
+                                    </td>
+                                </tr>
+                            </table>*@
                         <div class="panel-group" style="margin-left:0px;margin-bottom:3px!important;display:none;margin-top:10px!important" id="DepartmentInfo">
                             <div class="panel panel-default" style="border:none!important">
                                 <div class="panel-heading" style="background:#00A65A">
@@ -1059,13 +1087,13 @@
                                             {
                                                 <div class="col-lg-12">
                                                     @*<div class="input-group input-label">
-                                                        <label class="control-label">Status</label>
-                                                        <select style="border-radius: 4px" required onchange="$.fn.changeDepartmentStatus()" class="form-control" name="DEPARTMENT_STATUS" id="DEPARTMENT_STATUS">
-                                                            <option selected value="">Make a selection</option>
-                                                            <option value="Not Affected">Not Affected</option>
-                                                            <option value="Affected">Affected</option>
-                                                        </select>
-                                                    </div>*@
+                                                            <label class="control-label">Status</label>
+                                                            <select style="border-radius: 4px" required onchange="$.fn.changeDepartmentStatus()" class="form-control" name="DEPARTMENT_STATUS" id="DEPARTMENT_STATUS">
+                                                                <option selected value="">Make a selection</option>
+                                                                <option value="Not Affected">Not Affected</option>
+                                                                <option value="Affected">Affected</option>
+                                                            </select>
+                                                        </div>*@
                                                     <div class="input-group input-label">
                                                         <label class="control-label">Status</label>
                                                         <select style="border-radius: 4px" required onchange="$.fn.changeDepartmentStatus()" class="form-control" name="DEPARTMENT_STATUS" id="DEPARTMENT_STATUS">
@@ -1216,7 +1244,8 @@
                                                 <div class="col-lg-3">
                                                     <div class="input-group input-label">
                                                         <label class="control-label">Inspection Date</label>
-                                                        <input type="date" style="border-radius: 4px" class="form-control" name="INSPECTION_DATE" id="INSPECTION_DATE" />
+                                                        <input type="text" style="border-radius: 4px" class="form-control" name="INSPECTION_DATE" id="INSPECTION_DATE" />
+                                                    <input type="hidden" id="hdnInspectionDate" name="hdnInspectionDate" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3">
@@ -1240,13 +1269,13 @@
                                                 </div>
                                             </div>
                                             @*<div class="panel-body" style="padding: 10px;display:none" id="IsInspectionOutcomeComments">
-                                                <div class="col-lg-12">
-                                                    <div class="input-group input-label">
-                                                        <label class="control-label">Comments</label>
-                                                        <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="INSPECTION_COMMENTS" id="INSPECTION_COMMENTS"></textarea>
+                                                    <div class="col-lg-12">
+                                                        <div class="input-group input-label">
+                                                            <label class="control-label">Comments</label>
+                                                            <textarea rows="5" class="form-control" style="border-radius: 4px" placeholder="Comments" name="INSPECTION_COMMENTS" id="INSPECTION_COMMENTS"></textarea>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>*@
+                                                </div>*@
                                             <table width="100%" style="display:none!important" id="InspectionClosedButtons">
                                                 <tr>
                                                     <td colspan="4" class="text-center">
@@ -1395,7 +1424,7 @@
                     </div>
                     <div class="modal-footer text-center" style="text-align:center!important">
                         @*<input type="button" class="btn btn-green-custom btn-sm" value="Save" style="color: #fff !important" onclick="$.fn.SaveExcavationDetails()" />
-                        <input type="button" class="btn btn-warning btn-sm" value="Cancel" data-dismiss="modal" />*@
+                            <input type="button" class="btn btn-warning btn-sm" value="Cancel" data-dismiss="modal" />*@
                     </div>
                 </div>
                 <!-- /.modal-content -->

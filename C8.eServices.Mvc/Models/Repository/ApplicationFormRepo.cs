@@ -468,6 +468,15 @@ namespace C8.eServices.Mvc.Models.Repository
 
                 if (n)
                 {
+                    //Sending Application status to consultant
+                    EmailHelper eh = new EmailHelper();
+                    eh.Body = EmailNotificationBody.SentApplicationFormStatustoConsultant(applicationForm.CONSULTANT_NAME, applicationForm.CONSULTANT_SURNAME, applicationForm.APPLICATION_NUMBER).ToString();
+                    eh.Recipient = applicationForm.CONSULTANT_EMAIL;//"prasadthummala558@gmail.com";
+                    eh.Subject = "Wayleave application status";
+                    Email mail = new Email();
+                    mail.GenerateEmail(eh.Recipient, eh.Subject, eh.Body, applicationForm.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.CONSULTANT_NAME + " " + applicationForm.CONSULTANT_SURNAME, null, null, applicationForm.APPLICATION_NUMBER, null, null, null, null);
+
+
                     var departmentUsers = _context.Users.Where(s => s.region == applicationForm.REGION_OR_AREA).ToList();
                     //Send email notifications to departments based on region
                     foreach (User u in departmentUsers)
@@ -484,6 +493,10 @@ namespace C8.eServices.Mvc.Models.Repository
                             em.GenerateEmail(email.Recipient, email.Subject, email.Body, applicationForm.APPLICATION_NUMBER, false, AppSettingKeys.EmailNotificationTemplate, applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME, null, null, applicationForm.APPLICATION_NUMBER, null, null, null, null);
                         }
                     }
+
+
+                    
+
 
                     string createdUser = applicationForm.PROPERTYOWNER_NAME + " " + applicationForm.PROPERTYOWNER_SURNAME;
                     WL_APPLICATIONFORM_AUDIT audit_app = new WL_APPLICATIONFORM_AUDIT();
@@ -865,15 +878,15 @@ namespace C8.eServices.Mvc.Models.Repository
 
                 EmailHelper email = new EmailHelper();
                 string applicationGrantStatus = string.Empty;
-
-                if (appStatus == "Application Granted")
-                {
-                    applicationGrantStatus = "Supported";
-                }
-                else if (appStatus == "Application Rejected")
-                {
-                    applicationGrantStatus = "Not Supported";
-                }
+                applicationGrantStatus = appStatus;
+                //if (appStatus == "Application Granted")
+                //{
+                //    applicationGrantStatus = "Supported";
+                //}
+                //else if (appStatus == "Application Rejected")
+                //{
+                //    applicationGrantStatus = "Not Supported";
+                //}
                 email.Body = EmailNotificationBody.SentApplicationFormGrantStatus(res.PROPERTYOWNER_NAME, res.PROPERTYOWNER_SURNAME, res.APPLICATION_NUMBER, applicationGrantStatus, comments).ToString();
                 email.Recipient = res.PROPERTYOWNER_EMAIL;//"prasadthummala558@gmail.com";
                 email.Subject = "Wayleave Application Status";
@@ -891,7 +904,7 @@ namespace C8.eServices.Mvc.Models.Repository
                 audit_app.ACTION = "Updated to " + appStatus;
                 audit_app.OUTCOME = AuditTrailKeys.UnSuccessfulOutcome;
                 audit_app.DEVICE_IP_ADDRESS = Ip.GetIP();
-                audit_app.BASEAPP_IP_ADDRESS = ipAddress;
+                audit_app.BASEAPP_IP_ADDRESS = ipAddress;//getting client ip address
                 //audit_app.cre
                 _context.WL_APPLICATIONFORM_AUDIT.Add(audit_app);
                 _context.SaveChanges();

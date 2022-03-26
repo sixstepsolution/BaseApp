@@ -20,7 +20,7 @@
         //    window.location.href = "../WL/Reports";
         //}
 
-       
+
 
         $.fn.showLoader = function () {
             var statusArray = [];
@@ -57,8 +57,8 @@
                 var appFormData = new Object();
                 appFormData.documentType = $('#documentType').val();
                 appFormData.reportType = $('#reportType').val();
-                appFormData.startDate = $('#startDate').val();
-                appFormData.endDate = $('#endDate').val();
+                appFormData.startDate = $('#hdnStartDate').val();
+                appFormData.endDate = $('#hdnEndDate').val();
                 appFormData.status = statusArray;
                 //alert($('#status').val());
                 formData.append("FormData", JSON.stringify(appFormData));
@@ -100,8 +100,8 @@
                 toastr.error('* Fields are required!');
                 return;
             }
-           
-            
+
+
         }
 
         @*var actionValue = '@ViewBag.applicationStatus';
@@ -163,6 +163,55 @@
         document.body.removeChild(a);
     }
 </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+@*<script src="//code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#startDate").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $("#hdnStartDate").val(test);
+                }
+                else {
+                    toastr.warning('Please select start date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+            }
+        });
+        $("#endDate").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $("#hdnEndDate").val(test);
+                    //$("#hdnToDate").val(dateString);
+                }
+                else {
+                    toastr.warning('Please select end date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+            }
+        });
+    });
+</script>
 <!------ Include the above in your HEAD tag ---------->
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important;background-color:#fff!important">
     <div class="container">
@@ -218,15 +267,15 @@
                                 <td colspan="2" style="height: 40px !important; width: 15.5%!important">
                                     <div class="input-group" style="width: 100%;">
                                         <label class="control-label" style="color:#000!important;font-size:9pt!important">Start Date</label>
-                                        <input type="date" class="form-control" autocomplete="off" style="border-radius: 4px" name="startDate" id="startDate" required />
-
+                                        <input type="text" class="form-control" autocomplete="off" style="border-radius: 4px" name="startDate" id="startDate" required />
+                                        <input type="hidden" id="hdnStartDate" name="hdnStartDate" />
                                     </div>
                                 </td>
                                 <td style="height: 40px !important; width: 15.5%!important">
                                     <div class="input-group" style="width: 100%;">
                                         <label class="control-label" style="color:#000!important;font-size:9pt!important">End Date</label>
-                                        <input type="date" class="form-control" autocomplete="off" style="border-radius: 4px" name="endDate" id="endDate" required />
-
+                                        <input type="text" class="form-control" autocomplete="off" style="border-radius: 4px" name="endDate" id="endDate" required />
+                                        <input type="hidden" id="hdnEndDate" name="hdnEndDate" />
                                     </div>
                                 </td>
                                 <td style="height: 40px !important; width: 15.5%!important;display:none" id="ShowStatusSection">
@@ -253,38 +302,38 @@
                             </tr>
 
                             @*<tr>
-                        <td style="width: 15.5% !important">
-                        </td>
-                        <td style="width: 15.5% !important"></td>
-                        <td colspan="2" style="width:  15.5%">
-                            <div class="input-group" style="width: 100%">
-                                <label style="color:#000!important;font-size:10pt!important">Report Type</label>
-                                <select style="border-radius: 4px"
-                                        class="form-control" name="documentType" id="documentType">
-                                    <option value="" selected>Make a selection</option>
-                                    <option value="ApprovedApplication">Approved Application</option>
-                                    <option value="ProgressReport">Progress Report</option>
-                                    <option value="TotalWayleaveApplicationsCreated">Total Wayleave Applications Created</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td colspan="2" style="padding-top: 23px !important; height: 40px !important;width: 15.5% !important ">
-                            <button type="submit" class="btn btn-sm btn-green-custom" onclick="$.fn.showLoader()" style="color:#fff!important;height:28px!important">
-                                <i id="isLoading" class="fa fa-spinner fa-spin" style="font-size:9pt;display:none"></i>&nbsp;Search
-                            </button>
-                            <button type="reset" class="btn btn-warning" style="font-size: 12px; width: 70px;height:28px!important" tabindex="20">
-                                Clear
-                            </button>
-                        </td>
-                        <td style="width: 15.5% !important"></td>
-                        <td style="width: 15.5% !important"></td>
-                    </tr>*@
+                                    <td style="width: 15.5% !important">
+                                    </td>
+                                    <td style="width: 15.5% !important"></td>
+                                    <td colspan="2" style="width:  15.5%">
+                                        <div class="input-group" style="width: 100%">
+                                            <label style="color:#000!important;font-size:10pt!important">Report Type</label>
+                                            <select style="border-radius: 4px"
+                                                    class="form-control" name="documentType" id="documentType">
+                                                <option value="" selected>Make a selection</option>
+                                                <option value="ApprovedApplication">Approved Application</option>
+                                                <option value="ProgressReport">Progress Report</option>
+                                                <option value="TotalWayleaveApplicationsCreated">Total Wayleave Applications Created</option>
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td colspan="2" style="padding-top: 23px !important; height: 40px !important;width: 15.5% !important ">
+                                        <button type="submit" class="btn btn-sm btn-green-custom" onclick="$.fn.showLoader()" style="color:#fff!important;height:28px!important">
+                                            <i id="isLoading" class="fa fa-spinner fa-spin" style="font-size:9pt;display:none"></i>&nbsp;Search
+                                        </button>
+                                        <button type="reset" class="btn btn-warning" style="font-size: 12px; width: 70px;height:28px!important" tabindex="20">
+                                            Clear
+                                        </button>
+                                    </td>
+                                    <td style="width: 15.5% !important"></td>
+                                    <td style="width: 15.5% !important"></td>
+                                </tr>*@
                         </thead>
                     </table>
                 }
             </div>
         </div>
-        
+
         @if (ViewBag.errorStatus != null)
         {
             <div style="text-align:center!important;padding-top:10px!important"><b class="text-red">@ViewBag.errorStatus</b></div>

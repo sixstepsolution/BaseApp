@@ -1787,8 +1787,21 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 $('#CONTRACTOR_EMAIL').val(data.contractoR_EMAIL);
                 $('#CONTRACTOR_ADDRESS').val(data.contractoR_ADDRESS);
 
-                $('#STARTING_DATE').val(data.startinG_DATE);
-                $('#COMPLETION_DATE').val(data.completioN_DATE);
+                //$('#STARTING_DATE').val(data.startinG_DATE);
+                //$('#COMPLETION_DATE').val(data.completioN_DATE);
+                if (data.startinG_DATE != undefined && data.startinG_DATE != "" && data.startinG_DATE != null) {
+                    var dt = data.startinG_DATE;
+                    var ar = dt.split('-');
+                    var startDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $('#STARTING_DATE').val(startDate);
+                }
+                if (data.completioN_DATE != undefined && data.completioN_DATE != "" && data.completioN_DATE != null) {
+                    var dt = data.completioN_DATE;
+                    var ar = dt.split('-');
+                    var completionDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $('#COMPLETION_DATE').val(completionDate);
+                    //appFormData.COMPLETION_DATE = completionDate;
+                }
 
                 $('#GPS_START_ADDRESS').val(data.gpS_START_ADDRESS);
                 $('#GPS_END_ADDRESS').val(data.gpS_END_ADDRESS);
@@ -1890,10 +1903,19 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                     $('#viewInspectionForm').text(data.inspectioN_FORM);                    
                     $('#INSPECTION_STATUS').val(data.inspectioN_STATUS);
                     $('#INSPECTION_REFERENCE_NO').val(data.inspectioN_REFERENCE_NO);
-                    $('#INSPECTION_DATE').val(data.inspectioN_DATE);
+                    //$('#INSPECTION_DATE').val(data.inspectioN_DATE);
                     $('#INSPECTION_BY').val(data.inspectioN_BY);
                     //$('#INSPECTION_FORM').val(data.inspectioN_FORM);
                     $('#INSPECTION_COMMENTS').val(data.inspectioN_COMMENTS);
+
+                    if (data.inspectioN_DATE != undefined && data.inspectioN_DATE != "" && data.inspectioN_DATE != null) {
+                        var dt = data.inspectioN_DATE;
+                        var ar = dt.split('-');
+                        var inspectionDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+                        $('#INSPECTION_DATE').val(inspectionDate);
+                        //appFormData.COMPLETION_DATE = completionDate;
+                    }
+
 
                     $('#INSPECTION_STATUS').prop('disabled', true);
                     $('#INSPECTION_REFERENCE_NO').prop('disabled', true);
@@ -2453,7 +2475,8 @@ function formatDate(date) {
     if (day.length < 2)
         day = '0' + day;
 
-    return [year, month, day].join('-');
+    //return [year, month, day].join('-');
+    return [day, month, year].join('-');
 }
 
 function formatTime(date) {
@@ -2534,7 +2557,7 @@ $.fn.CloseApplicationForm = function () {
         var formData = new FormData();
         if ($("#INSPECTION_STATUS").val() == "Application Closed") {
             var insReference = $("#INSPECTION_REFERENCE_NO").val();
-            var insDate = $("#INSPECTION_DATE").val();
+            var insDate = $("#hdnInspectionDate").val();
             var insBy = $("#INSPECTION_BY").val();
             var insComments = $("#INSPECTION_COMMENTS").val();
             if (insReference != "" && insReference != undefined && insDate != "" && insDate != undefined && insBy != "" && insBy != undefined && insComments != "" && insComments != undefined) {
@@ -2562,7 +2585,7 @@ $.fn.CloseApplicationForm = function () {
             inspectionComments: $("#INSPECTION_COMMENTS").val(),
             inspectionBy: $("#INSPECTION_BY").val(),
             inspectionReferenceNo :$("#INSPECTION_REFERENCE_NO").val(),
-            inspectionDate : $("#INSPECTION_DATE").val()
+            inspectionDate: $("#hdnInspectionDate").val()
         };
         console.log(inpuclaims);
         formData.append("InspectionData", JSON.stringify(inpuclaims));

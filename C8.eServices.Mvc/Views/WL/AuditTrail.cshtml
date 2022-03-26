@@ -5,8 +5,8 @@
 }
 
 @*<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>*@
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>*@
 
 @*<link href="~/Content/wayleaveStyles/assets/Content/Timeline.css" rel="stylesheet" />*@
 <script type="text/javascript" language="javascript">
@@ -121,6 +121,55 @@
 
     });
 </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+@*<script src="//code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#startDate").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $("#hdnStartDate").val(test);
+                }
+                else {
+                    toastr.warning('Please select start date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+            }
+        });
+        $("#endDate").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $("#hdnEndDate").val(test);
+                    //$("#hdnToDate").val(dateString);
+                }
+                else {
+                    toastr.warning('Please select end date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+            }
+        });
+    });
+</script>
 <!------ Include the above in your HEAD tag ---------->
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important;background-color:#fff!important">
     <div class="container">
@@ -135,11 +184,11 @@
                         <thead style="font-size:11px !important;color:#fff !important;margin-bottom: 0;">
                             <tr>
                                 @*<td style="width: 15.5% !important">
-            @if (ViewBag.applicationNo != null)
-            {
-                <h4 class="text-primary">@ViewBag.applicationNo</h4>
-            }
-        </td>*@
+                                        @if (ViewBag.applicationNo != null)
+                                        {
+                                            <h4 class="text-primary">@ViewBag.applicationNo</h4>
+                                        }
+                                    </td>*@
 
                                 <td colspan="2" style="height: 40px !important; width: 15.5%!important">
                                     <div class="input-group" style="width: 100%;">
@@ -165,36 +214,36 @@
                                 <td colspan="2" style="width:  15.5%">
                                     <div class="input-group" style="width: 100%">
                                         <label style="color:#000!important;font-size:9pt!important">Username</label>
-                                       
+
                                         @*@Html.DropDownList("username", (List<SelectListItem>)ViewBag.VBUserList, "Select Username")*@
                                         @*@Html.DropDownList("VBUserList", ViewBag.VBUserList as SelectList, "Select Username", new { @class = "form-control", style = "border-radius: 4px", name = "username" })*@
 
                                         @*@Html.DropDownList("username",
-        (IEnumerable<SelectListItem>)ViewBag.VBUserList,
-        "Select Username")*@
+                                            (IEnumerable<SelectListItem>)ViewBag.VBUserList,
+                                            "Select Username")*@
                                         <select style="border-radius: 4px"
                                                 class="form-control" name="username" id="username">
                                             @*<option value="" selected>Make a selection</option>
-                                            <option value="All">Select All</option>*@
+                                                <option value="All">Select All</option>*@
                                             @*<option value="Prasad">Prasad</option>
-                                            <option value="Application Rejected">Rejected Applications</option>
-                                            <option value="Updated to Affected">Affected (All departments)</option>
-                                            <option value="Updated to Not Affected">Not Affected (All departments)</option>*@
+                                                <option value="Application Rejected">Rejected Applications</option>
+                                                <option value="Updated to Affected">Affected (All departments)</option>
+                                                <option value="Updated to Not Affected">Not Affected (All departments)</option>*@
                                         </select>
                                     </div>
                                 </td>
                                 <td colspan="2" style="height: 40px !important; width: 15.5%!important">
                                     <div class="input-group" style="width: 100%;">
                                         <label style="color:#000!important;font-size:9pt!important">Start Date</label>
-                                        <input type="date" class="form-control" autocomplete="off" style="border-radius: 4px" name="startDate" id="startDate" />
-
+                                        <input type="text" class="form-control" autocomplete="off" style="border-radius: 4px" name="startDate" id="startDate" />
+                                        <input type="hidden" id="hdnStartDate" name="hdnStartDate" />
                                     </div>
                                 </td>
                                 <td style="height: 40px !important; width: 15.5%!important">
                                     <div class="input-group" style="width: 100%;">
                                         <label style="color:#000!important;font-size:9pt!important">End Date</label>
-                                        <input type="date" class="form-control" autocomplete="off" style="border-radius: 4px" name="endDate" id="endDate" />
-
+                                        <input type="text" class="form-control" autocomplete="off" style="border-radius: 4px" name="endDate" id="endDate" />
+                                        <input type="hidden" id="hdnEndDate" name="hdnEndDate" />
                                     </div>
                                 </td>
                                 <td colspan="2" style="padding-top: 23px !important; height: 40px !important;width: 15.5% !important ">
@@ -206,7 +255,7 @@
                                     </button>
                                 </td>
 
-<tr>
+                            <tr>
                         </thead>
                     </table>
                 }
@@ -214,54 +263,54 @@
         </div>
 
         @*@if (ViewBag.applicationList != null)
-            {
-                string[] str1;
-
-                // Initialization of array
-                str1 = new string[2] { "", "timeline-inverted" };
-                int jj = 1;
-        <ul class="timeline">
-            @foreach (var app in (List<C8.eServices.Mvc.Models.WL_APPLICATIONFORM_AUDIT>)ViewBag.applicationList)
-            {
-                if (jj % 2 == 0)
                 {
-                    <li class="timeline-inverted">
-                        <div class="timeline-badge success"><i class="glyphicon glyphicon-envelope"></i></div>
-                        <div class="timeline-panel">
-                            <div class="timeline-heading">
-                                <h4 class="timeline-title">@app.ACTION</h4>
-                                <p><small class="text-muted"><i class="glyphicon glyphicon-time text-primary"></i> @app.CREATED_DATE</small></p>
-                            </div>
-                            <div class="timeline-body">
-                                <p>@app.APPLICATION_STEP_DESCRIPTION</p>
+                    string[] str1;
 
-                            </div>
-                        </div>
-                    </li>
-                }
-                else
+                    // Initialization of array
+                    str1 = new string[2] { "", "timeline-inverted" };
+                    int jj = 1;
+            <ul class="timeline">
+                @foreach (var app in (List<C8.eServices.Mvc.Models.WL_APPLICATIONFORM_AUDIT>)ViewBag.applicationList)
                 {
-                    <li>
-                        <div class="timeline-badge warning"><i class="glyphicon glyphicon-check"></i></div>
-                        <div class="timeline-panel">
-                            <div class="timeline-heading">
-                                <h4 class="timeline-title">@app.ACTION</h4>
-                                <p><small class="text-muted"><i class="glyphicon glyphicon-time text-primary"></i> @app.CREATED_DATE</small></p>
+                    if (jj % 2 == 0)
+                    {
+                        <li class="timeline-inverted">
+                            <div class="timeline-badge success"><i class="glyphicon glyphicon-envelope"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">@app.ACTION</h4>
+                                    <p><small class="text-muted"><i class="glyphicon glyphicon-time text-primary"></i> @app.CREATED_DATE</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>@app.APPLICATION_STEP_DESCRIPTION</p>
+
+                                </div>
                             </div>
-                            <div class="timeline-body">
-                                <p>@app.APPLICATION_STEP_DESCRIPTION</p>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <div class="timeline-badge warning"><i class="glyphicon glyphicon-check"></i></div>
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+                                    <h4 class="timeline-title">@app.ACTION</h4>
+                                    <p><small class="text-muted"><i class="glyphicon glyphicon-time text-primary"></i> @app.CREATED_DATE</small></p>
+                                </div>
+                                <div class="timeline-body">
+                                    <p>@app.APPLICATION_STEP_DESCRIPTION</p>
+                                </div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    }
+
+                    jj++;
+
                 }
+            </ul>
+                        }*@
 
-                jj++;
-
-            }
-        </ul>
-                    }*@
-
-        @if(ViewBag.applicationList != null)
+        @if (ViewBag.applicationList != null)
         {
             int jj = 1;
             <table class="table table-bordered table-hover" style="font-size:10pt!important">
@@ -277,19 +326,19 @@
                 </tr>
                 @foreach (var app in (List<C8.eServices.Mvc.Models.WL_APPLICATIONFORM_AUDIT>)ViewBag.applicationList)
                 {
-            <tr>
-                <td>@jj</td>
-                <td>@app.APPLICATION_NUMBER</td>
-                <td>@app.ACTION</td>
-                <td>@app.OUTCOME</td>
-                <td>@app.APPLICATION_STEP_DESCRIPTION</td>
-                <td>@app.CREATED_USER</td>
-                <td>@app.CREATED_DATE</td>
-                <td>@app.BASEAPP_IP_ADDRESS</td>
-            </tr>
+                    <tr>
+                        <td>@jj</td>
+                        <td>@app.APPLICATION_NUMBER</td>
+                        <td>@app.ACTION</td>
+                        <td>@app.OUTCOME</td>
+                        <td>@app.APPLICATION_STEP_DESCRIPTION</td>
+                        <td>@app.CREATED_USER</td>
+                        <td>@app.CREATED_DATE</td>
+                        <td>@app.BASEAPP_IP_ADDRESS</td>
+                    </tr>
                     jj++;
                 }
-        
+
             </table>
         }
 
@@ -299,4 +348,4 @@
         }
 
     </div>
-    </section>
+</section>

@@ -89,7 +89,7 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to,string serviceType)
+        public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to,string serviceType,DateTime? hdnFromDate,DateTime? hdnToDate)
         {
             //if (Session["wayleaveaccountId"] == null)
             //{
@@ -115,11 +115,11 @@ namespace C8.eServices.Mvc.Controllers
             }
             if (date_requested_from!=null)
             {
-                ViewBag.appStartDate = date_requested_from.Value.Year + "-" + date_requested_from.Value.Month + "-" + date_requested_from.Value.Day;
+                ViewBag.appStartDate = date_requested_from.Value.Day + "-" + date_requested_from.Value.Month + "-" + date_requested_from.Value.Year;
             }
             if (date_requested_to!=null)
             {
-                ViewBag.appEndDate = date_requested_to.Value.Year + "-" + date_requested_to.Value.Month + "-" + date_requested_to.Value.Day;
+                ViewBag.appEndDate = date_requested_to.Value.Day + "-" + date_requested_to.Value.Month + "-" + date_requested_to.Value.Year;
             }
             //if (!String.IsNullOrEmpty(OverdueStatus))
             //{
@@ -130,8 +130,8 @@ namespace C8.eServices.Mvc.Controllers
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
                 ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
                 inpuclaims.application_no = application_no;
-                inpuclaims.date_requested_from = date_requested_from;
-                inpuclaims.date_requested_to = date_requested_to;
+                inpuclaims.date_requested_from = hdnFromDate;// date_requested_from;
+                inpuclaims.date_requested_to = hdnToDate;// date_requested_to;
                 inpuclaims.serviceType = serviceType;
                 //inpuclaims.overdueStatus = OverdueStatus;
                 inpuclaims.created_by = Convert.ToInt32(Session["wayleaveaccountId"] != null ? Session["wayleaveaccountId"].ToString() : "0");

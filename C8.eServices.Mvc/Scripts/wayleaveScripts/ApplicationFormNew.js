@@ -630,8 +630,22 @@ $.fn.LoadApplicationsDetailsByAppId = function (appId) {
                 $('#CONTRACTOR_EMAIL').val(data.contractoR_EMAIL);
                 $('#CONTRACTOR_ADDRESS').val(data.contractoR_ADDRESS);                
                
-                $('#STARTING_DATE').val(data.startinG_DATE);
-                $('#COMPLETION_DATE').val(data.completioN_DATE);
+                //$('#STARTING_DATE').val(data.startinG_DATE);
+                //$('#COMPLETION_DATE').val(data.completioN_DATE);
+
+                if (data.startinG_DATE != undefined && data.startinG_DATE != "" && data.startinG_DATE != null) {
+                    var dt = data.startinG_DATE;
+                    var ar = dt.split('-');
+                    var startDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $('#STARTING_DATE').val(startDate);
+                }
+                if (data.completioN_DATE != undefined && data.completioN_DATE != "" && data.completioN_DATE != null) {
+                    var dt = data.completioN_DATE;
+                    var ar = dt.split('-');
+                    var completionDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $('#COMPLETION_DATE').val(completionDate);
+                    //appFormData.COMPLETION_DATE = completionDate;
+                }
 
 
                 $('#GPS_START_ADDRESS').val(data.gpS_START_ADDRESS);
@@ -1331,9 +1345,23 @@ $.fn.GetFormdataValues = function () {
     appFormData.CONTRACTOR_MOBILENO = $('#CONTRACTOR_MOBILENO').val();//*
     appFormData.CONTRACTOR_EMAIL = $('#CONTRACTOR_EMAIL').val();//*
     appFormData.CONTRACTOR_ADDRESS = $('#CONTRACTOR_ADDRESS').val();//*
+
+
+    if ($('#STARTING_DATE').val() != undefined && $('#STARTING_DATE').val() != "" && $('#STARTING_DATE').val() != null) {
+        var dt = $('#STARTING_DATE').val();
+        var ar = dt.split('-');
+        var startDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+        appFormData.STARTING_DATE = startDate;
+    }
+    if ($('#COMPLETION_DATE').val() != undefined && $('#COMPLETION_DATE').val() != "" && $('#COMPLETION_DATE').val() != null) {
+        var dt = $('#COMPLETION_DATE').val();
+        var ar = dt.split('-');
+        var completionDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+        appFormData.COMPLETION_DATE = completionDate;
+    }
+
     
-    appFormData.STARTING_DATE = $('#STARTING_DATE').val();
-    appFormData.COMPLETION_DATE = $('#COMPLETION_DATE').val();
+    
 
     //var radioValue = $("input[name=ChkHD]:checked").val();
     //if (radioValue != undefined && radioValue != "" && radioValue != null) {
@@ -1393,7 +1421,8 @@ function formatDate(date) {
     if (day.length < 2)
         day = '0' + day;
 
-    return [year, month, day].join('-');
+    //return [year, month, day].join('-');
+    return [day, month, year].join('-');
 }
 
 function formatTime(date) {
@@ -1403,14 +1432,25 @@ function formatTime(date) {
 
 function testdate() {
     var input = $("#STARTING_DATE").val();
-    var d = new Date(input);     
+    //alert(input);
+    var ar = input.split('-');
+    console.log(ar);
+    //alert(ar[0]);
+    //alert(ar[1]);
+    //alert(ar[2]);
+    var d = new Date(input);
+    //alert(d);
     var tt = d.setMonth(d.getMonth() + 6);
     var m = new Date(tt);
+    //var dddd = $.datepicker.parseDate("yy-mm-dd", input);
+    //alert(dddd);
+
     //alert(tt);
     //var cDate = dateEntered.setMonth(tt);
     //alert(cDate);
-    var yy = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
-    $("#COMPLETION_DATE").val(yy);
+    //var yy = m.getFullYear() + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + ("0" + m.getDate()).slice(-2);
+    var testYY = ("0" + m.getDate()).slice(-2) + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + m.getFullYear();
+    //$("#COMPLETION_DATE").val(testYY);
     console.log(input); //e.g. 2015-11-13
     //alert(input);
     //alert(dateEntered);

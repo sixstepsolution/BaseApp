@@ -350,6 +350,50 @@
         border-color: #ddd;
     }
 </style>
+<script>
+    $(document).ready(function () {
+        $("#date_requested_from").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $("#hdnFromDate").val(test);
+                }
+                else {
+                    toastr.warning('Please select from date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+            }
+        });
+        $("#date_requested_to").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $("#hdnToDate").val(test);
+                }
+                else {
+                    toastr.warning('Please select to date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+            }
+        });
+    });
+</script>
 <script src="~/Scripts/wayleaveScripts/WLApplicationFormDashboard.js"></script>
 <section class="content" style="padding-right: 0;padding-top:0;">
     @using (Html.BeginForm("Index", "WL", FormMethod.Post, new { @class = "form-horizontal", role = "form", name = "FilterForm" }))
@@ -377,22 +421,22 @@
                                         <td style="width:  10%">
                                             <label>Date From</label>
                                             <div class="input-group" style="width: 100%;">
-                                                <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" type="date" id="date_requested_from" name="date_requested_from" placeholder="Date From">
-
+                                                <input class="form-control" autocomplete="off" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" type="text" id="date_requested_from" name="date_requested_from" placeholder="Date From">
+                                                <input type="hidden" id="hdnFromDate" name="hdnFromDate" />
                                                 <span class="input-group-addon"
                                                       style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
-                                                    <i class="fa fa-user"></i>
+                                                    <i class="fa fa-calendar"></i>
                                                 </span>
                                             </div>
                                         </td>
                                         <td style="width:  10%">
                                             <label>Date To</label>
                                             <div class="input-group" style="width: 100%;">
-                                                <input class="form-control" autocomplete="off" type="date" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" id="date_requested_to" name="date_requested_to" placeholder="Date To">
-
+                                                <input class="form-control" autocomplete="off" type="text" style=" border-top-right-radius: 0px !important; border-bottom-right-radius: 0px !important" id="date_requested_to" name="date_requested_to" placeholder="Date To">
+                                                <input type="hidden" id="hdnToDate" name="hdnToDate" />
                                                 <span class="input-group-addon"
                                                       style="border-top-left-radius: 0;border-bottom-left-radius: 0;padding-bottom: 0;padding-top: 0px;">
-                                                    <i class="fa fa-user"></i>
+                                                    <i class="fa fa-calendar"></i>
                                                 </span>
                                             </div>
                                         </td>

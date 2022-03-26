@@ -92,7 +92,7 @@ namespace C8.eServices.Mvc.Controllers
 
         [HttpPost]
         public ActionResult Index(string application_no, DateTime? date_requested_from, DateTime? date_requested_to, 
-            string applicantName,string applicantSurname, string serviceType)
+            string applicantName,string applicantSurname, string serviceType, DateTime? hdnFromDate, DateTime? hdnToDate)
         {
             //if (Session["wayleaveaccountId"] == null)
             //{
@@ -130,11 +130,11 @@ namespace C8.eServices.Mvc.Controllers
             }
             if (date_requested_from != null)
             {
-                ViewBag.appStartDate = date_requested_from.Value.Year + "-" + date_requested_from.Value.Month + "-" + date_requested_from.Value.Day;
+                ViewBag.appStartDate = date_requested_from.Value.Day + "-" + date_requested_from.Value.Month + "-" + date_requested_from.Value.Year;
             }
             if (date_requested_to != null)
             {
-                ViewBag.appEndDate = date_requested_to.Value.Year + "-" + date_requested_to.Value.Month + "-" + date_requested_to.Value.Day;
+                ViewBag.appEndDate = date_requested_to.Value.Day + "-" + date_requested_to.Value.Month + "-" + date_requested_to.Value.Year;
             }
 
             using (var client = new HttpClient())
@@ -142,8 +142,8 @@ namespace C8.eServices.Mvc.Controllers
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["Api_Url"].ToString());
                 ApplicationInputClaimModel inpuclaims = new ApplicationInputClaimModel();
                 inpuclaims.application_no = application_no;
-                inpuclaims.date_requested_from = date_requested_from;
-                inpuclaims.date_requested_to = date_requested_to;
+                inpuclaims.date_requested_from = hdnFromDate;// date_requested_from;
+                inpuclaims.date_requested_to = hdnToDate;// date_requested_to;
                 inpuclaims.created_by = 0;
                 inpuclaims.first_name = applicantName;
                 inpuclaims.last_name = applicantSurname;
@@ -769,7 +769,7 @@ namespace C8.eServices.Mvc.Controllers
                 //int acNo = Convert.ToInt32(res.PROPERTYOWNER_ACCOUNT_NO??"0");
                 var address = db.WL_ACCOUNTS.Where(s => s.ACCOUNT_NUMBER == res.PROPERTYOWNER_ACCOUNT_NO).FirstOrDefault();//!=null? db.WL_ACCOUNTS.Where(s => s.ACCOUNT_ID == acNo).FirstOrDefault().
                 //ViewBag.inspectionDate =res.INSPECTION_DATE != null ? Convert.ToDateTime(res.INSPECTION_DATE).ToString("yyyy-MM-dd") : "";
-                ViewBag.inspectionDate = DateTime.Now.ToString("yyyy-MM-dd");
+                ViewBag.inspectionDate = DateTime.Now.ToString("dd-MM-yyyy");
                 if (address != null)
                 {
                     ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
@@ -785,8 +785,8 @@ namespace C8.eServices.Mvc.Controllers
                 ViewBag.telephone = address.TELEPHONE_NUMBER;
                 ViewBag.streetName = address.STREET_NAME;
                 ViewBag.ApplicationAmount = feeDetails != null ? feeDetails.APPLICATION_PRICE : 0;
-                ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("yyyy-MM-dd") : "";
-                ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("yyyy-MM-dd") : "";
+                ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("dd-MM-yyyy") : "";
+                ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("dd-MM-yyyy") : "";
             }
             return View(res);
         }
@@ -949,7 +949,7 @@ namespace C8.eServices.Mvc.Controllers
                 //int acNo = Convert.ToInt32(res.PROPERTYOWNER_ACCOUNT_NO??"0");
                 var address = db.WL_ACCOUNTS.Where(s => s.ACCOUNT_NUMBER == res.PROPERTYOWNER_ACCOUNT_NO).FirstOrDefault();//!=null? db.WL_ACCOUNTS.Where(s => s.ACCOUNT_ID == acNo).FirstOrDefault().
                 //ViewBag.inspectionDate =res.INSPECTION_DATE != null ? Convert.ToDateTime(res.INSPECTION_DATE).ToString("yyyy-MM-dd") : "";
-                ViewBag.inspectionDate = DateTime.Now.ToString("yyyy-MM-dd");
+                ViewBag.inspectionDate = DateTime.Now.ToString("dd-MM-yyyy");
                 if (address != null)
                 {
                     ViewBag.streetAddress = address.STREET_NAME + " " + address.CITY + " " + address.PROVINCE + " " + address.COUNTRY + " - " + address.POST_CODE;
@@ -965,8 +965,8 @@ namespace C8.eServices.Mvc.Controllers
                 ViewBag.telephone = address.TELEPHONE_NUMBER;
                 ViewBag.streetName = address.STREET_NAME;
                 ViewBag.ApplicationAmount = feeDetails != null ? feeDetails.APPLICATION_PRICE : 0;
-                ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("yyyy-MM-dd") : "";
-                ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("yyyy-MM-dd") : "";
+                ViewBag.applicationDate = res.STARTING_DATE != null ? Convert.ToDateTime(res.STARTING_DATE).ToString("dd-MM-yyyy") : "";
+                ViewBag.applicationEndDate = res.COMPLETION_DATE != null ? Convert.ToDateTime(res.COMPLETION_DATE).ToString("dd-MM-yyyy") : "";
                 ViewBag.ExcavationData = db.WL_EXCAVATION_DETAILS.Where(s => s.APP_ID == pdf.AppId).ToList();
             }
             return View(res);
@@ -1018,7 +1018,7 @@ namespace C8.eServices.Mvc.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AuditTrail(string searchKeyword,string status,DateTime? startDate,DateTime? endDate, string username)
+        public ActionResult AuditTrail(string searchKeyword,string status,DateTime? startDate,DateTime? endDate, string username, DateTime? hdnStartDate, DateTime? hdnEndDate)
         {
             if (Session["ekurhuleniData"] == null)
             {
@@ -1068,18 +1068,18 @@ namespace C8.eServices.Mvc.Controllers
                 }
             }
 
-            if (startDate!=null)
+            if (hdnStartDate!=null)
             {
-                ViewBag.appStartDate = startDate.Value.Year+"-"+ startDate.Value.Month+"-"+ startDate.Value.Day;
+                ViewBag.appStartDate = hdnStartDate.Value.Day+"-"+ hdnStartDate.Value.Month+"-"+ hdnStartDate.Value.Year;
                 
                 //appDetails = appDetails.Where(s => s.CREATED_DATE>=startDate).ToList();
-                appDetails = appDetails.Where(s => s.CREATED_DATE.Date >= startDate.Value.Date).ToList();
+                appDetails = appDetails.Where(s => s.CREATED_DATE.Date >= hdnStartDate.Value.Date).ToList();
             }
-            if (endDate != null)
+            if (hdnEndDate != null)
             {
-                ViewBag.appEndDate = endDate.Value.Year + "-" + endDate.Value.Month + "-" + endDate.Value.Day; ;
+                ViewBag.appEndDate = hdnEndDate.Value.Day + "-" + hdnEndDate.Value.Month + "-" + hdnEndDate.Value.Year;
                 //appDetails = appDetails.Where(s =>s.CREATED_DATE<= endDate).ToList();
-                appDetails = appDetails.Where(s => s.CREATED_DATE.Date <= endDate.Value.Date).ToList();
+                appDetails = appDetails.Where(s => s.CREATED_DATE.Date <= hdnEndDate.Value.Date).ToList();
             }
 
             if (appDetails.Count > 0)

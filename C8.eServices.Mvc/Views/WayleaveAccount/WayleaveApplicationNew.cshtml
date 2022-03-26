@@ -198,11 +198,11 @@
     });
 </script>
 @*<link rel="stylesheet" href="https://js.arcgis.com/3.37/esri/css/esri.css">
-<script src="https://js.arcgis.com/3.37/"></script>*@
+    <script src="https://js.arcgis.com/3.37/"></script>*@
 <style>
     #map {
         height: 500px !important;
-        width: 100%!important;
+        width: 100% !important;
         margin: 0;
         padding: 0;
     }
@@ -330,7 +330,7 @@
             function showLocation(evt) {
                 //alert(evt.result.name);
                 //alert(GlobalSearchResult);
-                var selectedAddress = evt.result.name;                
+                var selectedAddress = evt.result.name;
                 $("#" + GlobalSearchResult).val(evt.result.name);
                 console.log(evt.result);
                 map.graphics.clear();
@@ -387,22 +387,56 @@
         });
     </script>*@
 @*<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-      crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-        crossorigin=""></script>*@
- @*Load Esri Leaflet from CDN*@ 
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>*@
+@*Load Esri Leaflet from CDN*@
 @*<script src="https://unpkg.com/esri-leaflet@3.0.0/dist/esri-leaflet.js"></script>
-<script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>*@
+    <script src="https://unpkg.com/esri-leaflet-vector@3.0.0/dist/esri-leaflet-vector.js"></script>*@
 
 @*<script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
 <!-- Load Esri Leaflet Geocoder from CDN -->
 @*<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.css" ">
-<script src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"></script>
-<script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
+    <script src="https://unpkg.com/esri-leaflet-geocoder@3.0.0/dist/esri-leaflet-geocoder.js"></script>
+    <script src="~/Content/wayleaveStyles/assets/Scripts/ScrollBar/main.js"></script>*@
 @*<link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>*@
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>*@
+
+@*<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd-mm-yy",
+                buttonImageOnly: true
+            });
+        });
+    </script>*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+@*<script src="//code.jquery.com/jquery-1.12.4.js"></script>*@
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+@*<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+          rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>*@
+
+<!-- Javascript -->
+@*<script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd-mm-yy",
+                buttonImageOnly: true
+            });
+            //$(".datepicker").datepicker();
+            //$(".datepicker").datepicker("show");
+        });
+    </script>*@
+
 <section class="content ApplicationFormChild" id="ApplicationFormChild" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
     <form name="ApplicationForm">
         <div class="panel-group" style="margin-left: -25px;
@@ -696,7 +730,7 @@
                                                     <div class="input-label-date">
                                                         <label class="control-label">Starting Date</label>
                                                         <div class="input-group" style="width: 100%">
-                                                            <input type="date" onblur="testdate()" autocomplete="off" style="border-radius: 4px !important;" id="STARTING_DATE"
+                                                            <input type="text" @*onblur="testdate()"*@ style="border-radius: 4px !important;" id="STARTING_DATE"
                                                                    class="form-control border-radius" name="STARTING_DATE" required />
 
                                                         </div>
@@ -706,10 +740,10 @@
                                                     <div class="input-label-date">
                                                         <label class="control-label">Estimated Completion Date</label>
                                                         <div class="input-group" style="width: 100%">
-                                                            <input type="date" autocomplete="off" onblur="checkEstimatedDate('COMPLETION_DATE')"
+                                                            <input type="text" autocomplete="off" @*onblur="checkEstimatedDate('COMPLETION_DATE')"*@
                                                                    style="border-radius:4px!important;"
                                                                    id="COMPLETION_DATE"
-                                                                   class="form-control" name="COMPLETION_DATE" />
+                                                                   class="form-control datepicker" name="COMPLETION_DATE" />
 
                                                         </div>
                                                     </div>
@@ -831,18 +865,18 @@
                                             <tbody id="ExcavationListDataFromServer" style="display:none!important">
                                             </tbody>
                                             @*<tbody>
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>*@
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>*@
                                         </table>
                                     </div>
                                 </div>
@@ -962,17 +996,17 @@
                                 <div id="collapse_ApplicationClosureStatus" class="panel-collapse collapse in" style="border: 1px solid #00A65A;">
                                     <div>
                                         @*<div class="panel-body" style="padding: 10px;">
-                                            <div class="col-lg-3">
-                                                <div class="input-group input-label">
-                                                    <label class="control-label">Status</label>
-                                                    <select style="border-radius: 4px" readonly onchange="$.fn.ChangeAppSatus('INSPECTION_STATUS')" required
-                                                            class="form-control" name="INSPECTION_STATUS" id="INSPECTION_STATUS">
-                                                        <option selected value="">Make a selection</option>
-                                                        <option value="Application Closed">Application Closed</option>
-                                                    </select>
+                                                <div class="col-lg-3">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Status</label>
+                                                        <select style="border-radius: 4px" readonly onchange="$.fn.ChangeAppSatus('INSPECTION_STATUS')" required
+                                                                class="form-control" name="INSPECTION_STATUS" id="INSPECTION_STATUS">
+                                                            <option selected value="">Make a selection</option>
+                                                            <option value="Application Closed">Application Closed</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>*@
+                                            </div>*@
                                         <div class="panel-body" style="padding: 10px;">
                                             <div class="col-lg-3">
                                                 <div class="input-group input-label">
@@ -983,38 +1017,38 @@
                                                 </div>
                                             </div>
                                             @*<div class="col-lg-3">
-                                                <div class="input-group input-label">
-                                                    <label class="control-label">Inspection Reference No</label>
-                                                    <input type="text" style="border-radius: 4px" readonly class="form-control" name="INSPECTION_REFERENCE_NO" id="INSPECTION_REFERENCE_NO" />
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Inspection Reference No</label>
+                                                        <input type="text" style="border-radius: 4px" readonly class="form-control" name="INSPECTION_REFERENCE_NO" id="INSPECTION_REFERENCE_NO" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <div class="input-group input-label">
-                                                    <label class="control-label">Inspection Date</label>
-                                                    <input type="date" style="border-radius: 4px" readonly class="form-control" name="INSPECTION_DATE" id="INSPECTION_DATE" />
+                                                <div class="col-lg-3">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Inspection Date</label>
+                                                        <input type="date" style="border-radius: 4px" readonly class="form-control" name="INSPECTION_DATE" id="INSPECTION_DATE" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <div class="input-group input-label">
-                                                    <label class="control-label">Inspected By</label>
-                                                    <input type="text" style="border-radius: 4px" readonly class="form-control" name="INSPECTION_BY" id="INSPECTION_BY" />
+                                                <div class="col-lg-3">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Inspected By</label>
+                                                        <input type="text" style="border-radius: 4px" readonly class="form-control" name="INSPECTION_BY" id="INSPECTION_BY" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-3">
-                                                <div class="input-group input-label">
-                                                    <label></label>
-                                                    <a class="btn btn-green-custom btn-sm" onclick="ViewInspectionDocument('INSPECTION_FORM')">View Inspection Form</a>
-                                                   
-                                                    <input type="hidden" style="border-radius: 4px" class="form-control" name="INSPECTION_FORM" id="INSPECTION_FORM" />
+                                                <div class="col-lg-3">
+                                                    <div class="input-group input-label">
+                                                        <label></label>
+                                                        <a class="btn btn-green-custom btn-sm" onclick="ViewInspectionDocument('INSPECTION_FORM')">View Inspection Form</a>
+
+                                                        <input type="hidden" style="border-radius: 4px" class="form-control" name="INSPECTION_FORM" id="INSPECTION_FORM" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-lg-12" style="margin-top:10px!important">
-                                                <div class="input-group input-label">
-                                                    <label class="control-label">Comments</label>
-                                                    <textarea rows="5" class="form-control" readonly style="border-radius: 4px" placeholder="Comments" name="INSPECTION_COMMENTS" id="INSPECTION_COMMENTS"></textarea>
-                                                </div>
-                                            </div>*@
-                                        </div>                                        
+                                                <div class="col-lg-12" style="margin-top:10px!important">
+                                                    <div class="input-group input-label">
+                                                        <label class="control-label">Comments</label>
+                                                        <textarea rows="5" class="form-control" readonly style="border-radius: 4px" placeholder="Comments" name="INSPECTION_COMMENTS" id="INSPECTION_COMMENTS"></textarea>
+                                                    </div>
+                                                </div>*@
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1156,10 +1190,10 @@
                     </div>
                     <div class="modal-body">
                         @*<div id="map" style="display:none!important"></div>
-                        <div class="soria" id="ArcGisSearchMap">
-                            <div id="search"></div>
-                            <div id="map"></div>
-                        </div>*@
+                            <div class="soria" id="ArcGisSearchMap">
+                                <div id="search"></div>
+                                <div id="map"></div>
+                            </div>*@
                         <div class="text-center" style="display:none" id="ShowMapLoader">
                             <h3 class="text-center"><i class="fa fa-spinner fa-spin text-success"></i></h3>
                         </div>
@@ -1171,10 +1205,10 @@
                         @*<div id="map"></div>*@
                         @*@Html.RenderPartial("_ArcMap");*@
                         @*@{
-                            Html.RenderPartial("_ArcMap");
-                        }*@
+                                Html.RenderPartial("_ArcMap");
+                            }*@
                         @*<iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                        srcdoc="../Views/Shared/_ArcMap.cshtml"></iframe>*@
+                            srcdoc="../Views/Shared/_ArcMap.cshtml"></iframe>*@
                         <div class="text-center" style="display:none!important" id="DivButtonSubmit">
                             <button type="button" data-dismiss="modal" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important">Submit</button>
                             <button type="button" data-dismiss="modal" class="btn btn-success text-white" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button>
@@ -1281,91 +1315,181 @@
         </script>
         @*<script>
 
-        const apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
+            const apiKey = "AAPKc21c25baaf40479d9bd172699e2e7106yI9AiNPZK1BLrTgv85rEEOHiLzCrFTRtXeJnGtP45V62xfosNU9BaOu-IQJeRtAt";
 
-        const basemapEnum = "ArcGIS:Navigation";
+            const basemapEnum = "ArcGIS:Navigation";
 
-        const map = L.map("map", {
-            minZoom: 2
+            const map = L.map("map", {
+                minZoom: 2
 
-        }).setView([-26.18848, 28.32078], 14); // Sydney
+            }).setView([-26.18848, 28.32078], 14); // Sydney
 
-        L.esri.Vector.vectorBasemapLayer(basemapEnum, {
-            apiKey: apiKey
-        }).addTo(map);
+            L.esri.Vector.vectorBasemapLayer(basemapEnum, {
+                apiKey: apiKey
+            }).addTo(map);
 
 
-        var searchControl = L.esri.Geocoding.geosearch({
-            position: "topright",
-            placeholder: "Enter an address or place e.g. 37 Brakpan Rd",
-            useMapBounds: false,
-            providers: [L.esri.Geocoding.arcgisOnlineProvider({
-                apikey: apiKey,
-                nearby: {
-                    lat: -26.18848,
-                    lng: 28.32078
-                },
-            })]
-        }).addTo(map);
+            var searchControl = L.esri.Geocoding.geosearch({
+                position: "topright",
+                placeholder: "Enter an address or place e.g. 37 Brakpan Rd",
+                useMapBounds: false,
+                providers: [L.esri.Geocoding.arcgisOnlineProvider({
+                    apikey: apiKey,
+                    nearby: {
+                        lat: -26.18848,
+                        lng: 28.32078
+                    },
+                })]
+            }).addTo(map);
 
-        var results = L.layerGroup().addTo(map);
+            var results = L.layerGroup().addTo(map);
 
-        searchControl.on("results", (data) => {
-            //alert(data.results.length);
-            results.clearLayers();
-            for (let i = data.results.length - 1; i >= 0; i--) {
-                const lngLatString = `${Math.round(data.results[i].latlng.lng * 100000) / 100000}, ${Math.round(data.results[i].latlng.lat * 100000) / 100000}`;
-                const marker = L.marker(data.results[i].latlng);
-                marker.bindPopup(`<b>${lngLatString}</b><p>${data.results[i].properties.LongLabel}</p>`)
-                results.addLayer(marker);
-                var lat = data.results[i].latlng.lat;
-                var lng = data.results[i].latlng.lng;
-                var latilngi = lat + "," + lng;
-                //alert(latilngi);
-                //debugger;
-                var streetnumber = data.results[i].properties.AddNum;
-                var streetname = data.results[i].properties.StName;
-                var township = data.results[i].properties.District;
-                //marker.openPopup();
-                //console.log(data.results[i]);
-                //debugger;
-                $.ajax({
-                    type: 'GET',
-                    url: '@Url.Action("GetAddress", "WayleaveAccount")',
-                    data: { latilngi: latilngi},
-                    success: function (response) {
-                        //debugger;
-                        console.log(response);
-                        var obj1 = JSON.parse(response);
-                        var obj = obj1;
-                        if (obj.StreetName != "" || obj.StreetNumber != "" || obj.TownShip != "") {
-                            alert('success');
-                            //window.parent.document.getElementById("streetnumber").value = streetnumber;
-                            //window.parent.document.getElementById("streetnamefield").value = streetname;
-                            ////window.parent.document.getElementById("streetnumber").value = obj.StreetNumber;
-                            ////window.parent.document.getElementById("streetnamefield").value = obj.StreetName;
-                            //window.parent.document.getElementById("suburbdist").value = township;
-                            //window.parent.document.getElementById("cityfield").value = data.results[i].properties.Subregion;
-                            //window.parent.document.getElementById("postalcode").value = data.results[i].properties.Postal;
-                            //window.parent.document.getElementById("customerLatLong").value = latilngi;
-                            //alert(streetnumber);
-                            //alert(streetname);
+            searchControl.on("results", (data) => {
+                //alert(data.results.length);
+                results.clearLayers();
+                for (let i = data.results.length - 1; i >= 0; i--) {
+                    const lngLatString = `${Math.round(data.results[i].latlng.lng * 100000) / 100000}, ${Math.round(data.results[i].latlng.lat * 100000) / 100000}`;
+                    const marker = L.marker(data.results[i].latlng);
+                    marker.bindPopup(`<b>${lngLatString}</b><p>${data.results[i].properties.LongLabel}</p>`)
+                    results.addLayer(marker);
+                    var lat = data.results[i].latlng.lat;
+                    var lng = data.results[i].latlng.lng;
+                    var latilngi = lat + "," + lng;
+                    //alert(latilngi);
+                    //debugger;
+                    var streetnumber = data.results[i].properties.AddNum;
+                    var streetname = data.results[i].properties.StName;
+                    var township = data.results[i].properties.District;
+                    //marker.openPopup();
+                    //console.log(data.results[i]);
+                    //debugger;
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("GetAddress", "WayleaveAccount")',
+                        data: { latilngi: latilngi},
+                        success: function (response) {
+                            //debugger;
+                            console.log(response);
+                            var obj1 = JSON.parse(response);
+                            var obj = obj1;
+                            if (obj.StreetName != "" || obj.StreetNumber != "" || obj.TownShip != "") {
+                                alert('success');
+                                //window.parent.document.getElementById("streetnumber").value = streetnumber;
+                                //window.parent.document.getElementById("streetnamefield").value = streetname;
+                                ////window.parent.document.getElementById("streetnumber").value = obj.StreetNumber;
+                                ////window.parent.document.getElementById("streetnamefield").value = obj.StreetName;
+                                //window.parent.document.getElementById("suburbdist").value = township;
+                                //window.parent.document.getElementById("cityfield").value = data.results[i].properties.Subregion;
+                                //window.parent.document.getElementById("postalcode").value = data.results[i].properties.Postal;
+                                //window.parent.document.getElementById("customerLatLong").value = latilngi;
+                                //alert(streetnumber);
+                                //alert(streetname);
 
+                            }
+                            else {
+                                alert("Please note that the address provided is outside Ekurhuleni.");
+                                //parent.genericSystemMessage("Please note that the address provided is outside Ekurhuleni.");
                         }
-                        else {
-                            alert("Please note that the address provided is outside Ekurhuleni.");
-                            //parent.genericSystemMessage("Please note that the address provided is outside Ekurhuleni.");
                     }
-                }
-                });
+                    });
 
-            }
-        });
-        </script>*@
+                }
+            });
+            </script>*@
     </form>
 
 </section>
 
+<script>
+    $(document).ready(function () {
+        $("#STARTING_DATE").datepicker({
+            changeMonth: true,
+            changeYear: true,                    
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    var d = new Date(test);
+                    var tt = d.setMonth(d.getMonth() + 6);
+                    var m = new Date(tt);
+                    var testYY = ("0" + m.getDate()).slice(-2) + "-" + ("0" + (m.getMonth() + 1)).slice(-2) + "-" + m.getFullYear();
+                    $("#COMPLETION_DATE").val(testYY);
+                }
+                else {
+                    toastr.warning('Please select starting date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }                
+            }
+        });
+        $("#COMPLETION_DATE").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                //alert(dateString);
+                var id = "COMPLETION_DATE";
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    //alert(test);
+                    
+                    var input = $("#STARTING_DATE").val();
+                    var arr2 = input.split('-');
+                    var test2 = arr2[2] + "-" + arr2[1] + "-" + arr2[0];
+                    //alert(test2);
+                    var d = new Date(test2);
+                    //alert(d);
+                    var inputt = test;
+                    var dd = new Date(inputt);
+                    //alert(dd);
+                    // To calculate the time difference of two dates
+                    var Difference_In_Time = dd.getTime() - d.getTime();
+
+                    // To calculate the no. of days between two dates
+                    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                    //alert(Difference_In_Days);
+                    if (Difference_In_Days <= 181) {
+                        if (Difference_In_Days > 0) {
+                            var yy = ("0" + dd.getDate()).slice(-2) + "-" + ("0" + (dd.getMonth() + 1)).slice(-2) + "-" + dd.getFullYear();
+                            $("#" + id).val(yy);
+                        }
+                        else {
+                            toastr.warning('Estimated Completion Date cannot be less than Starting Date', "warning", {
+                                "timeOut": "30000",
+                                "extendedTImeout": "50000",
+                                "closeButton": true,
+                            });
+                            $("#" + id).val('');
+                        }
+                    }
+                    else {
+                        //alert('else');
+                        toastr.warning('Estimated Completion Date cannot be more than six months after Starting Date', "warning", {
+                            "timeOut": "30000",
+                            "extendedTImeout": "50000",
+                            "closeButton": true,
+                        });
+                        $("#" + id).val('');
+                    }
+                }
+                else {
+                    toastr.warning('Please select starting date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+                
+            }
+        });
+    });
+</script>
 @*<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>*@
 
 
