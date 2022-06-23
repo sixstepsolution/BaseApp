@@ -856,7 +856,7 @@
 //                    toastr.success('Application form re-submitted successfully');
 //                    //alert("Application form saved successfully.");
 //                    //setTimeout(function () {
-//                    //    window.location.href = "../WayleaveAccount/Index";
+//                    //    window.location.href = BaseUrl+"WayleaveAccount/Index";
 //                    //}, 2000)
 
 //                }
@@ -864,7 +864,7 @@
 //                    toastr.success('Application form saved successfully');
 //                    //alert("Application form saved successfully.");
 //                    setTimeout(function () {
-//                        window.location.href = "../WayleaveAccount/Index";
+//                        window.location.href = BaseUrl+"WayleaveAccount/Index";
 //                    }, 2000)
 
 //                }
@@ -1084,7 +1084,7 @@
 //                if (data) {
 //                    toastr.success('Application status has been updated successfully!');
 //                    setTimeout(function () {
-//                        window.location.href = "../WL/index";
+//                        window.location.href = BaseUrl+"WL/index";
 //                    }, 1000)
 //                }
 //                $('#isAppLoading').hide();
@@ -1138,7 +1138,7 @@
 //                if (data) {
 //                    toastr.success('Department status has been updated successfully!');
 //                    setTimeout(function () {
-//                        window.location.href = "../WL/index";
+//                        window.location.href = BaseUrl+"WL/index";
 //                    }, 1000)
 //                }
 //                $('#isAppLoading').hide();
@@ -2115,7 +2115,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
                 toastr.success('Application form submitted successfully');
                 //alert("Application form saved successfully.");
                 setTimeout(function () {
-                    window.location.href = "../WayleaveAccount/Index";
+                    window.location.href = BaseUrl+"WayleaveAccount/Index";
                 }, 2000)
 
             }
@@ -2529,7 +2529,7 @@ $.fn.UpdateApplicationFormStaus = function () {
                     if (data) {
                         toastr.success('Application submitted successfully!');
                         setTimeout(function () {
-                            window.location.href = "../WL/index";
+                            window.location.href = BaseUrl+"WL/index";
                         }, 1000)
                     }
                     $('#isAppLoading').hide();
@@ -2614,7 +2614,7 @@ $.fn.CloseApplicationForm = function () {
                 if (data) {
                     toastr.success('Application closed successfully!');
                     setTimeout(function () {
-                        window.location.href = "../WL/index";
+                        window.location.href = BaseUrl+"WL/index";
                     }, 1000)
                 }
                 else if (data.exception) {
@@ -2679,7 +2679,7 @@ $.fn.UpdateDepartmentStaus = function () {
                 if (data) {
                     toastr.success('Department status has been updated successfully!');
                     setTimeout(function () {
-                        window.location.href = "../WL/index";
+                        window.location.href = BaseUrl+"WL/index";
                     }, 1000)
                 }
                 $('#isAppLoading').hide();
@@ -2803,7 +2803,7 @@ function ViewExcavation(id) {
 
 $.fn.ViewInspectionForm = function (id) {
     var filename = $("#" + id).text();
-    window.location.href = "../uploads/" + filename;
+    window.location.href = BaseUrl+"uploads/" + filename;
 }
 
 $.fn.CheckFileSize = function (id, fileContent) {

@@ -35,7 +35,7 @@ namespace C8.eServices.Mvc.Controllers
             //if (Session["wayleaveaccountId"] == null)
             //{
             //    // if IsAuthenticated is false return to login code here....
-            //    return Redirect("../Home/WayleaveLogin");
+            //    return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"Home/WayleaveLogin");
 
             //}
             IEnumerable<ApplicationInputModel> members = null;
@@ -94,7 +94,7 @@ namespace C8.eServices.Mvc.Controllers
             //if (Session["wayleaveaccountId"] == null)
             //{
             //    // if IsAuthenticated is false return to login code here....
-            //    return Redirect("../Home/WayleaveLogin");
+            //    return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"Home/WayleaveLogin");
 
             //}
             IEnumerable<ApplicationInputModel> members = null;
@@ -184,7 +184,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["wayleaveaccountId"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../Home/WayleaveLogin");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"Home/WayleaveLogin");
 
             }
             if (id != null)
@@ -212,7 +212,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["wayleaveaccountId"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../Home/WayleaveLogin");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"Home/WayleaveLogin");
             }
             if (id != null)
             {

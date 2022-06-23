@@ -17,6 +17,7 @@ using C8.eServices.Mvc.Models.Comm;
 using System.Net;
 using System.DirectoryServices.AccountManagement;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -32,95 +33,52 @@ namespace C8.eServices.Mvc.Controllers
         {
             try
             {
-                Session["payments"] = null;
-                //var tt = dbWayleave.WL_DEPARTMENTS.Where(s => s.APP_ID == 1125 && s.APPLICATION_STATUS != "Pending Department Review" && s.APPLICATION_STATUS != null).ToList().Count();
-                //string ipAddresss = Request.UserHostAddress;
-                //string ipaddress;
-                //ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-                //if (ipaddress == "" || ipaddress == null)
-                //    ipaddress = Request.ServerVariables["REMOTE_ADDR"];
-                //Response.Write("IP Address : " + ipaddress);
-                //var result = (from u in dbWayleave.Users
-                //              join r in dbWayleave.Roles on u.userid equals r.userid
-                //              orderby u.userid
-                //              select new
-                //              {
-                //                  userInfo = u,
-                //                  RoleId = r.role_id,
-                //                  RoleName = r.role_name
-                //              }).ToList();
-                //IPAddressModel ipad = new IPAddressModel();
-                //string str=ipad.GetIP();
-                //string tt = ipad.GetIP4Address();
-                // Test code.
-                //This is not needed
-                //var ca = CustomerAccountApi.GetAccounts("6911305037089");
-                //EmailHelper client = new EmailHelper();
-                //client.Recipient = "jayan.kistasami@calc8.co.za";
-                //client.Subject = "Test " + DateTime.Now.ToString();
-                //client.Body = "the quick brown fox.";
-                //client.SendEmail();
-
-                //using (var cxt = new eServicesDbContext())
-                //{
-                //    var ca = cxt.CustomerAccounts.FirstOrDefault(o => o.AccountNo == 1800678685);
-                //    System.Diagnostics.Debug.WriteLine(ca.IDNo);
-                //}                             
-
-                // Used to display an update message for eservices.
-                //using (var cxt = new eServicesDbContext())
-                //{
-                //    //var ban = new BankAccount() { BankAccountNumber = "62099807411" };
-                //    //System.Diagnostics.Debug.WriteLine(ban.BankAccountNumber + Environment.NewLine + ban.HiddenBankAccountNumber);
-
-                //    //ban = cxt.BankAccounts.First();
-                //    //System.Diagnostics.Debug.WriteLine(ban.BankAccountNumber + Environment.NewLine + ban.HiddenBankAccountNumber);
-
-                //    var eServicesUpdate = cxt.AppSettings.FirstOrDefault(a => a.Key == AppSettingKeys.UpdateNotification);
-                //    if (eServicesUpdate == null) throw new Exception("Invalid appsetting");
-
-                //    ViewBag.ShowUpdate = eServicesUpdate.IsActive;
-                //    ViewBag.UpdateMessage = eServicesUpdate.Value;
-                //    ViewBag.UpdateTime = eServicesUpdate.ModifiedDateTime?.ToString("yyyy/MM/dd HH:mm") ?? DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-                //    return View();
-                //}
-
-
-                //var identity = User.Identity as ClaimsIdentity;
-
-                //var claims1 = from c in identity.Claims
-                //              select new
-                //              {
-                //                  subject = c.Subject.Name,
-                //                  type = c.Type,
-                //                  value = c.Value
-                //              };
-
-                ////var d=contex.testMigrations;
-                //bool IsAuthenticated = ClaimsPrincipal.Current.Identities.First().IsAuthenticated;
-                //if (!IsAuthenticated)
-                //{
-                //    // if IsAuthenticated is false return to login code here....
-
-                //}
-
-
-
-                //OverdueApplications();
-
-                //var ipAddress = System.Web.HttpContext.Current.Request.UserHostAddress;
+                Session["payments"] = null;                
                 ViewBag.ReturnUrl = returnUrl;
-                ViewBag.Error = "";                
-                //IPAddressModel Ip = new IPAddressModel();
-                //var ttgg=Ip.GetIP();
+                ViewBag.Error = "";
                 return View();
             }
             catch (Exception ex)
-            {
+            {                 
                 throw ex;
             }
         }
         #endregion
+
+        [HttpGet]
+        public ActionResult Start()
+        {
+            dynamic NetConnection;
+            string url = string.Empty;
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    using (client.OpenRead("http://clients3.google.com/generate_204"))
+                    {
+                        NetConnection = true;
+                    }
+                }
+            }
+            catch
+            {
+                NetConnection = false;
+            }
+
+            if (NetConnection)
+            {
+                url = ConfigurationManager.AppSettings["Public_Url"].ToString();
+                Response.Redirect(url);
+                //return RedirectToAction(url);
+            }
+            else
+            {
+                url = ConfigurationManager.AppSettings["Intranet_Url"].ToString();
+                Response.Redirect(url);
+                //return RedirectToAction(url);
+            }
+            return View();
+        }
 
         public static void OverdueApplications()
         {
@@ -268,7 +226,7 @@ namespace C8.eServices.Mvc.Controllers
                     if (model.Password.Contains("TEMP!@*"))
                     {
                         var enc = new AesCrypto();
-                        return Redirect("../Home/ChangePassword?e1=" + enc.Encrypt(model.UserName) + "&e2=" + enc.Encrypt(model.Password));// RedirectToAction("Index", "Home");
+                        return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"Home/ChangePassword?e1=" + enc.Encrypt(model.UserName) + "&e2=" + enc.Encrypt(model.Password));// RedirectToAction("Index", "Home");
                     }
                     var result = context.WL_ACCOUNTS.Where(s => s.EMAIL == model.UserName && s.PASSWORD == model.Password).FirstOrDefault();
                     if (result!=null)
@@ -279,12 +237,14 @@ namespace C8.eServices.Mvc.Controllers
                         Session["wayleaveAccountUserName!@*"] = result.CONTACT_PERSON_FIRST_NAME+" "+result.CONTACT_PERSON_LAST_NAME;
                         Session["wayleaveCompanyId"] = result.COMPANY_ID;
                         Session["wayleaveAccountNumber"] = result.ACCOUNT_NUMBER;
-                        return RedirectToAction("Index", "WayleaveAccount");
+                        return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "WayleaveAccount/Index");
+                        //return RedirectToAction("Index", "WayleaveAccount");
                     }
                     else
                     {
                         TempData["LoginError"] = "Invalid username or password!";
-                        return RedirectToAction("WayleaveLogin", "Home");
+                        return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/WayleaveLogin");
+                        //return RedirectToAction("WayleaveLogin", "Home");
                     }
                 }
 
@@ -312,7 +272,8 @@ namespace C8.eServices.Mvc.Controllers
             }
             else
             {
-                return RedirectToAction("WayleaveLogin", "Home");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/WayleaveLogin");
+                //return RedirectToAction("WayleaveLogin", "Home");
             }
         }
         #endregion
@@ -338,7 +299,8 @@ namespace C8.eServices.Mvc.Controllers
                         accountdetails.PASSWORD = newPassword;
                         dbWayleave.SaveChanges();
                         TempData["changePasswordResult"] = "Password changed successfully!";
-                        return RedirectToAction("WayleaveLogin", "Home");
+                        return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/WayleaveLogin");
+                        //return RedirectToAction("WayleaveLogin", "Home");
                     }
                     else
                     {
@@ -542,6 +504,7 @@ namespace C8.eServices.Mvc.Controllers
             WayleaveDbContext context = new WayleaveDbContext();
             try
             {
+               // var url = new Uri(Request.Url, "").AbsoluteUri;
                 var resultNew = context.Users.Where(s => s.username == model.UserName).FirstOrDefault();
                 // Please store the 2 line below in the db and call/ them from there
                 var activeDirectoryOn = "";
@@ -586,7 +549,9 @@ namespace C8.eServices.Mvc.Controllers
                                     Session["ekurhuleniUserName"] = result.username;
                                     Session["ekurhuleniUserDeptName"] = result.deptartmentname;
                                     Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
-                                    return RedirectToAction("Index", "WL");
+                                    //var pageurl = new Uri(Request.Url,"").AbsoluteUri;
+                                    return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "WL/Index");
+                                    //return RedirectToAction("Index", "WL");
                                 }
                                 else
                                 {
@@ -600,7 +565,8 @@ namespace C8.eServices.Mvc.Controllers
                                     context.SaveChanges();
 
                                     TempData["LoginError"] = "Invalid username or password!";
-                                    return RedirectToAction("Index", "Home");
+                                    return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/Index");
+                                    //return RedirectToAction("Index", "Home");
                                 }
 
                             }
@@ -617,7 +583,8 @@ namespace C8.eServices.Mvc.Controllers
                             context.SaveChanges();
 
                             TempData["LoginError"] = "Invalid username or password For active directory login!";
-                            return RedirectToAction("Index", "Home");
+                            return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/Index");
+                            //return RedirectToAction("Index", "Home");
 
                         }
                     }
@@ -641,7 +608,8 @@ namespace C8.eServices.Mvc.Controllers
                         Session["ekurhuleniUserName"] = result.username;
                         Session["ekurhuleniUserDeptName"] = result.deptartmentname;
                         Session["ekurhuleniUserRole"] = result.Roles.FirstOrDefault().role_name;
-                        return RedirectToAction("Index", "WL");
+                        return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "WL/Index");
+                        //return RedirectToAction("Index", "WL");
                     }
                     else
                     {
@@ -655,7 +623,8 @@ namespace C8.eServices.Mvc.Controllers
                         context.SaveChanges();
 
                         TempData["LoginError"] = "Invalid username or password!";
-                        return RedirectToAction("Index", "Home");
+                        return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/Index");
+                        //return RedirectToAction("Index", "Home");
                     }
                 }
             }
@@ -669,7 +638,8 @@ namespace C8.eServices.Mvc.Controllers
                 context.LOGIN_HISTORY.Add(lh);
                 context.SaveChanges();
                 TempData["LoginError"] = "Invalid username or password For active directory login!";
-                return RedirectToAction("Index", "Home");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/Index");
+                //return RedirectToAction("Index", "Home");
             }            
             return View();
         }
@@ -677,14 +647,15 @@ namespace C8.eServices.Mvc.Controllers
         public ActionResult LogOut()
         {
             Session.RemoveAll();
-            return RedirectToAction("Index", "Home");
+            return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/Index");
+            //return RedirectToAction("Index", "Home");
         }
         public ActionResult EkurhuleniLogout()
         {
             System.Web.HttpContext.Current.Session.Clear();
             System.Web.HttpContext.Current.Session.Abandon();
             System.Web.HttpContext.Current.Session.RemoveAll();
-            return Redirect("../home/index");
+            return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
         }
 
         public ActionResult GetDecryptValue(string id)

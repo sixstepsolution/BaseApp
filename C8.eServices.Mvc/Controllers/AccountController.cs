@@ -19,6 +19,7 @@ using C8.eServices.Mvc.Keys;
 using C8.eServices.Mvc.Helpers;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace C8.eServices.Mvc.Controllers
 {
@@ -234,18 +235,21 @@ namespace C8.eServices.Mvc.Controllers
                             if (user.SystemUser.IsPasswordReset == false)
                             {
                                 await SignInAsync(user, model.RememberMe);
-                                return RedirectToAction("Manage", "Account");
+                                return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Account/Manage");
+                                //return RedirectToAction("Manage", "Account");
                             }
 
                             if (UserManager.IsInRole(user.Id, "System Administrators"))
                             {
                                 await SignInAsync(user, model.RememberMe);
-                                return RedirectToAction("Index", "Home");
+                                return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Home/Index");
+                                //return RedirectToAction("Index", "Home");
                             }
                             else
                             {
                                 await SignInAsync(user, model.RememberMe);
-                                return RedirectToAction("Dashboard", "Profile");
+                                return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "Profile/Dashboard");
+                                //return RedirectToAction("Dashboard", "Profile");
                             }
                         }
                     }

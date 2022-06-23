@@ -243,7 +243,7 @@ Password : <b style='color:#00337f'>`+ data.accountPassword + `</b>
             });
 
             setTimeout(function () {
-                window.location.href = "../Home/WayleaveLogin";
+                window.location.href = BaseUrl+"Home/WayleaveLogin";
             }, 10000);
         },
         error: function (xhr, textStatus, errorThrown) {
@@ -277,7 +277,13 @@ $.fn.LoadWayleaveAccountDetails = function (accountNumber) {
             $('#companyName').val(data.companyName);
             $('#companyFullName').val(data.companyFullName);
             $('#companyRegistrationNumber').val(data.companyRegistrationNumber);
-            $('#tradeLicenseExpirationDate').val(data.tradeLicenseExpirationDate);
+            if (data.tradeLicenseExpirationDate != undefined && data.tradeLicenseExpirationDate != "" && data.tradeLicenseExpirationDate != null) {
+                var dt = data.tradeLicenseExpirationDate;
+                var ar = dt.split('-');
+                var tradeLicenseDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+                $('#tradeLicenseExpirationDate').val(tradeLicenseDate);
+            }
+            //$('#tradeLicenseExpirationDate').val(data.tradeLicenseExpirationDate);
             $('#contactPersonFirstName').val(data.contactPersonFirstName);
             $('#contactPersonLastName').val(data.contactPersonLastName);
             $('#designation').val(data.designation);

@@ -115,7 +115,7 @@ $.fn.SavePreInspectionDetails = function (inspectiontype) {
                             "closeButton": true
                         });
                         setTimeout(function () {
-                            window.location.href = "../WL/PreInspectionList";
+                            window.location.href = BaseUrl+"WL/PreInspectionList";
                         }, 2000)
                     }
                 },

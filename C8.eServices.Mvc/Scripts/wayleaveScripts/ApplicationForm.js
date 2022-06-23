@@ -1034,7 +1034,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
                     toastr.success('Application form submitted successfully');
                     //alert("Application form saved successfully.");
                     setTimeout(function () {
-                        window.location.href = "../WayleaveAccount/Index";
+                        window.location.href = BaseUrl+"WayleaveAccount/Index";
                     }, 2000)
 
                 }

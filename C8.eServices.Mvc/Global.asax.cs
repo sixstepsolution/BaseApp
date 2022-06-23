@@ -10,6 +10,7 @@ using System.Web.Helpers;
 using System.Security.Claims;
 using System.Web.Http;
 using C8.eServices.Mvc.Helpers;
+using System.Net;
 
 namespace C8.eServices.Mvc
 {
@@ -42,6 +43,8 @@ namespace C8.eServices.Mvc
             System.Web.Optimization.PreApplicationStartCode.Start();
 
             MvcHandler.DisableMvcResponseHeader = true;
+
+            
         }
 
         /// <summary>

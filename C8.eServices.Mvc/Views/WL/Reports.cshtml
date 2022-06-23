@@ -17,7 +17,7 @@
         }
 
         //if (isSuccess === "success") {
-        //    window.location.href = "../WL/Reports";
+        //    window.location.href = BaseUrl+"WL/Reports";
         //}
 
 
@@ -80,7 +80,7 @@
                         if (data.success) {
                             download("../uploads/" + data.success,data.file);
                             setTimeout(function () {
-                                //window.location.href = "../WL/Reports";
+                                //window.location.href = BaseUrl+"WL/Reports";
                                 clearinputs();
                             }, 2000);
                         }

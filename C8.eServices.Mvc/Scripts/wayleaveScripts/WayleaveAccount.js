@@ -358,7 +358,7 @@ Password : <b style='color:#00337f'>`+ data.accountPassword + `</b>
                         "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../Home/WayleaveLogin";
+                        window.location.href = BaseUrl+"Home/WayleaveLogin";
                     }, 15000);
                 }
                 else if (data.exception) {
@@ -422,7 +422,16 @@ $.fn.LoadWayleaveAccountDetails = function (accountNumber,status) {
             $('#companyName').val(data.companyName);
             $('#companyFullName').val(data.companyFullName);
             $('#companyRegistrationNumber').val(data.companyRegistrationNumber);
-            $('#tradeLicenseExpirationDate').val(data.tradeLicenseExpirationDate);
+            //$('#tradeLicenseExpirationDate').val(data.tradeLicenseExpirationDate);
+
+            if (data.tradeLicenseExpirationDate != undefined && data.tradeLicenseExpirationDate != "" && data.tradeLicenseExpirationDate != null) {
+                var dt = data.tradeLicenseExpirationDate;
+                var ar = dt.split('-');
+                var tradeLicenseDate = ar[2] + "-" + ar[1] + "-" + ar[0];
+                $('#tradeLicenseExpirationDate').val(tradeLicenseDate);
+            }
+
+
             $('#contactPersonFirstName').val(data.contactPersonFirstName);
             $('#contactPersonLastName').val(data.contactPersonLastName);
             $('#designation').val(data.designation);
@@ -508,7 +517,7 @@ $.fn.GetFormdataValues = function () {
     wayleaveAccount.companyName = $('#companyName').val();
     wayleaveAccount.companyFullName = $('#companyFullName').val();
     wayleaveAccount.companyRegistrationNumber = $('#companyRegistrationNumber').val();
-    wayleaveAccount.tradeLicenseExpirationDate = $('#tradeLicenseExpirationDate').val();
+    wayleaveAccount.tradeLicenseExpirationDate = $('#hdntradeLicenseExpirationDate').val();//$('#tradeLicenseExpirationDate').val();
     wayleaveAccount.contactPersonFirstName = $('#contactPersonFirstName').val();
     wayleaveAccount.contactPersonLastName = $('#contactPersonLastName').val();
     wayleaveAccount.designation = $('#designation').val();
@@ -627,8 +636,11 @@ $.fn.UpdateWlAccountForm = function () {
 
 
 
-    var formValid = $.fn.CheckFormValidations();
+    
+    //alert(document.getElementById('identificationNumber').value);
+
     var validIdNumber = $.fn.ValidateRSAIDNo(document.getElementById('identificationNumber').value);
+    var formValid = $.fn.CheckFormValidations();
     if (formValid && validIdNumber) {
         $('#isAppLoading').show();
         var emailFormat = re.test($("#email").val()); // This return result in Boolean type

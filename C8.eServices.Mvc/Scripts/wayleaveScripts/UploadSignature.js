@@ -114,7 +114,7 @@ Password : <b style='color:#00337f'>`+ data.accountPassword + `</b>
                         "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../Home/WayleaveLogin";
+                        window.location.href = BaseUrl+"Home/WayleaveLogin";
                     }, 25000);
                 }
                 else if (data.exception) {
@@ -196,7 +196,7 @@ $.fn.uploadDepartmentSignature = function () {
                         "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../WL/UploadSignature";
+                        window.location.href = BaseUrl+"WL/UploadSignature";
                     }, 5000);
                 }
                 else if (data.add) {
@@ -206,7 +206,7 @@ $.fn.uploadDepartmentSignature = function () {
                         "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../WL/UploadSignature";
+                        window.location.href = BaseUrl+"WL/UploadSignature";
                     }, 5000);
                 }
             },

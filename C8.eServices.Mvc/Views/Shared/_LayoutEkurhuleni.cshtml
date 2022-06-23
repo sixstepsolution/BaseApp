@@ -349,7 +349,7 @@
                 <!-- Sidebar user panel -->
                 @if (Session["ekurhuleniData"] != null)
                 {
-                    <a href="../WL/Index">
+                    <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()WL/Index">
                         <div class="user-panel" style="cursor:pointer">
                             <div class="text-center image">
                                 <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" style="width:35%!important;margin-top:10px!important" alt="GGB Image" />
@@ -359,7 +359,7 @@
                 }
                 else
                 {
-                    <a href="../Home/Index">
+                    <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()Home/Index">
                         <div class="user-panel" style="cursor:pointer">
                             <div class="text-center image">
                                 <img src="~/Content/wayleaveStyles/assets/Images/User_Logo.png" style="width:35%!important;margin-top:10px!important" alt="GGB Image" />
@@ -503,7 +503,7 @@
                                             </div>
                                         </a>
                                     </li>
-                                    <li class="right-pane-inv">
+                                    @*<li class="right-pane-inv">
                                         <a class="right-pane-inv bg-yellow" href="../WL/UpdatePaymentPrice">
                                             <i class="menu-icon fa fa-refresh ggb-menu-icon" style="margin-top:3px!important;"></i>
 
@@ -520,7 +520,7 @@
                                                 <h3 class="control-sidebar-subheading">Upload Signature</h3>
                                             </div>
                                         </a>
-                                    </li>
+                                    </li>*@
                                     <li class="right-pane-inv text-black">
                                         <a class="right-pane-inv" href="../WL/AuditTrail">
                                             <i class="menu-icon fa fa-bar-chart bg-green ggb-menu-icon" style="margin-top:3px!important;"></i>

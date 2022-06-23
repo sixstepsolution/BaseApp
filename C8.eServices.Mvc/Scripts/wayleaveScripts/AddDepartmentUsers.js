@@ -62,7 +62,7 @@ $.fn.AddDepartmentUser = function () {
                         "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../WL/AddDepartmentUsers";
+                        window.location.href = BaseUrl+"WL/AddDepartmentUsers";
                     }, 5000);
                 }
                 else if (data.exception) {
@@ -165,7 +165,7 @@ $.fn.UpdatePaymentPrice = function () {
                         "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../WL/UpdatePaymentPrice";
+                        window.location.href = BaseUrl+"WL/UpdatePaymentPrice";
                     }, 5000);
                 }
                 if (data.success) {
@@ -175,7 +175,7 @@ $.fn.UpdatePaymentPrice = function () {
                         "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../WL/UpdatePaymentPrice";
+                        window.location.href = BaseUrl+"WL/UpdatePaymentPrice";
                     }, 5000);
                 }
                 else if (data.exception) {
@@ -255,7 +255,7 @@ $.fn.UpdateDepartmentUser = function () {
                         "closeButton": true,
                     });
                     setTimeout(function () {
-                        window.location.href = "../WL/AddDepartmentUsers";
+                        window.location.href = BaseUrl+"WL/AddDepartmentUsers";
                     }, 5000);
                 }
                 else if (data.exception) {

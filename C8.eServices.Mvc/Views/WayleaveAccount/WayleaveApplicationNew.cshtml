@@ -1,4 +1,5 @@
 ﻿@model C8.eServices.Mvc.Models.WL_APPLICATIONFORM
+@using System.Configuration
 
 @{
     ViewBag.Title = "WayleaveApplicationForm";
@@ -169,8 +170,9 @@
 <script type="text/javascript" language="javascript">
     $(document).ready(function () {
         //alert();
+        var baseUrl = '@ConfigurationManager.AppSettings["Base_Url"].ToString()';
         $.ajax({
-            url: "/WayleaveAccount/LoadRegions",
+            url: baseUrl+"WayleaveAccount/LoadRegions",
             type: "Get",
             success: function (data) {
                 console.log("##########Region data#########");
@@ -1063,14 +1065,14 @@
                                         <i id="isAppLoadingUpdate" style="display:none!important" class="fa fa-spinner fa-spin"></i>
                                         Update
                                     </button>
-                                    <a href="../WayleaveAccount/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
+                                    <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()WayleaveAccount/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
                                 </td>
                                 <td colspan="4" class="text-center" id="isNewApplication">
                                     <button type="button" class="btn btn-green-custom" style="height: 24px; width: 60px; padding: 0; font-size: 11px;color:#fff!important" onclick="$.fn.SubmitApplication()" @*onclick="$.fn.SaveApplicationForm()"*@>
                                         <i id="isAppLoading" class="fa fa-spinner fa-spin"></i>
                                         Submit
                                     </button>
-                                    <a href="../WayleaveAccount/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button></a>
+                                    <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()WayleaveAccount/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 11px">Cancel</button></a>
                                 </td>
                             </tr>
                         </table>
@@ -1404,7 +1406,7 @@
     $(document).ready(function () {
         $("#STARTING_DATE").datepicker({
             changeMonth: true,
-            changeYear: true,                    
+            changeYear: true,
             dateFormat: 'dd-mm-yy',
             onSelect: function (dateString, txtDate) {
                 if (dateString != undefined && dateString != "" && dateString != null) {
@@ -1423,7 +1425,7 @@
                         "extendedTImeout": "50000",
                         "closeButton": true,
                     });
-                }                
+                }
             }
         });
         $("#COMPLETION_DATE").datepicker({
@@ -1438,7 +1440,7 @@
                     var ar = dt.split('-');
                     var test = ar[2] + "-" + ar[1] + "-" + ar[0];
                     //alert(test);
-                    
+
                     var input = $("#STARTING_DATE").val();
                     var arr2 = input.split('-');
                     var test2 = arr2[2] + "-" + arr2[1] + "-" + arr2[0];
@@ -1485,7 +1487,7 @@
                         "closeButton": true,
                     });
                 }
-                
+
             }
         });
     });

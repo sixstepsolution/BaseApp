@@ -1,4 +1,4 @@
-﻿
+﻿@using System.Configuration
 @{
     ViewBag.Title = "WayleaveAccount";
     Layout = "~/Views/Shared/_LayoutWayleaveAccount.cshtml";
@@ -130,6 +130,7 @@
         border-color: red !important;
         color: red !important;
     }
+
     .panel-default > .panel-heading {
         position: relative;
     }
@@ -157,7 +158,7 @@
             //alert(updateAccount);
             $('#accordionApprove').hide();
             $.fn.ShowUpdateButtons();
-            
+
         }
 
 
@@ -305,9 +306,62 @@
     //$('.actions a[href="#previous"]').attr('id', 'previous');
     //$('.actions a[href="#finish"]').attr('id', 'finish');
 
-    
+
 </script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="~/Scripts/wayleaveScripts/WayleaveAccount.js"></script>
+<script>
+    $(function () {
+        $("#tradeLicenseExpirationDate").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: 'dd-mm-yy',
+            onSelect: function (dateString, txtDate) {
+                if (dateString != undefined && dateString != "" && dateString != null) {
+                    var dt = dateString;
+                    var ar = dt.split('-');
+                    var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                    $("#hdntradeLicenseExpirationDate").val(test);
+                }
+                else {
+                    toastr.warning('Please select trade license expiration date!', "warning", {
+                        "timeOut": "30000",
+                        "extendedTImeout": "50000",
+                        "closeButton": true,
+                    });
+                }
+            }
+        });
+    });
+</script>
+@*<script>
+        $(document).ready(function () {
+            alert();
+            $("#tradeLicenseExpirationDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+                onSelect: function (dateString, txtDate) {
+                    if (dateString != undefined && dateString != "" && dateString != null) {
+                        var dt = dateString;
+                        var ar = dt.split('-');
+                        var test = ar[2] + "-" + ar[1] + "-" + ar[0];
+                        $("#hdntradeLicenseExpirationDate").val(test);
+                    }
+                    else {
+                        toastr.warning('Please select trade license expiration date!', "warning", {
+                            "timeOut": "30000",
+                            "extendedTImeout": "50000",
+                            "closeButton": true,
+                        });
+                    }
+                }
+            });
+
+        });
+    </script>*@
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important">
 
     @*@using (Html.BeginForm("WlAccountForm", "Home", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -332,15 +386,15 @@
                             <label for="Qs_PersonMandatory" class="radio-custom-label"
                                    style="margin-top: 10px;padding: 6px;">New Profile</label>&nbsp;&nbsp;
                             @*<input id="Qs_PersonMandatory1" class="radio-custom" onclick="$.fn.showAccountScreen('Renewal')"
-                                   name="Qs_PersonMandatory" type="radio"
-                                   style="margin-top: 10px !important">
-                            <label for="Qs_PersonMandatory1" class="radio-custom-label"
-                                   style="margin-top:10px;padding: 6px;">Renewal of Account</label>*@
+                                       name="Qs_PersonMandatory" type="radio"
+                                       style="margin-top: 10px !important">
+                                <label for="Qs_PersonMandatory1" class="radio-custom-label"
+                                       style="margin-top:10px;padding: 6px;">Renewal of Account</label>*@
                         </div>
 
                         <div>
                             <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;">
-                                <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:10px !important">
+                                <div class="panel-group" style="margin-left: 0px;margin-bottom:3px!important;margin-top:15px !important">
                                     <div class="panel panel-default" style="border:none!important">
                                         <div id="collapse_search_1" class="panel-collapse collapse in" style="border:none">
                                             <div class="panel-body" style="padding: 0;" id="IsNewAccount">
@@ -419,8 +473,9 @@
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label>Expiration Date of Trade License</label>
-                                                        <input type="date" style="border-radius: 4px" id="tradeLicenseExpirationDate"
+                                                        <input type="text" style="border-radius: 4px" id="tradeLicenseExpirationDate"
                                                                class="form-control" name="TradeLicenseExpirationDate" />
+                                                        <input type="hidden" id="hdntradeLicenseExpirationDate" name="hdntradeLicenseExpirationDate" />
                                                     </div>
                                                 </td>
                                                 <td>
@@ -492,7 +547,7 @@
                                                         </select>
                                                     </div>
                                                 </td>
-                                                
+
                                             </tr>
 
                                             <tr>
@@ -525,7 +580,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr>                                                
+                                            <tr>
                                                 <td style="width:  15.5%">
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Email</label>
@@ -588,27 +643,27 @@
                                                         <input type="text" maxlength="32" style="border-radius: 4px" id="suburb"
                                                                class="form-control" name="suburb" required />
                                                     </div>
-                                                </td>                                                
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>
                                                     <div class="input-group input-label" style="width: 100%">
                                                         <label class="control-label">Province</label>
                                                         @*<input type="text" style="border-radius: 4px" id="province"
-                                                               class="form-control" name="Province" required />*@
-                                                    <select style="border-radius: 4px" required
-                                                            class="form-control" name="province" id="province">
-                                                        <option value="" selected>Make a selection</option>
-                                                        <option value="Eastern Cape">Eastern Cape</option>
-                                                        <option value="Free State">Free State</option>
-                                                        <option value="Gauteng">Gauteng</option>
-                                                        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-                                                        <option value="Limpopo">Limpopo</option>
-                                                        <option value="Mpumalanga">Mpumalanga</option>
-                                                        <option value="Northern Cape">Northern Cape</option>
-                                                        <option value="North West">North West</option>
-                                                        <option value="Western Cape">Western Cape</option>
-                                                    </select>
+                                                            class="form-control" name="Province" required />*@
+                                                        <select style="border-radius: 4px" required
+                                                                class="form-control" name="province" id="province">
+                                                            <option value="" selected>Make a selection</option>
+                                                            <option value="Eastern Cape">Eastern Cape</option>
+                                                            <option value="Free State">Free State</option>
+                                                            <option value="Gauteng">Gauteng</option>
+                                                            <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                                                            <option value="Limpopo">Limpopo</option>
+                                                            <option value="Mpumalanga">Mpumalanga</option>
+                                                            <option value="Northern Cape">Northern Cape</option>
+                                                            <option value="North West">North West</option>
+                                                            <option value="Western Cape">Western Cape</option>
+                                                        </select>
                                                     </div>
                                                 </td>
                                                 <td>
@@ -793,8 +848,8 @@
                                         <i id="isAppLoading" class="fa fa-spinner fa-spin" style="display:none!important"></i>
                                         Submit
                                     </button>
-                                    <a href="../"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
-</td>
+                                    <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
+                                </td>
                             </tr>
                             <tr id="ShowUpdateButton" style="display:none!important">
                                 <td colspan="4" class="text-center" id="IsWayleaveAccountResubmit">
@@ -802,8 +857,8 @@
                                         <i id="isAppUpdateLoading" style="display:none!important" class="fa fa-spinner fa-spin"></i>
                                         Update
                                     </button>
-                                    <a href="../WayleaveAccount/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
-</td>
+                                    <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()WayleaveAccount/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
+                                </td>
                             </tr>
                         </table>
                     </div>

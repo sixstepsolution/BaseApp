@@ -32,7 +32,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
 
             }
             var ggg = db.WL_DEPARTMENTS.Where(s => s.APP_ID == 1125 && s.APPLICATION_STATUS != "Pending Department Review" && s.APPLICATION_STATUS != null).ToList().Count();
@@ -97,7 +97,7 @@ namespace C8.eServices.Mvc.Controllers
             //if (Session["wayleaveaccountId"] == null)
             //{
             //    // if IsAuthenticated is false return to login code here....
-            //    return Redirect("../Home/WayleaveLogin");
+            //    return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"Home/WayleaveLogin");
 
             //}
             IEnumerable<ApplicationInputModel> members = null;
@@ -194,7 +194,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
 
             }
             return View();
@@ -205,7 +205,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
 
             }
 
@@ -229,7 +229,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
 
             var result = (from u in db.Users where u.username.Contains(searchKeyword)
@@ -250,7 +250,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
 
             }
             var Pricedata = db.APPLICATION_PAYMENT_PRICE.FirstOrDefault();
@@ -263,7 +263,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
 
             }
             
@@ -285,7 +285,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             if (id != null)
             {
@@ -305,7 +305,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             List<SelectListItem> userTypeList = new List<SelectListItem>() {
                 new SelectListItem {
@@ -393,7 +393,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             List<SelectListItem> userTypeList = new List<SelectListItem>() {
                 new SelectListItem {
@@ -450,7 +450,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             IEnumerable<ApplicationInputModel> members = null;
             ViewBag.ApplicationStatusList = null;
@@ -507,7 +507,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             IEnumerable<ApplicationInputModel> members = null;
             ViewBag.ApplicationStatusList = null;
@@ -564,7 +564,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             IEnumerable<ApplicationInputModel> members = null;
 
@@ -616,7 +616,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             IEnumerable<ApplicationInputModel> members = null;
 
@@ -842,7 +842,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             IEnumerable<ApplicationInputModel> members = null;
             ViewBag.ApplicationStatusList = null;
@@ -979,7 +979,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
 
             }
 
@@ -993,7 +993,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             ViewBag.applicationList = null;
             //var ttt = db.WL_ACCOUNTS.Select(s => new { s.CONTACT_PERSON_FIRST_NAME, s.CONTACT_PERSON_LAST_NAME, s.ACCOUNT_ID }).Distinct().ToList();
@@ -1023,7 +1023,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             ViewBag.applicationNo = searchKeyword;
             ViewBag.applicationStatus = status;
@@ -1120,7 +1120,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             TempData["ReportResult"] = "";
             ViewBag.result = null;           
@@ -1132,7 +1132,7 @@ namespace C8.eServices.Mvc.Controllers
             //if (Session["ekurhuleniData"] == null)
             //{
             //    // if IsAuthenticated is false return to login code here....
-            //    return Redirect("../home/index");
+            //    return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             //}
             try
             {
@@ -1217,8 +1217,8 @@ namespace C8.eServices.Mvc.Controllers
                     //Response.BufferOutput = true;
                     TempData["ReportResult"] = "success";
                     //Response.Redirect("../WL/Reports", false);
-
-                    return RedirectToAction("Reports", "WL");
+                    return Redirect(ConfigurationManager.AppSettings["Base_Url"] + "WL/Reports");
+                    //return RedirectToAction("Reports", "WL");
                     //Response.ContentType = "application/pdf";
                     ////Response.AppendHeader("Content-Disposition", "attachment; filename="+f1);
                     //Response.TransmitFile(fileName);
@@ -1245,7 +1245,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             Dictionary<string, object> dct = new Dictionary<string, object>();
             try
@@ -1372,7 +1372,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }
             string username= Session["ekurhuleniUserName"]!=null? Session["ekurhuleniUserName"].ToString():"";
             string userRole = Session["ekurhuleniUserRole"] != null ? Session["ekurhuleniUserRole"].ToString() : "";
@@ -1396,7 +1396,7 @@ namespace C8.eServices.Mvc.Controllers
             if (Session["ekurhuleniData"] == null)
             {
                 // if IsAuthenticated is false return to login code here....
-                return Redirect("../home/index");
+                return Redirect(ConfigurationManager.AppSettings["Base_Url"]+"home/index");
             }            
             ViewBag.appStartDate = "";
             ViewBag.appEndDate = "";

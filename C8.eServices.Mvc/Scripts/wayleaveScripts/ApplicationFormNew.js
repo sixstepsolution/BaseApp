@@ -1223,7 +1223,7 @@ $.fn.SaveApplicationForm = function (paymentStatus, alertStatus) {
             else {
                 var appNo = data;
                 if (paymentStatus == "PayNow") {
-                    window.location.href = "../WayleaveAccount/Payment_Test?q=" + appNo;
+                    window.location.href = BaseUrl+"WayleaveAccount/Payment_Test?q=" + appNo;
                 }
                 else if (paymentStatus == "PayLater") {
 
@@ -1236,14 +1236,14 @@ Please upload a receipt. <br />This can be done by navigating to the pending pay
                     });
                     setTimeout(function () {
                         $("#PaymentModel").modal('hide');
-                        window.location.href = "../WayleaveAccount/Index";
+                        window.location.href = BaseUrl+"WayleaveAccount/Index";
                     }, 15000);
                 }
                 else {
                     if (appNo == "Application Form resubmitted successfully.") {
                         toastr.success(appNo);
                         setTimeout(function () {
-                        window.location.href = "../WayleaveAccount/Index";
+                        window.location.href = BaseUrl+"WayleaveAccount/Index";
                     }, 5000);
                     }
                     else {
@@ -1253,13 +1253,13 @@ Please upload a receipt. <br />This can be done by navigating to the pending pay
                             "closeButton": true,
                         });
                         setTimeout(function () {
-                            window.location.href = "../WayleaveAccount/Index";
+                            window.location.href = BaseUrl+"WayleaveAccount/Index";
                         }, 15000);
                     }
                     
                     //toastr.success('Application form submitted successfully');
                     //setTimeout(function () {
-                    //    window.location.href = "../WayleaveAccount/Index";
+                    //    window.location.href = BaseUrl+"WayleaveAccount/Index";
                     //}, 1000);
                 }
             }
@@ -1717,7 +1717,7 @@ function ViewDocument(filename) {
 
 function ViewInspectionDocument(id) {
     var filename = $("#" + id).val();
-    window.location.href = "../uploads/" + filename;
+    window.location.href = BaseUrl+"uploads/" + filename;
 }
 
 $.fn.ShowEftMasterpassDetails = function () {

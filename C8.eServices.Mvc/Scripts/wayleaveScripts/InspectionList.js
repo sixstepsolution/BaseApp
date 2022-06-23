@@ -218,7 +218,7 @@ $.fn.SavePreInspectionDetails = function (inspectiontype) {
                             "closeButton": true
                         });
                         setTimeout(function () {
-                            window.location.href = "../WL/PreInspectionList";
+                            window.location.href = BaseUrl+"WL/PreInspectionList";
                         }, 2000)
                     }
                 },
@@ -274,7 +274,7 @@ $.fn.SaveInspectionDetails = function (inspectiontype) {
                         "closeButton": true
                     });                                     
                     setTimeout(function () {
-                        window.location.href = "../WL/InspectionList";
+                        window.location.href = BaseUrl+"WL/InspectionList";
                     }, 2000)
                 }                
             },

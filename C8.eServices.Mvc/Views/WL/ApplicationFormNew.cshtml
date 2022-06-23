@@ -1,5 +1,5 @@
 ﻿@model C8.eServices.Mvc.Models.WL_APPLICATIONFORM
-
+@using System.Configuration
 @{
     ViewBag.Title = "WayleaveApplicationForm";
     Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
@@ -181,8 +181,9 @@
         Init();
     });*@
     $(document).ready(function () {
+        var baseUrl = '@ConfigurationManager.AppSettings["Base_Url"].ToString()';
         $.ajax({
-            url: "/WayleaveAccount/LoadRegions",
+            url: baseUrl+"WayleaveAccount/LoadRegions",
             type: "Get",
             success: function (data) {
                 console.log("##########Region data#########");
@@ -435,7 +436,7 @@
                     });
                 }
             }
-        });        
+        });
     });
 </script>
 <section class="content" style="padding-right: 0;padding-top:0;margin-top:-10px!important" onload="Init()">
@@ -1245,7 +1246,7 @@
                                                     <div class="input-group input-label">
                                                         <label class="control-label">Inspection Date</label>
                                                         <input type="text" style="border-radius: 4px" class="form-control" name="INSPECTION_DATE" id="INSPECTION_DATE" />
-                                                    <input type="hidden" id="hdnInspectionDate" name="hdnInspectionDate" />
+                                                        <input type="hidden" id="hdnInspectionDate" name="hdnInspectionDate" />
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-3">
@@ -1282,7 +1283,7 @@
                                                         <button type="button" class="btn btn-success" style="background-color: #036638 !important; height: 24px; padding: 0; font-size: 10px;width:150px!important" onclick="$.fn.CloseApplicationFormModal()">
                                                             Close Application
                                                         </button>
-                                                        <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
+                                                        <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -1299,7 +1300,7 @@
                                                 <i id="isAppLoading" class="fa fa-spinner fa-spin" style="font-size:10pt;margin-right:5px!important;display:none!important"></i>
                                                 Submit
                                             </button>
-                                            <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
+                                            <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
                                         </td>
                                     </tr>
                                 </table>
@@ -1316,7 +1317,7 @@
                                                 <i id="isAppLoading" class="fa fa-spinner fa-spin" style="font-size:10pt;margin-right:5px!important"></i>
                                                 Submit
                                             </button>
-                                            <a href="../WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
+                                            <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()WL/Index"><button type="button" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 60px; padding: 0; font-size: 10px">Cancel</button></a>
                                         </td>
                                     </tr>
                                 </table>

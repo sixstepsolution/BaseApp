@@ -79,10 +79,10 @@
     <link href="~/Content/wayleaveStyles/Content/toastr.css" rel="stylesheet" />
     <script type="text/javascript" language="javascript">
         $(document).ready(function () {
+            
             if (localStorage.expandedMenu == 0) {
                 $("body").addClass('sidebar-collapse');
             }
-
             $('body').bind('expanded.pushMenu', function () {
                 localStorage.expandedMenu = 1;
             });
@@ -95,19 +95,20 @@
                 scrollTop: 0,
             }, scroll_top_duration
             );
+
+            
         });
     </script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
     <link href="~/Content/wayleaveStyles/Content/toastr.css" rel="stylesheet" />
     <style>
-        body {
-            background: url('../../Content/wayleaveStyles/assets/Images/Home_BG.png') no-repeat center center fixed;
+        /*body {
+            background: url('http://localhost:3456/Content/wayleaveStyles/assets/Images/Home_BG.png') no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
             background-size: cover;
-            /*background-color: #d5d5d5 !important;*/
-        }
+        }*/
 
         bradius {
             border-top-right-radius: 15px !important;
@@ -175,7 +176,13 @@
             localStorage.clear();
             localStorage.setItem("apiBaseUrl", "@ConfigurationManager.AppSettings["Api_Url"].ToString()");
             localStorage.setItem("BaseUrl", "@ConfigurationManager.AppSettings["Base_Url"].ToString()");
-
+            var tt = '@ConfigurationManager.AppSettings["Base_Url"].ToString()';
+            var imageUrl = tt+"Content/wayleaveStyles/assets/Images/Home_BG.png";            
+            $("body").css("background", "url(" + imageUrl + ") no-repeat center center fixed");
+            $("body").css("-webkit-background-size", "cover");
+            $("body").css("-moz-background-size", "cover");
+            $("body").css("-o-background-size", "cover");
+            $("body").css("background-size", "cover");
         });
     </script>
 </head>

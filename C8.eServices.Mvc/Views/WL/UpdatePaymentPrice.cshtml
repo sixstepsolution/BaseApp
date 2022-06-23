@@ -1,4 +1,4 @@
-﻿
+﻿@using System.Configuration
 @{
     ViewBag.Title = "UpdatePaymentPrice";
     Layout = "~/Views/Shared/_LayoutEkurhuleni.cshtml";
@@ -151,9 +151,10 @@
         }
 </style>
 <script src="~/Scripts/wayleaveScripts/AddDepartmentUsers.js"></script>
-<script type="text/javascript" language="javascript">   
+<script type="text/javascript" language="javascript">
+
     $(document).ready(function () {
-        var departmentName = '@Session["ekurhuleniUserDeptName"]';      
+        var departmentName = '@Session["ekurhuleniUserDeptName"]';
         var userName = '@Session["ekurhuleniUserName"]';
         var userRole = '@Session["ekurhuleniUserRole"]';
         $("#CurrentUserName").val(userName);
@@ -228,7 +229,7 @@
                                         <i id="isAppLoading" class="fa fa-spinner fa-spin" style="display:none!important"></i>
                                         Update
                                     </button>
-                                    <a href="../WL/Index"><button type="button" id="btnCancel" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 100px; padding: 0; font-size: 11px">Cancel</button></a>
+                                    <a href="@ConfigurationManager.AppSettings["Base_Url"].ToString()WL/Index"><button type="button" id="btnCancel" class="btn btn-success" style="background-color: #cc0c00 !important; height: 24px; width: 100px; padding: 0; font-size: 11px">Cancel</button></a>
                                 </td>
                             </tr>
                         </table>
